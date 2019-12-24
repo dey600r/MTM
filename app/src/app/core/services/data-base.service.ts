@@ -18,6 +18,9 @@ export class DataBaseService {
 
   motos = new BehaviorSubject([]);
   constructor(private plt: Platform, private sqlitePorter: SQLitePorter, private sqlite: SQLite, private http: HttpClient) {
+  }
+
+  initDB() {
     this.plt.ready().then(() => {
       this.sqlite.create({
         name: 'mtm.db',
@@ -31,21 +34,19 @@ export class DataBaseService {
   }
 
   seedDatabase() {
-    this.http.get('assets/db/initTableDB.sql', { responseType: 'text'}).subscribe(sql => {
-      this.sqlitePorter.importSqlToDb(this.database, sql).then(_ => {
-          this.database.executeSql(`SELECT * FROM ${ConstantsTable.TABLE_MTM_OPERATION_TYPE}`, []).then(dataTable => {
-            if (dataTable.rows.length === 0) {
-              this.http.get('assets/db/initDataDB.sql', { responseType: 'text'}).subscribe(sqlData => {
-                this.sqlitePorter.importSqlToDb(this.database, sql).then(data => {
-                })
-                .catch(e => console.error(`Error al iniciar los datos de la base de datos: ${e}`));
-              });
-            }
+    this.database.executeSql(`SELECT * FROM ${ConstantsTable.TABLE_MTM_MOTO}`, []).then(initDB => {
+      this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
+      this.dbReady.next(true);
+    }).catch(e => {
+      console.log(`INIT DB`);
+      this.http.get('assets/db/initTableDB.sql', { responseType: 'text'}).subscribe(sql => {
+        this.sqlitePorter.importSqlToDb(this.database, sql).then(sql => {
             this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
             this.dbReady.next(true);
-          });
-        })
-        .catch(e => console.error(`Error al iniciar las tablas de la base de datos: ${e}`));
+          })
+          // tslint:disable-next-line: no-shadowed-variable
+          .catch(e => console.error(`Error al iniciar las tablas de la base de datos: ${e}`));
+        });
     });
   }
 
@@ -69,7 +70,6 @@ export class DataBaseService {
         let motosDB: MotoModel[] = [];
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
-            console.log(data.rows.item(i).model);
             motosDB = [...motosDB, {
               id: data.rows.item(i).id,
               model: data.rows.item(i).model,

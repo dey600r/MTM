@@ -3,11 +3,11 @@ import { DataBaseService } from '@services/index';
 import { MotoModel } from '@models/index';
 
 @Component({
-  selector: 'app-tab3',
-  templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss']
+  selector: 'app-operation',
+  templateUrl: 'operation.page.html',
+  styleUrls: ['operation.page.scss']
 })
-export class Tab3Page implements OnInit {
+export class OperationPage implements OnInit {
 
   motos: MotoModel[] = [];
 
