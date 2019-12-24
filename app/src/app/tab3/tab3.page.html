@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Tab Three
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item button *ngFor="let m of motos">
+      <ion-label>
+        <h2>{{ m.model }}</h2>
+        <p>{{ m.brand }}</p>
+        <p>{{ m.year }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
