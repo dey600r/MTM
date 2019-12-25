@@ -1,9 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      Moto
-    </ion-title>
+    <ion-title class="align-center">Moto</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      <ion-icon size="large" name="bicycle"></ion-icon>
+      <h3 class="header-list">Tus motos</h3>
+      <ion-icon size="large" style="color:var(--ion-color-primary-tint)" name="add-circle"></ion-icon>
+    </ion-list-header>
+    <ion-item button *ngFor="let m of motos">
+      <ion-label>
+        <h2>{{ m.brand }}</h2>
+        <h3>{{ m.model }}</h3>
+        <p>{{ m.year }}</p>
+      </ion-label>
+      <ion-label>
+        <h3>{{ m.km }} km</h3>
+        <ion-label>
+          <ion-icon name="cog"></ion-icon>
+          <p class="p-inline">{{ m.configuration.name }}</p>
+        </ion-label>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

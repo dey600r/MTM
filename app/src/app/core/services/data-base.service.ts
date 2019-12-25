@@ -5,9 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { MotoModel } from '@models/index';
+import { MotoModel, ConfigurationModel } from '@models/index';
 
 import { ConstantsTable } from '@utils/index';
+
+import { SqlService } from './sql.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +19,11 @@ export class DataBaseService {
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   motos = new BehaviorSubject([]);
-  constructor(private plt: Platform, private sqlitePorter: SQLitePorter, private sqlite: SQLite, private http: HttpClient) {
-  }
+  constructor(private plt: Platform,
+              private sqlitePorter: SQLitePorter,
+              private sqlite: SQLite,
+              private http: HttpClient,
+              private sqlService: SqlService) { }
 
   initDB() {
     this.plt.ready().then(() => {
@@ -35,18 +40,25 @@ export class DataBaseService {
 
   seedDatabase() {
     this.database.executeSql(`SELECT * FROM ${ConstantsTable.TABLE_MTM_MOTO}`, []).then(initDB => {
-      this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
-      this.dbReady.next(true);
+      console.log(`NEXT DEPLOY DB`); // INIT DB
+      this.http.get('assets/db/nextDeployDB.sql', { responseType: 'text'}).subscribe(sql => {
+        this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
+          this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
+          this.dbReady.next(true);
+        })
+        // tslint:disable-next-line: no-shadowed-variable
+        .catch(e => console.error(`Error launching next deploy data base: ${e}`));
+      });
     }).catch(e => {
-      console.log(`INIT DB`);
+      console.log(`INIT DB`); // INIT DB
       this.http.get('assets/db/initTableDB.sql', { responseType: 'text'}).subscribe(sql => {
-        this.sqlitePorter.importSqlToDb(this.database, sql).then(sql => {
-            this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
-            this.dbReady.next(true);
-          })
-          // tslint:disable-next-line: no-shadowed-variable
-          .catch(e => console.error(`Error al iniciar las tablas de la base de datos: ${e}`));
-        });
+        this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
+          this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
+          this.dbReady.next(true);
+        })
+        // tslint:disable-next-line: no-shadowed-variable
+        .catch(e => console.error(`Error launching initialize data base: ${e}`));
+      });
     });
   }
 
@@ -59,29 +71,11 @@ export class DataBaseService {
   }
 
   loadAllDataTable(table: string) {
-    return this.database.executeSql(`SELECT * FROM ${table}`, []).then(data => {
-      this.mapDataToObserver(table, data);
+    return this.database.executeSql(this.sqlService.getSql(table), []).then(data => {
+      this.motos.next(this.sqlService.mapDataToObserver(table, data));
     });
   }
 
-  mapDataToObserver(table: string, data: any) {
-    switch (table) {
-      case ConstantsTable.TABLE_MTM_MOTO:
-        let motosDB: MotoModel[] = [];
-        if (data.rows.length > 0) {
-          for (let i = 0; i < data.rows.length; i++) {
-            motosDB = [...motosDB, {
-              id: data.rows.item(i).id,
-              model: data.rows.item(i).model,
-              brand: data.rows.item(i).brand,
-              year: data.rows.item(i).year
-            }];
-          }
-        }
-        this.motos.next(motosDB);
-        break;
-    }
-  }
 
   // addMoto(model, brand, year) {
   //   return this.database.executeSql('INSERT INTO mtmMoto (model, brand, year) VALUES (?, ?, ?)', [name, brand, year]).then(data => {

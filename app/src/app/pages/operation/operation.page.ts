@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataBaseService } from '@services/index';
-import { MotoModel } from '@models/index';
 
 @Component({
   selector: 'app-operation',
@@ -9,14 +7,9 @@ import { MotoModel } from '@models/index';
 })
 export class OperationPage implements OnInit {
 
-  motos: MotoModel[] = [];
-
-  constructor(private dbService: DataBaseService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.dbService.getMotos().subscribe(x => {
-      this.motos = x;
-    });
   }
 
 }
