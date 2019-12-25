@@ -2,13 +2,13 @@ BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"idMaintenanceElement"	INTEGER NOT NULL,
-	"idMaintenanceFreq"	INTEGER NOT NULL,
+	"idMaintenanceFrec"	INTEGER NOT NULL,
 	"km"	INTEGER NOT NULL,
 	"time"	INTEGER,
 	"init"	TEXT NOT NULL,
 	"desgaste"	TEXT NOT NULL,
 	FOREIGN KEY("idMaintenanceElement") REFERENCES "mtmMaintenanceElement"("id"),
-	FOREIGN KEY("idMaintenanceFreq") REFERENCES "mtmMaintenanceFreq"("id")
+	FOREIGN KEY("idMaintenanceFrec") REFERENCES "mtmMaintenanceFrec"("id")
 );
 CREATE TABLE IF NOT EXISTS "mtmMoto" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS "mtmOperation" (
 	FOREIGN KEY("idMoto") REFERENCES "mtmMoto"("id"),
 	FOREIGN KEY("idOperationType") REFERENCES "mtmOperationType"("id")
 );
-CREATE TABLE IF NOT EXISTS "mtmMaintenanceFreq" (
+CREATE TABLE IF NOT EXISTS "mtmMaintenanceFrec" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
@@ -68,12 +68,13 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
 );
-INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFreq","km","time","init","desgaste") VALUES (1,1,2,30000,48,'N','Y');
-INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFreq","km","time","init","desgaste") VALUES (2,6,2,25000,24,'N','N');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration") VALUES (1,'R6','Yamaha',2005,85300,1);
+INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (1,1,2,30000,48,'N','Y');
+INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (2,6,2,25000,24,'N','N');
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration") VALUES (1,'R6','Yamaha',2005,85300,2);
 INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration") VALUES (2,'GT 125 R','Hyosung',2006,76000,1);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (1,1,1);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (2,1,2);
+INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (3,2,1);
 INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (1,1,6);
 INSERT INTO "mtmMaintenanceElement" ("id","name","description") VALUES (1,'Rueda delantera','Cambio rueda delantera');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description") VALUES (2,'Rueda trasera','Cambio rueda trasera');
@@ -83,9 +84,10 @@ INSERT INTO "mtmMaintenanceElement" ("id","name","description") VALUES (5,'Filtr
 INSERT INTO "mtmMaintenanceElement" ("id","name","description") VALUES (6,'Bujias','Cambio Bujias');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description") VALUES (7,'Liquido de frenos','Cambio liquido de frenos');
 INSERT INTO "mtmConfiguration" ("id","name","description") VALUES (1,'Fabrica','Configuración de fábrica');
+INSERT INTO "mtmConfiguration" ("id","name","description") VALUES (2,'Yamaha','Configuración de Yamaha');
 INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (1,'Revision','Cambio de bujias crk10',2,1,15000.0,'01/12/2019','Garaje','Yo',0.0,NULL);
-INSERT INTO "mtmMaintenanceFreq" ("id","code","description") VALUES (1,'O','Operacion');
-INSERT INTO "mtmMaintenanceFreq" ("id","code","description") VALUES (2,'C','Calendario');
+INSERT INTO "mtmMaintenanceFrec" ("id","code","description") VALUES (1,'O','Operacion');
+INSERT INTO "mtmMaintenanceFrec" ("id","code","description") VALUES (2,'C','Calendario');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (1,'MT','Mantenimiento Taller');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (2,'AT','Averia Taller');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (3,'R','Ropa');
