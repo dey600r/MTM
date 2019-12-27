@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">Añadir nueva moto</ion-title>
+    <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">Editar moto</ion-title>
+    <ion-button fill="clear" (click)="closeModal()" class="btn-header">
+      <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form onsubmit="saveData(event)">
+    <ion-list lines="full">
+      <ion-item>
+        <ion-label position="stacked">Marca<ion-text color="danger">*</ion-text></ion-label>
+        <ion-input required type="text" oninput="handleFirstNameValue(event)">{{moto.brand}}</ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Modelo<ion-text color="danger">*</ion-text></ion-label>
+        <ion-input required type="text" oninput="handleFirstNameValue(event)">{{moto.model}}</ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Año<ion-text color="danger">*</ion-text></ion-label>
+        <ion-input required type="number" oninput="handleFirstNameValue(event)">{{moto.year}}</ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button fill="clear" type="submit" class="margin-left80" (click)="closeModal()">
+      <ion-icon size="large" class="btn-color" name="checkmark-circle-outline"></ion-icon>
+    </ion-button>
+  </form>
+</ion-content>

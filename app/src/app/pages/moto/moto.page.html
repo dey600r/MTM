@@ -9,9 +9,11 @@
     <ion-list-header>
       <ion-icon size="large" name="bicycle"></ion-icon>
       <h3 class="header-list">Tus motos</h3>
-      <ion-icon size="large" style="color:var(--ion-color-primary-tint)" name="add-circle"></ion-icon>
+      <ion-button fill="clear" (click)="openCreateModal()">
+        <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
+      </ion-button>
     </ion-list-header>
-    <ion-item button *ngFor="let m of motos">
+    <ion-item button *ngFor="let m of motos" (click)="openEditModal(m)">
       <ion-label>
         <h2>{{ m.brand }}</h2>
         <h3>{{ m.model }}</h3>
@@ -19,9 +21,9 @@
       </ion-label>
       <ion-label>
         <h3>{{ m.km }} km</h3>
-        <ion-label>
+        <ion-label class="row-block flex-items-center">
           <ion-icon name="cog"></ion-icon>
-          <p class="p-inline">{{ m.configuration.name }}</p>
+          <p class="icon-label">{{ m.configuration.name }}</p>
         </ion-label>
       </ion-label>
     </ion-item>

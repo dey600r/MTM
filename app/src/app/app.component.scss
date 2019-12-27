@@ -1,0 +1,53 @@
+.width100 {
+    width: 100%;
+}
+
+.margin-left80 {
+    margin-left: 80%;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.btn-color {
+    color:var(--ion-color-primary-tint);
+}
+
+.btn-header {
+    width: 18%;
+    padding-bottom: 10px;
+}
+
+.title-header {
+    display: inline-flex;
+    text-align: center;
+    width: 80%;
+    padding-top: 10px;
+}
+
+.row-block {
+    display: flex;
+    flex-direction: row;
+}
+
+.icon-label {
+    margin: 0;
+    padding: 0 4px;
+    line-height: 1em;
+    flex: 1;
+}
+
+.flex-items-center {
+    align-items: center;
+}
+
+.header-list {
+    width: 100%;
+    text-align: left;
+    margin-left: 10px;
+}
