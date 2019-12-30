@@ -39,7 +39,6 @@ export class MotoPage implements OnInit, OnChanges {
   }
 
   async openModal() {
-    console.log('OPEN MODAL');
 
     const modal = await this.modalController.create({
       component: AddEditMotoComponent,
@@ -50,7 +49,6 @@ export class MotoPage implements OnInit, OnChanges {
       if (dataReturned !== null) {
         this.dataReturned = dataReturned.data;
       }
-      console.log('CLOSE MODAL');
     });
 
     return await modal.present();

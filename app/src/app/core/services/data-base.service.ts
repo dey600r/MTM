@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { MotoModel, ConfigurationModel } from '@models/index';
 
-import { ConstantsTable } from '@utils/index';
+import { ConstantsTable, ActionDB } from '@utils/index';
 
 import { SqlService } from './sql.service';
 
@@ -19,6 +19,7 @@ export class DataBaseService {
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   motos = new BehaviorSubject([]);
+  configuration = new BehaviorSubject([]);
   constructor(private plt: Platform,
               private sqlitePorter: SQLitePorter,
               private sqlite: SQLite,
@@ -43,7 +44,7 @@ export class DataBaseService {
       console.log(`NEXT DEPLOY DB`); // INIT DB
       this.http.get('assets/db/nextDeployDB.sql', { responseType: 'text'}).subscribe(sql => {
         this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
-          this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
+          this.loadAllTables();
           this.dbReady.next(true);
         })
         // tslint:disable-next-line: no-shadowed-variable
@@ -53,7 +54,7 @@ export class DataBaseService {
       console.log(`INIT DB`); // INIT DB
       this.http.get('assets/db/initTableDB.sql', { responseType: 'text'}).subscribe(sql => {
         this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
-          this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
+          this.loadAllTables();
           this.dbReady.next(true);
         })
         // tslint:disable-next-line: no-shadowed-variable
@@ -70,18 +71,52 @@ export class DataBaseService {
     return this.motos.asObservable();
   }
 
+  getConfigurations(): Observable<ConfigurationModel[]> {
+    return this.configuration.asObservable();
+  }
+
+  loadAllTables() {
+    this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
+    this.loadAllDataTable(ConstantsTable.TABLE_MTM_CONFIGURATION);
+  }
+
   loadAllDataTable(table: string) {
     return this.database.executeSql(this.sqlService.getSql(table), []).then(data => {
-      this.motos.next(this.sqlService.mapDataToObserver(table, data));
+      this.loadDataOnObserver(table, data);
     });
   }
 
+  loadDataOnObserver(table: string, data: any[]) {
+    switch (table) {
+      case ConstantsTable.TABLE_MTM_MOTO:
+        this.motos.next(this.sqlService.mapDataToObserver(table, data));
+        break;
+      case ConstantsTable.TABLE_MTM_CONFIGURATION:
+        this.configuration.next(this.sqlService.mapDataToObserver(table, data));
+        break;
+    }
+  }
 
-  // addMoto(model, brand, year) {
-  //   return this.database.executeSql('INSERT INTO mtmMoto (model, brand, year) VALUES (?, ?, ?)', [name, brand, year]).then(data => {
-  //     this.loadAllDataTable();
-  //   });
-  // }
+  saveMoto(moto: MotoModel, action: ActionDB) {
+    let sqlDB: string;
+    let dataDB: any[];
+    switch (action) {
+      case ActionDB.create:
+        sqlDB = this.sqlService.insertSqlMoto();
+        dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id];
+        break;
+      case ActionDB.update:
+        sqlDB = this.sqlService.updateSqlMoto();
+        dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.id];
+        break;
+      case ActionDB.delete:
+        sqlDB = '';
+        break;
+    }
+    return this.database.executeSql(sqlDB, dataDB).then(data => {
+            this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
+      }).catch(e => console.error(`Error saving moto: ${e.message}`));
+  }
 
   // getMoto(id: string): Promise<MotoModel> {
   //   return this.database.executeSql('SELECT * FROM mtmMoto WHERE id = ?', [id]).then(data => {

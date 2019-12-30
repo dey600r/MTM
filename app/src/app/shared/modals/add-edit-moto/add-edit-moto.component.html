@@ -9,23 +9,59 @@
 </ion-header>
 
 <ion-content>
-  <form onsubmit="saveData(event)">
+  <form #formAddMoto name="formAddMoto" (ngSubmit)="saveData(formAddMoto)" novalidate>
     <ion-list lines="full">
       <ion-item>
-        <ion-label position="stacked">Marca<ion-text color="danger">*</ion-text></ion-label>
-        <ion-input required type="text" oninput="handleFirstNameValue(event)">{{moto.brand}}</ion-input>
+        <ion-label position="stacked">
+          <ion-text>Marca</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidBrand(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidBrand(formAddMoto)" color="danger">Añada la marca</ion-text>
+        </ion-label>
+        <ion-input #motoBrand name="motoBrand" placeholder="Yamaha" required type="text" [(ngModel)]="moto.brand"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">Modelo<ion-text color="danger">*</ion-text></ion-label>
-        <ion-input required type="text" oninput="handleFirstNameValue(event)">{{moto.model}}</ion-input>
+        <ion-label position="stacked">
+          <ion-text>Modelo</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidModel(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidModel(formAddMoto)" color="danger">Añada el modelo</ion-text>
+        </ion-label>
+        <ion-input #motoModel name="motoModel" placeholder="R6" required type="text" [(ngModel)]="moto.model"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">Año<ion-text color="danger">*</ion-text></ion-label>
-        <ion-input required type="number" oninput="handleFirstNameValue(event)">{{moto.year}}</ion-input>
+        <ion-label position="stacked">
+          <ion-text>Año</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidYear(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidYear(formAddMoto)" color="danger">Añada el año</ion-text>
+        </ion-label>
+        <ion-input #motoYear name="motoYear" required placeholder="2005" type="number" min="1900" max="3000" [(ngModel)]="moto.year"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>Kilometros</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidKm(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidKm(formAddMoto)" color="danger">Añada los kms</ion-text>
+        </ion-label>
+        <ion-input #motoKm name="motoKm" required placeholder="50000" type="number" min="0" [(ngModel)]="moto.km"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>Configuración</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidConfiguration(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidConfiguration(formAddMoto)" color="danger">Añada la configuración</ion-text>
+        </ion-label>
+        <ion-select #motoConfiguration name="motoConfiguration" interface="popover" [(ngModel)]="moto.configuration.id">
+          <ion-select-option [(value)]="c.id" *ngFor="let c of configurations">{{c.name}}</ion-select-option>
+        </ion-select>
       </ion-item>
     </ion-list>
-    <ion-button fill="clear" type="submit" class="margin-left80" (click)="closeModal()">
-      <ion-icon size="large" class="btn-color" name="checkmark-circle-outline"></ion-icon>
+    <ion-button expand="block" type="submit">
+      <ion-text>Guardar</ion-text>
+      <ion-icon name="save" class="padding-left12"></ion-icon>
     </ion-button>
   </form>
 </ion-content>

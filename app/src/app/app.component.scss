@@ -6,6 +6,14 @@
     margin-left: 80%;
 }
 
+.padding-left20 {
+    padding-left: 20%;
+}
+
+.padding-left12 {
+    padding-left: 12px;
+}
+
 .align-center {
     text-align: center;
 }
@@ -16,6 +24,10 @@
 
 .btn-color {
     color:var(--ion-color-primary-tint);
+}
+
+.btn-color-error {
+    color:var(--ion-color-danger);
 }
 
 .btn-header {

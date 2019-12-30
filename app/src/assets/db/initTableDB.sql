@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS "mtmMoto" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"model"	TEXT NOT NULL,
+	"brand"	TEXT NOT NULL,
+	"year"	INTEGER NOT NULL,
+	"km"	INTEGER NOT NULL,
+	"idConfiguration"	INTEGER NOT NULL,
+	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id")
+);
 CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"idMaintenanceElement"	INTEGER NOT NULL,
@@ -8,15 +17,6 @@ CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
 	"desgaste"	TEXT NOT NULL,
 	FOREIGN KEY("idMaintenanceElement") REFERENCES "mtmMaintenanceElement"("id"),
 	FOREIGN KEY("idMaintenanceFrec") REFERENCES "mtmMaintenanceFrec"("id")
-);
-CREATE TABLE IF NOT EXISTS "mtmMoto" (
-	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	"model"	TEXT NOT NULL UNIQUE,
-	"brand"	TEXT NOT NULL,
-	"year"	INTEGER NOT NULL,
-	"km"	INTEGER NOT NULL,
-	"idConfiguration"	INTEGER NOT NULL,
-	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id")
 );
 CREATE TABLE IF NOT EXISTS "mtmConfigMaintenance" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -67,11 +67,10 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
 );
-
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration") VALUES (1,'R6','Yamaha',2005,85300,2);
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration") VALUES (2,'GT 125 R','Yamaha',2006,75600,1);
 INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (1,1,2,30000,48,'N','Y');
 INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (2,6,2,25000,24,'N','N');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration") VALUES (1,'R6','Yamaha',2005,85300,2);
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration") VALUES (2,'GT 125 R','Hyosung',2006,76000,1);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (1,1,1);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (2,1,2);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (3,2,1);
