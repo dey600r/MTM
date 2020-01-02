@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { CommonService } from '@services/index';
+import { Platform } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-tabs',
@@ -7,6 +10,13 @@ import { Component } from '@angular/core';
 })
 export class TabsPage {
 
-  constructor() {}
-
+  constructor(private platform: Platform,
+              private translator: TranslateService,
+              private commonService: CommonService) {
+    this.platform.ready().then(() => {
+      let userLang = navigator.language.split('-')[0];
+      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
+      this.translator.use(userLang);
+    });
+  }
 }

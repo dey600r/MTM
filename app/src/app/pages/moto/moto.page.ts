@@ -1,7 +1,8 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { DataBaseService } from '@services/index';
+import { TranslateService } from '@ngx-translate/core';
+import { DataBaseService, CommonService } from '@services/index';
 import { MotoModel, ModalInputModel, ModalOutputModel } from '@models/index';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 
 import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
 
@@ -16,8 +17,17 @@ export class MotoPage implements OnInit, OnChanges {
   dataReturned: ModalOutputModel;
   rowSelected: MotoModel = new MotoModel();
 
-  constructor(private dbService: DataBaseService,
-              private modalController: ModalController) {}
+  constructor(private platform: Platform,
+              private dbService: DataBaseService,
+              private modalController: ModalController,
+              private translator: TranslateService,
+              private commonService: CommonService) {
+      this.platform.ready().then(() => {
+        let userLang = navigator.language.split('-')[0];
+        userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
+        this.translator.use(userLang);
+      });
+  }
 
   ngOnInit() {
     this.dbService.getMotos().subscribe(x => {

@@ -7,7 +7,9 @@ export class MotoModel extends BaseModel {
     year: number;
     km: number;
     configuration: ConfigurationModel;
-    constructor(m: string = null, b: string = null, y: number = null, k: number = null, c: ConfigurationModel = new ConfigurationModel(),
+    kmsPerMonth: number;
+    constructor(m: string = null, b: string = null, y: number = null, k: number = null,
+                c: ConfigurationModel = new ConfigurationModel(), kpm: number = null,
                 id: number = 1) {
         super(id);
         this.model = m;
@@ -15,5 +17,6 @@ export class MotoModel extends BaseModel {
         this.year = y;
         this.km = k;
         this.configuration = c;
+        this.kmsPerMonth = kpm;
     }
 }

@@ -4,6 +4,7 @@ import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel } from
 import { DataBaseService } from '@services/index';
 import { Form } from '@angular/forms';
 import { ActionDB } from '@app/core/utils';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-edit-moto',
@@ -25,7 +26,8 @@ export class AddEditMotoComponent implements OnInit {
     private modalController: ModalController,
     private navParams: NavParams,
     private dbService: DataBaseService,
-    public toastController: ToastController
+    private toastController: ToastController,
+    private translator: TranslateService
   ) { }
 
   ngOnInit() {
@@ -56,8 +58,9 @@ export class AddEditMotoComponent implements OnInit {
 
   async showSaveToast() {
     const toast = await this.toastController.create({
-      message: (this.modalInputModel.data.isCreate ? `La moto ${this.moto.model} se ha guardado correctamente` :
-                `La moto ${this.moto.model} se ha actualizado correctamente`),
+      message: (this.modalInputModel.data.isCreate ?
+                this.translator.instant('AddSaveMoto', { moto: this.moto.model }) :
+                this.translator.instant('EditSaveMoto', { moto: this.moto.model })),
       duration: 2000
     });
     toast.present();
@@ -65,7 +68,7 @@ export class AddEditMotoComponent implements OnInit {
 
   isValidForm(f: any): boolean {
     return this.isValidBrand(f) && this.isValidModel(f) && this.isValidYear && this.isValidKm(f) &&
-            this.isValidConfiguration(f);
+            this.isValidConfiguration(f) && this.isValidKmsPerMonth(f);
   }
 
   isValidBrand(f: any): boolean {
@@ -86,5 +89,9 @@ export class AddEditMotoComponent implements OnInit {
 
   isValidConfiguration(f: any): boolean {
     return f.motoConfiguration !== undefined && f.motoConfiguration.validity.valid;
+  }
+
+  isValidKmsPerMonth(f: any): boolean {
+    return f.motoKmsPerMonth !== undefined && f.motoKmsPerMonth.validity.valid;
   }
 }

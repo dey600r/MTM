@@ -103,11 +103,11 @@ export class DataBaseService {
     switch (action) {
       case ActionDB.create:
         sqlDB = this.sqlService.insertSqlMoto();
-        dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id];
+        dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth];
         break;
       case ActionDB.update:
         sqlDB = this.sqlService.updateSqlMoto();
-        dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.id];
+        dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth, moto.id];
         break;
       case ActionDB.delete:
         sqlDB = '';

@@ -1,0 +1,22 @@
+{
+    "SAVE": "Save",
+    "HOME": "Home",
+    "MOTORBIKE": "Motorbike",
+    "BRAND": "Brand",
+    "MODEL": "Model",
+    "YEAR": "Year",
+    "KM": "Kilometers",
+    "CONFIGURATION": "Configuration",
+    "KM_PER_MONTH": "Kms per month",
+    "YOURS_MOTORBIKES": "Yours Motorbikes",
+    "AddNewMoto": "Add new motorbike",
+    "EditMoto": "Edit motorbike",
+    "AddBrand": "Add brand",
+    "AddModel": "Add model",
+    "AddYear": "Add year",
+    "AddKm": "Add kilometers",
+    "AddConfiguration": "Add Configuration",
+    "AddKmsPerMonth": "Add kms per Month",
+    "AddSaveMoto": "The motorbike {{moto}} has been added succesfully",
+    "EditSaveMoto": "The motorbike {{moto}} has been modified succesfully"
+}

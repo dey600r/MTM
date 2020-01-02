@@ -27,9 +27,14 @@ export class SqlService {
   }
 
   getSqlMoto(): string {
-      return `SELECT * FROM ${ConstantsTable.TABLE_MTM_MOTO} ` +
-      `JOIN ${ConstantsTable.TABLE_MTM_CONFIGURATION} ON ` +
-      `${ConstantsTable.TABLE_MTM_CONFIGURATION}.id = ${ConstantsTable.TABLE_MTM_MOTO}.idConfiguration`;
+      return `SELECT m.${ConstantsColumns.COLUMN_MTM_ID}, ` +
+      `m.${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, m.${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
+      `m.${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, m.${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
+      `m.${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, m.${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
+      `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME}, c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} ` +
+      `FROM ${ConstantsTable.TABLE_MTM_MOTO} AS m ` +
+      `JOIN ${ConstantsTable.TABLE_MTM_CONFIGURATION} AS c ON ` +
+      `c.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}`;
   }
 
   /* MAPPERS */
@@ -47,7 +52,12 @@ export class SqlService {
               brand: data.rows.item(i).brand,
               year: data.rows.item(i).year,
               km: Number(data.rows.item(i).km),
-              configuration: new ConfigurationModel(data.rows.item(i).name)
+              configuration: new ConfigurationModel(
+                          data.rows.item(i).name,
+                          data.rows.item(i).description,
+                          data.rows.item(i).idConfiguration
+              ),
+              kmsPerMonth: data.rows.item(i).kmsPerMonth
             }];
           }
         }
@@ -76,22 +86,17 @@ export class SqlService {
     return `INSERT INTO ${ConstantsTable.TABLE_MTM_MOTO} ` +
     `(${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}) ` +
+    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}) ` +
     `VALUES (?, ?, ?, ?, ?)`;
   }
 
   /* UPDATES SQL */
 
   updateSqlMoto(): string {
-    // return `UPDATE ${ConstantsTable.TABLE_MTM_MOTO} SET ` +
-    // `(${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
-    // `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
-    // `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}) = ('?', '?', '?', '?', ?) ` +
-    // `WHERE ${ConstantsColumns.COLUMN_MTM_ID}='?'`;
     return `UPDATE ${ConstantsTable.TABLE_MTM_MOTO} ` +
     `SET ${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}=?, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}=?, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=? ` +
+    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=? ` +
     `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?;`;
   }
 }

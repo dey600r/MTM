@@ -1,0 +1,22 @@
+{
+    "SAVE": "Guardar",
+    "HOME": "Inicio",
+    "MOTORBIKE": "Moto",
+    "BRAND": "Marca",
+    "MODEL": "Modelo",
+    "YEAR": "Año",
+    "KM": "Kilometros",
+    "CONFIGURATION": "Configuración",
+    "KM_PER_MONTH": "Kms por mes",
+    "YOURS_MOTORBIKES": "Tus Motos",
+    "AddNewMoto": "Añadir nueva moto",
+    "EditMoto": "Editar moto",
+    "AddBrand": "Añada la marca",
+    "AddModel": "Añada el modelo",
+    "AddYear": "Añada el año",
+    "AddKm": "Añada los kms",
+    "AddConfiguration": "Añada la configuración",
+    "AddKmsPerMonth": "Añada los km por mes",
+    "AddSaveMoto": "La moto {{moto}} ha sido añadida correctamente",
+    "EditSaveMoto": "La moto {{moto}} ha sido modificada correctamente"
+}

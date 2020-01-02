@@ -29,6 +29,8 @@
     "@ionic-native/sqlite-porter": "^5.18.0",
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.7.1",
+    "@ngx-translate/core": "^11.0.1",
+    "@ngx-translate/http-loader": "^4.0.0",
     "caniuse-lite": "^1.0.30001016",
     "cordova-android": "^8.1.0",
     "cordova-sqlite-storage": "^4.0.0",

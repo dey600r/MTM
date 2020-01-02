@@ -25,7 +25,6 @@
       "@models/*": ["src/app/core/models/*"],
       "@utils/*": ["src/app/core/utils/*"],
       "@shared/*": ["src/app/shared/*"],
-      "@modules/*": ["src/app/shared/modules/*"],
       "@modals/*": ["src/app/shared/modals/*"],
       "@pages/*": ["src/app/pages/*"]
     }
