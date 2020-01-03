@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { MotoModel, ConfigurationModel } from '@models/index';
 
-import { ConstantsTable, ActionDB } from '@utils/index';
+import { ConstantsTable } from '@utils/index';
 
 import { SqlService } from './sql.service';
 
@@ -97,78 +97,10 @@ export class DataBaseService {
     }
   }
 
-  saveMoto(moto: MotoModel, action: ActionDB) {
-    let sqlDB: string;
-    let dataDB: any[];
-    switch (action) {
-      case ActionDB.create:
-        sqlDB = this.sqlService.insertSqlMoto();
-        dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth];
-        break;
-      case ActionDB.update:
-        sqlDB = this.sqlService.updateSqlMoto();
-        dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth, moto.id];
-        break;
-      case ActionDB.delete:
-        sqlDB = '';
-        break;
-    }
+  executeSqlDataBase(sqlDB: string, dataDB: any[]): Promise<any> {
     return this.database.executeSql(sqlDB, dataDB).then(data => {
-            this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
-      }).catch(e => console.error(`Error saving moto: ${e.message}`));
+      this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
+    }).catch(e => console.error(`Error saving moto: ${e.message}`));
   }
 
-  // getMoto(id: string): Promise<MotoModel> {
-  //   return this.database.executeSql('SELECT * FROM mtmMoto WHERE id = ?', [id]).then(data => {
-  //     let skills = [];
-  //     if (data.rows.item(0).skills !== '') {
-  //       skills = JSON.parse(data.rows.item(0).skills);
-  //     }
-
-  //     return {
-  //       id: data.rows.item(0).id,
-  //       model: data.rows.item(0).model,
-  //       brand: data.rows.item(0).brand,
-  //       year: data.rows.item(0).year
-  //      };
-  //   });
-  // }
-
-  // deleteDeveloper(id) {
-  //   return this.database.executeSql('DELETE FROM developer WHERE id = ?', [id]).then(_ => {
-  //     this.loadDevelopers();
-  //     this.loadProducts();
-  //   });
-  // }
-
-  // updateDeveloper(dev: Dev) {
-  //   let data = [dev.name, JSON.stringify(dev.skills), dev.img];
-  //   return this.database.executeSql(`UPDATE developer SET name = ?, skills = ?, img = ? WHERE id = ${dev.id}`, data).then(data => {
-  //     this.loadDevelopers();
-  //   })
-  // }
-
-  // loadProducts() {
-  //   let query = 'SELECT product.name, product.id, developer.name AS creator FROM product JOIN developer ON developer.id = product.creatorId';
-  //   return this.database.executeSql(query, []).then(data => {
-  //     let products = [];
-  //     if (data.rows.length > 0) {
-  //       for (var i = 0; i < data.rows.length; i++) {
-  //         products.push({ 
-  //           name: data.rows.item(i).name,
-  //           id: data.rows.item(i).id,
-  //           creator: data.rows.item(i).creator,
-  //          });
-  //       }
-  //     }
-  //     this.products.next(products);
-  //   });
-  // }
- 
-  // addProduct(name, creator) {
-  //   let data = [name, creator];
-  //   return this.database.executeSql('INSERT INTO product (name, creatorId) VALUES (?, ?)', data).then(data => {
-  //     this.loadProducts();
-  //   });
-  // }
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel } from '@models/index';
-import { DataBaseService } from '@services/index';
+import { DataBaseService, MotoService } from '@services/index';
 import { Form } from '@angular/forms';
-import { ActionDB } from '@app/core/utils';
+import { ActionDB, Constants } from '@app/core/utils';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -27,7 +27,8 @@ export class AddEditMotoComponent implements OnInit {
     private navParams: NavParams,
     private dbService: DataBaseService,
     private toastController: ToastController,
-    private translator: TranslateService
+    private translator: TranslateService,
+    private motoService: MotoService
   ) { }
 
   ngOnInit() {
@@ -44,7 +45,7 @@ export class AddEditMotoComponent implements OnInit {
   saveData(f: Form) {
     this.submited = true;
     if (this.isValidForm(f)) {
-      this.dbService.saveMoto(this.moto, (this.modalInputModel.data.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+      this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
         this.closeModal();
         this.showSaveToast();
       });
@@ -58,10 +59,10 @@ export class AddEditMotoComponent implements OnInit {
 
   async showSaveToast() {
     const toast = await this.toastController.create({
-      message: (this.modalInputModel.data.isCreate ?
+      message: (this.modalInputModel.isCreate ?
                 this.translator.instant('AddSaveMoto', { moto: this.moto.model }) :
                 this.translator.instant('EditSaveMoto', { moto: this.moto.model })),
-      duration: 2000
+      duration: Constants.DELAY_TOAST
     });
     toast.present();
   }

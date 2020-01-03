@@ -87,7 +87,7 @@ export class SqlService {
     `(${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}) ` +
-    `VALUES (?, ?, ?, ?, ?)`;
+    `VALUES (?, ?, ?, ?, ?, ?)`;
   }
 
   /* UPDATES SQL */
@@ -98,5 +98,11 @@ export class SqlService {
     `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}=?, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=? ` +
     `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?;`;
+  }
+
+  /* DELETES SQL */
+
+  deleteSql(table: string, column: string): string {
+    return `DELETE FROM ${table} WHERE ${column}=?`;
   }
 }

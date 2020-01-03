@@ -1,6 +1,9 @@
 {
     "SAVE": "Save",
+    "ACEPTAR": "Accept",
+    "CANCEL": "Cancel",
     "HOME": "Home",
+    "OPERATION": "Operation",
     "MOTORBIKE": "Motorbike",
     "BRAND": "Brand",
     "MODEL": "Model",
@@ -18,5 +21,8 @@
     "AddConfiguration": "Add Configuration",
     "AddKmsPerMonth": "Add kms per Month",
     "AddSaveMoto": "The motorbike {{moto}} has been added succesfully",
-    "EditSaveMoto": "The motorbike {{moto}} has been modified succesfully"
+    "EditSaveMoto": "The motorbike {{moto}} has been modified succesfully",
+    "DeleteSaveMoto": "The motorbike {{moto}} has been deleted succesfully",
+    "ConfirmDeleteMoto": "The motorbike {{moto}} will be deleted. Do you wish continue?",
+    "ConfirmDeleteMotoOperation": "The motorbike {{moto}} and operations will be deleted. Do you wish continue?"
 }

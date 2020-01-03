@@ -1,6 +1,9 @@
 {
     "SAVE": "Guardar",
+    "ACEPTAR": "Aceptar",
+    "CANCEL": "Cancelar",
     "HOME": "Inicio",
+    "OPERATION": "Operación",
     "MOTORBIKE": "Moto",
     "BRAND": "Marca",
     "MODEL": "Modelo",
@@ -18,5 +21,8 @@
     "AddConfiguration": "Añada la configuración",
     "AddKmsPerMonth": "Añada los km por mes",
     "AddSaveMoto": "La moto {{moto}} ha sido añadida correctamente",
-    "EditSaveMoto": "La moto {{moto}} ha sido modificada correctamente"
+    "EditSaveMoto": "La moto {{moto}} ha sido modificada correctamente",
+    "DeleteSaveMoto": "La moto {{moto}} ha sido borrada correctamente",
+    "ConfirmDeleteMoto": "La moto {{moto}} se va a borrar. ¿Desea continuar?",
+    "ConfirmDeleteMotoOperation": "La moto {{moto}} y sus operaciones se van a borrar. ¿Desea continuar?"
 }
