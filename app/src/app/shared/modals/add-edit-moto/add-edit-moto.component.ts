@@ -35,7 +35,7 @@ export class AddEditMotoComponent implements OnInit {
 
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList);
-    this.moto = this.modalInputModel.data;
+    this.moto = Object.assign({}, this.modalInputModel.data);
 
     this.dbService.getConfigurations().subscribe(x => {
       this.configurations = x;
@@ -45,6 +45,11 @@ export class AddEditMotoComponent implements OnInit {
   saveData(f: Form) {
     this.submited = true;
     if (this.isValidForm(f)) {
+      // Save date to change km to calculate maintenance
+      if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.moto.km) {
+        this.moto.dateKms = new Date();
+      }
+
       this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
         this.closeModal();
         this.showSaveToast();

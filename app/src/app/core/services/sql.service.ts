@@ -31,6 +31,7 @@ export class SqlService {
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, m.${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, m.${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, m.${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
+      `m.${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}, ` +
       `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME}, c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} ` +
       `FROM ${ConstantsTable.TABLE_MTM_MOTO} AS m ` +
       `JOIN ${ConstantsTable.TABLE_MTM_CONFIGURATION} AS c ON ` +
@@ -57,7 +58,8 @@ export class SqlService {
                           data.rows.item(i).description,
                           data.rows.item(i).idConfiguration
               ),
-              kmsPerMonth: data.rows.item(i).kmsPerMonth
+              kmsPerMonth: data.rows.item(i).kmsPerMonth,
+              dateKms: data.rows.item(i).dateKms
             }];
           }
         }
@@ -86,8 +88,9 @@ export class SqlService {
     return `INSERT INTO ${ConstantsTable.TABLE_MTM_MOTO} ` +
     `(${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}) ` +
-    `VALUES (?, ?, ?, ?, ?, ?)`;
+    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
+    `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}) ` +
+    `VALUES (?, ?, ?, ?, ?, ?, ?)`;
   }
 
   /* UPDATES SQL */
@@ -96,7 +99,8 @@ export class SqlService {
     return `UPDATE ${ConstantsTable.TABLE_MTM_MOTO} ` +
     `SET ${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}=?, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}=?, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=? ` +
+    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=?, ` +
+    `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}=? ` +
     `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?;`;
   }
 

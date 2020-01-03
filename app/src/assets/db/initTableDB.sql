@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS "mtmMoto" (
 	"km"	INTEGER NOT NULL,
 	"idConfiguration"	INTEGER NOT NULL,
 	"kmsPerMonth"	INTEGER NOT NULL,
+	"dateKms"	TEXT NOT NULL,
 	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id")
 );
 CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
@@ -68,8 +69,8 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
 );
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth") VALUES (1,'R6','Yamaha',2005,85300,2,150);
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth") VALUES (2,'GT 125 R','Hyosung',2006,75600,1,30);
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (1,'R6','Yamaha',2005,85300,2,150,'01/12/2019');
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (2,'GT 125 R','Hyosung',2006,75600,1,30,'01/12/2019');
 INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (1,1,2,30000,48,'N','Y');
 INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (2,6,2,25000,24,'N','N');
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (1,1,1);
