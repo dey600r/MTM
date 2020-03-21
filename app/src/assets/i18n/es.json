@@ -24,5 +24,6 @@
     "EditSaveMoto": "La moto {{moto}} ha sido modificada correctamente",
     "DeleteSaveMoto": "La moto {{moto}} ha sido borrada correctamente",
     "ConfirmDeleteMoto": "La moto {{moto}} se va a borrar. ¿Desea continuar?",
-    "ConfirmDeleteMotoOperation": "La moto {{moto}} y sus operaciones se van a borrar. ¿Desea continuar?"
+    "ConfirmDeleteMotoOperation": "La moto {{moto}} y sus operaciones se van a borrar. ¿Desea continuar?",
+    "YOURS_OPERATIONS": "Operaciones de la moto"
 }

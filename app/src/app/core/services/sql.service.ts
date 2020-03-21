@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { MotoModel, ConfigurationModel } from '@models/index';
+import { MotoModel, ConfigurationModel, OperationModel, OperationTypeModel } from '@models/index';
 
 import { ConstantsTable, ConstantsColumns } from '@utils/index';
 
@@ -20,6 +20,9 @@ export class SqlService {
         case ConstantsTable.TABLE_MTM_MOTO:
             sql = this.getSqlMoto();
             break;
+        case ConstantsTable.TABLE_MTM_OPERATION:
+            sql = this.getSqlOperation();
+            break;
         default:
             sql = `SELECT * FROM ${table}`;
       }
@@ -37,6 +40,19 @@ export class SqlService {
       `JOIN ${ConstantsTable.TABLE_MTM_CONFIGURATION} AS c ON ` +
       `c.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}`;
   }
+
+  getSqlOperation(): string {
+    return `SELECT op.${ConstantsColumns.COLUMN_MTM_ID}, ` +
+    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}, ` +
+    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
+    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
+    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, ` + `op.${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
+    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}, ` +
+    `opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE}, opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION} ` +
+    `FROM ${ConstantsTable.TABLE_MTM_OPERATION} AS op ` +
+    `JOIN ${ConstantsTable.TABLE_MTM_OPERATION_TYPE} AS opt ON ` +
+    `opt.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}`;
+}
 
   /* MAPPERS */
 
@@ -78,6 +94,44 @@ export class SqlService {
         }
         result = configurationDB;
         break;
+      case ConstantsTable.TABLE_MTM_OPERATION:
+            let operationsDB: OperationModel[] = [];
+            if (data.rows.length > 0) {
+              for (let i = 0; i < data.rows.length; i++) {
+                operationsDB = [...operationsDB, {
+                  id: Number(data.rows.item(i).id),
+                  description: data.rows.item(i).description,
+                  details: data.rows.item(i).details,
+                  operationType: new OperationTypeModel(
+                              data.rows.item(i).code,
+                              data.rows.item(i).description,
+                              data.rows.item(i).idOperationType
+                  ),
+                  moto: new MotoModel(null, null, null, null, null, null, null, data.rows.item(i).idMoto),
+                  km: data.rows.item(i).km,
+                  date: data.rows.item(i).date,
+                  location: data.rows.item(i).location,
+                  owner: data.rows.item(i).owner,
+                  price: data.rows.item(i).price,
+                  document: data.rows.item(i).document
+                }];
+              }
+            }
+            result = operationsDB;
+            break;
+          case ConstantsTable.TABLE_MTM_OPERATION_TYPE:
+            let operationTypeDB: OperationTypeModel[] = [];
+            if (data.rows.length > 0) {
+              for (let i = 0; i < data.rows.length; i++) {
+                operationTypeDB = [...operationTypeDB, {
+                  id: Number(data.rows.item(i).id),
+                  code: data.rows.item(i).code,
+                  description: data.rows.item(i).description
+                }];
+              }
+            }
+            result = operationTypeDB;
+            break;
     }
     return result;
   }

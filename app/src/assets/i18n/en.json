@@ -24,5 +24,6 @@
     "EditSaveMoto": "The motorbike {{moto}} has been modified succesfully",
     "DeleteSaveMoto": "The motorbike {{moto}} has been deleted succesfully",
     "ConfirmDeleteMoto": "The motorbike {{moto}} will be deleted. Do you wish continue?",
-    "ConfirmDeleteMotoOperation": "The motorbike {{moto}} and operations will be deleted. Do you wish continue?"
+    "ConfirmDeleteMotoOperation": "The motorbike {{moto}} and operations will be deleted. Do you wish continue?",
+    "YOURS_OPERATIONS": "Motorbike's Operations"
 }

@@ -5,11 +5,13 @@ import { HttpClient } from '@angular/common/http';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { MotoModel, ConfigurationModel } from '@models/index';
+import { MotoModel, ConfigurationModel, OperationModel } from '@models/index';
 
 import { ConstantsTable } from '@utils/index';
 
 import { SqlService } from './sql.service';
+import { MotoService } from './moto.service';
+import { OperationService } from './operation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,7 @@ export class DataBaseService {
 
   motos = new BehaviorSubject([]);
   configuration = new BehaviorSubject([]);
+  operation = new BehaviorSubject([]);
   constructor(private plt: Platform,
               private sqlitePorter: SQLitePorter,
               private sqlite: SQLite,
@@ -75,9 +78,14 @@ export class DataBaseService {
     return this.configuration.asObservable();
   }
 
+  getOperations(): Observable<OperationModel[]> {
+    return this.operation.asObservable();
+  }
+
   loadAllTables() {
     this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
     this.loadAllDataTable(ConstantsTable.TABLE_MTM_CONFIGURATION);
+    this.loadAllDataTable(ConstantsTable.TABLE_MTM_OPERATION);
   }
 
   loadAllDataTable(table: string) {
@@ -93,6 +101,9 @@ export class DataBaseService {
         break;
       case ConstantsTable.TABLE_MTM_CONFIGURATION:
         this.configuration.next(this.sqlService.mapDataToObserver(table, data));
+        break;
+      case ConstantsTable.TABLE_MTM_OPERATION:
+        this.operation.next(this.sqlService.mapDataToObserver(table, data));
         break;
     }
   }

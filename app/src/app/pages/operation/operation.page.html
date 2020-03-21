@@ -1,10 +1,30 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Operacion
+      <ion-title class="align-center">{{ 'OPERATION' | translate }}</ion-title>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen>
+  <ion-list>
+    <ion-list-header>
+      <ion-icon size="large" name="construct"></ion-icon>
+      <h3 class="header-list">{{ 'YOURS_OPERATIONS' | translate }} {{ operations[0].idMoto }}</h3>
+      <ion-button fill="clear" (click)="openCreateOperationModal()">
+        <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+
+    <ion-item button *ngFor="let op of operations">
+      <ion-avatar slot="start">
+        <ion-icon size="large" name="hammer"></ion-icon>
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ op.description }}</h2>
+        <h3>{{ op.details }}</h3>
+        <p>{{ op.operationType.code }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>
