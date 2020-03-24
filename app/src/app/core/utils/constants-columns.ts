@@ -29,4 +29,12 @@ export class ConstantsColumns {
     static COLUMN_MTM_OPERATION_OWNER = 'owner';
     static COLUMN_MTM_OPERATION_PRICE = 'price';
     static COLUMN_MTM_OPERATION_DOCUMENT = 'document';
+
+    // OPERATION MAINTENANCE ELEMENT
+    static COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION = 'idOperation';
+    static COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT = 'idMaintenanceElement';
+
+    // MAINTENANCE ELEMENT
+    static COLUMN_MTM_MAINTENANCE_ELEMENT_NAME = 'name';
+    static COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION = 'description';
 }

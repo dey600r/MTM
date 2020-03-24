@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DataBaseService, MotoService, CommonService } from '@services/index';
+import { DataBaseService, MotoService, CommonService, OperationService } from '@services/index';
 import { MotoModel, ModalInputModel, ModalOutputModel } from '@models/index';
 import { ModalController, Platform, AlertController, ToastController } from '@ionic/angular';
 
@@ -26,7 +26,8 @@ export class MotoPage implements OnInit, OnChanges {
               private alertController: AlertController,
               private toastController: ToastController,
               private motoService: MotoService,
-              private commonService: CommonService) {
+              private commonService: CommonService,
+              private operationService: OperationService) {
       this.platform.ready().then(() => {
         let userLang = navigator.language.split('-')[0];
         userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -58,6 +59,10 @@ export class MotoPage implements OnInit, OnChanges {
   deleteMoto(row: MotoModel) {
     this.rowSelected = row;
     this.showConfirmDelete();
+  }
+
+  changeFilterOperation(idMoto: number) {
+    this.operationService.setSearchOperation(new MotoModel(null, null, null, null, null, null, null, idMoto));
   }
 
   async openModal() {

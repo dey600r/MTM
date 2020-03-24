@@ -26,6 +26,7 @@
       "@utils/*": ["src/app/core/utils/*"],
       "@shared/*": ["src/app/shared/*"],
       "@modals/*": ["src/app/shared/modals/*"],
+      "@popover/*": ["src/app/shared/popover/*"],
       "@pages/*": ["src/app/pages/*"]
     }
   },

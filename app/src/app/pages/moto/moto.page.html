@@ -14,12 +14,12 @@
       </ion-button>
     </ion-list-header>
     <ion-item button *ngFor="let m of motos">
-      <ion-label routerLink="/tabs/operationTab" routerDirection="root">
+      <ion-label routerLink="/tabs/operationTab" routerDirection="root" (click)="changeFilterOperation(m.id)">
         <h2>{{ m.brand }}</h2>
         <h3>{{ m.model }}</h3>
         <p>{{ m.year }}</p>
       </ion-label>
-      <ion-label routerLink="/tabs/operationTab" routerDirection="root">
+      <ion-label routerLink="/tabs/operationTab" routerDirection="root" (click)="changeFilterOperation(m.id)">
         <h3>{{ m.km }} km</h3>
         <ion-label class="row-block flex-items-center">
           <ion-icon name="cog"></ion-icon>

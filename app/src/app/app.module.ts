@@ -22,12 +22,13 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 
 import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
+import { SearchOperationPopOverComponent } from '@popover/search-operation-popover/search-operation-popover.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
-  declarations: [AppComponent, AddEditMotoComponent],
-  entryComponents: [AddEditMotoComponent],
+  declarations: [AppComponent, AddEditMotoComponent, SearchOperationPopOverComponent],
+  entryComponents: [AddEditMotoComponent, SearchOperationPopOverComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

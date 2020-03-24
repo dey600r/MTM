@@ -1,6 +1,7 @@
 import { BaseModel } from './common.model';
 import { OperationTypeModel } from './operation-type.model';
 import { MotoModel } from './moto.model';
+import { MaintenanceElementModel } from './maintenance-element.model';
 
 export class OperationModel extends BaseModel {
     description: string;
@@ -13,9 +14,11 @@ export class OperationModel extends BaseModel {
     owner: string;
     price: number;
     document: string;
+    listMaintenanceElement: MaintenanceElementModel[];
     constructor(desc: string = null, det: string = null, opt: OperationTypeModel = new OperationTypeModel(),
                 m: MotoModel = new MotoModel(), k: number = null, d: Date = new Date(), l: string = null,
-                o: string = null, p: number = null, doc: string = null, id: number = 1) {
+                o: string = null, p: number = null, doc: string = null, id: number = 1,
+                listME: MaintenanceElementModel[] = []) {
         super(id);
         this.description = desc;
         this.details = det;

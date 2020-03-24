@@ -3,6 +3,9 @@
     <ion-title>
       <ion-title class="align-center">{{ 'OPERATION' | translate }}</ion-title>
     </ion-title>
+    <ion-button slot="end" fill="clear" (click)="presentPopover()">
+      <ion-icon name="ellipsis-horizontal"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -10,7 +13,7 @@
   <ion-list>
     <ion-list-header>
       <ion-icon size="large" name="construct"></ion-icon>
-      <h3 class="header-list">{{ 'YOURS_OPERATIONS' | translate }} {{ operations[0].idMoto }}</h3>
+      <h3 class="header-list">{{ 'YOURS_OPERATIONS' | translate }}</h3>
       <ion-button fill="clear" (click)="openCreateOperationModal()">
         <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
       </ion-button>

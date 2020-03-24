@@ -5,6 +5,8 @@
     "HOME": "Inicio",
     "OPERATION": "Operación",
     "MOTORBIKE": "Moto",
+    "MOTORBIKES": "Motos",
+    "SEARCHER": "Buscador",
     "BRAND": "Marca",
     "MODEL": "Modelo",
     "YEAR": "Año",
@@ -25,5 +27,8 @@
     "DeleteSaveMoto": "La moto {{moto}} ha sido borrada correctamente",
     "ConfirmDeleteMoto": "La moto {{moto}} se va a borrar. ¿Desea continuar?",
     "ConfirmDeleteMotoOperation": "La moto {{moto}} y sus operaciones se van a borrar. ¿Desea continuar?",
-    "YOURS_OPERATIONS": "Operaciones de la moto"
+    "YOURS_OPERATIONS": "Operaciones de la moto",
+    "OPERATION_TYPE": "Tipo de operación",
+    "OP_TYPE": "Tipo de op",
+    "REPLACEMENT": "Recambio"
 }

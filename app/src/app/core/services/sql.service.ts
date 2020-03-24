@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { MotoModel, ConfigurationModel, OperationModel, OperationTypeModel } from '@models/index';
+import { MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel } from '@models/index';
 
 import { ConstantsTable, ConstantsColumns } from '@utils/index';
 
@@ -48,10 +48,16 @@ export class SqlService {
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, ` + `op.${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}, ` +
-    `opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE}, opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION} ` +
+    `opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE}, opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION}, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME}, me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} ` +
     `FROM ${ConstantsTable.TABLE_MTM_OPERATION} AS op ` +
     `JOIN ${ConstantsTable.TABLE_MTM_OPERATION_TYPE} AS opt ON ` +
-    `opt.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}`;
+    `opt.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE} ` +
+    `JOIN ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} AS ome ON ` +
+    `ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION} = op.${ConstantsColumns.COLUMN_MTM_ID} ` +
+    `JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
+    `me.${ConstantsColumns.COLUMN_MTM_ID} = ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT}`;
 }
 
   /* MAPPERS */
@@ -60,80 +66,118 @@ export class SqlService {
     let result: any;
     switch (table) {
       case ConstantsTable.TABLE_MTM_MOTO:
-        let motosDB: MotoModel[] = [];
-        if (data.rows.length > 0) {
-          for (let i = 0; i < data.rows.length; i++) {
-            motosDB = [...motosDB, {
-              id: Number(data.rows.item(i).id),
-              model: data.rows.item(i).model,
-              brand: data.rows.item(i).brand,
-              year: data.rows.item(i).year,
-              km: Number(data.rows.item(i).km),
-              configuration: new ConfigurationModel(
-                          data.rows.item(i).name,
-                          data.rows.item(i).description,
-                          data.rows.item(i).idConfiguration
-              ),
-              kmsPerMonth: data.rows.item(i).kmsPerMonth,
-              dateKms: data.rows.item(i).dateKms
-            }];
-          }
-        }
-        result = motosDB;
+        result = this.mapMoto(data);
         break;
       case ConstantsTable.TABLE_MTM_CONFIGURATION:
-        let configurationDB: ConfigurationModel[] = [];
-        if (data.rows.length > 0) {
-          for (let i = 0; i < data.rows.length; i++) {
-            configurationDB = [...configurationDB, {
-              id: Number(data.rows.item(i).id),
-              name: data.rows.item(i).name,
-              description: data.rows.item(i).description
-            }];
-          }
-        }
-        result = configurationDB;
+        result = this.mapConfiguration(data);
         break;
       case ConstantsTable.TABLE_MTM_OPERATION:
-            let operationsDB: OperationModel[] = [];
-            if (data.rows.length > 0) {
-              for (let i = 0; i < data.rows.length; i++) {
-                operationsDB = [...operationsDB, {
-                  id: Number(data.rows.item(i).id),
-                  description: data.rows.item(i).description,
-                  details: data.rows.item(i).details,
-                  operationType: new OperationTypeModel(
-                              data.rows.item(i).code,
-                              data.rows.item(i).description,
-                              data.rows.item(i).idOperationType
-                  ),
-                  moto: new MotoModel(null, null, null, null, null, null, null, data.rows.item(i).idMoto),
-                  km: data.rows.item(i).km,
-                  date: data.rows.item(i).date,
-                  location: data.rows.item(i).location,
-                  owner: data.rows.item(i).owner,
-                  price: data.rows.item(i).price,
-                  document: data.rows.item(i).document
-                }];
-              }
-            }
-            result = operationsDB;
-            break;
-          case ConstantsTable.TABLE_MTM_OPERATION_TYPE:
-            let operationTypeDB: OperationTypeModel[] = [];
-            if (data.rows.length > 0) {
-              for (let i = 0; i < data.rows.length; i++) {
-                operationTypeDB = [...operationTypeDB, {
-                  id: Number(data.rows.item(i).id),
-                  code: data.rows.item(i).code,
-                  description: data.rows.item(i).description
-                }];
-              }
-            }
-            result = operationTypeDB;
-            break;
+        result = this.mapOperation(data);
+        break;
+      case ConstantsTable.TABLE_MTM_OPERATION_TYPE:
+        result = this.mapOperationType(data);
+        break;
+      case ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT:
+        result = this.mapMaintenanceElement(data);
+        break;
     }
     return result;
+  }
+
+  mapMoto(data: any): any {
+    let motosDB: MotoModel[] = [];
+    if (data.rows.length > 0) {
+      for (let i = 0; i < data.rows.length; i++) {
+        motosDB = [...motosDB, {
+          id: Number(data.rows.item(i).id),
+          model: data.rows.item(i).model,
+          brand: data.rows.item(i).brand,
+          year: data.rows.item(i).year,
+          km: Number(data.rows.item(i).km),
+          configuration: new ConfigurationModel(
+                      data.rows.item(i).name,
+                      data.rows.item(i).description,
+                      data.rows.item(i).idConfiguration
+          ),
+          kmsPerMonth: data.rows.item(i).kmsPerMonth,
+          dateKms: data.rows.item(i).dateKms
+        }];
+      }
+    }
+    return motosDB;
+  }
+
+  mapConfiguration(data: any): any {
+    let configurationDB: ConfigurationModel[] = [];
+    if (data.rows.length > 0) {
+      for (let i = 0; i < data.rows.length; i++) {
+          configurationDB = [...configurationDB, {
+            id: Number(data.rows.item(i).id),
+            name: data.rows.item(i).name,
+            description: data.rows.item(i).description
+          }];
+        }
+    }
+    return configurationDB;
+  }
+
+  mapOperation(data: any): any {
+    let operationsDB: OperationModel[] = [];
+    if (data.rows.length > 0) {
+      for (let i = 0; i < data.rows.length; i++) {
+        operationsDB = [...operationsDB, {
+          id: Number(data.rows.item(i).id),
+          description: data.rows.item(i).description,
+          details: data.rows.item(i).details,
+          operationType: new OperationTypeModel(
+                      data.rows.item(i).code,
+                      data.rows.item(i).description,
+                      data.rows.item(i).idOperationType
+          ),
+          moto: new MotoModel(null, null, null, null, null, null, null, data.rows.item(i).idMoto),
+          km: data.rows.item(i).km,
+          date: data.rows.item(i).date,
+          location: data.rows.item(i).location,
+          owner: data.rows.item(i).owner,
+          price: data.rows.item(i).price,
+          document: data.rows.item(i).document,
+          listMaintenanceElement: [new MaintenanceElementModel(
+            data.rows.item(i).name,
+            data.rows.item(i).description,
+            data.rows.item(i).idMaintenanceElement
+          )]
+        }];
+      }
+    }
+    return operationsDB;
+  }
+
+  mapOperationType(data: any): any {
+    let operationTypeDB: OperationTypeModel[] = [];
+    if (data.rows.length > 0) {
+      for (let i = 0; i < data.rows.length; i++) {
+        operationTypeDB = [...operationTypeDB, {
+          id: Number(data.rows.item(i).id),
+          code: data.rows.item(i).code,
+          description: data.rows.item(i).description
+        }];
+      }
+    }
+    return operationTypeDB;
+  }
+
+  mapMaintenanceElement(data: any): any {
+    let maintenanceElementDB: MaintenanceElementModel[] = [];
+    if (data.rows.length > 0) {
+      for (let i = 0; i < data.rows.length; i++) {
+        maintenanceElementDB = [...maintenanceElementDB, {
+          id: Number(data.rows.item(i).id),
+          name: data.rows.item(i).name,
+          description: data.rows.item(i).description
+        }];
+      }
+    }
+    return maintenanceElementDB;
   }
 
   /* INSERTS SQL */
