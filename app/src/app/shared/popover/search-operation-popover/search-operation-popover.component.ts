@@ -3,6 +3,7 @@ import { PopoverController } from '@ionic/angular';
 import { DataBaseService, CommonService, OperationService } from '@services/index';
 import { MotoModel, SearchOperationModel, OperationTypeModel, MaintenanceElementModel } from '@models/index';
 import { ConstantsColumns } from '@utils/index';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-search-operation-popover',
@@ -19,10 +20,19 @@ import { ConstantsColumns } from '@utils/index';
     filterOpType: number[] = [];
     filterMaintElement: number[] = [];
 
-    constructor(public popoverController: PopoverController,
-                public dbService: DataBaseService,
-                public commonService: CommonService,
-                public operationService: OperationService) {
+    // translate
+    translateAccept = '';
+    translateCancel = '';
+    translateSelect = '';
+
+    constructor(private popoverController: PopoverController,
+                private dbService: DataBaseService,
+                private commonService: CommonService,
+                private operationService: OperationService,
+                private translator: TranslateService) {
+      this.translateAccept = this.translator.instant('ACCEPT');
+      this.translateCancel = this.translator.instant('CANCEL');
+      this.translateSelect = this.translator.instant('SELECT');
       this.searchOperation = this.operationService.getSearchOperation();
       this.filterMoto = this.searchOperation.searchMoto.id;
       this.filterOpType = this.searchOperation.searchOperationType.map(x => x.id);

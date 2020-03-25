@@ -34,7 +34,9 @@ export class OperationService {
 
     saveOperation(op: OperationModel, action: ActionDB) {
         let sqlDB: string;
-        let dataDB: any[];
+        const dataDB: any[] = [];
+        const listLoadTable: string[] = this.getTablesRefreshDeleteOperation();
+        let scriptDB = false;
         switch (action) {
             case ActionDB.create:
                 sqlDB = this.sqlService.insertSqlMoto();
@@ -45,10 +47,27 @@ export class OperationService {
                 // dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth, moto.dateKms, moto.id];
                 break;
             case ActionDB.delete:
-                sqlDB = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION, ConstantsColumns.COLUMN_MTM_ID);
-                dataDB = [op.id];
+                sqlDB = this.getSqlDeleteOperation([op]);
+                scriptDB = true;
                 break;
         }
-        return this.dbService.executeSqlDataBase(sqlDB, dataDB);
+        return (scriptDB ? this.dbService.executeScriptDataBase(sqlDB, listLoadTable) :
+            this.dbService.executeSqlDataBase(sqlDB, dataDB, listLoadTable));
+    }
+
+    getSqlDeleteOperation(operation: OperationModel[] = []): string {
+        let sqlDB = '';
+        if (!!operation && operation.length > 0) {
+            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
+                ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION, operation.length,
+                operation.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
+            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION,
+                ConstantsColumns.COLUMN_MTM_OPERATION_MOTO, 1, [operation[0].moto.id]); // DELETE OPERATION
+        }
+        return sqlDB;
+    }
+
+    getTablesRefreshDeleteOperation() {
+        return [ConstantsTable.TABLE_MTM_OPERATION];
     }
 }

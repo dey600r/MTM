@@ -94,11 +94,21 @@ export class DataBaseService {
   }
 
   loadAllTables() {
-    this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
-    this.loadAllDataTable(ConstantsTable.TABLE_MTM_CONFIGURATION);
-    this.loadAllDataTable(ConstantsTable.TABLE_MTM_OPERATION);
-    this.loadAllDataTable(ConstantsTable.TABLE_MTM_OPERATION_TYPE);
-    this.loadAllDataTable(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT);
+    this.loadListTables([
+      ConstantsTable.TABLE_MTM_MOTO,
+      ConstantsTable.TABLE_MTM_CONFIGURATION,
+      ConstantsTable.TABLE_MTM_OPERATION,
+      ConstantsTable.TABLE_MTM_OPERATION_TYPE,
+      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT
+    ]);
+  }
+
+  loadListTables(list: string []) {
+    if (!!list && list.length > 0) {
+      list.forEach(x => {
+        this.loadAllDataTable(x);
+      });
+    }
   }
 
   loadAllDataTable(table: string) {
@@ -127,10 +137,24 @@ export class DataBaseService {
     }
   }
 
-  executeSqlDataBase(sqlDB: string, dataDB: any[]): Promise<any> {
+  executeSqlDataBase(sqlDB: string, dataDB: any[], list: string[] = []): Promise<any> {
     return this.database.executeSql(sqlDB, dataDB).then(data => {
-      this.loadAllDataTable(ConstantsTable.TABLE_MTM_MOTO);
-    }).catch(e => console.error(`Error saving moto: ${e.message}`));
+      this.loadListTables(list);
+    }).catch(e => {
+      console.error(`Error executing sql on DB: ${e.message}`);
+      throw new Error(`Error executing sql on DB: ${e.message}`);
+    });
+  }
+
+  executeScriptDataBase(sqlDB: string, list: string[] = []): Promise<any> {
+    return this.sqlitePorter.importSqlToDb(this.database, sqlDB).then(result => {
+      this.loadListTables(list);
+    })
+    // tslint:disable-next-line: no-shadowed-variable
+    .catch(e => {
+      console.error(`Error executing script on DB: ${e.message}`);
+      throw new Error(`Error executing script on DB: ${e.message}`);
+    });
   }
 
 }

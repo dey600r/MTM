@@ -52,7 +52,13 @@ export class AddEditMotoComponent implements OnInit {
 
       this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
         this.closeModal();
-        this.showSaveToast();
+        if (this.modalInputModel.isCreate) {
+          this.showSaveToast('AddSaveMoto', { moto: this.moto.model });
+        } else {
+          this.showSaveToast('EditSaveMoto', { moto: this.moto.model });
+        }
+      }).catch(e => {
+        this.showSaveToast('ErrorSaveMoto');
       });
     }
   }
@@ -62,11 +68,9 @@ export class AddEditMotoComponent implements OnInit {
     await this.modalController.dismiss(this.modalOutputModel);
   }
 
-  async showSaveToast() {
+  async showSaveToast(msg: string, data: any = null) {
     const toast = await this.toastController.create({
-      message: (this.modalInputModel.isCreate ?
-                this.translator.instant('AddSaveMoto', { moto: this.moto.model }) :
-                this.translator.instant('EditSaveMoto', { moto: this.moto.model })),
+      message: this.translator.instant(msg, data),
       duration: Constants.DELAY_TOAST
     });
     toast.present();

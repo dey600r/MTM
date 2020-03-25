@@ -1,3 +1,14 @@
 export class Constants {
-    static DELAY_TOAST = 3000; 
+    static DELAY_TOAST = 3000;
+
+    static CLASS_ION_ICON_OPERATION_TYPE = 'icon-color-';
+
+    static OPERATION_TYPE_MAINTENANCE_HOME = 'MH';
+    static OPERATION_TYPE_MAINTENANCE_WORKSHOP = 'MW';
+    static OPERATION_TYPE_FAILURE_HOME = 'FH';
+    static OPERATION_TYPE_FAILURE_WORKSHOP = 'FW';
+    static OPERATION_TYPE_TOOLS = 'T';
+    static OPERATION_TYPE_OTHER = 'O';
+    static OPERATION_TYPE_ACCESSORIES = 'A';
+    static OPERATION_TYPE_CLOTHES = 'C';
 }

@@ -44,19 +44,24 @@ export class SqlService {
   getSqlOperation(): string {
     return `SELECT op.${ConstantsColumns.COLUMN_MTM_ID}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}, ` +
-    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_ID} as idMoto, m.${ConstantsColumns.COLUMN_MTM_MOTO_BRAND} as brandMoto, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MOTO_MODEL} as modelMoto, op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
-    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, ` + `op.${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
-    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}, ` +
-    `opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE}, opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION}, ` +
+    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
+    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}, opt.${ConstantsColumns.COLUMN_MTM_ID} as idOperationType, ` +
+    `opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE} as codeOperationType, ` +
+    `opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION} as descriptionOperationType, ` +
     `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
-    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME}, me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement ` +
     `FROM ${ConstantsTable.TABLE_MTM_OPERATION} AS op ` +
     `JOIN ${ConstantsTable.TABLE_MTM_OPERATION_TYPE} AS opt ON ` +
     `opt.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE} ` +
-    `JOIN ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} AS ome ON ` +
+    `JOIN ${ConstantsTable.TABLE_MTM_MOTO} AS m ON ` +
+    `m.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO} ` +
+    `LEFT JOIN ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} AS ome ON ` +
     `ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION} = op.${ConstantsColumns.COLUMN_MTM_ID} ` +
-    `JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
+    `LEFT JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
     `me.${ConstantsColumns.COLUMN_MTM_ID} = ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT}`;
 }
 
@@ -123,30 +128,45 @@ export class SqlService {
 
   mapOperation(data: any): any {
     let operationsDB: OperationModel[] = [];
+    let operation: OperationModel = new OperationModel();
     if (data.rows.length > 0) {
       for (let i = 0; i < data.rows.length; i++) {
-        operationsDB = [...operationsDB, {
-          id: Number(data.rows.item(i).id),
-          description: data.rows.item(i).description,
-          details: data.rows.item(i).details,
-          operationType: new OperationTypeModel(
-                      data.rows.item(i).code,
-                      data.rows.item(i).description,
-                      data.rows.item(i).idOperationType
-          ),
-          moto: new MotoModel(null, null, null, null, null, null, null, data.rows.item(i).idMoto),
-          km: data.rows.item(i).km,
-          date: data.rows.item(i).date,
-          location: data.rows.item(i).location,
-          owner: data.rows.item(i).owner,
-          price: data.rows.item(i).price,
-          document: data.rows.item(i).document,
-          listMaintenanceElement: [new MaintenanceElementModel(
-            data.rows.item(i).name,
-            data.rows.item(i).description,
-            data.rows.item(i).idMaintenanceElement
-          )]
-        }];
+        operation = operationsDB.find(x => x.id === data.rows.item(i).id);
+        if (!!operation) { // if data exists it just save maintenance element
+          operation.listMaintenanceElement = [...operation.listMaintenanceElement,
+            new MaintenanceElementModel(
+              data.rows.item(i).name,
+              data.rows.item(i).description,
+              data.rows.item(i).idMaintenanceElement
+            )];
+        } else { // new data
+          operationsDB = [...operationsDB, {
+            id: Number(data.rows.item(i).id),
+            description: data.rows.item(i).description,
+            details: data.rows.item(i).details,
+            operationType: new OperationTypeModel(
+                        data.rows.item(i).codeOperationType,
+                        data.rows.item(i).descriptionOperationType,
+                        data.rows.item(i).idOperationType
+            ),
+            moto: new MotoModel(
+              data.rows.item(i).modelMoto,
+              data.rows.item(i).brandMoto,
+              null, null, null, null, null,
+              data.rows.item(i).idMoto),
+            km: data.rows.item(i).km,
+            date: data.rows.item(i).date,
+            location: data.rows.item(i).location,
+            owner: data.rows.item(i).owner,
+            price: data.rows.item(i).price,
+            document: data.rows.item(i).document,
+            listMaintenanceElement: [new MaintenanceElementModel(
+              data.rows.item(i).nameMaintenanceElement,
+              data.rows.item(i).descriptionMaintenanceElement,
+              data.rows.item(i).idMaintenanceElement
+            )]
+          }];
+        }
       }
     }
     return operationsDB;
@@ -199,12 +219,19 @@ export class SqlService {
     `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}=?, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=?, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}=? ` +
-    `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?;`;
+    `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?`;
   }
 
   /* DELETES SQL */
 
-  deleteSql(table: string, column: string): string {
-    return `DELETE FROM ${table} WHERE ${column}=?`;
+  deleteSql(table: string, column: string, numData: number = 1, data: number[] = []): string {
+    let sql = `DELETE FROM ${table} WHERE ${column} in (`;
+    for (let i = 0; i < numData; i++) {
+      sql += (data.length === numData ? data[0] : '?');
+      if ((i + 1) < numData) {
+        sql += ',';
+      }
+    }
+    return `${sql.trim()}); `;
   }
 }
