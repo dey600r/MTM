@@ -4,6 +4,7 @@ import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
 import { ConstantsTable, ConstantsColumns, ActionDB } from '@utils/index';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { CommonService } from './common.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,8 @@ export class OperationService {
         = new BehaviorSubject<SearchOperationModel>(this.searchOperation);
 
     constructor(private dbService: DataBaseService,
-                private sqlService: SqlService) {
+                private sqlService: SqlService,
+                private commonService: CommonService) {
     }
 
     getObserverSearchOperation(): Observable<SearchOperationModel> {
@@ -39,15 +41,16 @@ export class OperationService {
         let scriptDB = false;
         switch (action) {
             case ActionDB.create:
-                sqlDB = this.sqlService.insertSqlMoto();
-                // dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth, moto.dateKms];
+                sqlDB = this.sqlService.insertSqlOperation(op);
+                sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
+                scriptDB = true;
                 break;
             case ActionDB.update:
                 sqlDB = this.sqlService.updateSqlMoto();
                 // dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth, moto.dateKms, moto.id];
                 break;
             case ActionDB.delete:
-                sqlDB = this.getSqlDeleteOperation([op]);
+                sqlDB = this.getSqlDeleteOperation(op);
                 scriptDB = true;
                 break;
         }
@@ -55,7 +58,19 @@ export class OperationService {
             this.dbService.executeSqlDataBase(sqlDB, dataDB, listLoadTable));
     }
 
-    getSqlDeleteOperation(operation: OperationModel[] = []): string {
+    getSqlDeleteOperation(operation: OperationModel): string {
+        let sqlDB = '';
+        if (!!operation.listMaintenanceElement && operation.listMaintenanceElement.length > 0) {
+        sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
+                ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION, operation.listMaintenanceElement.length,
+                operation.listMaintenanceElement.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
+        }
+        sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION,
+            ConstantsColumns.COLUMN_MTM_ID, 1, [operation.id]); // DELETE OPERATION
+        return sqlDB;
+    }
+
+    getSqlDeleteMotoOperation(operation: OperationModel[] = []): string {
         let sqlDB = '';
         if (!!operation && operation.length > 0) {
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,

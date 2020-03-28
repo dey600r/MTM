@@ -70,9 +70,9 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
 );
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (1,'R6','Yamaha',2005,85300,2,150,'01/12/2019');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (2,'GT 125 R','Hyosung',2006,75600,1,30,'01/12/2019');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (3,'Ninja600','Kawasaky',2006,74000,2,100,'01/12/2019');
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (1,'R6','Yamaha',2005,85300,2,150,'2019-12-01');
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (2,'GT 125 R','Hyosung',2006,75600,1,30,'2019-12-01');
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (3,'Ninja600','Kawasaky',2006,74000,2,100,'2019-12-01');
 INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (1,1,2,30000,48,'N','Y');
 INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (2,6,2,25000,24,'N','N');
 INSERT INTO "mtmMaintenance" ("id","idMaintenanceElement","idMaintenanceFrec","km","time","init","desgaste") VALUES (3,3,2,8000,24,'N','Y');
@@ -109,13 +109,14 @@ INSERT INTO "mtmMaintenanceElement" ("id","name","description") VALUES (12,'BACK
 INSERT INTO "mtmMaintenanceElement" ("id","name","description") VALUES (13,'BACK_BRAKE_PADS','CHANGE_BACK_BRAKE_PADS');
 INSERT INTO "mtmConfiguration" ("id","name","description") VALUES (1,'Fabrica','Configuración de fábrica');
 INSERT INTO "mtmConfiguration" ("id","name","description") VALUES (2,'Yamaha','Configuración de Yamaha');
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (1,'Revision','Cambio de bujias crk10',7,1,15000.0,'01/12/2019','Garaje','Yo',32.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (2,'Revision','Cambio de aceite y filtros',2,2,50000.0,'01/01/2020','Garaje','Yo',40.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (3,'Revision','Cambio de aceite, filtros, ruedas y bujias',8,1,80000.0,'01/03/2020','Garaje','Yo',300.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (4,'Compra motocard','Compra casco shoei',5,1,40000.0,'04/02/2020','Motocard','Yo',456.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (5,'Revision','Cambio de aceite y filtros',1,3,40000.0,'01/01/2019','Garaje','Jose',130.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (6,'Compra aliexpress','Compra cupula negra',6,2,66600.0,'07/02/2020','Aliexpress','Yo',12.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (7,'Compra nilmoto','Compra caballete deltantero y trasero',4,1,60000.0,'01/03/2020','Nilmoto','Yo',200.0,NULL);
+INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (1,'Revision','Cambio de bujias crk10',7,1,15000.0,'2019-12-01','Garaje','Yo',32.0,NULL);
+INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (2,'Revision','Cambio de aceite y filtros',2,2,50000.0,'2020-01-01','Garaje','Yo',40.0,NULL);
+INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (3,'Revision','Cambio de aceite, filtros, ruedas y bujias',8,1,80000.0,'2020-03-03','Garaje','Yo',300.0,NULL);
+INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (4,'Compra motocard','Compra casco shoei',5,1,40000.0,'2020-02-01','Motocard','Yo',456.0,NULL);
+INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (5,'Revision','Cambio de aceite y filtros',1,3,40000.0,'2019-04-02','Garaje','Jose',130.0,NULL);
+INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (6,'Compra aliexpress','Compra cupula negra',6,2,66600.0,'2020-02-14','Aliexpress','Yo',12.0,NULL);
+INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (7,'Compra nilmoto','Compra caballete deltantero y trasero',4,1,60000.0,'2020-03-01','Nilmoto','Yo',200.0,NULL);
+INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (8,'Compra motocard','Compra chaqueta alpinestar',3,3,40000.0,'2019-05-23','Motocard','Yo',240.0,NULL);
 INSERT INTO "mtmMaintenanceFrec" ("id","code","description") VALUES (1,'O','Operacion');
 INSERT INTO "mtmMaintenanceFrec" ("id","code","description") VALUES (2,'C','Calendario');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (1,'MW','MAINTENANCE_WORKSHOP');

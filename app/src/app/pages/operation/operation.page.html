@@ -4,7 +4,7 @@
       <ion-title class="align-center">{{ 'OPERATION' | translate }}</ion-title>
     </ion-title>
     <ion-button slot="end" fill="clear" (click)="presentPopover()">
-      <ion-icon name="ellipsis-horizontal"></ion-icon>
+      <ion-icon size="large" name="search"></ion-icon>
     </ion-button>
   </ion-toolbar>
 </ion-header>
@@ -21,7 +21,7 @@
 
     <ion-item button *ngFor="let op of operations">
       <ion-avatar slot="start">
-        <ion-icon size="large" [class]="this.geClassIconOperationType(op)" [name]="this.getIconOperationType(op)"></ion-icon>
+        <ion-icon size="large" class="icon-color" [name]="this.getIconOperationType(op)"></ion-icon>
       </ion-avatar>
       <ion-label>
         <h2>{{ op.description }}</h2>
@@ -29,7 +29,7 @@
         <p>{{ op.price }} €</p>
       </ion-label>
       <ion-label>
-        <p>{{ op.date }}</p>
+        <p>{{ op.date | dateFormatCalendarPipe }}</p>
       </ion-label>
       <ion-label class="align-right">
         <ion-label>

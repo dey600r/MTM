@@ -37,4 +37,8 @@ export class ConstantsColumns {
     // MAINTENANCE ELEMENT
     static COLUMN_MTM_MAINTENANCE_ELEMENT_NAME = 'name';
     static COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION = 'description';
+
+    // SEQUENCE
+    static COLUMN_MTM_SEQUENCE_NAME = 'name';
+    static COLUMN_MTM_SEQUENCE_SEQ = 'seq';
 }

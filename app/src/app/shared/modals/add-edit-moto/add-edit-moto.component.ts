@@ -22,6 +22,9 @@ export class AddEditMotoComponent implements OnInit {
 
   configurations: ConfigurationModel[] = [];
 
+  // TRANSLATE
+  translateYearBetween = '';
+
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
@@ -29,7 +32,9 @@ export class AddEditMotoComponent implements OnInit {
     private toastController: ToastController,
     private translator: TranslateService,
     private motoService: MotoService
-  ) { }
+  ) {
+    this.translateYearBetween = this.translator.instant('AddYearBetween', { year: new Date().getFullYear()});
+  }
 
   ngOnInit() {
 
@@ -77,8 +82,8 @@ export class AddEditMotoComponent implements OnInit {
   }
 
   isValidForm(f: any): boolean {
-    return this.isValidBrand(f) && this.isValidModel(f) && this.isValidYear && this.isValidKm(f) &&
-            this.isValidConfiguration(f) && this.isValidKmsPerMonth(f);
+    return this.isValidBrand(f) && this.isValidModel(f) && this.isValidYearBetween(f) &&
+           this.isValidKmMin(f) && this.isValidConfiguration(f) && this.isValidKmsPerMonth(f);
   }
 
   isValidBrand(f: any): boolean {
@@ -93,8 +98,17 @@ export class AddEditMotoComponent implements OnInit {
     return f.motoYear !== undefined && f.motoYear.validity.valid;
   }
 
+  isValidYearBetween(f: any): boolean {
+    return this.isValidYear(f) && f.motoYear.valueAsNumber >= 1900 &&
+      f.motoYear.valueAsNumber <= new Date().getFullYear();
+  }
+
   isValidKm(f: any): boolean {
     return f.motoKm !== undefined && f.motoKm.validity.valid;
+  }
+
+  isValidKmMin(f: any): boolean {
+    return this.isValidKm(f) && f.motoKm.valueAsNumber >= 0;
   }
 
   isValidConfiguration(f: any): boolean {

@@ -8,4 +8,5 @@ export class ConstantsTable {
     static TABLE_MTM_OPERATION = 'mtmOperation';
     static TABLE_MTM_MAINTENANCE_FREC = 'mtmMaintenanceFrec';
     static TABLE_MTM_OPERATION_TYPE = 'mtmOperationType';
+    static SEQUENCES_MTM = 'sqlite_sequence';
 }

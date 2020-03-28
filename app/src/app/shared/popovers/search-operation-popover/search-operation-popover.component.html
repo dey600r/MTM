@@ -1,14 +1,18 @@
 <ion-list>
     <ion-list-header>
-        <ion-label>{{ 'SEARCHER' | translate }}</ion-label>
-        <ion-button fill="clear" (click)="closePopover()">
-            <ion-icon size="large" name="close-circle-outline"></ion-icon>
-        </ion-button>
+        <ion-label>{{ 'FILTER' | translate }}</ion-label>
+        <ion-label>
+            <ion-button slot="start" fill="clear" (click)="clearFilter()">{{ 'CLEAN' | translate }}
+                <ion-icon size="small" name="hourglass"></ion-icon>
+            </ion-button>
+            <ion-button slot="end" fill="clear" (click)="closePopover()">
+                <ion-icon size="large" name="close-circle-outline"></ion-icon>
+            </ion-button>
+        </ion-label>
     </ion-list-header>
     <ion-item>
         <ion-label>{{ 'MOTORBIKES' | translate }}</ion-label>
-        <ion-select [placeholder]="this.translateSelect" multiple="false" 
-            [cancelText]="this.translateCancel" [okText]="this.translateAccept"
+        <ion-select [placeholder]="this.translateSelect" interface="popover"
             [(ngModel)]="this.filterMoto" (ionChange)="changeSearcherMoto()">
             <ion-select-option [(value)]="m.id" *ngFor="let m of motos">{{ m.brand + ' ' + m.model }}</ion-select-option>
           </ion-select>

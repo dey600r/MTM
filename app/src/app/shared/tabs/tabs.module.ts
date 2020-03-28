@@ -28,6 +28,7 @@ import { environment } from '../../../environments/environment';
       }
     }),
   ],
+  exports: [],
   providers: [TranslateStore],
   declarations: [TabsPage]
 })

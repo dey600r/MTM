@@ -4,6 +4,7 @@ import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
 import { ConstantsTable, ConstantsColumns, ActionDB } from '@utils/index';
 import { OperationService } from './operation.service';
+import { CommonService } from './common.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +13,7 @@ export class MotoService {
 
     constructor(private dbService: DataBaseService,
                 private sqlService: SqlService,
+                private commonService: CommonService,
                 private operationService: OperationService) {
     }
 
@@ -23,17 +25,19 @@ export class MotoService {
         switch (action) {
             case ActionDB.create:
                 sqlDB = this.sqlService.insertSqlMoto();
-                dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth, moto.dateKms];
+                dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth,
+                    this.commonService.getDateStringToDB(moto.dateKms)];
                 listLoadTable = [ConstantsTable.TABLE_MTM_MOTO];
                 break;
             case ActionDB.update:
                 sqlDB = this.sqlService.updateSqlMoto();
-                dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth, moto.dateKms, moto.id];
+                dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth,
+                    this.commonService.getDateStringToDB(moto.dateKms), moto.id];
                 listLoadTable = [ConstantsTable.TABLE_MTM_MOTO];
                 break;
             case ActionDB.delete:
                 if (!!operation && operation.length > 0) {
-                    sqlDB = this.operationService.getSqlDeleteOperation(operation);
+                    sqlDB = this.operationService.getSqlDeleteMotoOperation(operation);
                     listLoadTable = this.operationService.getTablesRefreshDeleteOperation();
                 }
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MOTO,

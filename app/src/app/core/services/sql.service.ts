@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 
 import { MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel } from '@models/index';
-
 import { ConstantsTable, ConstantsColumns } from '@utils/index';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SqlService {
 
-  constructor() {
+  constructor(private commonService: CommonService) {
   }
 
   /* BUILDER SQL */
@@ -63,7 +63,13 @@ export class SqlService {
     `ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION} = op.${ConstantsColumns.COLUMN_MTM_ID} ` +
     `LEFT JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
     `me.${ConstantsColumns.COLUMN_MTM_ID} = ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT}`;
-}
+  }
+
+  getSqlSequence(table: string, iteration: number): string {
+    return `SELECT ${ConstantsColumns.COLUMN_MTM_SEQUENCE_SEQ} + ${iteration} FROM ` +
+        `${ConstantsTable.SEQUENCES_MTM} WHERE ` +
+        `${ConstantsColumns.COLUMN_MTM_SEQUENCE_NAME} = '${table}'`;
+  }
 
   /* MAPPERS */
 
@@ -105,7 +111,7 @@ export class SqlService {
                       data.rows.item(i).idConfiguration
           ),
           kmsPerMonth: data.rows.item(i).kmsPerMonth,
-          dateKms: data.rows.item(i).dateKms
+          dateKms: new Date(data.rows.item(i).dateKms)
         }];
       }
     }
@@ -202,13 +208,49 @@ export class SqlService {
 
   /* INSERTS SQL */
 
-  insertSqlMoto() {
+  insertSqlMoto(): string {
     return `INSERT INTO ${ConstantsTable.TABLE_MTM_MOTO} ` +
     `(${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
     `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}) ` +
     `VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  }
+
+  insertSqlOperation(op: OperationModel = null): string {
+    let sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OPERATION} ` +
+    `(${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}, ${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}, ` +
+    `${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}, ${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}, ` +
+    `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
+    `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, ${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
+    `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, ${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}) `;
+    if (!!op) {
+      sql += `SELECT '${op.description}', '${op.details}', ${op.operationType.id}, ${op.moto.id}, ` +
+      `${op.km}, ${op.price}, '${this.commonService.getDateStringToDB(op.date)}', ${this.getValueWithCom(op.location)}, ` +
+      `${this.getValueWithCom(op.owner)}, ${op.document}`;
+    } else {
+      sql += `VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?); `;
+    }
+    return `${sql}; `;
+  }
+
+  insertSqlOpMaintenanceElement(op: OperationModel = null): string {
+    let sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} ` +
+    `(${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION}, ` +
+    `${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT}) `;
+    if (!!op  && !!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < op.listMaintenanceElement.length; i++) {
+        sql += `SELECT (${this.getSqlSequence(ConstantsTable.TABLE_MTM_OPERATION, 0)}), ` +
+        `${op.listMaintenanceElement[i].id}`;
+        if ((i + 1) < op.listMaintenanceElement.length) {
+          sql += ' union ';
+        }
+      }
+    } else {
+      sql += `VALUES (?, ?) `;
+    }
+    return `${sql}; `;
   }
 
   /* UPDATES SQL */
@@ -232,6 +274,11 @@ export class SqlService {
         sql += ',';
       }
     }
-    return `${sql.trim()}); `;
+    return `${sql}); `;
+  }
+
+  /* SQL UTLS */
+  getValueWithCom(data: any): string {
+    return (!!data ? `'${data}'` : data);
   }
 }

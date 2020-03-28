@@ -11,6 +11,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { environment } from '../../../environments/environment';
 
+import { PipeModule } from '@pipes/pipes.module';
+
 @NgModule({
   imports: [
     IonicModule,
@@ -24,7 +26,8 @@ import { environment } from '../../../environments/environment';
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
+    }),
+    PipeModule
   ],
   providers: [TranslateStore],
   declarations: [OperationPage]

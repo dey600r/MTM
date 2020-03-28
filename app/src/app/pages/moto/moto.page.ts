@@ -5,7 +5,7 @@ import { MotoModel, ModalInputModel, ModalOutputModel, OperationModel } from '@m
 import { ModalController, Platform, AlertController, ToastController } from '@ionic/angular';
 
 import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
-import { ActionDB, ConstantsTable, ConstantsColumns, Constants } from '@utils/index';
+import { ActionDB, ConstantsColumns, Constants } from '@utils/index';
 
 @Component({
   selector: 'app-moto',

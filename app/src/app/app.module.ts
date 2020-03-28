@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -15,22 +16,33 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { DataBaseService, CommonService } from '@services/index';
-
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { environment } from '../environments/environment';
 
 import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
-import { SearchOperationPopOverComponent } from '@popover/search-operation-popover/search-operation-popover.component';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
+import { SearchOperationPopOverComponent } from '@popovers/search-operation-popover/search-operation-popover.component';
+import { PipeModule } from '@pipes/pipes.module';
 
 @NgModule({
-  declarations: [AppComponent, AddEditMotoComponent, SearchOperationPopOverComponent],
-  entryComponents: [AddEditMotoComponent, SearchOperationPopOverComponent],
+  declarations: [
+    AppComponent,
+    AddEditMotoComponent,
+    AddEditOperationComponent,
+    SearchOperationPopOverComponent
+  ],
+  entryComponents: [
+    AddEditMotoComponent,
+    AddEditOperationComponent,
+    SearchOperationPopOverComponent
+  ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     IonicModule.forRoot(),
     HttpClientModule,
     TranslateModule.forRoot({
@@ -42,7 +54,10 @@ import { CommonModule } from '@angular/common';
     }),
     AppRoutingModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    PipeModule
+  ],
+  exports: [
   ],
   providers: [
     StatusBar,

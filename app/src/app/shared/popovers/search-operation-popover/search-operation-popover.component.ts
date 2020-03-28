@@ -75,4 +75,10 @@ import { TranslateService } from '@ngx-translate/core';
     closePopover() {
         this.popoverController.getTop().then(r => { r.dismiss(); } );
     }
+
+    clearFilter() {
+      this.filterOpType = [];
+      this.filterMaintElement = [];
+      this.operationService.setSearchOperation(this.searchOperation.searchMoto);
+    }
 }
