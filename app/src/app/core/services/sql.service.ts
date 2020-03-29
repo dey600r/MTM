@@ -235,20 +235,20 @@ export class SqlService {
   }
 
   insertSqlOpMaintenanceElement(op: OperationModel = null): string {
-    let sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} ` +
-    `(${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION}, ` +
-    `${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT}) `;
-    if (!!op  && !!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+    let sql = '';
+    if (op !== null  && !!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+      sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} ` +
+      `(${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT}) `;
+
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < op.listMaintenanceElement.length; i++) {
-        sql += `SELECT (${this.getSqlSequence(ConstantsTable.TABLE_MTM_OPERATION, 0)}), ` +
+        sql += `SELECT (${(op.id > 0 ? op.id : this.getSqlSequence(ConstantsTable.TABLE_MTM_OPERATION, 0))}), ` +
         `${op.listMaintenanceElement[i].id}`;
         if ((i + 1) < op.listMaintenanceElement.length) {
-          sql += ' union ';
+          sql += ' UNION ';
         }
       }
-    } else {
-      sql += `VALUES (?, ?) `;
     }
     return `${sql}; `;
   }
@@ -264,13 +264,38 @@ export class SqlService {
     `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?`;
   }
 
+  updateSqlOperation(op: OperationModel = null): string {
+    if (op !== null) {
+      return `UPDATE ${ConstantsTable.TABLE_MTM_OPERATION} ` +
+      `SET ${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}='${op.description}', ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}='${op.details}', ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}=${op.operationType.id}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}=${op.moto.id}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}=${op.km}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}=${op.price}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}='${this.commonService.getDateStringToDB(op.date)}', ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}=${this.getValueWithCom(op.location)}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}=${this.getValueWithCom(op.owner)}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}=${op.document} ` +
+      `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${op.id}; `;
+    } else {
+      return `UPDATE ${ConstantsTable.TABLE_MTM_OPERATION} ` +
+      `SET ${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}=?, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}=?, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}=?, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}=?, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}=? ` +
+      `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?; `;
+    }
+  }
+
   /* DELETES SQL */
 
-  deleteSql(table: string, column: string, numData: number = 1, data: number[] = []): string {
+  deleteSql(table: string, column: string, data: number[] = []): string {
     let sql = `DELETE FROM ${table} WHERE ${column} in (`;
-    for (let i = 0; i < numData; i++) {
-      sql += (data.length === numData ? data[0] : '?');
-      if ((i + 1) < numData) {
+    for (let i = 0; i < data.length; i++) {
+      sql += (data.length === data.length ? data[0] : '?');
+      if ((i + 1) < data.length) {
         sql += ',';
       }
     }
@@ -279,6 +304,6 @@ export class SqlService {
 
   /* SQL UTLS */
   getValueWithCom(data: any): string {
-    return (!!data ? `'${data}'` : data);
+    return (data !== null ? `'${data}'` : data);
   }
 }

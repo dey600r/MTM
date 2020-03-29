@@ -5,6 +5,8 @@
     "SELECT": "Select...",
     "OR": "o",
     "HOME": "Inicio",
+    "EXPENSES_PER_MOTO": "Gastos por moto",
+    "EXPENSES_PER_OP_TYPE": "Gastos por tipo de op.",
     "OPERATION": "Operación",
     "MOTORBIKE": "Moto",
     "MOTORBIKES": "Motos",

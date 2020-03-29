@@ -52,14 +52,17 @@ export class OperationPage implements OnInit, OnChanges {
   }
 
   initPage() {
+    this.nameFilterMoto = this.translator.instant('YOURS_OPERATIONS');
     this.dbService.getOperations().subscribe(data => {
-      this.operationService.setSearchOperation(
-        (!!data && data.length > 0 ? data[0].moto : new MotoModel(null, null, null, null, null, null, null, 0)));
+      this.operationService.setSearchOperation((!!data && data.length > 0 ?
+        this.filterOperations.searchMoto :
+        new MotoModel(null, null, null, null, null, null, null, 0)));
       this.operationService.getObserverSearchOperation().subscribe(filter => {
         this.filterOperations = filter;
-        this.nameFilterMoto = this.translator.instant('YOURS_OPERATIONS');
         if (!!data && data.length > 0) {
           this.nameFilterMoto = `${this.translator.instant('OPERATIONS_OF')} ${filter.searchMoto.brand} ${filter.searchMoto.model}`;
+        } else {
+          this.nameFilterMoto = this.translator.instant('YOURS_OPERATIONS');
         }
         this.operations = this.commonService.orderBy(
           data.filter(op =>
@@ -131,7 +134,7 @@ export class OperationPage implements OnInit, OnChanges {
     await alert.present();
   }
 
-  async presentPopover(ev: any) {
+  async showPopover(ev: any) {
     this.currentPopover = await this.popoverController.create({
       component: SearchOperationPopOverComponent,
       event: ev,

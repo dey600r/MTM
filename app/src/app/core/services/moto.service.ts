@@ -41,7 +41,7 @@ export class MotoService {
                     listLoadTable = this.operationService.getTablesRefreshDeleteOperation();
                 }
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MOTO,
-                    ConstantsColumns.COLUMN_MTM_ID, 1, [moto.id]); // DELETE MOTO
+                    ConstantsColumns.COLUMN_MTM_ID, [moto.id]); // DELETE MOTO
                 listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_MOTO];
                 scriptDB = true;
                 break;

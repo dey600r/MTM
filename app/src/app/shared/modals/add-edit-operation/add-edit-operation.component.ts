@@ -4,7 +4,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDB } from '@utils/index';
+import { Constants, ActionDB, ConstantsColumns } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MotoModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
@@ -63,7 +63,6 @@ export class AddEditOperationComponent implements OnInit {
     this.operation = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.operation.id = -1;
-      this.operation.date = null;
       this.operation.operationType.id = null;
     }
 
@@ -103,11 +102,8 @@ export class AddEditOperationComponent implements OnInit {
         this.operationService.saveOperation(this.operation,
           (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
           this.closeModal();
-          if (this.modalInputModel.isCreate) {
-            this.showSaveToast('AddSaveOperation', { operation: this.operation.description });
-          } else {
-            this.showSaveToast('EditSaveOperation', { operation: this.operation.description });
-          }
+          this.showSaveToast(this.modalInputModel.isCreate ? 'AddSaveOperation' : 'EditSaveOperation',
+              { operation: this.operation.description });
         }).catch(e => {
           this.showSaveToast('ErrorSaveOperation');
         });
@@ -209,7 +205,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsDateBefore && operationsDateBefore.length > 0) {
-      resultKm = this.commonService.max(operationsDateBefore, 'km');
+      resultKm = this.commonService.max(operationsDateBefore, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
     }
 
     return resultKm;
@@ -223,7 +219,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsDateAfter && operationsDateAfter.length > 0) {
-      resultKm = this.commonService.min(operationsDateAfter, 'km');
+      resultKm = this.commonService.min(operationsDateAfter, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
     }
 
     return resultKm;
@@ -236,7 +232,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsKmBefore && operationsKmBefore.length > 0) {
-      resultDate = new Date(this.commonService.max(operationsKmBefore, 'date'));
+      resultDate = new Date(this.commonService.max(operationsKmBefore, ConstantsColumns.COLUMN_MTM_OPERATION_DATE));
     }
 
     return resultDate;
@@ -249,7 +245,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsKmAfter && operationsKmAfter.length > 0) {
-      resultDate = new Date(this.commonService.max(operationsKmAfter, 'date'));
+      resultDate = new Date(this.commonService.max(operationsKmAfter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE));
     }
 
     return resultDate;

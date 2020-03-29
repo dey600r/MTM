@@ -6,7 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 // UTILS
-import { DataBaseService, CommonService } from '@services/index';
+import { DataBaseService, CommonService, DashboardService } from '@services/index';
+import { DashboardModel, OperationModel } from '@models/index';
 
 @Component({
   selector: 'app-home',
@@ -15,82 +16,35 @@ import { DataBaseService, CommonService } from '@services/index';
 })
 export class HomePage implements OnInit, OnChanges {
 
-  view: any[] = [this.platform.width(), this.platform.height()];
+  operations: OperationModel[] = [];
 
-  // options
-  showXAxis = true;
-  showYAxis = true;
-  gradient = true;
-  showLegend = true;
-  showXAxisLabel = true;
-  xAxisLabel = 'Country';
-  showYAxisLabel = true;
-  yAxisLabel = 'Population';
-  legendTitle = 'Years';
-
-  colorScheme = {
-    domain: ['#5AA454', '#C7B42C', '#AAAAAA']
-  };
-
-  private multi = [
-    {
-      name: 'Germany',
-      series: [
-        {
-          name: '2010',
-          value: 7300000
-        },
-        {
-          name: '2011',
-          value: 8940000
-        }
-      ]
-    },
-
-    {
-      name: 'USA',
-      series: [
-        {
-          name: '2010',
-          value: 7870000
-        },
-        {
-          name: '2011',
-          value: 8270000
-        }
-      ]
-    },
-
-    {
-      name: 'France',
-      series: [
-        {
-          name: '2010',
-          value: 5000002
-        },
-        {
-          name: '2011',
-          value: 5800000
-        }
-      ]
-    }
-  ];
+  dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
+  dashboardMotoExpenses: DashboardModel = new DashboardModel([], []);
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
               private translator: TranslateService,
               private commonService: CommonService,
               private screenOrientation: ScreenOrientation,
-              private changeDetector: ChangeDetectorRef) {
+              private changeDetector: ChangeDetectorRef,
+              private dashboardService: DashboardService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
       this.translator.use(userLang);
     });
 
+    this.dbService.getOperations().subscribe(data => {
+      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+      this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoExpenses(windowsSize, data);
+      this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, data);
+    });
+
     this.screenOrientation.onChange().subscribe(
       () => {
-        this.view = [this.platform.height(), this.platform.width()];
+        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+        this.dashboardMotoExpenses.view = windowsSize;
+        this.dashboardOpTypeExpenses.view = windowsSize;
         this.changeDetector.detectChanges();
       }
    );
@@ -102,15 +56,7 @@ export class HomePage implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
   }
 
-  onSelect(data: any): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+  showPopover() {
   }
 
-  onActivate(data: any): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
-  }
-
-  onDeactivate(data: any): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
-  }
 }
