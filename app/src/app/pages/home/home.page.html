@@ -14,7 +14,20 @@
     <ion-icon size="large" name="bicycle"></ion-icon>
     <h3 class="header-list">{{ 'EXPENSES_PER_MOTO' | translate }}</h3>
   </ion-list-header>
-  <ngx-charts-bar-vertical-2d
+  <ngx-charts-bar-vertical *ngIf="isChartMoto()"
+    [view]="dashboardMotoExpenses.view"
+    [scheme]="dashboardMotoExpenses.colorScheme"
+    [results]="dashboardMotoExpenses.data"
+    [gradient]="dashboardMotoExpenses.gradient"
+    [xAxis]="dashboardMotoExpenses.showXAxis"
+    [yAxis]="dashboardMotoExpenses.showYAxis"
+    [legend]="dashboardMotoExpenses.showLegend"
+    [showXAxisLabel]="dashboardMotoExpenses.showXAxisLabel"
+    [showYAxisLabel]="dashboardMotoExpenses.showYAxisLabel"
+    [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
+    [yAxisLabel]="dashboardMotoExpenses.yAxisLabel">
+  </ngx-charts-bar-vertical>
+  <ngx-charts-bar-vertical-2d *ngIf="isChartOperationType()"
     [view]="dashboardMotoExpenses.view"
     [scheme]="dashboardMotoExpenses.colorScheme"
     [results]="dashboardMotoExpenses.data"
@@ -26,7 +39,9 @@
     [showYAxisLabel]="dashboardMotoExpenses.showYAxisLabel"
     [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
     [yAxisLabel]="dashboardMotoExpenses.yAxisLabel"
-    [legendTitle]="dashboardMotoExpenses.legendTitle">
+    [legendTitle]="dashboardMotoExpenses.legendTitle"
+    [barPadding]="dashboardMotoExpenses.barPadding"
+    [groupPadding]="dashboardMotoExpenses.groupPadding">
   </ngx-charts-bar-vertical-2d>
   <ion-list-header>
     <ion-icon size="large" name="construct"></ion-icon>

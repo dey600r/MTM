@@ -14,11 +14,13 @@ export class DashboardModel {
     showLabels: boolean;
     isDoughnut: boolean;
     legendPosition: string;
+    barPadding: number;
+    groupPadding: number;
     constructor(v: any[], d: any[], color: any = null,
                 x: boolean = true, y: boolean = true, grad: boolean = true, legShow: boolean = false,
                 legTitle: string = '', xShow: boolean = false, xLabel: string = '',
                 yShow: boolean = false, yLabel: string = '', labelShow: boolean = true, doug: boolean = false,
-                legPos: string = '') {
+                legPos: string = '', barPad: number = 2, groupPad: number = 4) {
         this.view = v;
         this.data = d;
         this.colorScheme = (!color ? this.getColorSchemeDefault() : color);
@@ -34,6 +36,8 @@ export class DashboardModel {
         this.showLabels = labelShow;
         this.isDoughnut = doug;
         this.legendPosition = legPos;
+        this.barPadding = barPad;
+        this.groupPadding = groupPad;
     }
 
     getColorSchemeDefault(): any {

@@ -17,11 +17,11 @@ export class CommonService {
 
     // COMMON UTILS METHODS STRINGS
 
-    getDateString(date: Date): string {
+    getDateString(date: Date): any {
         return Moment(date).format(this.getFormatCalendar());
     }
 
-    getDateStringToDB(date: Date): string {
+    getDateStringToDB(date: Date): any {
         return Moment(date).format(Constants.DATE_FORMAT_DB);
     }
 
@@ -31,7 +31,7 @@ export class CommonService {
 
     // TOAST
 
-    async showSaveToast(msg: string, data: any = null, delay: number = Constants.DELAY_TOAST) {
+    async showToast(msg: string, data: any = null, delay: number = Constants.DELAY_TOAST) {
         const toast = await this.toastController.create({
           message: this.translator.instant(msg, data),
           duration: delay

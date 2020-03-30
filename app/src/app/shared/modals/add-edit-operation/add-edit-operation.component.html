@@ -36,7 +36,8 @@
           <ion-icon *ngIf="this.submited && !isValidOperationType(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidOperationType(formAddOperation)" color="danger">{{ 'AddOperationType' | translate }}</ion-text>
         </ion-label>
-        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="required" required interface="popover" [(ngModel)]="operation.operationType.id">
+        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="required" interface="popover" 
+           required [(ngModel)]="operation.operationType.id">
           <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationType">{{ ot.description | translate }}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -57,7 +58,8 @@
           <ion-text>{{ 'REPLACEMENT' | translate }}</ion-text>
         </ion-label>
         <ion-select #opReplacement name="opReplacement" multiple="true" [placeholder]="this.translateSelect"
-          [cancelText]="this.translateCancel" [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect">
+        [disabled]="!isOperationTypeMaintenanceReplacement(formAddOperation)" [cancelText]="this.translateCancel"
+        [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect">
           <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElement">{{ me.name | translate }}</ion-select-option>
         </ion-select>
       </ion-item>

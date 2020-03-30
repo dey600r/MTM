@@ -20,6 +20,8 @@ export class OperationService {
                 private commonService: CommonService) {
     }
 
+    // SEARCHER OPERATION
+
     getObserverSearchOperation(): Observable<SearchOperationModel> {
         return this.behaviourSearchOperation.asObservable();
     }
@@ -33,6 +35,8 @@ export class OperationService {
         this.searchOperation = new SearchOperationModel(sm, sot, sme);
         this.behaviourSearchOperation.next(this.searchOperation);
     }
+
+    // SAVE OPERATION
 
     saveOperation(op: OperationModel, action: ActionDB) {
         let sqlDB = '';

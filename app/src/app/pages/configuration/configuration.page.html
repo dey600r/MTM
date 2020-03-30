@@ -1,9 +1,37 @@
 <ion-header>
     <ion-toolbar>
       <ion-title>
-        Configuración
+        <ion-title class="align-center">{{ 'CONFIGURATION' | translate }}</ion-title>
       </ion-title>
     </ion-toolbar>
   </ion-header>
   
-  <ion-content></ion-content>
+  <ion-content>
+    <ion-list>
+      <ion-list-header>
+        <ion-icon size="large" name="cog"></ion-icon>
+        <h3 class="header-list">{{ 'YOURS_CONFIGURATIONS' | translate }}</h3>
+        <ion-button fill="clear" (click)="openCreateModal()">
+          <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+    </ion-list>
+    <ion-list>
+      <ion-list-header>
+        <ion-icon size="large" name="build"></ion-icon>
+        <h3 class="header-list">{{ 'MAINTENANCES' | translate }}</h3>
+        <ion-button fill="clear" (click)="openCreateModal()">
+          <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+    </ion-list>
+    <ion-list>
+      <ion-list-header>
+        <ion-icon size="large" name="repeat"></ion-icon>
+        <h3 class="header-list">{{ 'REPLACEMENTS' | translate }}</h3>
+        <ion-button fill="clear" (click)="openCreateModal()">
+          <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+    </ion-list>
+  </ion-content>

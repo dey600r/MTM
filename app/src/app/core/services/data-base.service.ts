@@ -10,7 +10,6 @@ import { MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, Main
 import { ConstantsTable } from '@utils/index';
 
 import { SqlService } from './sql.service';
-import { MotoService } from './moto.service';
 import { OperationService } from './operation.service';
 
 @Injectable({

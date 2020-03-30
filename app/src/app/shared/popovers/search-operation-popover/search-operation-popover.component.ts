@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
+
+// LIBRARIES
+import { TranslateService } from '@ngx-translate/core';
+
+// UTILS
 import { DataBaseService, CommonService, OperationService } from '@services/index';
 import { MotoModel, SearchOperationModel, OperationTypeModel, MaintenanceElementModel } from '@models/index';
 import { ConstantsColumns } from '@utils/index';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-search-operation-popover',

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams, ToastController } from '@ionic/angular';
+import { ModalController, NavParams, AlertController } from '@ionic/angular';
 import { Form } from '@angular/forms';
+
+// LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
@@ -8,7 +10,7 @@ import { Constants, ActionDB, ConstantsColumns } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MotoModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, MotoService, OperationService, CommonService } from '@services/index';
+import { DataBaseService, OperationService, CommonService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-operation',
@@ -40,11 +42,10 @@ export class AddEditOperationComponent implements OnInit {
 
   constructor(
     private modalController: ModalController,
+    private alertController: AlertController,
     private navParams: NavParams,
     private dbService: DataBaseService,
-    private toastController: ToastController,
     private translator: TranslateService,
-    private motoService: MotoService,
     private operationService: OperationService,
     private commonService: CommonService
   ) {
@@ -63,6 +64,7 @@ export class AddEditOperationComponent implements OnInit {
     this.operation = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.operation.id = -1;
+      this.operation.date = this.commonService.getDateStringToDB(new Date());
       this.operation.operationType.id = null;
     }
 
@@ -92,23 +94,34 @@ export class AddEditOperationComponent implements OnInit {
     if (this.isValidForm(f)) {
       const result = this.validateDateToKm();
       if (result !== '') {
-        this.showSaveToast(result, null, Constants.DELAY_TOAST_HIGHER);
+        this.commonService.showToast(result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
-        if (!!this.maintenanceElementSelect && this.maintenanceElementSelect.length > 0) {
-          this.operation.listMaintenanceElement = this.maintenanceElement.filter(x =>
-            this.maintenanceElementSelect.some(y => y === x.id)
-          );
+        if (!this.modalInputModel.isCreate && this.maintenanceElementSelect.length > 0 &&
+          !this.isOperationTypeWithReplacement()) {
+          this.showConfirmSaveWithDelete();
+        } else {
+          this.saveOperation();
         }
-        this.operationService.saveOperation(this.operation,
-          (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
-          this.closeModal();
-          this.showSaveToast(this.modalInputModel.isCreate ? 'AddSaveOperation' : 'EditSaveOperation',
-              { operation: this.operation.description });
-        }).catch(e => {
-          this.showSaveToast('ErrorSaveOperation');
-        });
       }
     }
+  }
+
+  saveOperation() {
+    if (!this.isOperationTypeWithReplacement()) {
+      this.operation.listMaintenanceElement = [];
+    } else if (!!this.maintenanceElementSelect && this.maintenanceElementSelect.length > 0) {
+      this.operation.listMaintenanceElement = this.maintenanceElement.filter(x =>
+        this.maintenanceElementSelect.some(y => y === x.id)
+      );
+    }
+    this.operationService.saveOperation(this.operation,
+      (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+      this.closeModal();
+      this.commonService.showToast(this.modalInputModel.isCreate ? 'AddSaveOperation' : 'EditSaveOperation',
+          { operation: this.operation.description });
+    }).catch(e => {
+      this.commonService.showToast('ErrorSaveOperation');
+    });
   }
 
   async closeModal() {
@@ -116,12 +129,25 @@ export class AddEditOperationComponent implements OnInit {
     await this.modalController.dismiss(this.modalOutputModel);
   }
 
-  async showSaveToast(msg: string, data: any = null, delay: number = Constants.DELAY_TOAST) {
-    const toast = await this.toastController.create({
-      message: this.translator.instant(msg, data),
-      duration: delay
+  async showConfirmSaveWithDelete() {
+    const alert = await this.alertController.create({
+      header: this.translator.instant('OPERATION'),
+      message: this.translator.instant('ConfirmSaveToDeleteReplacement'),
+      buttons: [
+        {
+          text: this.translator.instant('CANCEL'),
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, {
+          text: this.translator.instant('ACCEPT'),
+          handler: () => {
+            this.saveOperation();
+          }
+        }
+      ]
     });
-    toast.present();
+
+    await alert.present();
   }
 
   isValidForm(f: any): boolean {
@@ -156,6 +182,16 @@ export class AddEditOperationComponent implements OnInit {
 
   isValidDate(f: any): boolean {
     return f.opDate !== undefined && f.opDate.validity.valid;
+  }
+
+  isOperationTypeMaintenanceReplacement(f: any): boolean {
+    return this.isValidOperationType(f) && this.isOperationTypeWithReplacement();
+  }
+
+  isOperationTypeWithReplacement(): boolean {
+    return this.operationType.some(x => x.id === this.operation.operationType.id &&
+      (Constants.OPERATION_TYPE_FAILURE_HOME === x.code || Constants.OPERATION_TYPE_FAILURE_WORKSHOP === x.code ||
+      Constants.OPERATION_TYPE_MAINTENANCE_HOME === x.code || Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP === x.code));
   }
 
   validateDateToKm(): string {
@@ -245,7 +281,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsKmAfter && operationsKmAfter.length > 0) {
-      resultDate = new Date(this.commonService.max(operationsKmAfter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE));
+      resultDate = new Date(this.commonService.min(operationsKmAfter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE));
     }
 
     return resultDate;

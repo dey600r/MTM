@@ -1,18 +1,24 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ModalController, Platform, AlertController } from '@ionic/angular';
+
+// LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
+
+// UTILS
+import { ActionDB, ConstantsColumns } from '@utils/index';
 import { DataBaseService, MotoService, CommonService, OperationService } from '@services/index';
 import { MotoModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
-import { ModalController, Platform, AlertController, ToastController } from '@ionic/angular';
 
+// COMPONENTS
 import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
-import { ActionDB, ConstantsColumns, Constants } from '@utils/index';
+
 
 @Component({
   selector: 'app-moto',
   templateUrl: 'moto.page.html',
   styleUrls: ['moto.page.scss', '../../app.component.scss']
 })
-export class MotoPage implements OnInit, OnChanges {
+export class MotoPage implements OnInit {
 
   motos: MotoModel[] = [];
   operations: OperationModel[] = [];
@@ -25,7 +31,6 @@ export class MotoPage implements OnInit, OnChanges {
               private modalController: ModalController,
               private translator: TranslateService,
               private alertController: AlertController,
-              private toastController: ToastController,
               private motoService: MotoService,
               private commonService: CommonService,
               private operationService: OperationService) {
@@ -44,9 +49,6 @@ export class MotoPage implements OnInit, OnChanges {
     this.dbService.getOperations().subscribe(data => {
       this.operations = data;
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
   }
 
   openCreateModal() {
@@ -104,9 +106,9 @@ export class MotoPage implements OnInit, OnChanges {
           text: this.translator.instant('ACCEPT'),
           handler: () => {
             this.motoService.saveMoto(this.rowSelected, ActionDB.delete, ops).then(x => {
-              this.showSaveToast('DeleteSaveMoto', { moto: `${this.rowSelected.brand} ${this.rowSelected.model}` });
+              this.commonService.showToast('DeleteSaveMoto', { moto: `${this.rowSelected.brand} ${this.rowSelected.model}` });
             }).catch(e => {
-              this.showSaveToast('ErrorSaveMoto');
+              this.commonService.showToast('ErrorSaveMoto');
             });
           }
         }
@@ -114,14 +116,6 @@ export class MotoPage implements OnInit, OnChanges {
     });
 
     await alert.present();
-  }
-
-  async showSaveToast(msg: string, data: any = null) {
-    const toast = await this.toastController.create({
-      message: this.translator.instant(msg, data),
-      duration: Constants.DELAY_TOAST
-    });
-    toast.present();
   }
 
 }

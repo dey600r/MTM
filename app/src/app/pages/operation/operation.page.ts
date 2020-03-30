@@ -1,5 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { Platform, ModalController, AlertController, ToastController, PopoverController } from '@ionic/angular';
+import { Platform, ModalController, AlertController, PopoverController } from '@ionic/angular';
+
+// LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
@@ -32,7 +34,6 @@ export class OperationPage implements OnInit, OnChanges {
               private modalController: ModalController,
               private translator: TranslateService,
               private alertController: AlertController,
-              private toastController: ToastController,
               private commonService: CommonService,
               private operationService: OperationService,
               public popoverController: PopoverController) {
@@ -52,17 +53,15 @@ export class OperationPage implements OnInit, OnChanges {
   }
 
   initPage() {
-    this.nameFilterMoto = this.translator.instant('YOURS_OPERATIONS');
     this.dbService.getOperations().subscribe(data => {
+      this.filterOperations = this.operationService.getSearchOperation();
       this.operationService.setSearchOperation((!!data && data.length > 0 ?
-        this.filterOperations.searchMoto :
+        (this.filterOperations.searchMoto.brand !== null ? this.filterOperations.searchMoto : data[0].moto) :
         new MotoModel(null, null, null, null, null, null, null, 0)));
       this.operationService.getObserverSearchOperation().subscribe(filter => {
         this.filterOperations = filter;
         if (!!data && data.length > 0) {
-          this.nameFilterMoto = `${this.translator.instant('OPERATIONS_OF')} ${filter.searchMoto.brand} ${filter.searchMoto.model}`;
-        } else {
-          this.nameFilterMoto = this.translator.instant('YOURS_OPERATIONS');
+          this.nameFilterMoto = `${filter.searchMoto.brand} ${filter.searchMoto.model}`;
         }
         this.operations = this.commonService.orderBy(
           data.filter(op =>
@@ -122,9 +121,9 @@ export class OperationPage implements OnInit, OnChanges {
           text: this.translator.instant('ACCEPT'),
           handler: () => {
             this.operationService.saveOperation(this.rowSelected, ActionDB.delete).then(x => {
-              this.commonService.showSaveToast('DeleteSaveOperation', {operation: this.rowSelected.description});
+              this.commonService.showToast('DeleteSaveOperation', {operation: this.rowSelected.description});
             }).catch(e => {
-              this.commonService.showSaveToast('ErrorSaveOperation');
+              this.commonService.showToast('ErrorSaveOperation');
             });
           }
         }

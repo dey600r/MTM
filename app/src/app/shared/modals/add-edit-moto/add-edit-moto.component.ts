@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams, ToastController } from '@ionic/angular';
-import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel } from '@models/index';
-import { DataBaseService, MotoService } from '@services/index';
+import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
-import { ActionDB, Constants } from '@app/core/utils';
+
+// LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
+
+// UTILS
+import { ActionDB } from '@app/core/utils';
+import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel } from '@models/index';
+import { DataBaseService, MotoService, CommonService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-moto',
@@ -29,9 +33,9 @@ export class AddEditMotoComponent implements OnInit {
     private modalController: ModalController,
     private navParams: NavParams,
     private dbService: DataBaseService,
-    private toastController: ToastController,
     private translator: TranslateService,
-    private motoService: MotoService
+    private motoService: MotoService,
+    private commonService: CommonService
   ) {
     this.translateYearBetween = this.translator.instant('AddYearBetween', { year: new Date().getFullYear()});
   }
@@ -57,13 +61,10 @@ export class AddEditMotoComponent implements OnInit {
 
       this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
         this.closeModal();
-        if (this.modalInputModel.isCreate) {
-          this.showSaveToast('AddSaveMoto', { moto: this.moto.model });
-        } else {
-          this.showSaveToast('EditSaveMoto', { moto: this.moto.model });
-        }
+        this.commonService.showToast((this.modalInputModel.isCreate ? 'AddSaveMoto' : 'EditSaveMoto'),
+          { moto: this.moto.model });
       }).catch(e => {
-        this.showSaveToast('ErrorSaveMoto');
+        this.commonService.showToast('ErrorSaveMoto');
       });
     }
   }
@@ -71,14 +72,6 @@ export class AddEditMotoComponent implements OnInit {
   async closeModal() {
     this.modalOutputModel = new ModalOutputModel(true);
     await this.modalController.dismiss(this.modalOutputModel);
-  }
-
-  async showSaveToast(msg: string, data: any = null) {
-    const toast = await this.toastController.create({
-      message: this.translator.instant(msg, data),
-      duration: Constants.DELAY_TOAST
-    });
-    toast.present();
   }
 
   isValidForm(f: any): boolean {

@@ -1,13 +1,16 @@
 import { Component, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform, PopoverController } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 // UTILS
-import { DataBaseService, CommonService, DashboardService } from '@services/index';
-import { DashboardModel, OperationModel } from '@models/index';
+import { DataBaseService, DashboardService } from '@services/index';
+import { DashboardModel, OperationModel, SearchDashboardModel, FilterGroupMotoOpTypeReplacement } from '@models/index';
+
+// COMPONENTS
+import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
   selector: 'app-home',
@@ -16,18 +19,20 @@ import { DashboardModel, OperationModel } from '@models/index';
 })
 export class HomePage implements OnInit, OnChanges {
 
+  currentPopover = null;
   operations: OperationModel[] = [];
 
+  searchDashboard: SearchDashboardModel = this.dashboardService.getSearchDashboard();
   dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
   dashboardMotoExpenses: DashboardModel = new DashboardModel([], []);
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
               private translator: TranslateService,
-              private commonService: CommonService,
               private screenOrientation: ScreenOrientation,
               private changeDetector: ChangeDetectorRef,
-              private dashboardService: DashboardService) {
+              private dashboardService: DashboardService,
+              private popoverController: PopoverController) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -35,9 +40,19 @@ export class HomePage implements OnInit, OnChanges {
     });
 
     this.dbService.getOperations().subscribe(data => {
-      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-      this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoExpenses(windowsSize, data);
-      this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, data);
+      this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
+        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        if (this.isChartMoto()) {
+          this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoExpenses(windowsSize, data);
+          this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, data);
+        } else if (this.isChartOperationType()) {
+          this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoOpTypeExpenses(windowsSize, data);
+          this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, data);
+        } else {
+          this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoOpTypeExpenses(windowsSize, data);
+          this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, data);
+        }
+      });
     });
 
     this.screenOrientation.onChange().subscribe(
@@ -56,7 +71,20 @@ export class HomePage implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
   }
 
-  showPopover() {
+  async showPopover(ev: any) {
+    this.currentPopover = await this.popoverController.create({
+      component: SearchDashboardPopOverComponent,
+      event: ev,
+      translucent: true
+    });
+    return await this.currentPopover.present();
   }
 
+  isChartMoto() {
+    return this.searchDashboard.filterGrouper === FilterGroupMotoOpTypeReplacement.MOTO;
+  }
+
+  isChartOperationType() {
+    return this.searchDashboard.filterGrouper === FilterGroupMotoOpTypeReplacement.OPERATION_TYPE;
+  }
 }
