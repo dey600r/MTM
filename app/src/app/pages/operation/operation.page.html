@@ -22,15 +22,15 @@
     </ion-list-header>
 
     <ion-item button *ngFor="let op of operations">
-      <ion-avatar slot="start">
+      <ion-avatar slot="start" class="max-width10">
         <ion-icon size="large" class="icon-color" [name]="this.getIconOperationType(op)"></ion-icon>
       </ion-avatar>
-      <ion-label>
-        <h2>{{ op.description }}</h2>
+      <ion-label class="min-width45">
+        <h2 class="text-overflow">{{ op.description }}</h2>
         <h3>{{ op.km }} km</h3>
         <p>{{ op.price }} €</p>
       </ion-label>
-      <ion-label>
+      <ion-label class="padding-left10">
         <p>{{ op.date | dateFormatCalendarPipe }}</p>
       </ion-label>
       <ion-label class="align-right">

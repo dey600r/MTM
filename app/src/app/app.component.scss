@@ -10,8 +10,16 @@
     padding-left: 20%;
 }
 
+.padding-left10 {
+    padding-left: 10px;
+}
+
 .padding-left12 {
     padding-left: 12px;
+}
+
+.padding-left15 {
+    padding-left: 15px;
 }
 
 .margin-right-15 {
@@ -106,4 +114,37 @@
     width: 100%;
     text-align: left;
     margin-left: 10px;
+}
+
+.max-width10 {
+    max-width: 10%;
+}
+
+.min-width40 {
+    min-width: 40%;
+}
+
+.min-width45 {
+    min-width: 45%;
+}
+
+.min-width55 {
+    min-width: 55%;
+}
+
+.min-width55 {
+    min-width: 55%;
+}
+
+.min-width70 {
+    min-width: 70%;
+}
+
+.min-height29 {
+    min-height: 29px;
+}
+
+.text-overflow {
+    text-overflow: inherit;
+    overflow: inherit;
 }
