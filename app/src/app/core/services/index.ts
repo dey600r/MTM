@@ -4,3 +4,4 @@ export * from './common.service';
 export * from './moto.service';
 export * from './operation.service';
 export * from './dashboard.service';
+export * from './configuration.service';

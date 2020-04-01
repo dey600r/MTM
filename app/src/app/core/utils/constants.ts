@@ -17,4 +17,7 @@ export class Constants {
     static OPERATION_TYPE_OTHER = 'O';
     static OPERATION_TYPE_ACCESSORIES = 'A';
     static OPERATION_TYPE_CLOTHES = 'C';
+
+    static DATABASE_YES = 'Y';
+    static DATABASE_NO = 'N';
 }

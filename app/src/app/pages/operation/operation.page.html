@@ -13,8 +13,9 @@
   <ion-list>
     <ion-list-header>
       <ion-icon size="large" name="construct"></ion-icon>
-      <h3 *ngIf="this.operations.length === 0" class="header-list">{{ 'YOUR_OPERATIONS' | translate }}</h3>
-      <h3 *ngIf="this.operations.length > 0" class="header-list">{{ 'OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
+      <h3 *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null"
+        class="header-list">{{ 'YOURS_OPERATIONS' | translate }}</h3>
+      <h3 *ngIf="this.filterOperations.searchMoto.brand !== null" class="header-list">{{ 'OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
       <ion-button fill="clear" (click)="openCreateOperationModal()">
         <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
       </ion-button>

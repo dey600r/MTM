@@ -7,31 +7,118 @@
   </ion-header>
   
   <ion-content>
+    <!-- CONFIGURATIONS -->
     <ion-list>
       <ion-list-header>
         <ion-icon size="large" name="cog"></ion-icon>
         <h3 class="header-list">{{ 'YOURS_CONFIGURATIONS' | translate }}</h3>
-        <ion-button fill="clear" (click)="openCreateModal()">
+        <ion-button class="margin-right-15" fill="clear" (click)="hideConfiguration = !hideConfiguration">
+          <ion-icon *ngIf="!hideConfiguration" size="small" class="btn-color" name="caret-down"></ion-icon>
+          <ion-icon *ngIf="hideConfiguration" size="small" class="btn-color" name="caret-up"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="openCreateConfigurationModal()">
           <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
         </ion-button>
       </ion-list-header>
+      <ion-item button *ngFor="let c of configurations" [hidden]="hideConfiguration">
+        <ion-label>
+          <h2>{{ c.name }}</h2>
+          <h3>{{ c.description }}</h3>
+        </ion-label>
+        <ion-label *ngIf="c.master" class="align-right">
+          <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+        </ion-label>
+        <ion-label *ngIf="!c.master" class="align-right">
+          <ion-label>
+            <ion-button fill="clear" (click)="openEditConfigurationModal(c)">
+              <ion-icon size="large" class="btn-color" name="create"></ion-icon>
+            </ion-button>
+          </ion-label>
+          <ion-label>
+            <ion-button fill="clear" (click)="deleteConfiguration(c)">
+              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </ion-label>
+        </ion-label>
+      </ion-item>
     </ion-list>
+    <!-- MAINTENANCES -->
     <ion-list>
       <ion-list-header>
         <ion-icon size="large" name="build"></ion-icon>
         <h3 class="header-list">{{ 'MAINTENANCES' | translate }}</h3>
-        <ion-button fill="clear" (click)="openCreateModal()">
+        <ion-button class="margin-right-15" fill="clear" (click)="hideMaintenance = !hideMaintenance">
+          <ion-icon *ngIf="!hideMaintenance" size="small" class="btn-color" name="caret-down"></ion-icon>
+          <ion-icon *ngIf="hideMaintenance" size="small" class="btn-color" name="caret-up"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="openCreateMaintenanceModal()">
           <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
         </ion-button>
       </ion-list-header>
+      <ion-item button *ngFor="let m of maintenances" [hidden]="hideMaintenance">
+        <ion-label>
+          <h2>{{ m.description }}</h2>
+          <h3>{{ m.maintenanceElement.name | translate }}</h3>
+          <p>{{ m.maintenanceFreq.description }} km</p>
+        </ion-label>
+        <ion-label>
+          <h3>{{ m.km }} km</h3>
+          <p>{{ m.time }} m</p>
+        </ion-label>
+        <ion-label *ngIf="m.master" class="align-right">
+          <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+        </ion-label>
+        <ion-label *ngIf="!m.master" class="align-right">
+          <ion-label>
+            <ion-button fill="clear" (click)="openEditMaintenanceModal(m)">
+              <ion-icon size="large" class="btn-color" name="create"></ion-icon>
+            </ion-button>
+          </ion-label>
+          <ion-label>
+            <ion-button fill="clear" (click)="deleteMaintenance(m)">
+              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </ion-label>
+        </ion-label>
+      </ion-item>
     </ion-list>
+    <!-- MAINTENANCE ELEMNTS / REPLACEMENT -->
     <ion-list>
       <ion-list-header>
         <ion-icon size="large" name="repeat"></ion-icon>
         <h3 class="header-list">{{ 'REPLACEMENTS' | translate }}</h3>
-        <ion-button fill="clear" (click)="openCreateModal()">
+        <ion-button class="margin-right-15" fill="clear" (click)="hideReplacement = !hideReplacement">
+          <ion-icon *ngIf="!hideReplacement" size="small" class="btn-color" name="caret-down"></ion-icon>
+          <ion-icon *ngIf="hideReplacement" size="small" class="btn-color" name="caret-up"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="openCreateReplacementModal()">
           <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
         </ion-button>
       </ion-list-header>
+      <ion-item button *ngFor="let me of maintenanceElements" [hidden]="hideReplacement">
+        <ion-label>
+          <h2>{{ me.name | translate }}</h2>
+          <h3>{{ me.description | translate }}</h3>
+        </ion-label>
+        <ion-label *ngIf="me.master" class="align-right">
+          <ion-label>
+            <ion-button fill="clear" disabled="true">
+              <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+            </ion-button>
+          </ion-label>
+        </ion-label>
+        <ion-label *ngIf="!me.master" class="align-right">
+          <ion-label>
+            <ion-button fill="clear" (click)="openEditReplacementModal(me)">
+              <ion-icon size="large" class="btn-color" name="create"></ion-icon>
+            </ion-button>
+          </ion-label>
+          <ion-label>
+            <ion-button fill="clear" (click)="deleteReplacement(me)">
+              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </ion-label>
+        </ion-label>
+      </ion-item>
     </ion-list>
   </ion-content>

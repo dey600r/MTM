@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel } from '@models/index';
-import { ConstantsTable, ConstantsColumns } from '@utils/index';
+// UTILS
+import {
+  MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
+  MaintenanceFreqModel, MaintenanceModel
+} from '@models/index';
+import { ConstantsTable, ConstantsColumns, Constants } from '@utils/index';
 import { CommonService } from './common.service';
 
 @Injectable({
@@ -18,13 +22,19 @@ export class SqlService {
       let sql: string;
       switch (table) {
         case ConstantsTable.TABLE_MTM_MOTO:
-            sql = this.getSqlMoto();
-            break;
+          sql = this.getSqlMoto();
+          break;
+        case ConstantsTable.TABLE_MTM_CONFIGURATION:
+          sql = this.getSqlConfiguration();
+          break;
         case ConstantsTable.TABLE_MTM_OPERATION:
-            sql = this.getSqlOperation();
-            break;
+          sql = this.getSqlOperation();
+          break;
+        case ConstantsTable.TABLE_MTM_MAINTENANCE:
+          sql = this.getSqlMaintenance();
+          break;
         default:
-            sql = `SELECT * FROM ${table}`;
+          sql = `SELECT * FROM ${table}`;
       }
       return sql;
   }
@@ -33,12 +43,41 @@ export class SqlService {
       return `SELECT m.${ConstantsColumns.COLUMN_MTM_ID}, ` +
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, m.${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, m.${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
-      `m.${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, m.${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
+      `m.${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}, ` +
-      `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME}, c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} ` +
+      `c.${ConstantsColumns.COLUMN_MTM_ID} as idConfiguration, ` +
+      `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME} as nameConfiguration, ` +
+      `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} as descriptionConfiguration ` +
       `FROM ${ConstantsTable.TABLE_MTM_MOTO} AS m ` +
       `JOIN ${ConstantsTable.TABLE_MTM_CONFIGURATION} AS c ON ` +
       `c.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}`;
+  }
+
+  getSqlConfiguration(): string {
+    return `SELECT c.${ConstantsColumns.COLUMN_MTM_ID}, ` +
+    `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME}, c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION}, ` +
+    `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenance, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION} as descriptionMaintenance, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement, ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE} as codeMaintenanceFreq, ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION} as descriptionMaintenanceFreq, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME}, m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER} as masterMaintenance ` +
+    `FROM ${ConstantsTable.TABLE_MTM_CONFIGURATION} AS c ` +
+    `LEFT JOIN ${ConstantsTable.TABLE_MTM_CONFIG_MAINT} AS cm ON ` +
+    `c.${ConstantsColumns.COLUMN_MTM_ID} = cm.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION} ` +
+    `LEFT JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE} AS m ON ` +
+    `m.${ConstantsColumns.COLUMN_MTM_ID} = cm.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE} ` +
+    `LEFT JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
+    `me.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_ELEMENT} ` +
+    `LEFT JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ} AS mf ON ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_FREQ}`;
   }
 
   getSqlOperation(): string {
@@ -60,9 +99,29 @@ export class SqlService {
     `JOIN ${ConstantsTable.TABLE_MTM_MOTO} AS m ON ` +
     `m.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO} ` +
     `LEFT JOIN ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} AS ome ON ` +
-    `ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION} = op.${ConstantsColumns.COLUMN_MTM_ID} ` +
+    `ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION} = op.${ConstantsColumns.COLUMN_MTM_ID} ` +
     `LEFT JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
-    `me.${ConstantsColumns.COLUMN_MTM_ID} = ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT}`;
+    `me.${ConstantsColumns.COLUMN_MTM_ID} = ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT}`;
+  }
+
+  getSqlMaintenance(): string {
+    return `SELECT m.${ConstantsColumns.COLUMN_MTM_ID}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION}, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement, ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE} as codeMaintenanceFreq, ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION} as descriptionMaintenanceFreq, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME}, m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER} ` +
+    `FROM ${ConstantsTable.TABLE_MTM_MAINTENANCE} AS m ` +
+    `JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
+    `me.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_ELEMENT} ` +
+    `JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ} AS mf ON ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_FREQ}`;
   }
 
   getSqlSequence(table: string, iteration: number): string {
@@ -88,8 +147,14 @@ export class SqlService {
       case ConstantsTable.TABLE_MTM_OPERATION_TYPE:
         result = this.mapOperationType(data);
         break;
+      case ConstantsTable.TABLE_MTM_MAINTENANCE:
+        result = this.mapMaintenance(data);
+        break;
       case ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT:
         result = this.mapMaintenanceElement(data);
+        break;
+      case ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ:
+        result = this.mapMaintenanceFreq(data);
         break;
     }
     return result;
@@ -98,20 +163,18 @@ export class SqlService {
   mapMoto(data: any): any {
     let motosDB: MotoModel[] = [];
     if (data.rows.length > 0) {
+      let row: any = null;
       for (let i = 0; i < data.rows.length; i++) {
+        row = data.rows.item(i);
         motosDB = [...motosDB, {
-          id: Number(data.rows.item(i).id),
-          model: data.rows.item(i).model,
-          brand: data.rows.item(i).brand,
-          year: data.rows.item(i).year,
-          km: Number(data.rows.item(i).km),
-          configuration: new ConfigurationModel(
-                      data.rows.item(i).name,
-                      data.rows.item(i).description,
-                      data.rows.item(i).idConfiguration
-          ),
-          kmsPerMonth: data.rows.item(i).kmsPerMonth,
-          dateKms: new Date(data.rows.item(i).dateKms)
+          id: Number(row[ConstantsColumns.COLUMN_MTM_ID]),
+          model: row[ConstantsColumns.COLUMN_MTM_MOTO_MODEL],
+          brand: row[ConstantsColumns.COLUMN_MTM_MOTO_BRAND],
+          year: Number(row[ConstantsColumns.COLUMN_MTM_MOTO_YEAR]),
+          km: Number(row[ConstantsColumns.COLUMN_MTM_MOTO_KM]),
+          configuration: this.getMapConfiguration(row, true),
+          kmsPerMonth: row[ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH],
+          dateKms: new Date(row[ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS])
         }];
       }
     }
@@ -121,56 +184,65 @@ export class SqlService {
   mapConfiguration(data: any): any {
     let configurationDB: ConfigurationModel[] = [];
     if (data.rows.length > 0) {
+      let configuration: ConfigurationModel = new ConfigurationModel();
+      let row: any = null;
       for (let i = 0; i < data.rows.length; i++) {
-          configurationDB = [...configurationDB, {
-            id: Number(data.rows.item(i).id),
-            name: data.rows.item(i).name,
-            description: data.rows.item(i).description
-          }];
+        row = data.rows.item(i);
+        configuration = configurationDB.find(x => x.id === row.id);
+        if (!!configuration) {
+          configuration.listMaintenance = [...configuration.listMaintenance, this.getMapMaintenance(row, true)];
+        } else {
+          configurationDB = [...configurationDB, this.getMapConfiguration(row, false)];
         }
+      }
     }
     return configurationDB;
   }
 
+  getMapConfiguration(data: any, moto: boolean): ConfigurationModel {
+    return (moto ? {
+      id: Number(data.idConfiguration),
+      name: data.nameConfiguration,
+      description: data.descriptionConfiguration,
+      master: (data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER] === Constants.DATABASE_YES),
+      listMaintenance: []
+    } : {
+      id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
+      name: data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME],
+      description: data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION],
+      master: (data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER] === Constants.DATABASE_YES),
+      listMaintenance: [this.getMapMaintenance(data, true)]
+    });
+  }
+
   mapOperation(data: any): any {
     let operationsDB: OperationModel[] = [];
-    let operation: OperationModel = new OperationModel();
     if (data.rows.length > 0) {
+      let operation: OperationModel = new OperationModel();
+      let row: any = null;
       for (let i = 0; i < data.rows.length; i++) {
-        operation = operationsDB.find(x => x.id === data.rows.item(i).id);
+        row = data.rows.item(i);
+        operation = operationsDB.find(x => x.id === row.id);
         if (!!operation) { // if data exists it just save maintenance element
-          operation.listMaintenanceElement = [...operation.listMaintenanceElement,
-            new MaintenanceElementModel(
-              data.rows.item(i).name,
-              data.rows.item(i).description,
-              data.rows.item(i).idMaintenanceElement
-            )];
+          operation.listMaintenanceElement = [...operation.listMaintenanceElement, this.getMapMaintenanceElement(row, true)];
         } else { // new data
           operationsDB = [...operationsDB, {
-            id: Number(data.rows.item(i).id),
-            description: data.rows.item(i).description,
-            details: data.rows.item(i).details,
-            operationType: new OperationTypeModel(
-                        data.rows.item(i).codeOperationType,
-                        data.rows.item(i).descriptionOperationType,
-                        data.rows.item(i).idOperationType
-            ),
+            id: Number(row[ConstantsColumns.COLUMN_MTM_ID]),
+            description: row[ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION],
+            details: row[ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS],
+            operationType: this.getMapOperationType(row, true),
             moto: new MotoModel(
-              data.rows.item(i).modelMoto,
-              data.rows.item(i).brandMoto,
+              row.modelMoto,
+              row.brandMoto,
               null, null, null, null, null,
-              data.rows.item(i).idMoto),
-            km: data.rows.item(i).km,
-            date: data.rows.item(i).date,
-            location: data.rows.item(i).location,
-            owner: data.rows.item(i).owner,
-            price: data.rows.item(i).price,
-            document: data.rows.item(i).document,
-            listMaintenanceElement: [new MaintenanceElementModel(
-              data.rows.item(i).nameMaintenanceElement,
-              data.rows.item(i).descriptionMaintenanceElement,
-              data.rows.item(i).idMaintenanceElement
-            )]
+              row.idMoto),
+            km: Number(row[ConstantsColumns.COLUMN_MTM_OPERATION_KM]),
+            date: row[ConstantsColumns.COLUMN_MTM_OPERATION_DATE],
+            location: row[ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION],
+            owner: row[ConstantsColumns.COLUMN_MTM_OPERATION_OWNER],
+            price: Number(row[ConstantsColumns.COLUMN_MTM_OPERATION_PRICE]),
+            document: row[ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT],
+            listMaintenanceElement: [this.getMapMaintenanceElement(row, true)]
           }];
         }
       }
@@ -182,28 +254,102 @@ export class SqlService {
     let operationTypeDB: OperationTypeModel[] = [];
     if (data.rows.length > 0) {
       for (let i = 0; i < data.rows.length; i++) {
-        operationTypeDB = [...operationTypeDB, {
-          id: Number(data.rows.item(i).id),
-          code: data.rows.item(i).code,
-          description: data.rows.item(i).description
-        }];
+        operationTypeDB = [...operationTypeDB, this.getMapOperationType(data.rows.item(i), false)];
       }
     }
     return operationTypeDB;
+  }
+
+  getMapOperationType(data: any, op: boolean): OperationTypeModel {
+    return (op ? {
+      id: Number(data.idOperationType),
+      code: data.codeOperationType,
+      description: data.descriptionOperationType
+    } : {
+      id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
+      code: data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE],
+      description: data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION]
+    });
+  }
+
+  mapMaintenance(data: any): any {
+    let maintenanceDB: MaintenanceModel[] = [];
+    if (data.rows.length > 0) {
+      for (let i = 0; i < data.rows.length; i++) {
+        maintenanceDB = [...maintenanceDB, this.getMapMaintenance(data.rows.item(i), false)];
+      }
+    }
+    return maintenanceDB;
+  }
+
+  getMapMaintenance(data: any, conf: boolean): MaintenanceModel {
+    return (conf ? {
+      id: Number(data.idMaintenance),
+      description: data.descriptionMaintenance,
+      maintenanceElement: this.getMapMaintenanceElement(data, true),
+      maintenanceFreq: this.getMapMaintenanceFreq(data, true),
+      km: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM]),
+      time: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME]),
+      init: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT] === Constants.DATABASE_YES,
+      wear: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR] === Constants.DATABASE_YES,
+      master: data.masterMaintenance === Constants.DATABASE_YES
+    } : {
+      id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
+      description: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION],
+      maintenanceElement: this.getMapMaintenanceElement(data, true),
+      maintenanceFreq: this.getMapMaintenanceFreq(data, true),
+      km: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM]),
+      time: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME]),
+      init: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT] === Constants.DATABASE_YES,
+      wear: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR] === Constants.DATABASE_YES,
+      master: data.master === Constants.DATABASE_YES
+    });
   }
 
   mapMaintenanceElement(data: any): any {
     let maintenanceElementDB: MaintenanceElementModel[] = [];
     if (data.rows.length > 0) {
       for (let i = 0; i < data.rows.length; i++) {
-        maintenanceElementDB = [...maintenanceElementDB, {
-          id: Number(data.rows.item(i).id),
-          name: data.rows.item(i).name,
-          description: data.rows.item(i).description
-        }];
+        maintenanceElementDB = [...maintenanceElementDB, this.getMapMaintenanceElement(data.rows.item(i), false)];
       }
     }
     return maintenanceElementDB;
+  }
+
+  getMapMaintenanceElement(data: any, op: boolean): MaintenanceElementModel {
+    return (op ? {
+      id: Number(data.idMaintenanceElement),
+      name: data.nameMaintenanceElement,
+      description: data.descriptionMaintenanceElement,
+      master: false
+    } : {
+      id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
+      name: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME],
+      description: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION],
+      master: (data.master === Constants.DATABASE_YES)
+    });
+  }
+
+  mapMaintenanceFreq(data: any): any {
+    let maintenanceFreqDB: MaintenanceFreqModel[] = [];
+    if (data.rows.length > 0) {
+      for (let i = 0; i < data.rows.length; i++) {
+        maintenanceFreqDB = [...maintenanceFreqDB, this.getMapMaintenanceFreq(data.rows.item(i), false)];
+      }
+    }
+    return maintenanceFreqDB;
+  }
+
+  getMapMaintenanceFreq(data: any, man: boolean): MaintenanceFreqModel {
+    return (man ? {
+      id: Number(data.idMaintenanceFreq),
+      code: data.codeMaintenanceFreq,
+      description: data.descriptionMaintenanceFreq
+    } : {
+      id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
+      code: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE],
+      description: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION]
+    });
   }
 
   /* INSERTS SQL */
@@ -238,8 +384,8 @@ export class SqlService {
     let sql = '';
     if (op !== null  && !!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
       sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} ` +
-      `(${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION}, ` +
-      `${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_MAINTENANCE_ELEMENT}) `;
+      `(${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT}) `;
 
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < op.listMaintenanceElement.length; i++) {

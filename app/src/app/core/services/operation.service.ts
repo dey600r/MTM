@@ -52,7 +52,7 @@ export class OperationService {
             case ActionDB.update:
                 sqlDB = this.sqlService.updateSqlOperation(op);
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                    ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION, [op.id]);
+                    ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, [op.id]);
                 sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
                 scriptDB = true;
                 break;
@@ -69,7 +69,7 @@ export class OperationService {
         let sqlDB = '';
         if (!!operation.listMaintenanceElement && operation.listMaintenanceElement.length > 0) {
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                    ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION,
+                    ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION,
                     operation.listMaintenanceElement.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
         }
         sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION,
@@ -81,7 +81,7 @@ export class OperationService {
         let sqlDB = '';
         if (!!operation && operation.length > 0) {
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_ID_OPERATION, operation.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
+                ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, operation.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION,
                 ConstantsColumns.COLUMN_MTM_OPERATION_MOTO, [operation[0].moto.id]); // DELETE OPERATION
         }

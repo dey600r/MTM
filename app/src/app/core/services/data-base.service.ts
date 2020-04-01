@@ -1,16 +1,19 @@
 import { Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClient } from '@angular/common/http';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel } from '@models/index';
+// LIBRARIES IONIC
+import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 
+// UTILS
+import {
+  MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
+  MaintenanceFreqModel, MaintenanceModel
+} from '@models/index';
 import { ConstantsTable } from '@utils/index';
-
 import { SqlService } from './sql.service';
-import { OperationService } from './operation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +26,9 @@ export class DataBaseService {
   configuration = new BehaviorSubject([]);
   operation = new BehaviorSubject([]);
   operationType = new BehaviorSubject([]);
+  maintenance = new BehaviorSubject([]);
   maintenanceElement = new BehaviorSubject([]);
+  maintenanceFreq = new BehaviorSubject([]);
 
   constructor(private plt: Platform,
               private sqlitePorter: SQLitePorter,
@@ -88,8 +93,16 @@ export class DataBaseService {
     return this.operationType.asObservable();
   }
 
+  getMaintenance(): Observable<MaintenanceModel[]> {
+    return this.maintenance.asObservable();
+  }
+
   getMaintenanceElement(): Observable<MaintenanceElementModel[]> {
     return this.maintenanceElement.asObservable();
+  }
+
+  getMaintenanceFreq(): Observable<MaintenanceFreqModel[]> {
+    return this.maintenanceFreq.asObservable();
   }
 
   loadAllTables() {
@@ -98,7 +111,9 @@ export class DataBaseService {
       ConstantsTable.TABLE_MTM_CONFIGURATION,
       ConstantsTable.TABLE_MTM_OPERATION,
       ConstantsTable.TABLE_MTM_OPERATION_TYPE,
-      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT
+      ConstantsTable.TABLE_MTM_MAINTENANCE,
+      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT,
+      ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ
     ]);
   }
 
@@ -130,8 +145,14 @@ export class DataBaseService {
       case ConstantsTable.TABLE_MTM_OPERATION_TYPE:
         this.operationType.next(this.sqlService.mapDataToObserver(table, data));
         break;
+      case ConstantsTable.TABLE_MTM_MAINTENANCE:
+        this.maintenance.next(this.sqlService.mapDataToObserver(table, data));
+        break;
       case ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT:
         this.maintenanceElement.next(this.sqlService.mapDataToObserver(table, data));
+        break;
+      case ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ:
+        this.maintenanceFreq.next(this.sqlService.mapDataToObserver(table, data));
         break;
     }
   }
