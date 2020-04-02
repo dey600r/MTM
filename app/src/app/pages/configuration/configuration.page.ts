@@ -5,7 +5,8 @@ import { ModalController, Platform, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService } from '@services/index';
+import { DataBaseService, CommonService } from '@services/index';
+import { ConstantsColumns } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel
 } from '@models/index';
@@ -14,6 +15,7 @@ import {
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
+
 
 @Component({
   selector: 'app-configuration',
@@ -40,7 +42,8 @@ export class ConfigurationPage implements OnInit {
               private dbService: DataBaseService,
               private modalController: ModalController,
               private translator: TranslateService,
-              private alertController: AlertController) {
+              private alertController: AlertController,
+              private commonService: CommonService) {
       this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -55,15 +58,16 @@ export class ConfigurationPage implements OnInit {
 
   initPage() {
     this.dbService.getConfigurations().subscribe(data => {
-      this.configurations = data;
+      this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
     });
 
     this.dbService.getMaintenance().subscribe(data => {
-      this.maintenances = data;
+      this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
     });
 
     this.dbService.getMaintenanceElement().subscribe(data => {
-      this.maintenanceElements = data;
+      data.filter(x => x.master).forEach(x => x.name = this.translator.instant('DB.' + x.name));
+      this.maintenanceElements = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
     });
   }
 

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      <ion-title class="align-center">{{ 'OPERATION' | translate }}</ion-title>
+      <ion-title class="align-center">{{ 'COMMON.OPERATION' | translate }}</ion-title>
     </ion-title>
     <ion-button slot="end" fill="clear" (click)="showPopover()">
       <ion-icon size="large" name="filter"></ion-icon>
@@ -15,11 +15,16 @@
       <!-- Title -->
       <ion-icon size="large" name="construct"></ion-icon>
       <h3 *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null"
-        class="header-list">{{ 'YOURS_OPERATIONS' | translate }}</h3>
-      <h3 *ngIf="this.filterOperations.searchMoto.brand !== null" class="header-list">{{ 'OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
+        class="header-list">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h3>
+      <h3 *ngIf="this.filterOperations.searchMoto.brand !== null" class="header-list">{{ 'COMMON.OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
       <!-- Button create -->
-      <ion-button fill="clear" (click)="openOperationModal()">
+      <ion-button *ngIf="this.filterOperations.searchMoto.brand !== null" fill="clear" (click)="openOperationModal()">
         <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
+      </ion-button>
+      <!-- Button info -->
+      <ion-button *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null" 
+        fill="clear" (click)="showModalInfo()">
+        <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
       </ion-button>
     </ion-list-header>
 

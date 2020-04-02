@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import * as Moment from 'moment';
 
@@ -12,6 +12,7 @@ import { Constants } from '@utils/index';
 export class CommonService {
 
     constructor(private translator: TranslateService,
+                private alertController: AlertController,
                 private toastController: ToastController) {
     }
 
@@ -33,11 +34,27 @@ export class CommonService {
 
     async showToast(msg: string, data: any = null, delay: number = Constants.DELAY_TOAST) {
         const toast = await this.toastController.create({
-          message: this.translator.instant(msg, data),
-          duration: delay
+            message: this.translator.instant(msg, data),
+            duration: delay
         });
         toast.present();
-      }
+    }
+
+    // ALERTS
+
+    alertInfo(msg: string) {
+        this.alert('ALERT.INFO', msg);
+    }
+
+    async alert(header: string, msg: string) {
+        const alert = await this.alertController.create({
+            header: this.translator.instant(header),
+            subHeader: '',
+            message: this.translator.instant(msg),
+            buttons: [this.translator.instant(`COMMON.ACCEPT`)]
+        });
+        await alert.present();
+    }
 
     // COMMON UTILS METHODS
 

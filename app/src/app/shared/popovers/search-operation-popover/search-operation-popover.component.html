@@ -1,12 +1,12 @@
 <ion-list>
     <!-- HEADER -->
     <ion-list-header>
-        <ion-label>{{ 'FILTER' | translate }}</ion-label>
+        <ion-label>{{ 'COMMON.FILTER' | translate }}</ion-label>
         <ion-label>
             <!-- Clear -->
             <ion-chip outline color="primary" (click)="clearFilter()">
                 <ion-icon size="small" name="hourglass"></ion-icon>
-                <ion-label>{{ 'CLEAN' | translate }}</ion-label>
+                <ion-label>{{ 'COMMON.CLEAN' | translate }}</ion-label>
             </ion-chip>
             <!-- Close -->
             <ion-button slot="end" fill="clear" (click)="closePopover()">
@@ -16,26 +16,26 @@
     </ion-list-header>
     <!-- FILTERS -->
     <ion-item>
-        <ion-label>{{ 'MOTORBIKES' | translate }}</ion-label>
+        <ion-label>{{ 'COMMON.MOTORBIKES' | translate }}</ion-label>
         <ion-select [placeholder]="this.translateSelect" interface="popover"
             [(ngModel)]="this.filterMoto" (ionChange)="changeSearcherMoto()">
             <ion-select-option [(value)]="m.id" *ngFor="let m of motos">{{ m.brand + ' ' + m.model }}</ion-select-option>
           </ion-select>
     </ion-item>
     <ion-item>
-        <ion-label>{{ 'OP_TYPE' | translate }}</ion-label>
+        <ion-label>{{ 'COMMON.OP_TYPE' | translate }}</ion-label>
         <ion-select [placeholder]="this.translateSelect" multiple="true" 
             [cancelText]="this.translateCancel" [okText]="this.translateAccept"
             [(ngModel)]="this.filterOpType" (ionChange)="changeSearcherOperationType()">
-            <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationTypes">{{ ot.description | translate }}</ion-select-option>
+            <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationTypes">{{ 'DB.' + ot.description | translate }}</ion-select-option>
           </ion-select>
     </ion-item>
     <ion-item>
-        <ion-label>{{ 'REPLACEMENT' | translate }}</ion-label>
+        <ion-label>{{ 'COMMON.REPLACEMENT' | translate }}</ion-label>
         <ion-select [placeholder]="this.translateSelect" multiple="true" 
             [cancelText]="this.translateCancel" [okText]="this.translateAccept"
             [(ngModel)]="this.filterMaintElement" (ionChange)="changeSearcherMaintenanceElement()">
-            <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ me.name | translate }}</ion-select-option>
+            <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ 'DB.' + me.name | translate }}</ion-select-option>
           </ion-select>
     </ion-item>
 </ion-list>

@@ -59,7 +59,7 @@ export class OperationPage implements OnInit {
         new MotoModel(null, null, null, null, null, null, null, 0)));
       this.operationService.getObserverSearchOperation().subscribe(filter => {
         this.filterOperations = filter;
-        if (!!data && data.length > 0) {
+        if (this.filterOperations.searchMoto.brand !== null) {
           this.nameFilterMoto = `${filter.searchMoto.brand} ${filter.searchMoto.model}`;
         }
         this.operations = this.commonService.orderBy(
@@ -89,6 +89,10 @@ export class OperationPage implements OnInit {
     this.showConfirmDelete();
   }
 
+  showModalInfo() {
+    this.commonService.alertInfo('ALERT.AddMotoToAddOperation');
+  }
+
   async openModal() {
 
     const modal = await this.modalController.create({
@@ -107,20 +111,20 @@ export class OperationPage implements OnInit {
 
   async showConfirmDelete() {
     const alert = await this.alertController.create({
-      header: this.translator.instant('OPERATION'),
-      message: this.translator.instant('ConfirmDeleteOperation', {operation: this.rowSelected.description}),
+      header: this.translator.instant('COMMON.OPERATION'),
+      message: this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation', {operation: this.rowSelected.description}),
       buttons: [
         {
-          text: this.translator.instant('CANCEL'),
+          text: this.translator.instant('COMMON.CANCEL'),
           role: 'cancel',
           cssClass: 'secondary'
         }, {
-          text: this.translator.instant('ACCEPT'),
+          text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
             this.operationService.saveOperation(this.rowSelected, ActionDB.delete).then(x => {
-              this.commonService.showToast('DeleteSaveOperation', {operation: this.rowSelected.description});
+              this.commonService.showToast('PAGE_OPERATION.DeleteSaveOperation', {operation: this.rowSelected.description});
             }).catch(e => {
-              this.commonService.showToast('ErrorSaveOperation');
+              this.commonService.showToast('PAGE_OPERATION.ErrorSaveOperation');
             });
           }
         }

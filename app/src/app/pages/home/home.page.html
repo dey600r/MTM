@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      <ion-title class="align-center">{{ 'HOME' | translate }}</ion-title>
+      <ion-title class="align-center">{{ 'PAGE_HOME.HOME' | translate }}</ion-title>
     </ion-title>
     <ion-button slot="end" fill="clear" (click)="showPopover()">
       <ion-icon size="large" name="filter"></ion-icon>
@@ -12,7 +12,7 @@
 <ion-content fullscreen>
   <ion-list-header>
     <ion-icon size="large" name="bicycle"></ion-icon>
-    <h3 class="header-list">{{ 'EXPENSES_PER_MOTO' | translate }}</h3>
+    <h3 class="header-list">{{ 'PAGE_HOME.EXPENSES_PER_MOTO' | translate }}</h3>
   </ion-list-header>
   <ngx-charts-bar-vertical *ngIf="isChartMoto()"
     [view]="dashboardMotoExpenses.view"
@@ -45,7 +45,7 @@
   </ngx-charts-bar-vertical-2d>
   <ion-list-header>
     <ion-icon size="large" name="construct"></ion-icon>
-    <h3 class="header-list">{{ 'EXPENSES_PER_OP_TYPE' | translate }}</h3>
+    <h3 class="header-list">{{ 'PAGE_HOME.EXPENSES_PER_OP_TYPE' | translate }}</h3>
   </ion-list-header>
   <ngx-charts-pie-chart
     [view]="dashboardOpTypeExpenses.view"

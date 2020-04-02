@@ -34,9 +34,9 @@ import { ConstantsColumns } from '@utils/index';
                 private commonService: CommonService,
                 private operationService: OperationService,
                 private translator: TranslateService) {
-      this.translateAccept = this.translator.instant('ACCEPT');
-      this.translateCancel = this.translator.instant('CANCEL');
-      this.translateSelect = this.translator.instant('SELECT');
+      this.translateAccept = this.translator.instant('COMMON.ACCEPT');
+      this.translateCancel = this.translator.instant('COMMON.CANCEL');
+      this.translateSelect = this.translator.instant('COMMON.SELECT');
       this.searchOperation = this.operationService.getSearchOperation();
       this.filterMoto = this.searchOperation.searchMoto.id;
       this.filterOpType = this.searchOperation.searchOperationType.map(x => x.id);

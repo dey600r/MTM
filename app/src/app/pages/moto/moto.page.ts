@@ -91,22 +91,24 @@ export class MotoPage implements OnInit {
     if (!!this.operations && this.operations.length > 0) {
       ops = this.operations.filter(x => x.moto.id === this.rowSelected.id);
     }
-    const message: string = (!!ops && ops.length > 0 ? 'ConfirmDeleteMotoOperation' : 'ConfirmDeleteMoto');
+    const message: string = (!!ops && ops.length > 0 ?
+      'PAGE_MOTO.ConfirmDeleteMotoOperation' : 'PAGE_MOTO.ConfirmDeleteMoto');
     const alert = await this.alertController.create({
-      header: this.translator.instant('MOTORBIKE'),
+      header: this.translator.instant('COMMON.MOTORBIKE'),
       message: this.translator.instant(message, {moto: `${this.rowSelected.brand} ${this.rowSelected.model}`}),
       buttons: [
         {
-          text: this.translator.instant('CANCEL'),
+          text: this.translator.instant('COMMON.CANCEL'),
           role: 'cancel',
           cssClass: 'secondary'
         }, {
-          text: this.translator.instant('ACCEPT'),
+          text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
             this.motoService.saveMoto(this.rowSelected, ActionDB.delete, ops).then(x => {
-              this.commonService.showToast('DeleteSaveMoto', { moto: `${this.rowSelected.brand} ${this.rowSelected.model}` });
+              this.commonService.showToast('PAGE_MOTO.DeleteSaveMoto',
+                { moto: `${this.rowSelected.brand} ${this.rowSelected.model}` });
             }).catch(e => {
-              this.commonService.showToast('ErrorSaveMoto');
+              this.commonService.showToast('PAGE_MOTO.ErrorSaveMoto');
             });
           }
         }

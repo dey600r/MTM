@@ -6,7 +6,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDB } from '@app/core/utils';
+import { ActionDB, ConstantsColumns } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel } from '@models/index';
 import { DataBaseService, MotoService, CommonService } from '@services/index';
 
@@ -37,7 +37,7 @@ export class AddEditMotoComponent implements OnInit {
     private motoService: MotoService,
     private commonService: CommonService
   ) {
-    this.translateYearBetween = this.translator.instant('AddYearBetween', { year: new Date().getFullYear()});
+    this.translateYearBetween = this.translator.instant('PAGE_MOTO.AddYearBetween', { year: new Date().getFullYear()});
   }
 
   ngOnInit() {
@@ -47,7 +47,7 @@ export class AddEditMotoComponent implements OnInit {
     this.moto = Object.assign({}, this.modalInputModel.data);
 
     this.dbService.getConfigurations().subscribe(x => {
-      this.configurations = x;
+      this.configurations = this.commonService.orderBy(x, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
     });
   }
 
@@ -61,10 +61,11 @@ export class AddEditMotoComponent implements OnInit {
 
       this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
         this.closeModal();
-        this.commonService.showToast((this.modalInputModel.isCreate ? 'AddSaveMoto' : 'EditSaveMoto'),
+        this.commonService.showToast((
+          this.modalInputModel.isCreate ? 'PAGE_MOTO.AddSaveMoto' : 'PAGE_MOTO.EditSaveMoto'),
           { moto: this.moto.model });
       }).catch(e => {
-        this.commonService.showToast('ErrorSaveMoto');
+        this.commonService.showToast('PAGE_MOTO.ErrorSaveMoto');
       });
     }
   }

@@ -49,11 +49,11 @@ export class AddEditOperationComponent implements OnInit {
     private operationService: OperationService,
     private commonService: CommonService
   ) {
-    this.translateWorkshop = this.translator.instant('WORKSHOP');
-    this.translateMe = this.translator.instant('ME');
-    this.translateAccept = this.translator.instant('ACCEPT');
-    this.translateCancel = this.translator.instant('CANCEL');
-    this.translateSelect = this.translator.instant('SELECT');
+    this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
+    this.translateMe = this.translator.instant('COMMON.ME');
+    this.translateAccept = this.translator.instant('COMMON.ACCEPT');
+    this.translateCancel = this.translator.instant('COMMON.CANCEL');
+    this.translateSelect = this.translator.instant('COMMON.SELECT');
    }
 
   ngOnInit() {
@@ -73,11 +73,13 @@ export class AddEditOperationComponent implements OnInit {
     });
 
     this.dbService.getOperationType().subscribe(data => {
-      this.operationType = data;
+      data.forEach(x => x.description = this.translator.instant('DB.' + x.description));
+      this.operationType = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
     });
 
     this.dbService.getMaintenanceElement().subscribe(data => {
-      this.maintenanceElement = data;
+      data.forEach(x => x.name = this.translator.instant('DB.' + x.name));
+      this.maintenanceElement = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
       this.maintenanceElementSelect = [];
       if (!!this.operation.listMaintenanceElement && this.operation.listMaintenanceElement.length > 0) {
         this.maintenanceElementSelect = this.operation.listMaintenanceElement.map(x => x.id);
@@ -117,10 +119,11 @@ export class AddEditOperationComponent implements OnInit {
     this.operationService.saveOperation(this.operation,
       (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
       this.closeModal();
-      this.commonService.showToast(this.modalInputModel.isCreate ? 'AddSaveOperation' : 'EditSaveOperation',
+      this.commonService.showToast(
+        this.modalInputModel.isCreate ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation',
           { operation: this.operation.description });
     }).catch(e => {
-      this.commonService.showToast('ErrorSaveOperation');
+      this.commonService.showToast('PAGE_OPERATION.ErrorSaveOperation');
     });
   }
 
@@ -131,15 +134,15 @@ export class AddEditOperationComponent implements OnInit {
 
   async showConfirmSaveWithDelete() {
     const alert = await this.alertController.create({
-      header: this.translator.instant('OPERATION'),
-      message: this.translator.instant('ConfirmSaveToDeleteReplacement'),
+      header: this.translator.instant('COMMON.OPERATION'),
+      message: this.translator.instant('PAGE_OPERATION.ConfirmSaveToDeleteReplacement'),
       buttons: [
         {
-          text: this.translator.instant('CANCEL'),
+          text: this.translator.instant('COMMON.CANCEL'),
           role: 'cancel',
           cssClass: 'secondary'
         }, {
-          text: this.translator.instant('ACCEPT'),
+          text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
             this.saveOperation();
           }
@@ -204,30 +207,30 @@ export class AddEditOperationComponent implements OnInit {
     const maxKm = this.calculateMaxKm(this.operation);
 
     if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
-      msgResult = `${this.translator.instant('date_between',
+      msgResult = `${this.translator.instant('PAGE_OPERATION.date_between',
                 {
                   dateIni: this.commonService.getDateString(minDate),
                   dateFin: this.commonService.getDateString(maxDate)
                 })} ` +
-                `${this.translator.instant('OR')} `;
+                `${this.translator.instant('COMMON.OR')} `;
     } else if (!!minDate && !(!!maxDate) && dateSelected < minDate) {
-      msgResult = `${this.translator.instant('date_higher',
+      msgResult = `${this.translator.instant('PAGE_OPERATION.date_higher',
                 {
                   dateIni: this.commonService.getDateString(minDate)
                 })} ` +
-                `${this.translator.instant('OR')} `;
+                `${this.translator.instant('COMMON.OR')} `;
     } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
-      msgResult = `${this.translator.instant('date_lower',
+      msgResult = `${this.translator.instant('PAGE_OPERATION.date_lower',
                 {
                   dateFin: this.commonService.getDateString(maxDate)
                 })} ` +
-                `${this.translator.instant('OR')} `;
+                `${this.translator.instant('COMMON.OR')} `;
     }
 
     if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
-      msgResult += `${this.translator.instant('km_between', {kmIni: minKm, kmFin: maxKm})}`;
+      msgResult += `${this.translator.instant('PAGE_OPERATION.km_between', {kmIni: minKm, kmFin: maxKm})}`;
     } else if (!(!!maxKm) && kmSelected < minKm) {
-      msgResult += `${this.translator.instant('km_higher', {kmIni: minKm})}`;
+      msgResult += `${this.translator.instant('PAGE_OPERATION.km_higher', {kmIni: minKm})}`;
     }
 
     return msgResult;

@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar>
     <!-- Title -->
-    <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">{{ 'AddNewMoto' | translate }}</ion-title>
-    <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">{{ 'EditMoto' | translate }}</ion-title>
+    <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">{{ 'PAGE_MOTO.AddNewMoto' | translate }}</ion-title>
+    <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">{{ 'PAGE_MOTO.EditMoto' | translate }}</ion-title>
     <!-- Button Close -->
     <ion-button fill="clear" (click)="closeModal()" class="btn-header">
       <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
@@ -16,48 +16,48 @@
       <!-- Input control -->
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'BRAND' | translate }}</ion-text>
+          <ion-text>{{ 'COMMON.BRAND' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidBrand(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidBrand(formAddMoto)" color="danger">{{ 'AddBrand' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && !isValidBrand(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddBrand' | translate }}</ion-text>
         </ion-label>
         <ion-input #motoBrand name="motoBrand" placeholder="Yamaha" required type="text" [(ngModel)]="moto.brand"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'MODEL' | translate }}</ion-text>
+          <ion-text>{{ 'COMMON.MODEL' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidModel(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidModel(formAddMoto)" color="danger">{{ 'AddModel' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && !isValidModel(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddModel' | translate }}</ion-text>
         </ion-label>
         <ion-input #motoModel name="motoModel" placeholder="R6" required type="text" [(ngModel)]="moto.model"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'YEAR' | translate }}</ion-text>
+          <ion-text>{{ 'COMMON.YEAR' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && (!isValidYear(formAddMoto) || !isValidYearBetween(formAddMoto))" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidYear(formAddMoto)" color="danger">{{ 'AddYear' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && !isValidYear(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddYear' | translate }}</ion-text>
           <ion-text *ngIf="this.submited && isValidYear(formAddMoto) && !isValidYearBetween(formAddMoto)" color="danger">{{ translateYearBetween }}</ion-text>
         </ion-label>
         <ion-input #motoYear name="motoYear" required placeholder="2005" type="number" [(ngModel)]="moto.year"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'KM' | translate }}</ion-text>
+          <ion-text>{{ 'COMMON.KM' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && (!isValidKm(formAddMoto) || !isValidKmMin(formAddMoto))" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidKm(formAddMoto)" color="danger">{{ 'AddKm' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && !isValidKm(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddKm' | translate }}</ion-text>
           <ion-text *ngIf="this.submited && isValidKm(formAddMoto) && !isValidKmMin(formAddMoto)" color="danger">{{ 'AddKmMinCero' | translate }}</ion-text>
         </ion-label>
         <ion-input #motoKm name="motoKm" required placeholder="50000 km" type="number" min="0" [(ngModel)]="moto.km"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'CONFIGURATION' | translate }}</ion-text>
+          <ion-text>{{ 'COMMON.CONFIGURATION' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidConfiguration(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidConfiguration(formAddMoto)" color="danger">{{ 'AddConfiguration' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && !isValidConfiguration(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddConfiguration' | translate }}</ion-text>
         </ion-label>
         <ion-select #motoConfiguration name="motoConfiguration" interface="popover" [(ngModel)]="moto.configuration.id">
           <ion-select-option [(value)]="c.id" *ngFor="let c of configurations">{{c.name}}</ion-select-option>
@@ -65,17 +65,17 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'KM_PER_MONTH' | translate }}</ion-text>
+          <ion-text>{{ 'COMMON.KM_PER_MONTH' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidKmsPerMonth(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidKmsPerMonth(formAddMoto)" color="danger">{{ 'AddKmsPerMonth' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && !isValidKmsPerMonth(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddKmsPerMonth' | translate }}</ion-text>
         </ion-label>
         <ion-input #motoKmsPerMonth name="motoKmsPerMonth" required placeholder="150" type="number" min="0" [(ngModel)]="moto.kmsPerMonth"></ion-input>
       </ion-item>
     </ion-list>
     <!-- Button Save -->
     <ion-button expand="block" type="submit">
-      <ion-text>{{ 'SAVE' | translate }}</ion-text>
+      <ion-text>{{ 'COMMON.SAVE' | translate }}</ion-text>
       <ion-icon name="save" class="padding-left12"></ion-icon>
     </ion-button>
   </form>

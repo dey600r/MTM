@@ -65,7 +65,7 @@ export class DashboardService {
                     if (!dash.series.some((z: any) => z.id === x.operationType.id)) {
                         dash.series = [...dash.series, {
                             id: x.operationType.id,
-                            name: this.translator.instant(x.operationType.description),
+                            name: this.translator.instant('DB.' + x.operationType.description),
                             value: sumPrice
                         }];
                     }
@@ -74,7 +74,7 @@ export class DashboardService {
                         name: x.moto.model,
                         series: [{
                             id: x.operationType.id,
-                            name: this.translator.instant(x.operationType.description),
+                            name: this.translator.instant('DB.' + x.operationType.description),
                             value: sumPrice
                         }]
                     };
@@ -88,7 +88,7 @@ export class DashboardService {
     // OPERATION TYPE EXPENSES
     getDashboardModelOpTypeExpenses(view: any[], data: OperationModel[]): DashboardModel {
         return new DashboardModel(view, this.mapOperationToDashboardOpTypeExpenses(data), null, true, true, true, false,
-        this.translator.instant('OP_TYPE'), false, '', false, '', true, false, 'right');
+        this.translator.instant('COMMON.OP_TYPE'), false, '', false, '', true, false, 'right');
     }
 
     mapOperationToDashboardOpTypeExpenses(data: OperationModel[]): any[] {
@@ -100,7 +100,7 @@ export class DashboardService {
                     ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
                 result = [...result, {
                     id: x.operationType.id,
-                    name: this.translator.instant(x.operationType.description),
+                    name: this.translator.instant('DB.' + x.operationType.description),
                     value: sumPrice
                 }];
             }
