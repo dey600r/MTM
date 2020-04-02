@@ -6,7 +6,14 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService } from '@services/index';
-import { MaintenanceModel, MaintenanceElementModel, ConfigurationModel } from '@models/index';
+import {
+  MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel
+} from '@models/index';
+
+// COMPONENTS
+import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
+import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
+import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
 
 @Component({
   selector: 'app-configuration',
@@ -22,6 +29,12 @@ export class ConfigurationPage implements OnInit {
   hideConfiguration = false;
   hideMaintenance = true;
   hideReplacement = true;
+
+  dataInputModel: ModalInputModel;
+  dataReturned: ModalOutputModel;
+  rowConfSelected: ConfigurationModel = new ConfigurationModel();
+  rowMantSelected: MaintenanceModel = new MaintenanceModel();
+  rowReplSelected: MaintenanceElementModel = new MaintenanceElementModel();
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -56,11 +69,10 @@ export class ConfigurationPage implements OnInit {
 
   /** CONFIGURATION */
 
-  openCreateConfigurationModal() {
-  }
-
-  openEditConfigurationModal(configuration: ConfigurationModel) {
-
+  openConfigurationModal(row: ConfigurationModel = new ConfigurationModel(), create: boolean = true) {
+    this.rowConfSelected = row;
+    this.dataInputModel = new ModalInputModel(create, this.rowConfSelected);
+    this.openModal(AddEditConfigurationComponent);
   }
 
   deleteConfiguration(configuration: ConfigurationModel) {
@@ -69,12 +81,10 @@ export class ConfigurationPage implements OnInit {
 
   /** MAINTENANCE */
 
-  openCreateMaintenanceModal() {
-
-  }
-
-  openEditMaintenanceModal(maintenance: MaintenanceModel) {
-
+  openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
+    this.rowMantSelected = row;
+    this.dataInputModel = new ModalInputModel(create, this.rowMantSelected);
+    this.openModal(AddEditMaintenanceComponent);
   }
 
   deleteMaintenance(maintenance: MaintenanceModel) {
@@ -83,12 +93,10 @@ export class ConfigurationPage implements OnInit {
 
   /** MAINTENANCE ELEMENTS / REPLACEMENT */
 
-  openCreateReplacementModal() {
-
-  }
-
-  openEditReplacementModal(maintenanceElement: MaintenanceElementModel) {
-
+  openReplacementModal(row: MaintenanceElementModel = new MaintenanceElementModel(), create: boolean = true) {
+    this.rowReplSelected = row;
+    this.dataInputModel = new ModalInputModel(create, this.rowReplSelected);
+    this.openModal(AddEditMaintenanceElementComponent);
   }
 
   deleteReplacement(maintenanceElement: MaintenanceElementModel) {
@@ -97,36 +105,21 @@ export class ConfigurationPage implements OnInit {
 
   getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
     switch (maintenanceElement.id) {
-      case 1:
-      case 2:
-      case 22:
-      case 23:
+      case 1: case 2: case 22: case 23:
         return 'disc';
-      case 4:
-      case 5:
+      case 4: case 5:
         return 'basket';
       case 6:
         return 'flash';
-      case 9:
-      case 14:
-      case 15:
+      case 9: case 14: case 15:
         return 'thermometer';
-      case 3:
-      case 7:
-      case 8:
-      case 12:
+      case 3: case 7: case 8: case 12:
         return 'color-fill';
-      case 11:
-      case 13:
-      case 16:
+      case 11: case 13: case 16:
         return 'layers';
-      case 18:
-      case 19:
+      case 18: case 19:
         return 'eyedrop';
-      case 10:
-      case 17:
-      case 20:
-      case 21:
+      case 10: case 17: case 20: case 21:
         return 'settings';
       default:
         return this.getRandomIcon();
@@ -145,5 +138,23 @@ export class ConfigurationPage implements OnInit {
       default:
         return 'barbell';
     }
+  }
+
+  /** COMMON */
+
+  async openModal(modalComponent: any) {
+
+    const modal = await this.modalController.create({
+      component: modalComponent,
+      componentProps: this.dataInputModel
+    });
+
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned !== null) {
+        this.dataReturned = dataReturned.data;
+      }
+    });
+
+    return await modal.present();
   }
 }

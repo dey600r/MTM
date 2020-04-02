@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar>
+    <!-- Title -->
     <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">{{ 'AddNewMoto' | translate }}</ion-title>
     <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">{{ 'EditMoto' | translate }}</ion-title>
+    <!-- Button Close -->
     <ion-button fill="clear" (click)="closeModal()" class="btn-header">
       <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
     </ion-button>
@@ -11,6 +13,7 @@
 <ion-content>
   <form #formAddMoto name="formAddMoto" (ngSubmit)="saveData(formAddMoto)" novalidate>
     <ion-list lines="full">
+      <!-- Input control -->
       <ion-item>
         <ion-label position="stacked">
           <ion-text>{{ 'BRAND' | translate }}</ion-text>
@@ -70,6 +73,7 @@
         <ion-input #motoKmsPerMonth name="motoKmsPerMonth" required placeholder="150" type="number" min="0" [(ngModel)]="moto.kmsPerMonth"></ion-input>
       </ion-item>
     </ion-list>
+    <!-- Button Save -->
     <ion-button expand="block" type="submit">
       <ion-text>{{ 'SAVE' | translate }}</ion-text>
       <ion-icon name="save" class="padding-left12"></ion-icon>

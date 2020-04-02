@@ -24,8 +24,11 @@ import { environment } from '../environments/environment';
 
 // COMPONENTS
 import { AppComponent } from './app.component';
+import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
 import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
+import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
+import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
 import { SearchOperationPopOverComponent } from '@popovers/search-operation-popover/search-operation-popover.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { PipeModule } from '@pipes/pipes.module';
@@ -33,14 +36,20 @@ import { PipeModule } from '@pipes/pipes.module';
 @NgModule({
   declarations: [
     AppComponent,
+    AddEditConfigurationComponent,
     AddEditMotoComponent,
     AddEditOperationComponent,
+    AddEditMaintenanceComponent,
+    AddEditMaintenanceElementComponent,
     SearchOperationPopOverComponent,
     SearchDashboardPopOverComponent
   ],
   entryComponents: [
+    AddEditConfigurationComponent,
     AddEditMotoComponent,
     AddEditOperationComponent,
+    AddEditMaintenanceComponent,
+    AddEditMaintenanceElementComponent,
     SearchOperationPopOverComponent,
     SearchDashboardPopOverComponent
   ],

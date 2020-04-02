@@ -12,20 +12,24 @@
 <ion-content fullscreen>
   <ion-list>
     <ion-list-header>
+      <!-- Title -->
       <ion-icon size="large" name="construct"></ion-icon>
       <h3 *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null"
         class="header-list">{{ 'YOURS_OPERATIONS' | translate }}</h3>
       <h3 *ngIf="this.filterOperations.searchMoto.brand !== null" class="header-list">{{ 'OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
-      <ion-button fill="clear" (click)="openCreateOperationModal()">
+      <!-- Button create -->
+      <ion-button fill="clear" (click)="openOperationModal()">
         <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
       </ion-button>
     </ion-list-header>
 
     <ion-item button *ngFor="let op of operations">
+      <!-- Icons -->
       <ion-avatar slot="start" class="max-width10">
         <ion-icon size="large" class="icon-color" [name]="this.getIconOperationType(op)"></ion-icon>
       </ion-avatar>
-      <ion-label class="min-width45">
+      <!-- Labels -->
+      <ion-label class="min-width40">
         <h2 class="text-overflow">{{ op.description }}</h2>
         <h3>{{ op.km }} km</h3>
         <p>{{ op.price }} €</p>
@@ -33,9 +37,10 @@
       <ion-label class="padding-left10">
         <p>{{ op.date | dateFormatCalendarPipe }}</p>
       </ion-label>
+      <!-- Buttons edit / delete -->
       <ion-label class="align-right">
         <ion-label>
-          <ion-button fill="clear" (click)="openEditModal(op)">
+          <ion-button fill="clear" (click)="openOperationModal(op, false)">
             <ion-icon size="large" class="btn-color" name="create"></ion-icon>
           </ion-button>
         </ion-label>

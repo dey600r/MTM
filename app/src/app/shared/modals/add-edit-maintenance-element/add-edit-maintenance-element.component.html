@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-toolbar>
+        <!-- Title -->
+        <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">{{ 'AddNewReplacement' | translate }}</ion-title>
+        <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">{{ 'EditReplacement' | translate }}</ion-title>
+        <!-- Button Close -->
+        <ion-button fill="clear" (click)="closeModal()" class="btn-header">
+            <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+  
+<ion-content>
+    <!-- Form -->
+    <form #formAddReplacement name="formAddReplacement" (ngSubmit)="saveData(formAddReplacement)" novalidate>
+      <ion-list lines="full">
+        <!-- Input control -->
+        <ion-item>
+            <ion-label position="stacked">
+              <ion-text>{{ 'NAME' | translate }}</ion-text>
+              <ion-text color="danger">*</ion-text>
+              <ion-icon *ngIf="this.submited && !isValidName(formAddReplacement)" class="padding-left20" 
+                  color="danger" size="small" name="alert"></ion-icon>
+              <ion-text *ngIf="this.submited && !isValidName(formAddReplacement)" 
+                  color="danger">{{ 'AddName' | translate }}</ion-text>
+            </ion-label>
+            <ion-input #replacementName name="replacementName" placeholder="--" required type="text" 
+              [(ngModel)]="maintenanceElement.name"></ion-input>
+          </ion-item>
+        <ion-item>
+          <ion-label position="stacked">
+            <ion-text>{{ 'DESCRIPTION' | translate }}</ion-text>
+            <ion-text color="danger">*</ion-text>
+            <ion-icon *ngIf="this.submited && !isValidDescription(formAddReplacement)" class="padding-left20" 
+                color="danger" size="small" name="alert"></ion-icon>
+            <ion-text *ngIf="this.submited && !isValidDescription(formAddReplacement)" 
+                color="danger">{{ 'AddDescription' | translate }}</ion-text>
+          </ion-label>
+          <ion-input #replacementDescription name="replacementDescription" placeholder="--" required type="text" 
+            [(ngModel)]="maintenanceElement.description"></ion-input>
+        </ion-item>
+      </ion-list>
+      <!-- Buton Save -->
+      <ion-button expand="block" type="submit">
+        <ion-text>{{ 'SAVE' | translate }}</ion-text>
+        <ion-icon name="save" class="padding-left12"></ion-icon>
+      </ion-button>
+    </form>
+</ion-content>

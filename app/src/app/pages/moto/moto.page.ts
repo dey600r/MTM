@@ -41,6 +41,8 @@ export class MotoPage implements OnInit {
       });
   }
 
+  /** INIT */
+
   ngOnInit() {
     this.dbService.getMotos().subscribe(x => {
       this.motos = this.commonService.orderBy(x, ConstantsColumns.COLUMN_MTM_MOTO_BRAND);
@@ -51,15 +53,11 @@ export class MotoPage implements OnInit {
     });
   }
 
-  openCreateModal() {
-    this.rowSelected = new MotoModel();
-    this.dataInputModel = new ModalInputModel(true, this.rowSelected);
-    this.openModal();
-  }
+  /** MODALS */
 
-  openEditModal(row: MotoModel) {
+  openMotoModal(row: MotoModel = new MotoModel(), create: boolean = true) {
     this.rowSelected = row;
-    this.dataInputModel = new ModalInputModel(false, this.rowSelected);
+    this.dataInputModel = new ModalInputModel(create, this.rowSelected);
     this.openModal();
   }
 

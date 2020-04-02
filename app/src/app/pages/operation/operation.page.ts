@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Platform, ModalController, AlertController, PopoverController } from '@ionic/angular';
 
 // LIBRARIES
@@ -18,7 +18,7 @@ import { SearchOperationPopOverComponent } from '@popovers/search-operation-popo
   templateUrl: 'operation.page.html',
   styleUrls: ['operation.page.scss', '../../app.component.scss']
 })
-export class OperationPage implements OnInit, OnChanges {
+export class OperationPage implements OnInit {
 
   currentPopover = null;
   operations: OperationModel[] = [];
@@ -46,10 +46,9 @@ export class OperationPage implements OnInit, OnChanges {
     });
   }
 
-  ngOnInit() {
-  }
+  /** INIT */
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit() {
   }
 
   initPage() {
@@ -75,15 +74,13 @@ export class OperationPage implements OnInit, OnChanges {
     });
   }
 
-  openCreateOperationModal() {
-    this.rowSelected = new OperationModel(null, null, new OperationTypeModel(), this.filterOperations.searchMoto);
-    this.dataInputModel = new ModalInputModel(true, this.rowSelected);
-    this.openModal();
-  }
+  /** MODALS */
 
-  openEditModal(row: OperationModel) {
+  openOperationModal(
+      row: OperationModel = new OperationModel(null, null, new OperationTypeModel(), this.filterOperations.searchMoto),
+      create: boolean = true) {
     this.rowSelected = row;
-    this.dataInputModel = new ModalInputModel(false, this.rowSelected);
+    this.dataInputModel = new ModalInputModel(create, this.rowSelected);
     this.openModal();
   }
 
@@ -145,6 +142,8 @@ export class OperationPage implements OnInit, OnChanges {
   closePopover() {
     this.currentPopover.dissmis();
   }
+
+  /** ICONS */
 
   geClassIconOperationType(operation: OperationModel): string {
     return `${Constants.CLASS_ION_ICON_OPERATION_TYPE}${operation.operationType.code}`;

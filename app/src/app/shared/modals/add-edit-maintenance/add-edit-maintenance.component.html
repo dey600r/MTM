@@ -1,0 +1,37 @@
+<ion-header>
+    <ion-toolbar>
+        <!-- Title -->
+        <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">{{ 'AddNewMaintenance' | translate }}</ion-title>
+        <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">{{ 'EditMaintenance' | translate }}</ion-title>
+        <!-- Button Close -->
+        <ion-button fill="clear" (click)="closeModal()" class="btn-header">
+            <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+  
+<ion-content>
+    <!-- Form -->
+    <form #formAddMaintenance name="formAddMaintenance" (ngSubmit)="saveData(formAddMaintenance)" novalidate>
+      <ion-list lines="full">
+        <!-- Input control -->
+        <ion-item>
+          <ion-label position="stacked">
+            <ion-text>{{ 'DESCRIPTION' | translate }}</ion-text>
+            <ion-text color="danger">*</ion-text>
+            <ion-icon *ngIf="this.submited && !isValidDescription(formAddMaintenance)" class="padding-left20" 
+                color="danger" size="small" name="alert"></ion-icon>
+            <ion-text *ngIf="this.submited && !isValidDescription(formAddMaintenance)" 
+                color="danger">{{ 'AddDescription' | translate }}</ion-text>
+          </ion-label>
+          <ion-input #maintenanceDescription name="maintenanceDescription" placeholder="--" required type="text" 
+            [(ngModel)]="maintenance.description"></ion-input>
+        </ion-item>
+      </ion-list>
+      <!-- Buton Save -->
+      <ion-button expand="block" type="submit">
+        <ion-text>{{ 'SAVE' | translate }}</ion-text>
+        <ion-icon name="save" class="padding-left12"></ion-icon>
+      </ion-button>
+    </form>
+</ion-content>
