@@ -65,7 +65,7 @@ export class DashboardService {
                     if (!dash.series.some((z: any) => z.id === x.operationType.id)) {
                         dash.series = [...dash.series, {
                             id: x.operationType.id,
-                            name: this.translator.instant('DB.' + x.operationType.description),
+                            name: x.operationType.description,
                             value: sumPrice
                         }];
                     }
@@ -74,7 +74,7 @@ export class DashboardService {
                         name: x.moto.model,
                         series: [{
                             id: x.operationType.id,
-                            name: this.translator.instant('DB.' + x.operationType.description),
+                            name: x.operationType.description,
                             value: sumPrice
                         }]
                     };
@@ -100,7 +100,7 @@ export class DashboardService {
                     ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
                 result = [...result, {
                     id: x.operationType.id,
-                    name: this.translator.instant('DB.' + x.operationType.description),
+                    name: x.operationType.description,
                     value: sumPrice
                 }];
             }

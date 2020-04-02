@@ -10,7 +10,7 @@ import { Constants, ActionDB, ConstantsColumns } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MotoModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, OperationService, CommonService } from '@services/index';
+import { DataBaseService, OperationService, CommonService, ConfigurationService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-operation',
@@ -47,7 +47,8 @@ export class AddEditOperationComponent implements OnInit {
     private dbService: DataBaseService,
     private translator: TranslateService,
     private operationService: OperationService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private configurationService: ConfigurationService
   ) {
     this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
     this.translateMe = this.translator.instant('COMMON.ME');
@@ -73,12 +74,10 @@ export class AddEditOperationComponent implements OnInit {
     });
 
     this.dbService.getOperationType().subscribe(data => {
-      data.forEach(x => x.description = this.translator.instant('DB.' + x.description));
       this.operationType = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
     });
 
     this.dbService.getMaintenanceElement().subscribe(data => {
-      data.forEach(x => x.name = this.translator.instant('DB.' + x.name));
       this.maintenanceElement = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
       this.maintenanceElementSelect = [];
       if (!!this.operation.listMaintenanceElement && this.operation.listMaintenanceElement.length > 0) {

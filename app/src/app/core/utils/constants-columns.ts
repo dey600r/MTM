@@ -52,6 +52,7 @@ export class ConstantsColumns {
     // MAINTENANCE ELEMENT
     static COLUMN_MTM_MAINTENANCE_ELEMENT_NAME = 'name';
     static COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION = 'description';
+    static COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER = 'master';
 
     // MAINTENANCE FREQ
     static COLUMN_MTM_MAINTENANCE_FREQ_CODE = 'code';

@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { ActionDB } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, MaintenanceElementModel } from '@models/index';
-import { DataBaseService, CommonService } from '@services/index';
+import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-maintenance-element',
@@ -29,7 +29,8 @@ export class AddEditMaintenanceElementComponent implements OnInit {
     private navParams: NavParams,
     private dbService: DataBaseService,
     private translator: TranslateService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private configurationService: ConfigurationService
   ) {
   }
 
@@ -43,13 +44,15 @@ export class AddEditMaintenanceElementComponent implements OnInit {
   saveData(f: Form) {
     this.submited = true;
     if (this.isValidForm(f)) {
-    //   this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
-    //     this.closeModal();
-    //     this.commonService.showToast((this.modalInputModel.isCreate ? 'AddSaveMoto' : 'EditSaveMoto'),
-    //       { moto: this.moto.model });
-    //   }).catch(e => {
-    //     this.commonService.showToast('ErrorSaveMoto');
-    //   });
+      this.configurationService.saveMaintenanceElement(this.maintenanceElement,
+          (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+        this.closeModal();
+        this.commonService.showToast((this.modalInputModel.isCreate ?
+          'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),
+          { replacement: this.maintenanceElement.name });
+      }).catch(e => {
+        this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveReplacement');
+      });
     }
   }
 

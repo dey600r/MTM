@@ -44,8 +44,13 @@ export class MotoPage implements OnInit {
   /** INIT */
 
   ngOnInit() {
-    this.dbService.getMotos().subscribe(x => {
-      this.motos = this.commonService.orderBy(x, ConstantsColumns.COLUMN_MTM_MOTO_BRAND);
+    this.dbService.getMotos().subscribe(data => {
+      if (!!data && data.length > 0 && this.operationService.getSearchOperation().searchMoto.brand === null) {
+        this.operationService.setSearchOperation(data[0]);
+      } else {
+        this.operationService.setSearchOperation();
+      }
+      this.motos = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MOTO_BRAND);
     });
 
     this.dbService.getOperations().subscribe(data => {

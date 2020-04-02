@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+// LIBRARIES ANGULAR
+import { TranslateService } from '@ngx-translate/core';
+
 // UTILS
 import {
   MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
@@ -13,7 +16,8 @@ import { CommonService } from './common.service';
 })
 export class SqlService {
 
-  constructor(private commonService: CommonService) {
+  constructor(private commonService: CommonService,
+              private translator: TranslateService) {
   }
 
   /* BUILDER SQL */
@@ -92,7 +96,8 @@ export class SqlService {
     `opt.${ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION} as descriptionOperationType, ` +
     `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
-    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER} as masterMaintenanceElement ` +
     `FROM ${ConstantsTable.TABLE_MTM_OPERATION} AS op ` +
     `JOIN ${ConstantsTable.TABLE_MTM_OPERATION_TYPE} AS opt ON ` +
     `opt.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE} ` +
@@ -110,6 +115,7 @@ export class SqlService {
     `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement, ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER} as masterMaintenanceElement, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE} as codeMaintenanceFreq, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION} as descriptionMaintenanceFreq, ` +
@@ -264,11 +270,11 @@ export class SqlService {
     return (op ? {
       id: Number(data.idOperationType),
       code: data.codeOperationType,
-      description: data.descriptionOperationType
+      description: this.translator.instant(`DB.${data.descriptionOperationType}`)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE],
-      description: data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION]
+      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION]}`)
     });
   }
 
@@ -319,14 +325,22 @@ export class SqlService {
   getMapMaintenanceElement(data: any, op: boolean): MaintenanceElementModel {
     return (op ? {
       id: Number(data.idMaintenanceElement),
-      name: data.nameMaintenanceElement,
-      description: data.descriptionMaintenanceElement,
-      master: false
+      name: (data.masterMaintenanceElement === Constants.DATABASE_YES ?
+        this.translator.instant(`DB.${data.nameMaintenanceElement}`) :
+        data.nameMaintenanceElement),
+      description: (data.masterMaintenanceElement === Constants.DATABASE_YES ?
+        this.translator.instant(`DB.${data.descriptionMaintenanceElement}`) :
+        data.descriptionMaintenanceElement),
+      master: (data.masterMaintenanceElement === Constants.DATABASE_YES)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
-      name: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME],
-      description: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION],
-      master: (data.master === Constants.DATABASE_YES)
+      name: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES ?
+        this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME]}`) :
+        data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME]),
+      description: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES ?
+        this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION]}`) :
+        data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION]),
+      master: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES)
     });
   }
 
@@ -399,6 +413,13 @@ export class SqlService {
     return `${sql}; `;
   }
 
+  insertSqlMaintenanceElement(): string {
+    return `INSERT INTO ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} ` +
+    `(${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION}, ` +
+    `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER}) ` +
+    `VALUES (?, ?, ?)`;
+  }
+
   /* UPDATES SQL */
 
   updateSqlMoto(): string {
@@ -435,12 +456,20 @@ export class SqlService {
     }
   }
 
+  updateSqlMaintenanceElement(): string {
+    return `UPDATE ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} ` +
+    `SET ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME}=?, ` +
+    `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION}=?, ` +
+    `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER}=? ` +
+    `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?`;
+  }
+
   /* DELETES SQL */
 
-  deleteSql(table: string, column: string, data: number[] = []): string {
+  deleteSql(table: string, column: string, data: number[] = [], simple: boolean = false): string {
     let sql = `DELETE FROM ${table} WHERE ${column} in (`;
     for (let i = 0; i < data.length; i++) {
-      sql += (data.length === data.length ? data[0] : '?');
+      sql += (simple ? '?' : data[i]);
       if ((i + 1) < data.length) {
         sql += ',';
       }

@@ -5,8 +5,8 @@ import { ModalController, Platform, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, CommonService } from '@services/index';
-import { ConstantsColumns } from '@utils/index';
+import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
+import { ConstantsColumns, ActionDB } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel
 } from '@models/index';
@@ -15,7 +15,6 @@ import {
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
-
 
 @Component({
   selector: 'app-configuration',
@@ -43,7 +42,8 @@ export class ConfigurationPage implements OnInit {
               private modalController: ModalController,
               private translator: TranslateService,
               private alertController: AlertController,
-              private commonService: CommonService) {
+              private commonService: CommonService,
+              private configurationService: ConfigurationService) {
       this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -66,8 +66,7 @@ export class ConfigurationPage implements OnInit {
     });
 
     this.dbService.getMaintenanceElement().subscribe(data => {
-      data.filter(x => x.master).forEach(x => x.name = this.translator.instant('DB.' + x.name));
-      this.maintenanceElements = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
+      this.maintenanceElements = this.configurationService.orderMaintenanceElement(data);
     });
   }
 
@@ -103,8 +102,35 @@ export class ConfigurationPage implements OnInit {
     this.openModal(AddEditMaintenanceElementComponent);
   }
 
-  deleteReplacement(maintenanceElement: MaintenanceElementModel) {
+  deleteReplacement(row: MaintenanceElementModel) {
+    this.rowReplSelected = row;
+    this.showConfirmDelete();
+  }
 
+  async showConfirmDelete() {
+    const alert = await this.alertController.create({
+      header: this.translator.instant('COMMON.MOTORBIKE'),
+      message: this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteReplacement', {replacement: this.rowReplSelected.name}),
+      buttons: [
+        {
+          text: this.translator.instant('COMMON.CANCEL'),
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, {
+          text: this.translator.instant('COMMON.ACCEPT'),
+          handler: () => {
+            this.configurationService.saveMaintenanceElement(this.rowReplSelected, ActionDB.delete).then(x => {
+              this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveReplacement',
+                { replacement: this.rowReplSelected.name });
+            }).catch(e => {
+              this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveReplacement');
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
@@ -126,21 +152,20 @@ export class ConfigurationPage implements OnInit {
       case 10: case 17: case 20: case 21:
         return 'settings';
       default:
-        return this.getRandomIcon();
+        return this.getRandomIcon(maintenanceElement.id);
     }
 
   }
 
-  getRandomIcon(): string {
-    switch (Math.floor(Math.random() * (3 - 1) + 1)) {
-      case 1:
-        return 'bulb';
-      case 2:
-        return 'bandage';
-      case 3:
-        return 'briefcase';
-      default:
-        return 'barbell';
+  getRandomIcon(rand: number): string {
+    if (rand <= 30) {
+      return 'bulb';
+    } else if (rand > 30 && rand <= 40) {
+      return 'bandage';
+    } else if (rand > 40 && rand <= 55) {
+      return 'briefcase';
+    } else {
+      return 'barbell';
     }
   }
 

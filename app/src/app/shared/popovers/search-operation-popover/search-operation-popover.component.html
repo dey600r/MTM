@@ -27,7 +27,7 @@
         <ion-select [placeholder]="this.translateSelect" multiple="true" 
             [cancelText]="this.translateCancel" [okText]="this.translateAccept"
             [(ngModel)]="this.filterOpType" (ionChange)="changeSearcherOperationType()">
-            <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationTypes">{{ 'DB.' + ot.description | translate }}</ion-select-option>
+            <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationTypes">{{ ot.description }}</ion-select-option>
           </ion-select>
     </ion-item>
     <ion-item>
@@ -35,7 +35,7 @@
         <ion-select [placeholder]="this.translateSelect" multiple="true" 
             [cancelText]="this.translateCancel" [okText]="this.translateAccept"
             [(ngModel)]="this.filterMaintElement" (ionChange)="changeSearcherMaintenanceElement()">
-            <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ 'DB.' + me.name | translate }}</ion-select-option>
+            <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
           </ion-select>
     </ion-item>
 </ion-list>
