@@ -360,11 +360,11 @@ export class SqlService {
     return (man ? {
       id: Number(data.idMaintenanceFreq),
       code: data.codeMaintenanceFreq,
-      description: data.descriptionMaintenanceFreq
+      description: this.translator.instant(`DB.${data.descriptionMaintenanceFreq}`)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE],
-      description: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION]
+      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION]}`)
     });
   }
 
@@ -460,6 +460,26 @@ export class SqlService {
           sql += ' UNION ';
         }
       }
+    }
+    return `${sql}; `;
+  }
+
+  insertSqlMaintenance(maintenance: MaintenanceModel[]): string {
+    let sql = '';
+    if (!!maintenance && maintenance.length > 0) {
+      sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_MAINTENANCE} ` +
+      `(${ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_ELEMENT}, ` +
+      `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_FREQ}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}, ` +
+      `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT}, ` +
+      `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER}) `;
+      maintenance.forEach((x, index) => {
+        sql += `SELECT '${x.description}', ${x.maintenanceElement.id}, ${x.maintenanceFreq.id}, ` +
+          `${x.km}, ${x.time}, '${(x.init ? Constants.DATABASE_YES : Constants.DATABASE_NO)}', ` +
+          `'${(x.wear ? Constants.DATABASE_YES : Constants.DATABASE_NO)}', '${Constants.DATABASE_NO}'`;
+        if ((index + 1) < maintenance.length) {
+          sql += ' UNION ';
+        }
+      });
     }
     return `${sql}; `;
   }

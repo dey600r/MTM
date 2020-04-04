@@ -31,7 +31,10 @@
         "REPLACEMENT": "Recambio",
         "WORKSHOP": "Taller",
         "ME": "Yo",
-        "MONTHS": "Meses"
+        "MONTHS": "Meses",
+        "FREQUENCY": "Frecuencia",
+        "INIT": "Inicial",
+        "WEAR": "Desgaste"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -94,6 +97,9 @@
         "MAINTENANCES": "Mantenimientos",
         "AddNewMaintenance": "Añadir mantenimiento",
         "EditMaintenance": "Editar mantenimiento",
+        "AddReplacement": "Añada el recambio",
+        "AddMaintenanceFreq": "Añada la frecuencia",
+        "AddTime": "Añada los meses",
         "AddSaveMaintenance": "El mantenimiento {{maintenance}} ha sido añadida correctamente",
         "EditSaveMaintenance": "El mantenimiento {{maintenance}} ha sido modificada correctamente",
         "DeleteSaveMaintenance": "El mantenimiento {{maintenance}} ha sido borrada correctamente",
@@ -166,6 +172,8 @@
         "CHANGE_STEERING_BEARING_KIT": "Cambiar kit de rodamientos de dirección",
         "CHANGE_FRONT_BRAKE_DISC": "Cambiar Disco de freno delantero",
         "CHANGE_BACK_BRAKE_DISC": "Cambiar disco de freno trasero",
-        "CHANGE_BATTERY": "Cambiar Batería"
+        "CHANGE_BATTERY": "Cambiar Batería",
+        "ONCE": "Una vez",
+        "CALENDAR": "Calendario"
     }
 }

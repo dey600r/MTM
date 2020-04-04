@@ -31,7 +31,10 @@
         "REPLACEMENT": "Replacement",
         "WORKSHOP": "Workshop",
         "ME": "Me",
-        "MONTHS": "Months"
+        "MONTHS": "Months",
+        "FREQUENCY": "Frequency",
+        "INIT": "Init",
+        "WEAR": "Wear"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -94,6 +97,9 @@
         "MAINTENANCES": "Maintenances",
         "AddNewMaintenance": "Add maintenance",
         "EditMaintenance": "Edit maintenance",
+        "AddReplacement": "Add replacement",
+        "AddMaintenanceFreq": "Add frequence",
+        "AddTime": "Add months",
         "AddSaveMaintenance": "The maintenance {{maintenance}} has been added succesfully",
         "EditSaveMaintenance": "The maintenance {{maintenance}} has been modified succesfully",
         "DeleteSaveMaintenance": "The maintenance {{maintenance}} has been deleted succesfully",
@@ -166,6 +172,8 @@
         "CHANGE_STEERING_BEARING_KIT": "Change Steering Bearing Kit",
         "CHANGE_FRONT_BRAKE_DISC": "Change Front Brake Disc",
         "CHANGE_BACK_BRAKE_DISC": "Change Back Brake Disc",
-        "CHANGE_BATTERY": "Change Battery"
+        "CHANGE_BATTERY": "Change Battery",
+        "ONCE": "Once",
+        "CALENDAR": "Calendar"
     }
 }
