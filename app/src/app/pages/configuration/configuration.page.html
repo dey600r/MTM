@@ -69,7 +69,7 @@
         <!-- Labels -->
         <ion-label class="min-width55">
           <h2 class="text-overflow">{{ m.description }}</h2>
-          <h3 class="text-overflow">{{ 'DB.' + m.maintenanceElement.name | translate }}</h3>
+          <h3 class="text-overflow">{{ m.maintenanceElement.name }}</h3>
           <p>{{ m.maintenanceFreq.description }}</p>
         </ion-label>
         <ion-label class="padding-left10">
@@ -138,7 +138,7 @@
             </ion-button>
           </ion-label>
           <ion-label>
-            <ion-button fill="clear" (click)="deleteReplacement(me)">
+            <ion-button fill="clear" (click)="deleteReplacement(me)" [disabled]="isNotValidToDeleteReplacement(me)">
               <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
             </ion-button>
           </ion-label>

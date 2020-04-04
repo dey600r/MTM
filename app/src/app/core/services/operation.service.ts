@@ -41,16 +41,16 @@ export class OperationService {
     saveOperation(op: OperationModel, action: ActionDB) {
         let sqlDB = '';
         const dataDB: any[] = [];
-        const listLoadTable: string[] = this.getTablesRefreshDeleteOperation();
+        const listLoadTable: string[] = [ConstantsTable.TABLE_MTM_OPERATION];
         let scriptDB = false;
         switch (action) {
             case ActionDB.create:
-                sqlDB = this.sqlService.insertSqlOperation(op);
+                sqlDB = this.sqlService.insertSqlOperation([op]);
                 sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
                 scriptDB = true;
                 break;
             case ActionDB.update:
-                sqlDB = this.sqlService.updateSqlOperation(op);
+                sqlDB = this.sqlService.updateSqlOperation([op]);
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
                     ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, [op.id]);
                 sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
@@ -77,18 +77,14 @@ export class OperationService {
         return sqlDB;
     }
 
-    getSqlDeleteMotoOperation(operation: OperationModel[] = []): string {
+    getSqlDeleteMotoOperation(operations: OperationModel[] = []): string {
         let sqlDB = '';
-        if (!!operation && operation.length > 0) {
+        if (!!operations && operations.length > 0) {
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, operation.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
+                ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, operations.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION,
-                ConstantsColumns.COLUMN_MTM_OPERATION_MOTO, [operation[0].moto.id]); // DELETE OPERATION
+                ConstantsColumns.COLUMN_MTM_OPERATION_MOTO, [operations[0].moto.id]); // DELETE OPERATION
         }
         return sqlDB;
-    }
-
-    getTablesRefreshDeleteOperation() {
-        return [ConstantsTable.TABLE_MTM_OPERATION];
     }
 }

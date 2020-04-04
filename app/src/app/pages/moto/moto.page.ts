@@ -45,8 +45,10 @@ export class MotoPage implements OnInit {
 
   ngOnInit() {
     this.dbService.getMotos().subscribe(data => {
-      if (!!data && data.length > 0 && this.operationService.getSearchOperation().searchMoto.brand === null) {
-        this.operationService.setSearchOperation(data[0]);
+      if (!!data && data.length > 0) {
+        if (this.operationService.getSearchOperation().searchMoto.brand === null) {
+          this.operationService.setSearchOperation(data[0]);
+        }
       } else {
         this.operationService.setSearchOperation();
       }

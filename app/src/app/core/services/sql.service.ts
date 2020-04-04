@@ -206,6 +206,7 @@ export class SqlService {
   }
 
   getMapConfiguration(data: any, moto: boolean): ConfigurationModel {
+    const maintenance: MaintenanceModel = this.getMapMaintenance(data, true);
     return (moto ? {
       id: Number(data.idConfiguration),
       name: data.nameConfiguration,
@@ -217,7 +218,7 @@ export class SqlService {
       name: data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME],
       description: data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION],
       master: (data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER] === Constants.DATABASE_YES),
-      listMaintenance: [this.getMapMaintenance(data, true)]
+      listMaintenance: (!!maintenance && maintenance.description !== null ? [maintenance] : [])
     });
   }
 
@@ -232,6 +233,7 @@ export class SqlService {
         if (!!operation) { // if data exists it just save maintenance element
           operation.listMaintenanceElement = [...operation.listMaintenanceElement, this.getMapMaintenanceElement(row, true)];
         } else { // new data
+          const replacement: MaintenanceElementModel = this.getMapMaintenanceElement(row, true);
           operationsDB = [...operationsDB, {
             id: Number(row[ConstantsColumns.COLUMN_MTM_ID]),
             description: row[ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION],
@@ -248,7 +250,7 @@ export class SqlService {
             owner: row[ConstantsColumns.COLUMN_MTM_OPERATION_OWNER],
             price: Number(row[ConstantsColumns.COLUMN_MTM_OPERATION_PRICE]),
             document: row[ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT],
-            listMaintenanceElement: [this.getMapMaintenanceElement(row, true)]
+            listMaintenanceElement: (!!replacement && replacement.name !== null ? [replacement] : [])
           }];
         }
       }
@@ -368,33 +370,47 @@ export class SqlService {
 
   /* INSERTS SQL */
 
-  insertSqlMoto(): string {
-    return `INSERT INTO ${ConstantsTable.TABLE_MTM_MOTO} ` +
-    `(${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}) ` +
-    `VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  }
-
-  insertSqlOperation(op: OperationModel = null): string {
-    let sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OPERATION} ` +
-    `(${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}, ${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}, ` +
-    `${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}, ${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}, ` +
-    `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
-    `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, ${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
-    `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, ${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}) `;
-    if (!!op) {
-      sql += `SELECT '${op.description}', '${op.details}', ${op.operationType.id}, ${op.moto.id}, ` +
-      `${op.km}, ${op.price}, '${this.commonService.getDateStringToDB(op.date)}', ${this.getValueWithCom(op.location)}, ` +
-      `${this.getValueWithCom(op.owner)}, ${op.document}`;
-    } else {
-      sql += `VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?); `;
+  insertSqlMoto(motos: MotoModel[]): string {
+    let sql = '';
+    if (!!motos && motos.length > 0) {
+      sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_MOTO} ` +
+        `(${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}) `;
+      motos.forEach((x, index) => {
+        sql += `SELECT '${x.model}', '${x.brand}', ${x.year}, ${x.km}, ${x.configuration.id}, ` +
+          `${x.kmsPerMonth}, '${this.commonService.getDateStringToDB(x.dateKms)}' `;
+        if ((index + 1) < motos.length) {
+          sql += ' UNION ';
+        }
+      });
     }
     return `${sql}; `;
   }
 
-  insertSqlOpMaintenanceElement(op: OperationModel = null): string {
+  insertSqlOperation(op: OperationModel[]): string {
+    let sql = '';
+    if (!!op && op.length > 0) {
+      sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OPERATION} ` +
+      `(${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}, ${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}, ${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, ${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, ${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}) `;
+      op.forEach((x, index) => {
+        sql += `SELECT '${x.description}', '${x.details}', ${x.operationType.id}, ${x.moto.id}, ` +
+        `${x.km}, ${x.price}, '${this.commonService.getDateStringToDB(x.date)}', ${this.getValueWithCom(x.location)}, ` +
+        `${this.getValueWithCom(x.owner)}, ${x.document}`;
+        if ((index + 1) < op.length) {
+          sql += ' UNION ';
+        }
+      });
+    }
+    return `${sql}; `;
+  }
+
+  insertSqlOpMaintenanceElement(op: OperationModel): string {
     let sql = '';
     if (op !== null  && !!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
       sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} ` +
@@ -413,63 +429,129 @@ export class SqlService {
     return `${sql}; `;
   }
 
-  insertSqlMaintenanceElement(): string {
-    return `INSERT INTO ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} ` +
-    `(${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION}, ` +
-    `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER}) ` +
-    `VALUES (?, ?, ?)`;
+  insertSqlConfiguration(conf: ConfigurationModel[]): string {
+    let sql = '';
+    if (!!conf && conf.length > 0) {
+      sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_CONFIGURATION} ` +
+      `(${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME}, ${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION}, ` +
+      `${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER}) `;
+      conf.forEach((x, index) => {
+        sql += `SELECT '${x.name}', '${x.description}', '${Constants.DATABASE_NO}'`;
+        if ((index + 1) < conf.length) {
+          sql += ' UNION ';
+        }
+      });
+    }
+    return `${sql}; `;
+  }
+
+  insertSqlConfigurationMaintenance(conf: ConfigurationModel): string {
+    let sql = '';
+    if (conf !== null  && !!conf.listMaintenance && conf.listMaintenance.length > 0) {
+      sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_CONFIG_MAINT} ` +
+      `(${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION}, ` +
+      `${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE}) `;
+
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < conf.listMaintenance.length; i++) {
+        sql += `SELECT (${(conf.id > 0 ? conf.id : this.getSqlSequence(ConstantsTable.TABLE_MTM_CONFIGURATION, 0))}), ` +
+        `${conf.listMaintenance[i].id}`;
+        if ((i + 1) < conf.listMaintenance.length) {
+          sql += ' UNION ';
+        }
+      }
+    }
+    return `${sql}; `;
+  }
+
+  insertSqlMaintenanceElement(replacement: MaintenanceElementModel[]): string {
+    let sql = '';
+    if (!!replacement && replacement.length > 0) {
+      sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} ` +
+      `(${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION}, ` +
+      `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER}) `;
+      replacement.forEach((x, index) => {
+        sql += `SELECT '${x.name}', '${x.description}', '${Constants.DATABASE_NO}'`;
+        if ((index + 1) < replacement.length) {
+          sql += ' UNION ';
+        }
+      });
+    }
+    return `${sql}; `;
   }
 
   /* UPDATES SQL */
 
-  updateSqlMoto(): string {
-    return `UPDATE ${ConstantsTable.TABLE_MTM_MOTO} ` +
-    `SET ${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}=?, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}=?, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=?, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=?, ` +
-    `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}=? ` +
-    `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?`;
-  }
-
-  updateSqlOperation(op: OperationModel = null): string {
-    if (op !== null) {
-      return `UPDATE ${ConstantsTable.TABLE_MTM_OPERATION} ` +
-      `SET ${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}='${op.description}', ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}='${op.details}', ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}=${op.operationType.id}, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}=${op.moto.id}, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}=${op.km}, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}=${op.price}, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}='${this.commonService.getDateStringToDB(op.date)}', ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}=${this.getValueWithCom(op.location)}, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}=${this.getValueWithCom(op.owner)}, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}=${op.document} ` +
-      `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${op.id}; `;
-    } else {
-      return `UPDATE ${ConstantsTable.TABLE_MTM_OPERATION} ` +
-      `SET ${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}=?, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}=?, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}=?, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}=?, ` +
-      `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}=?, ${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}=? ` +
-      `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?; `;
+  updateSqlMoto(motos: MotoModel[]): string {
+    let sql = '';
+    if (!!motos && motos.length > 0) {
+      motos.forEach(x => {
+        sql += `UPDATE ${ConstantsTable.TABLE_MTM_MOTO} ` +
+        `SET ${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}='${x.model}', ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}='${x.brand}', ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}=${x.year}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}=${x.km}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=${x.configuration.id}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=${x.kmsPerMonth}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}=${this.commonService.getDateStringToDB(x.dateKms)} ` +
+        `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
+      });
     }
+    return sql;
   }
 
-  updateSqlMaintenanceElement(): string {
-    return `UPDATE ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} ` +
-    `SET ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME}=?, ` +
-    `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION}=?, ` +
-    `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER}=? ` +
-    `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=?`;
+  updateSqlOperation(op: OperationModel[]): string {
+    let sql = '';
+    if (!!op && op.length > 0) {
+      op.forEach(x => {
+        sql += `UPDATE ${ConstantsTable.TABLE_MTM_OPERATION} ` +
+        `SET ${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}='${x.description}', ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}='${x.details}', ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE}=${x.operationType.id}, ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}=${x.moto.id}, ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}=${x.km}, ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}=${x.price}, ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}='${this.commonService.getDateStringToDB(x.date)}', ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}=${this.getValueWithCom(x.location)}, ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}=${this.getValueWithCom(x.owner)}, ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}=${x.document} ` +
+        `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
+      });
+    }
+    return sql;
+  }
+
+  updateSqlMaintenanceElement(replacement: MaintenanceElementModel[]): string {
+    let sql = '';
+    if (!!replacement && replacement.length > 0) {
+      replacement.forEach(x => {
+        sql += `UPDATE ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} ` +
+        `SET ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME}='${x.name}', ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION}='${x.description}' ` +
+        `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
+      });
+    }
+    return sql;
+  }
+
+  updateSqlConfiguration(configuration: ConfigurationModel[]): string {
+    let sql = '';
+    if (!!configuration && configuration.length > 0) {
+      configuration.forEach(x => {
+        sql += `UPDATE ${ConstantsTable.TABLE_MTM_CONFIGURATION} ` +
+        `SET ${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME}='${x.name}', ` +
+        `${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION}='${x.description}' ` +
+        `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
+      });
+    }
+    return sql;
   }
 
   /* DELETES SQL */
 
-  deleteSql(table: string, column: string, data: number[] = [], simple: boolean = false): string {
+  deleteSql(table: string, column: string, data: number[] = []): string {
     let sql = `DELETE FROM ${table} WHERE ${column} in (`;
     for (let i = 0; i < data.length; i++) {
-      sql += (simple ? '?' : data[i]);
+      sql += data[i];
       if ((i + 1) < data.length) {
         sql += ',';
       }

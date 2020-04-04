@@ -10,10 +10,11 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy:prod-android": "ionic cordova run android",
-    "emulate:prod-android": "ionic cordova emulate android",
-    "deploy:debug-android": "ionic cordova run android --device -l --debug",
-    "emulate:debug-android": "ionic cordova emulate android --device -l --debug"
+    "deploy:app-store-android": "ionic cordova run android --verbose --release --prod",
+    "deploy:prod-android": "ionic cordova run android --verbose",
+    "emulate:prod-android": "ionic cordova emulate android --verbose",
+    "deploy:debug-android": "ionic cordova run android --device -l --debug --verbose",
+    "emulate:debug-android": "ionic cordova emulate android --device -l --debug --verbose"
   },
   "private": true,
   "dependencies": {

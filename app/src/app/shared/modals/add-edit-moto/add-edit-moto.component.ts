@@ -6,8 +6,8 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDB, ConstantsColumns } from '@app/core/utils';
-import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel } from '@models/index';
+import { ActionDB, ConstantsColumns, Constants } from '@app/core/utils';
+import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel, OperationModel } from '@models/index';
 import { DataBaseService, MotoService, CommonService } from '@services/index';
 
 @Component({
@@ -25,6 +25,7 @@ export class AddEditMotoComponent implements OnInit {
   submited = false;
 
   configurations: ConfigurationModel[] = [];
+  operations: OperationModel[] = [];
 
   // TRANSLATE
   translateYearBetween = '';
@@ -46,27 +47,37 @@ export class AddEditMotoComponent implements OnInit {
       this.navParams.data.data, this.navParams.data.dataList);
     this.moto = Object.assign({}, this.modalInputModel.data);
 
-    this.dbService.getConfigurations().subscribe(x => {
-      this.configurations = this.commonService.orderBy(x, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+    this.dbService.getConfigurations().subscribe(data => {
+      this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+    });
+
+    this.dbService.getOperations().subscribe(data => {
+      // Filter to get less elemnts to better perfomance
+      this.operations = data.filter(x => x.moto.id === this.moto.id);
     });
   }
 
   saveData(f: Form) {
     this.submited = true;
     if (this.isValidForm(f)) {
-      // Save date to change km to calculate maintenance
-      if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.moto.km) {
-        this.moto.dateKms = new Date();
-      }
+      const result = this.validateDateAndKmToOperations();
+      if (result !== '') {
+        this.commonService.showToast(result, null, Constants.DELAY_TOAST_HIGHER);
+      } else {
+        // Save date to change km to calculate maintenance
+        if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.moto.km) {
+          this.moto.dateKms = new Date();
+        }
 
-      this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
-        this.closeModal();
-        this.commonService.showToast((
-          this.modalInputModel.isCreate ? 'PAGE_MOTO.AddSaveMoto' : 'PAGE_MOTO.EditSaveMoto'),
-          { moto: this.moto.model });
-      }).catch(e => {
-        this.commonService.showToast('PAGE_MOTO.ErrorSaveMoto');
-      });
+        this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+          this.closeModal();
+          this.commonService.showToast((
+            this.modalInputModel.isCreate ? 'PAGE_MOTO.AddSaveMoto' : 'PAGE_MOTO.EditSaveMoto'),
+            { moto: this.moto.model });
+        }).catch(e => {
+          this.commonService.showToast('PAGE_MOTO.ErrorSaveMoto');
+        });
+      }
     }
   }
 
@@ -111,5 +122,16 @@ export class AddEditMotoComponent implements OnInit {
 
   isValidKmsPerMonth(f: any): boolean {
     return f.motoKmsPerMonth !== undefined && f.motoKmsPerMonth.validity.valid;
+  }
+
+  validateDateAndKmToOperations(): string {
+    let msg = '';
+
+    if (!!this.operations && this.operations.length > 0 && this.operations.some(x => this.moto.km < x.km)) {
+      msg = this.translator.instant('PAGE_MOTO.AddKmHigher',
+        { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM)});
+    }
+
+    return msg;
   }
 }

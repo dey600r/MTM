@@ -10,7 +10,7 @@ import { Constants, ActionDB, ConstantsColumns } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MotoModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, OperationService, CommonService, ConfigurationService } from '@services/index';
+import { DataBaseService, OperationService, CommonService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-operation',
@@ -30,7 +30,7 @@ export class AddEditOperationComponent implements OnInit {
   maintenanceElementSelect: number[] = [];
 
   operationType: OperationTypeModel[] = [];
-  moto: MotoModel[] = [];
+  motos: MotoModel[] = [];
   maintenanceElement: MaintenanceElementModel[] = [];
 
   // Translate
@@ -47,8 +47,7 @@ export class AddEditOperationComponent implements OnInit {
     private dbService: DataBaseService,
     private translator: TranslateService,
     private operationService: OperationService,
-    private commonService: CommonService,
-    private configurationService: ConfigurationService
+    private commonService: CommonService
   ) {
     this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
     this.translateMe = this.translator.instant('COMMON.ME');
@@ -70,7 +69,7 @@ export class AddEditOperationComponent implements OnInit {
     }
 
     this.dbService.getMotos().subscribe(data => {
-      this.moto = data;
+      this.motos = data;
     });
 
     this.dbService.getOperationType().subscribe(data => {
@@ -205,31 +204,41 @@ export class AddEditOperationComponent implements OnInit {
     const minKm = this.calculateMinKm(this.operation);
     const maxKm = this.calculateMaxKm(this.operation);
 
+    // Validate min and max date operation
     if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
-      msgResult = `${this.translator.instant('PAGE_OPERATION.date_between',
+      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
                 {
                   dateIni: this.commonService.getDateString(minDate),
                   dateFin: this.commonService.getDateString(maxDate)
                 })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
     } else if (!!minDate && !(!!maxDate) && dateSelected < minDate) {
-      msgResult = `${this.translator.instant('PAGE_OPERATION.date_higher',
+      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
                 {
                   dateIni: this.commonService.getDateString(minDate)
                 })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
     } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
-      msgResult = `${this.translator.instant('PAGE_OPERATION.date_lower',
+      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateLower',
                 {
                   dateFin: this.commonService.getDateString(maxDate)
                 })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
     }
 
+    // Validate min and max km operation
     if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
-      msgResult += `${this.translator.instant('PAGE_OPERATION.km_between', {kmIni: minKm, kmFin: maxKm})}`;
+      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: maxKm});
     } else if (!(!!maxKm) && kmSelected < minKm) {
-      msgResult += `${this.translator.instant('PAGE_OPERATION.km_higher', {kmIni: minKm})}`;
+      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween',
+        {kmIni: minKm, kmFin: this.motos.find(x => x.id === this.operation.moto.id).km});
+    }
+
+    // Validate max km moto
+    if (!!this.motos && this.motos.length > 0 && msgResult === '' &&
+      this.motos.some(x => x.id === this.operation.moto.id && this.operation.km > x.km)) {
+      msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower',
+        { kmFin: this.motos.find(x => x.id === this.operation.moto.id).km});
     }
 
     return msgResult;

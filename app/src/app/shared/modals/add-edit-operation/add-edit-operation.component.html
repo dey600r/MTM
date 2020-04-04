@@ -54,7 +54,7 @@
         </ion-label>
         <ion-select #opMoto name="opMoto" [placeholder]="this.translateSelect" required interface="popover" 
           [(ngModel)]="operation.moto.id" disabled="true">
-          <ion-select-option [(value)]="m.id" *ngFor="let m of moto">{{ m.brand + ' ' + m.model }}</ion-select-option>
+          <ion-select-option [(value)]="m.id" *ngFor="let m of motos">{{ m.brand + ' ' + m.model }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
@@ -114,9 +114,8 @@
       </ion-item>
     </ion-list>
     <!-- Button Create -->
-    <ion-button expand="block" type="submit">
-      <ion-text>{{ 'COMMON.SAVE' | translate }}</ion-text>
-      <ion-icon name="save" class="padding-left12"></ion-icon>
+    <ion-button class="button-circle" type="submit">
+      <ion-icon name="save"></ion-icon>
     </ion-button>
   </form>
 </ion-content>

@@ -4,7 +4,6 @@ import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
 import { ConstantsTable, ConstantsColumns, ActionDB } from '@utils/index';
 import { OperationService } from './operation.service';
-import { CommonService } from './common.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,40 +12,28 @@ export class MotoService {
 
     constructor(private dbService: DataBaseService,
                 private sqlService: SqlService,
-                private commonService: CommonService,
                 private operationService: OperationService) {
     }
 
-    saveMoto(moto: MotoModel, action: ActionDB, operation: OperationModel[] = []) {
+    saveMoto(moto: MotoModel, action: ActionDB, operations: OperationModel[] = []) {
         let sqlDB = '';
-        let dataDB: any[] = [];
-        let listLoadTable: string[] = [];
-        let scriptDB = false;
+        let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_MOTO];
         switch (action) {
             case ActionDB.create:
-                sqlDB = this.sqlService.insertSqlMoto();
-                dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth,
-                    this.commonService.getDateStringToDB(moto.dateKms)];
-                listLoadTable = [ConstantsTable.TABLE_MTM_MOTO];
+                sqlDB = this.sqlService.insertSqlMoto([moto]);
                 break;
             case ActionDB.update:
-                sqlDB = this.sqlService.updateSqlMoto();
-                dataDB = [moto.model, moto.brand, moto.year, moto.km, moto.configuration.id, moto.kmsPerMonth,
-                    this.commonService.getDateStringToDB(moto.dateKms), moto.id];
-                listLoadTable = [ConstantsTable.TABLE_MTM_MOTO];
+                sqlDB = this.sqlService.updateSqlMoto([moto]);
                 break;
             case ActionDB.delete:
-                if (!!operation && operation.length > 0) {
-                    sqlDB = this.operationService.getSqlDeleteMotoOperation(operation);
-                    listLoadTable = this.operationService.getTablesRefreshDeleteOperation();
+                if (!!operations && operations.length > 0) { // DELETE OPERATION ASSOCIATED
+                    sqlDB = this.operationService.getSqlDeleteMotoOperation(operations);
+                    listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_OPERATION];
                 }
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MOTO,
                     ConstantsColumns.COLUMN_MTM_ID, [moto.id]); // DELETE MOTO
-                listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_MOTO];
-                scriptDB = true;
                 break;
         }
-        return (scriptDB ? this.dbService.executeScriptDataBase(sqlDB, listLoadTable) :
-            this.dbService.executeSqlDataBase(sqlDB, dataDB, listLoadTable));
+        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
     }
 }

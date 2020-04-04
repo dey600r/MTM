@@ -39,11 +39,21 @@
           <ion-input #configurationDescription name="configurationDescription" placeholder="--" required type="text" 
             [(ngModel)]="configuration.description"></ion-input>
         </ion-item>
+        <ion-item *ngFor="let m of maintenances; let i = index">
+          <ion-label>
+            <h2>{{ m.description }}</h2>
+            <h3>{{ m.maintenanceElement.name }}</h3>
+            <p>{{ m.km }} km / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+          </ion-label>
+          <ion-toggle *ngIf="m.master" [name]="'configurationMaintenance' + i" color="primary" 
+            [(ngModel)]="toggleMaintenaces[i]"></ion-toggle>
+          <ion-toggle *ngIf="!m.master" [name]="'configurationMaintenance' + i" color="light" 
+            [(ngModel)]="toggleMaintenaces[i]"></ion-toggle>
+        </ion-item>
       </ion-list>
       <!-- Buton Save -->
-      <ion-button expand="block" type="submit">
-        <ion-text>{{ 'COMMON.SAVE' | translate }}</ion-text>
-        <ion-icon name="save" class="padding-left12"></ion-icon>
+      <ion-button class="button-circle" type="submit">
+        <ion-icon name="save"></ion-icon>
       </ion-button>
     </form>
 </ion-content>
