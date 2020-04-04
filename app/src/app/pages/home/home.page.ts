@@ -42,6 +42,7 @@ export class HomePage implements OnInit, OnChanges {
     this.dbService.getOperations().subscribe(data => {
       this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
         const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        this.searchDashboard = filter;
         if (this.isChartMoto()) {
           this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoExpenses(windowsSize, data);
           this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, data);

@@ -2,13 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 
-// LIBRARIES
-import { TranslateService } from '@ngx-translate/core';
-
 // UTILS
 import { ActionDB } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, MaintenanceElementModel } from '@models/index';
-import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
+import { CommonService, ConfigurationService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-maintenance-element',
@@ -17,18 +14,17 @@ import { DataBaseService, CommonService, ConfigurationService } from '@services/
 })
 export class AddEditMaintenanceElementComponent implements OnInit {
 
+  // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
   modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
+  // MODEL FORM
   maintenanceElement: MaintenanceElementModel = new MaintenanceElementModel();
-
   submited = false;
 
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
-    private dbService: DataBaseService,
-    private translator: TranslateService,
     private commonService: CommonService,
     private configurationService: ConfigurationService
   ) {

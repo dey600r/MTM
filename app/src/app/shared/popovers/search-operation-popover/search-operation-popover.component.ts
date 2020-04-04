@@ -16,15 +16,18 @@ import { ConstantsColumns } from '@utils/index';
   })
   export class SearchOperationPopOverComponent implements OnInit {
 
+    // DATA
     motos: MotoModel[] = [];
     operationTypes: OperationTypeModel[] = [];
     maintenanceElements: MaintenanceElementModel[] = [];
+
+    // MODELS
     searchOperation: SearchOperationModel = this.operationService.getSearchOperation();
     filterMoto = 1;
     filterOpType: number[] = [];
     filterMaintElement: number[] = [];
 
-    // translate
+    // TRANSLATE
     translateAccept = '';
     translateCancel = '';
     translateSelect = '';

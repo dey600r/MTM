@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, NavParams, AlertController } from '@ionic/angular';
 import { Form } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -17,21 +18,29 @@ import { DataBaseService, OperationService, CommonService } from '@services/inde
   templateUrl: 'add-edit-operation.component.html',
   styleUrls: ['add-edit-operation.component.scss', '../../../app.component.scss']
 })
-export class AddEditOperationComponent implements OnInit {
+export class AddEditOperationComponent implements OnInit, OnDestroy {
 
+  // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
   modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
-  submited = false;
-  formatDate = this.commonService.getFormatCalendar();
-
+  // MODEL FORM
   operation: OperationModel = new OperationModel();
-  operations: OperationModel[] = [];
-  maintenanceElementSelect: number[] = [];
+  submited = false;
 
+  // DATA
+  operations: OperationModel[] = [];
   operationType: OperationTypeModel[] = [];
   motos: MotoModel[] = [];
   maintenanceElement: MaintenanceElementModel[] = [];
+  maintenanceElementSelect: number[] = [];
+  formatDate = this.commonService.getFormatCalendar();
+
+  // SUBSCRIPTION
+  operationSubscription: Subscription = new Subscription();
+  operationTypeSubscription: Subscription = new Subscription();
+  motoSubscription: Subscription = new Subscription();
+  maintenanceElementSubscription: Subscription = new Subscription();
 
   // Translate
   translateWorkshop = '';
@@ -68,15 +77,15 @@ export class AddEditOperationComponent implements OnInit {
       this.operation.operationType.id = null;
     }
 
-    this.dbService.getMotos().subscribe(data => {
+    this.motoSubscription = this.dbService.getMotos().subscribe(data => {
       this.motos = data;
     });
 
-    this.dbService.getOperationType().subscribe(data => {
+    this.operationTypeSubscription = this.dbService.getOperationType().subscribe(data => {
       this.operationType = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
     });
 
-    this.dbService.getMaintenanceElement().subscribe(data => {
+    this.maintenanceElementSubscription = this.dbService.getMaintenanceElement().subscribe(data => {
       this.maintenanceElement = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
       this.maintenanceElementSelect = [];
       if (!!this.operation.listMaintenanceElement && this.operation.listMaintenanceElement.length > 0) {
@@ -84,9 +93,16 @@ export class AddEditOperationComponent implements OnInit {
       }
     });
 
-    this.dbService.getOperations().subscribe(data => {
+    this.operationSubscription = this.dbService.getOperations().subscribe(data => {
       this.operations = data;
     });
+  }
+
+  ngOnDestroy() {
+    this.operationSubscription.unsubscribe();
+    this.motoSubscription.unsubscribe();
+    this.operationTypeSubscription.unsubscribe();
+    this.maintenanceElementSubscription.unsubscribe();
   }
 
   saveData(f: Form) {

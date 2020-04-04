@@ -1,9 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
-
-// LIBRARIES
-import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 // UTILS
 import { ActionDB, ConstantsColumns } from '@app/core/utils';
@@ -15,26 +13,29 @@ import { DataBaseService, CommonService, ConfigurationService } from '@services/
   templateUrl: 'add-edit-configuration.component.html',
   styleUrls: ['add-edit-configuration.component.scss', '../../../app.component.scss']
 })
-export class AddEditConfigurationComponent implements OnInit {
+export class AddEditConfigurationComponent implements OnInit, OnDestroy {
 
+  // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
   modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
+  // MODEL FORM
   configuration: ConfigurationModel = new ConfigurationModel();
+  submited = false;
 
+  // DATA
   maintenances: MaintenanceModel[] = [];
   toggleMaintenaces: boolean[] = [];
 
-  submited = false;
+  // SUBSCRIPTION
+  maintenanceSubscription: Subscription = new Subscription();
 
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
     private dbService: DataBaseService,
-    private translator: TranslateService,
     private commonService: CommonService,
-    private configurationService: ConfigurationService,
-    private changeDetector: ChangeDetectorRef
+    private configurationService: ConfigurationService
   ) {
   }
 
@@ -47,7 +48,7 @@ export class AddEditConfigurationComponent implements OnInit {
       this.configuration.id = -1;
     }
 
-    this.dbService.getMaintenance().subscribe(data => {
+    this.maintenanceSubscription = this.dbService.getMaintenance().subscribe(data => {
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
       if (this.modalInputModel.isCreate) {
         this.maintenances.forEach(x => this.toggleMaintenaces = [...this.toggleMaintenaces, false]);
@@ -56,8 +57,11 @@ export class AddEditConfigurationComponent implements OnInit {
           this.toggleMaintenaces = [...this.toggleMaintenaces, this.configuration.listMaintenance.some(y => y.id === x.id)];
         });
       }
-      this.changeDetector.detectChanges();
     });
+  }
+
+  ngOnDestroy() {
+    this.maintenanceSubscription.unsubscribe();
   }
 
   saveData(f: Form) {

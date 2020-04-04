@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -15,17 +16,23 @@ import { DataBaseService, MotoService, CommonService } from '@services/index';
   templateUrl: 'add-edit-moto.component.html',
   styleUrls: ['add-edit-moto.component.scss', '../../../app.component.scss']
 })
-export class AddEditMotoComponent implements OnInit {
+export class AddEditMotoComponent implements OnInit, OnDestroy {
 
+  // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
   modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
+  // MODEL FORM
   moto: MotoModel = new MotoModel();
-
   submited = false;
 
+  // DATA
   configurations: ConfigurationModel[] = [];
   operations: OperationModel[] = [];
+
+  // SUBSCRIPTION
+  operationSubscription: Subscription = new Subscription();
+  configurationSubscription: Subscription = new Subscription();
 
   // TRANSLATE
   translateYearBetween = '';
@@ -47,14 +54,19 @@ export class AddEditMotoComponent implements OnInit {
       this.navParams.data.data, this.navParams.data.dataList);
     this.moto = Object.assign({}, this.modalInputModel.data);
 
-    this.dbService.getConfigurations().subscribe(data => {
+    this.configurationSubscription = this.dbService.getConfigurations().subscribe(data => {
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
     });
 
-    this.dbService.getOperations().subscribe(data => {
+    this.operationSubscription = this.dbService.getOperations().subscribe(data => {
       // Filter to get less elemnts to better perfomance
       this.operations = data.filter(x => x.moto.id === this.moto.id);
     });
+  }
+
+  ngOnDestroy() {
+    this.configurationSubscription.unsubscribe();
+    this.operationSubscription.unsubscribe();
   }
 
   saveData(f: Form) {

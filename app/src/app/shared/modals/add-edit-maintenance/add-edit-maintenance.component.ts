@@ -17,11 +17,12 @@ import { DataBaseService, CommonService } from '@services/index';
 })
 export class AddEditMaintenanceComponent implements OnInit {
 
+  // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
   modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
+  // MODEL FORM
   maintenance: MaintenanceModel = new MaintenanceModel();
-
   submited = false;
 
   constructor(
