@@ -72,7 +72,7 @@
           <ion-text>{{ 'COMMON.KM' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidKm(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidKm(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddKm' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && !isValidKm(formAddOperation)" color="danger">{{ 'PAGE_MOTO.AddKm' | translate }}</ion-text>
         </ion-label>
         <ion-input #opKm name="opKm" placeholder="10000 km" required type="number" min="0" [(ngModel)]="operation.km"></ion-input>
       </ion-item>

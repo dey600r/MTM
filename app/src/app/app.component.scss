@@ -140,6 +140,10 @@
     min-width: 70%;
 }
 
+.min-width75 {
+    min-width: 75%;
+}
+
 .min-height29 {
     min-height: 29px;
 }
@@ -160,4 +164,8 @@
     bottom: 10px;
     right: 15px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2),0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12)
+}
+
+.background-gray {
+    background:var(--ion-color-medium-shade);
 }

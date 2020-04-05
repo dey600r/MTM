@@ -18,6 +18,9 @@ export class Constants {
     static OPERATION_TYPE_ACCESSORIES = 'A';
     static OPERATION_TYPE_CLOTHES = 'C';
 
+    static MAINTENANCE_FREQ_ONCE_CODE = 'O';
+    static MAINTENANCE_FREQ_CALENDAR_CODE = 'C';
+
     static DATABASE_YES = 'Y';
     static DATABASE_NO = 'N';
 }

@@ -105,6 +105,7 @@
         "DeleteSaveMaintenance": "The maintenance {{maintenance}} has been deleted succesfully",
         "ErrorSaveMaintenance": "There was an erro while saving maintenance data",
         "ConfirmDeleteMaintenance": "The maintenance {{maintenance}} will be deleted. Do you wish continue?",
+        "ConfirmDeleteMaintenanceWithConfigururation": "The maintenance {{maintenance}} will be deleted and its configurations associated. Do you wish continue?",
         "REPLACEMENTS": "Replacements",
         "AddNewReplacement": "Add replacement",
         "EditReplacement": "Edit replacement",
@@ -112,7 +113,8 @@
         "EditSaveReplacement": "The replacement {{replacement}} has been modified succesfully",
         "DeleteSaveReplacement": "The replacement {{replacement}} has been deleted succesfully",
         "ErrorSaveReplacement": "There was an erro while saving replacement data",
-        "ConfirmDeleteReplacement": "The replacement {{replacement}} will be deleted. Do you wish continue?"
+        "ConfirmDeleteReplacement": "The replacement {{replacement}} will be deleted. Do you wish continue?",
+        "ConfirmDeleteReplacementWithOperations": "The replacement {{replacement}} will be deleted with its operations associated. Do you wish continue?"
     },
     "ALERT" : {
         "INFO": "Info",

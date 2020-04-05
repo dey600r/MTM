@@ -56,7 +56,7 @@
             <ion-text>{{ 'COMMON.KM' | translate }}</ion-text>
             <ion-text color="danger">*</ion-text>
             <ion-icon *ngIf="this.submited && !isValidKm(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-            <ion-text *ngIf="this.submited && !isValidKm(formAddMaintenance)" color="danger">{{ 'PAGE_OPERATION.AddKm' | translate }}</ion-text>
+            <ion-text *ngIf="this.submited && !isValidKm(formAddMaintenance)" color="danger">{{ 'PAGE_MOTO.AddKm' | translate }}</ion-text>
           </ion-label>
           <ion-input #maintenanceKm name="maintenanceKm" placeholder="10000 km" required type="number" min="0" 
             [(ngModel)]="maintenance.km"></ion-input>
@@ -82,7 +82,10 @@
         </ion-item>
       </ion-list>
       <!-- Buton Save -->
-      <ion-button class="button-circle" type="submit">
+      <ion-button *ngIf="maintenance.master" class="button-circle" type="submit" [disabled]="maintenance.master">
+        <ion-icon name="lock-closed"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!maintenance.master" class="button-circle" type="submit">
         <ion-icon name="save"></ion-icon>
       </ion-button>
     </form>

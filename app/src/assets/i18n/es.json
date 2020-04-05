@@ -105,6 +105,7 @@
         "DeleteSaveMaintenance": "El mantenimiento {{maintenance}} ha sido borrada correctamente",
         "ErrorSaveMaintenance": "Ha ocurrido un error guardando los datos del mantenimiento",
         "ConfirmDeleteMaintenance": "El mantenimiento {{maintenance}} se va a borrar. ¿Desea continuar?",
+        "ConfirmDeleteMaintenanceWithConfigururation": "El mantenimiento {{maintenance}} se va a borrar y sus configuraciones asociadas. ¿Desea continuar?",
         "REPLACEMENTS": "Recambios",
         "AddNewReplacement": "Añadir recambio",
         "EditReplacement": "Editar recambio",
@@ -112,7 +113,8 @@
         "EditSaveReplacement": "El recambio {{replacement}} ha sido modificada correctamente",
         "DeleteSaveReplacement": "El recambio {{replacement}} ha sido borrada correctamente",
         "ErrorSaveReplacement": "Ha ocurrido un error guardando los datos del recambio",
-        "ConfirmDeleteReplacement": "El recambio {{replacement}} se va a borrar. ¿Desea continuar?"
+        "ConfirmDeleteReplacement": "El recambio {{replacement}} se va a borrar. ¿Desea continuar?",
+        "ConfirmDeleteReplacementWithOperations": "El recambio {{replacement}} se va a borrar con sus operaciones asociadas. ¿Desea continuar?"
     },
     "ALERT" : {
         "INFO": "Info",

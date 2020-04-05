@@ -4,7 +4,7 @@ export class MaintenanceElementModel extends BaseModel {
     name: string;
     description: string;
     master: boolean;
-    constructor(n: string = null, desc: string = null, m: boolean = true, id: number = 1) {
+    constructor(n: string = null, desc: string = null, m: boolean = false, id: number = 1) {
         super(id);
         this.name = n;
         this.description = desc;

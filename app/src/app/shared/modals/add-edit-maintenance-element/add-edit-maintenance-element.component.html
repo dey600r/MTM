@@ -41,7 +41,10 @@
         </ion-item>
       </ion-list>
       <!-- Buton Save -->
-      <ion-button class="button-circle" type="submit">
+      <ion-button *ngIf="maintenanceElement.master" class="button-circle" type="submit" [disabled]="maintenanceElement.master">
+        <ion-icon name="lock-closed"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!maintenanceElement.master" class="button-circle" type="submit">
         <ion-icon name="save"></ion-icon>
       </ion-button>
     </form>

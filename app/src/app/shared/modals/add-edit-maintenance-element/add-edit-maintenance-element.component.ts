@@ -35,6 +35,9 @@ export class AddEditMaintenanceElementComponent implements OnInit {
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList);
     this.maintenanceElement = Object.assign({}, this.modalInputModel.data);
+    if (this.modalInputModel.isCreate) {
+      this.maintenanceElement.id = -1;
+    }
   }
 
   saveData(f: Form) {

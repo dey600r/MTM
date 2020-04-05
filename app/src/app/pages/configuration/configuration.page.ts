@@ -36,7 +36,7 @@ export class ConfigurationPage implements OnInit {
   dataInputModel: ModalInputModel;
   dataReturned: ModalOutputModel;
   rowConfSelected: ConfigurationModel = new ConfigurationModel();
-  rowMantSelected: MaintenanceModel = new MaintenanceModel();
+  rowMainSelected: MaintenanceModel = new MaintenanceModel();
   rowReplSelected: MaintenanceElementModel = new MaintenanceElementModel();
 
   constructor(private platform: Platform,
@@ -139,13 +139,51 @@ export class ConfigurationPage implements OnInit {
   /** MAINTENANCE */
 
   openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
-    this.rowMantSelected = row;
-    this.dataInputModel = new ModalInputModel(create, this.rowMantSelected);
+    this.rowMainSelected = row;
+    this.dataInputModel = new ModalInputModel(create, this.rowMainSelected);
     this.openModal(AddEditMaintenanceComponent);
   }
 
-  deleteMaintenance(maintenance: MaintenanceModel) {
+  deleteMaintenance(row: MaintenanceModel) {
+    this.rowMainSelected = row;
+    this.showConfirmDeleteMaintenance();
+  }
 
+  async showConfirmDeleteMaintenance() {
+    let msg = 'PAGE_CONFIGURATION.ConfirmDeleteMaintenance';
+    const configurationWithMaintenance: ConfigurationModel[] =
+      this.configurations.filter(x => x.listMaintenance.some(y => y.id === this.rowMainSelected.id));
+    if (!!configurationWithMaintenance && configurationWithMaintenance.length > 0) {
+      msg = 'PAGE_CONFIGURATION.ConfirmDeleteMaintenanceWithConfigururation';
+    }
+
+    const alert = await this.alertController.create({
+      header: this.translator.instant('COMMON.CONFIGURATION'),
+      message: this.translator.instant(msg, { maintenance: this.rowMainSelected.description }),
+      buttons: [
+        {
+          text: this.translator.instant('COMMON.CANCEL'),
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, {
+          text: this.translator.instant('COMMON.ACCEPT'),
+          handler: () => {
+            this.configurationService.saveMaintenance(this.rowMainSelected, ActionDB.delete, configurationWithMaintenance).then(x => {
+              this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveMaintenance',
+                { maintenance: this.rowMainSelected.description });
+            }).catch(e => {
+              this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveMaintenance');
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  getIconMaintenance(maintenance: MaintenanceModel): string {
+    return this.configurationService.getIconMaintenance(maintenance);
   }
 
   /** MAINTENANCE ELEMENTS / REPLACEMENT */
@@ -162,9 +200,15 @@ export class ConfigurationPage implements OnInit {
   }
 
   async showConfirmDeleteReplacement() {
+    let msg = 'PAGE_CONFIGURATION.ConfirmDeleteReplacement';
+    const operationsWithReplacement: OperationModel[] =
+      this.operations.filter(x => x.listMaintenanceElement.some(y => y.id === this.rowReplSelected.id));
+    if (!!operationsWithReplacement && operationsWithReplacement.length > 0) {
+      msg = 'PAGE_CONFIGURATION.ConfirmDeleteReplacementWithOperations';
+    }
     const alert = await this.alertController.create({
       header: this.translator.instant('COMMON.CONFIGURATION'),
-      message: this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteReplacement', {replacement: this.rowReplSelected.name}),
+      message: this.translator.instant(msg, {replacement: this.rowReplSelected.name}),
       buttons: [
         {
           text: this.translator.instant('COMMON.CANCEL'),
@@ -173,7 +217,7 @@ export class ConfigurationPage implements OnInit {
         }, {
           text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
-            this.configurationService.saveMaintenanceElement(this.rowReplSelected, ActionDB.delete).then(x => {
+            this.configurationService.saveMaintenanceElement(this.rowReplSelected, ActionDB.delete, operationsWithReplacement).then(x => {
               this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveReplacement',
                 { replacement: this.rowReplSelected.name });
             }).catch(e => {
@@ -188,7 +232,7 @@ export class ConfigurationPage implements OnInit {
   }
 
   isNotValidToDeleteReplacement(replacement: MaintenanceElementModel): boolean {
-    return this.operations.some(x => x.listMaintenanceElement.some(y => y.id === replacement.id));
+    return !replacement.master && this.maintenances.some(x => x.maintenanceElement.id === replacement.id);
   }
 
   getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
@@ -219,11 +263,11 @@ export class ConfigurationPage implements OnInit {
 
   getRandomIcon(rand: number): string {
     if (rand <= 30) {
-      return 'bandage';
+      return 'cube';
     } else if (rand > 30 && rand <= 40) {
       return 'bulb';
     } else if (rand > 40 && rand <= 55) {
-      return 'barbell';
+      return 'bandage';
     } else {
       return 'briefcase';
     }

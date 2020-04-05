@@ -30,25 +30,20 @@
 
     <ion-item button *ngFor="let op of operations">
       <!-- Icons -->
-      <ion-avatar slot="start" class="max-width10">
+      <ion-avatar slot="start" class="max-width10" (click)="openOperationModal(op, false)">
         <ion-icon size="large" class="icon-color" [name]="this.getIconOperationType(op)"></ion-icon>
       </ion-avatar>
       <!-- Labels -->
-      <ion-label class="min-width40">
+      <ion-label class="min-width40" (click)="openOperationModal(op, false)">
         <h2 class="text-overflow">{{ op.description }}</h2>
         <h3>{{ op.km }} km</h3>
         <p>{{ op.price }} €</p>
       </ion-label>
-      <ion-label class="padding-left10">
+      <ion-label class="padding-left10" (click)="openOperationModal(op, false)">
         <p>{{ op.date | dateFormatCalendarPipe }}</p>
       </ion-label>
-      <!-- Buttons edit / delete -->
+      <!-- Buttons delete -->
       <ion-label class="align-right">
-        <ion-label>
-          <ion-button fill="clear" (click)="openOperationModal(op, false)">
-            <ion-icon size="large" class="btn-color" name="create"></ion-icon>
-          </ion-button>
-        </ion-label>
         <ion-label>
           <ion-button fill="clear" (click)="deleteOperation(op)">
             <ion-icon size="large" class="btn-color" name="trash"></ion-icon>

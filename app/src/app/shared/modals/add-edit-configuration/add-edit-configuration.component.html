@@ -40,19 +40,29 @@
             [(ngModel)]="configuration.description"></ion-input>
         </ion-item>
         <ion-item *ngFor="let m of maintenances; let i = index">
+          <!-- Icons -->
+          <ion-avatar slot="start" class="max-width10">
+            <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(m)"></ion-icon>
+          </ion-avatar>
+          <!-- Labels -->
           <ion-label>
             <h2>{{ m.description }}</h2>
             <h3>{{ m.maintenanceElement.name }}</h3>
-            <p>{{ m.km }} km / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+            <p *ngIf="m.time > 0">{{ m.km }} km / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+            <p *ngIf="m.time <= 0">{{ m.km }} km </p>
           </ion-label>
+          <!-- Toggle -->
           <ion-toggle *ngIf="m.master" [name]="'configurationMaintenance' + i" color="primary" 
             [(ngModel)]="toggleMaintenaces[i]"></ion-toggle>
-          <ion-toggle *ngIf="!m.master" [name]="'configurationMaintenance' + i" color="light" 
+          <ion-toggle *ngIf="!m.master" [name]="'configurationMaintenance' + i" color="secondary" 
             [(ngModel)]="toggleMaintenaces[i]"></ion-toggle>
         </ion-item>
       </ion-list>
       <!-- Buton Save -->
-      <ion-button class="button-circle" type="submit">
+      <ion-button *ngIf="configuration.master" class="button-circle" type="submit" [disabled]="configuration.master">
+        <ion-icon name="lock-closed"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!configuration.master" class="button-circle" type="submit">
         <ion-icon name="save"></ion-icon>
       </ion-button>
     </form>

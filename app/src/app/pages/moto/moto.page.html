@@ -17,14 +17,12 @@
     </ion-list-header>
     <ion-item button *ngFor="let m of motos">
       <!-- Labels -->
-      <ion-label class="min-width40" routerLink="/tabs/operationTab" routerDirection="root"
-        (click)="changeFilterOperation(m.id)">
+      <ion-label class="min-width40" (click)="openMotoModal(m, false)">
         <h2>{{ m.brand }}</h2>
         <h3>{{ m.model }}</h3>
         <p>{{ m.year }}</p>
       </ion-label>
-      <ion-label class="padding-left10" routerLink="/tabs/operationTab" routerDirection="root"
-        (click)="changeFilterOperation(m.id)">
+      <ion-label class="padding-left10" (click)="openMotoModal(m, false)">
         <h3>{{ m.km }} km</h3>
         <ion-label class="row-block flex-items-center">
           <ion-icon name="cog"></ion-icon>
@@ -34,8 +32,9 @@
       <!-- Buttons edit / delete -->
       <ion-label class="align-right">
         <ion-label>
-          <ion-button fill="clear" (click)="openMotoModal(m, false)">
-            <ion-icon size="large" class="btn-color" name="create"></ion-icon>
+          <ion-button fill="clear" routerLink="/tabs/operationTab" routerDirection="root"
+          (click)="changeFilterOperation(m.id)">
+            <ion-icon size="large" class="btn-color" name="eye"></ion-icon>
           </ion-button>
         </ion-label>
         <ion-label>

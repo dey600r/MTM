@@ -66,7 +66,7 @@ export class SqlService {
     `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement, ` +
-    `mf.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceFreq, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE} as codeMaintenanceFreq, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION} as descriptionMaintenanceFreq, ` +
     `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}, ` +
@@ -116,7 +116,7 @@ export class SqlService {
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER} as masterMaintenanceElement, ` +
-    `mf.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
+    `mf.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceFreq, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE} as codeMaintenanceFreq, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION} as descriptionMaintenanceFreq, ` +
     `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}, ` +
@@ -534,6 +534,24 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}=${this.getValueWithCom(x.location)}, ` +
         `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}=${this.getValueWithCom(x.owner)}, ` +
         `${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}=${x.document} ` +
+        `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
+      });
+    }
+    return sql;
+  }
+
+  updateSqlMaintenance(maintenance: MaintenanceModel[]): string {
+    let sql = '';
+    if (!!maintenance && maintenance.length > 0) {
+      maintenance.forEach(x => {
+        sql += `UPDATE ${ConstantsTable.TABLE_MTM_MAINTENANCE} ` +
+        `SET ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION}='${x.description}', ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_ELEMENT}=${x.maintenanceElement.id}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_FREQ}=${x.maintenanceFreq.id}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}=${x.km}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME}=${x.time}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT}='${(x.init ? Constants.DATABASE_YES : Constants.DATABASE_NO)}', ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}='${(x.wear ? Constants.DATABASE_YES : Constants.DATABASE_NO)}' ` +
         `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
       });
     }
