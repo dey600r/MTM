@@ -10,52 +10,43 @@
 </ion-header>
 
 <ion-content fullscreen>
-  <ion-list-header>
-    <ion-icon size="large" name="bicycle"></ion-icon>
-    <h3 class="header-list">{{ 'PAGE_HOME.EXPENSES_PER_MOTO' | translate }}</h3>
-  </ion-list-header>
-  <ngx-charts-bar-vertical *ngIf="isChartMoto()"
-    [view]="dashboardMotoExpenses.view"
-    [scheme]="dashboardMotoExpenses.colorScheme"
-    [results]="dashboardMotoExpenses.data"
-    [gradient]="dashboardMotoExpenses.gradient"
-    [xAxis]="dashboardMotoExpenses.showXAxis"
-    [yAxis]="dashboardMotoExpenses.showYAxis"
-    [legend]="dashboardMotoExpenses.showLegend"
-    [showXAxisLabel]="dashboardMotoExpenses.showXAxisLabel"
-    [showYAxisLabel]="dashboardMotoExpenses.showYAxisLabel"
-    [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
-    [yAxisLabel]="dashboardMotoExpenses.yAxisLabel">
-  </ngx-charts-bar-vertical>
-  <ngx-charts-bar-vertical-2d *ngIf="isChartOperationType()"
-    [view]="dashboardMotoExpenses.view"
-    [scheme]="dashboardMotoExpenses.colorScheme"
-    [results]="dashboardMotoExpenses.data"
-    [gradient]="dashboardMotoExpenses.gradient"
-    [xAxis]="dashboardMotoExpenses.showXAxis"
-    [yAxis]="dashboardMotoExpenses.showYAxis"
-    [legend]="dashboardMotoExpenses.showLegend"
-    [showXAxisLabel]="dashboardMotoExpenses.showXAxisLabel"
-    [showYAxisLabel]="dashboardMotoExpenses.showYAxisLabel"
-    [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
-    [yAxisLabel]="dashboardMotoExpenses.yAxisLabel"
-    [legendTitle]="dashboardMotoExpenses.legendTitle"
-    [barPadding]="dashboardMotoExpenses.barPadding"
-    [groupPadding]="dashboardMotoExpenses.groupPadding">
-  </ngx-charts-bar-vertical-2d>
-  <ion-list-header>
-    <ion-icon size="large" name="construct"></ion-icon>
-    <h3 class="header-list">{{ 'PAGE_HOME.EXPENSES_PER_OP_TYPE' | translate }}</h3>
-  </ion-list-header>
-  <ngx-charts-pie-chart
-    [view]="dashboardOpTypeExpenses.view"
-    [scheme]="dashboardOpTypeExpenses.colorScheme"
-    [results]="dashboardOpTypeExpenses.data"
-    [gradient]="dashboardOpTypeExpenses.gradient"
-    [legend]="dashboardOpTypeExpenses.showLegend"
-    [legendTitle]="dashboardOpTypeExpenses.legendTitle"
-    [legendPosition]="dashboardOpTypeExpenses.legendPosition"
-    [labels]="dashboardOpTypeExpenses.showLabels"
-    [doughnut]="dashboardOpTypeExpenses.isDoughnut">
-  </ngx-charts-pie-chart>
+  <ion-list *ngFor="let m of wears; let i = index;">
+    <ion-list-header>
+      <ion-icon size="large" name="bicycle"></ion-icon>
+      <h3 class="header-list">{{ m.nameMoto }}</h3>
+      <ion-button fill="clear" (click)="hideMotos[i] = !hideMotos[i]">
+        <ion-icon *ngIf="hideMotos[i]" size="small" [color]="getColorMotoPercent(m)" name="caret-down"></ion-icon>
+        <ion-icon *ngIf="!hideMotos[i]" size="small" [color]="getColorMotoPercent(m)" name="caret-up"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <ion-item button *ngFor="let w of m.listWearReplacement" [hidden]="hideMotos[i]">
+      <ion-avatar slot="start" class="max-width10">
+        <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(w)"></ion-icon>
+      </ion-avatar>
+      <div class="main-div">
+        <div class="table-row">
+          <div class="progress-bar">
+            <ion-label>{{ w.nameMaintenanceElement }}</ion-label>
+          </div>
+          <div class="badge">  
+            <ion-badge [color]="getColorPercent(w, false)" *ngIf="w.timeMaintenace > 0">
+              {{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</ion-badge>
+          </div>
+        </div>
+        <div class="table-row">
+          <div class="progress-bar margin-top8">
+            <ion-progress-bar [color]="getColorPercent(w, true)" [value]="w.percentKms"></ion-progress-bar>
+          </div>
+          <div class="bagde">
+            <ion-badge [color]="getColorPercent(w, true)">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</ion-badge>
+          </div>
+        </div>
+      </div>
+      <!-- <ion-list-header>
+        <ion-label>{{ w.nameMaintenanceElement }}</ion-label>
+      </ion-list-header>
+      <ion-progress-bar [color]="getColorPercent(w, true)" [value]="w.percentKms"></ion-progress-bar>
+      <ion-badge slot="end" [color]="getColorPercent(w, true)">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</ion-badge> -->
+    </ion-item>
+  </ion-list>
 </ion-content>

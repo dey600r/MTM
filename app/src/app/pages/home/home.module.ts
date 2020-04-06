@@ -5,13 +5,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
-// LIBRARIES IONIC
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-
 // LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
 import { environment } from '../../../environments/environment';
@@ -25,7 +21,6 @@ import { HomePage } from './home.page';
     CommonModule,
     FormsModule,
     RouterModule.forChild([{ path: '', component: HomePage }]),
-    NgxChartsModule,
     HttpClientModule,
     TranslateModule.forChild({
       loader: {
@@ -35,7 +30,7 @@ import { HomePage } from './home.page';
       }
     })
   ],
-  providers: [TranslateStore, ScreenOrientation],
+  providers: [TranslateStore],
   declarations: [HomePage]
 })
 export class HomePageModule {}

@@ -34,12 +34,13 @@
         "MONTHS": "Meses",
         "FREQUENCY": "Frecuencia",
         "INIT": "Inicial",
-        "WEAR": "Desgaste"
+        "WEAR": "Desgaste",
+        "CHARTS": "Gráficos",
+        "EXPENSES": "Gastos"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
-        "EXPENSES_PER_MOTO": "Gastos por moto",
-        "EXPENSES_PER_OP_TYPE": "Gastos por tipo de op."
+        "WearReplacement": "Desgaste de recambios"
     },
     "PAGE_MOTO": {
         "YOURS_MOTORBIKES": "Tus Motos",
@@ -59,7 +60,9 @@
         "DeleteSaveMoto": "La moto {{moto}} ha sido borrada correctamente",
         "ErrorSaveMoto": "Ha ocurrido un error guardando los datos de la moto",
         "ConfirmDeleteMoto": "La moto {{moto}} se va a borrar. ¿Desea continuar?",
-        "ConfirmDeleteMotoOperation": "La moto {{moto}} y sus operaciones se van a borrar. ¿Desea continuar?"
+        "ConfirmDeleteMotoOperation": "La moto {{moto}} y sus operaciones se van a borrar. ¿Desea continuar?",
+        "ExpensesPerMoto": "Gastos por moto",
+        "ExpensesPerOperationType": "Gastos por tipo de op."
     },
     "PAGE_OPERATION": {
         "YOURS_OPERATIONS": "Operaciones de la moto",
@@ -80,8 +83,7 @@
         "EditSaveOperation": "La operación {{operation}} ha sido modificada correctamente",
         "DeleteSaveOperation": "La operación {{operation}} ha sido borrada correctamente",
         "ErrorSaveOperation": "Ha ocurrido un error guardando los datos de la operación",
-        "ConfirmDeleteOperation": "La operación {{operation}} se va a borrar. ¿Desea continuar?",
-        "ConfirmSaveToDeleteReplacement": "Los recambios se van a borrar. ¿Desea continuar?"
+        "ConfirmDeleteOperation": "La operación {{operation}} se va a borrar. ¿Desea continuar?"
     },
     "PAGE_CONFIGURATION": {
         "YOURS_CONFIGURATIONS": "Configuraciones",

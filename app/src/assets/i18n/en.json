@@ -28,18 +28,19 @@
         "OPERATION_TYPE": "Operation type",
         "OPERATIONS_OF": "Op. of",
         "OP_TYPE": "Op. type",
-        "REPLACEMENT": "Replacement",
+        "REPLACEMENT": "Spare part",
         "WORKSHOP": "Workshop",
         "ME": "Me",
         "MONTHS": "Months",
         "FREQUENCY": "Frequency",
         "INIT": "Init",
-        "WEAR": "Wear"
+        "WEAR": "Wear",
+        "CHARTS": "Boards",
+        "EXPENSES": "Expenses"
     },
     "PAGE_HOME": {
         "HOME": "Home",
-        "EXPENSES_PER_MOTO": "Expenses per motorbike",
-        "EXPENSES_PER_OP_TYPE": "Expenses per op. type"
+        "WearReplacement": "Wear of spare parts"
     },
     "PAGE_MOTO": {
         "YOURS_MOTORBIKES": "Yours Motorbikes",
@@ -59,7 +60,9 @@
         "DeleteSaveMoto": "The motorbike {{moto}} has been deleted succesfully",
         "ErrorSaveMoto": "There was an erro while saving motorbike data",
         "ConfirmDeleteMoto": "The motorbike {{moto}} will be deleted. Do you wish continue?",
-        "ConfirmDeleteMotoOperation": "The motorbike {{moto}} and operations will be deleted. Do you wish continue?"
+        "ConfirmDeleteMotoOperation": "The motorbike {{moto}} and operations will be deleted. Do you wish continue?",
+        "ExpensesPerMoto": "Expenses per motorbike",
+        "ExpensesPerOperationType": "Expenses per op. type"
     },
     "PAGE_OPERATION": {
         "YOURS_OPERATIONS": "Motorbike's Operations",
@@ -80,8 +83,7 @@
         "EditSaveOperation": "The operation {{operation}} has been modified succesfully",
         "DeleteSaveOperation": "The operation {{operation}} has been deleted succesfully",
         "ErrorSaveOperation": "There was an erro while saving operation data",
-        "ConfirmDeleteOperation": "The operation {{operation}} will be deleted. Do you wish continue?",
-        "ConfirmSaveToDeleteReplacement": "The replacement will be deleted. Do you wish continue?"
+        "ConfirmDeleteOperation": "The operation {{operation}} will be deleted. Do you wish continue?"
     },
     "PAGE_CONFIGURATION": {
         "YOURS_CONFIGURATIONS": "Configurations",
@@ -97,7 +99,7 @@
         "MAINTENANCES": "Maintenances",
         "AddNewMaintenance": "Add maintenance",
         "EditMaintenance": "Edit maintenance",
-        "AddReplacement": "Add replacement",
+        "AddReplacement": "Add spare part",
         "AddMaintenanceFreq": "Add frequence",
         "AddTime": "Add months",
         "AddSaveMaintenance": "The maintenance {{maintenance}} has been added succesfully",
@@ -106,15 +108,15 @@
         "ErrorSaveMaintenance": "There was an erro while saving maintenance data",
         "ConfirmDeleteMaintenance": "The maintenance {{maintenance}} will be deleted. Do you wish continue?",
         "ConfirmDeleteMaintenanceWithConfigururation": "The maintenance {{maintenance}} will be deleted and its configurations associated. Do you wish continue?",
-        "REPLACEMENTS": "Replacements",
-        "AddNewReplacement": "Add replacement",
-        "EditReplacement": "Edit replacement",
-        "AddSaveReplacement": "The replacement {{replacement}} has been added succesfully",
-        "EditSaveReplacement": "The replacement {{replacement}} has been modified succesfully",
-        "DeleteSaveReplacement": "The replacement {{replacement}} has been deleted succesfully",
-        "ErrorSaveReplacement": "There was an erro while saving replacement data",
-        "ConfirmDeleteReplacement": "The replacement {{replacement}} will be deleted. Do you wish continue?",
-        "ConfirmDeleteReplacementWithOperations": "The replacement {{replacement}} will be deleted with its operations associated. Do you wish continue?"
+        "REPLACEMENTS": "Spare parts",
+        "AddNewReplacement": "Add spare part",
+        "EditReplacement": "Edit spare part",
+        "AddSaveReplacement": "The spare part {{replacement}} has been added succesfully",
+        "EditSaveReplacement": "The spare part {{replacement}} has been modified succesfully",
+        "DeleteSaveReplacement": "The spare part {{replacement}} has been deleted succesfully",
+        "ErrorSaveReplacement": "There was an erro while saving spare part data",
+        "ConfirmDeleteReplacement": "The spare part {{replacement}} will be deleted. Do you wish continue?",
+        "ConfirmDeleteReplacementWithOperations": "The spare part {{replacement}} will be deleted with its operations associated. Do you wish continue?"
     },
     "ALERT" : {
         "INFO": "Info",

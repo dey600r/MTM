@@ -13,10 +13,12 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 // LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
 import { DataBaseService, CommonService } from '@services/index';
@@ -29,6 +31,8 @@ import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.compon
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
+import { DashboardMotoComponent } from '@modals/dashboard-moto/dashboard-moto.component';
+import { DashboardOperationComponent } from '@modals/dashboard-operation/dashboard-operation.component';
 import { SearchOperationPopOverComponent } from '@popovers/search-operation-popover/search-operation-popover.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { PipeModule } from '@pipes/pipes.module';
@@ -41,6 +45,8 @@ import { PipeModule } from '@pipes/pipes.module';
     AddEditOperationComponent,
     AddEditMaintenanceComponent,
     AddEditMaintenanceElementComponent,
+    DashboardMotoComponent,
+    DashboardOperationComponent,
     SearchOperationPopOverComponent,
     SearchDashboardPopOverComponent
   ],
@@ -50,6 +56,8 @@ import { PipeModule } from '@pipes/pipes.module';
     AddEditOperationComponent,
     AddEditMaintenanceComponent,
     AddEditMaintenanceElementComponent,
+    DashboardMotoComponent,
+    DashboardOperationComponent,
     SearchOperationPopOverComponent,
     SearchDashboardPopOverComponent
   ],
@@ -65,6 +73,7 @@ import { PipeModule } from '@pipes/pipes.module';
         deps: [HttpClient]
       }
     }),
+    NgxChartsModule,
     AppRoutingModule,
     CommonModule,
     FormsModule,
@@ -80,6 +89,7 @@ import { PipeModule } from '@pipes/pipes.module';
     DataBaseService,
     CommonService,
     TranslateStore,
+    ScreenOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

@@ -53,6 +53,9 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList);
     this.moto = Object.assign({}, this.modalInputModel.data);
+    if (this.modalInputModel.isCreate) {
+      this.moto.id = -1;
+    }
 
     this.configurationSubscription = this.dbService.getConfigurations().subscribe(data => {
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);

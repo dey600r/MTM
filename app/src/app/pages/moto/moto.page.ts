@@ -11,7 +11,7 @@ import { MotoModel, ModalInputModel, ModalOutputModel, OperationModel } from '@m
 
 // COMPONENTS
 import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
-
+import { DashboardMotoComponent } from '@modals/dashboard-moto/dashboard-moto.component';
 
 @Component({
   selector: 'app-moto',
@@ -65,7 +65,7 @@ export class MotoPage implements OnInit {
   openMotoModal(row: MotoModel = new MotoModel(), create: boolean = true) {
     this.rowSelected = row;
     this.dataInputModel = new ModalInputModel(create, this.rowSelected);
-    this.openModal();
+    this.openModal(AddEditMotoComponent);
   }
 
   deleteMoto(row: MotoModel) {
@@ -73,14 +73,18 @@ export class MotoPage implements OnInit {
     this.showConfirmDelete();
   }
 
+  openDashboardMoto() {
+    this.openModal(DashboardMotoComponent);
+  }
+
   changeFilterOperation(idMoto: number) {
     this.operationService.setSearchOperation(this.motos.find(x => x.id === idMoto));
   }
 
-  async openModal() {
+  async openModal(modalComponent: any) {
 
     const modal = await this.modalController.create({
-      component: AddEditMotoComponent,
+      component: modalComponent,
       componentProps: this.dataInputModel
     });
 

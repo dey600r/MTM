@@ -126,9 +126,13 @@ export class DataBaseService {
   }
 
   loadAllDataTable(table: string) {
-    return this.database.executeSql(this.sqlService.getSql(table), []).then(data => {
+    return this.executeSql(table).then(data => {
       this.loadDataOnObserver(table, data);
     });
+  }
+
+  executeSql(table: string): Promise<any> {
+    return this.database.executeSql(this.sqlService.getSql(table), []);
   }
 
   loadDataOnObserver(table: string, data: any[]) {

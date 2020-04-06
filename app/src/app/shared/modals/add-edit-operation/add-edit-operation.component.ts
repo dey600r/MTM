@@ -150,7 +150,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   async showConfirmSaveWithDelete() {
     const alert = await this.alertController.create({
       header: this.translator.instant('COMMON.OPERATION'),
-      message: this.translator.instant('PAGE_OPERATION.ConfirmSaveToDeleteReplacement'),
+      message: this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation'),
       buttons: [
         {
           text: this.translator.instant('COMMON.CANCEL'),

@@ -12,6 +12,7 @@ import { ConstantsColumns, Constants, ActionDB } from '@utils/index';
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 import { SearchOperationPopOverComponent } from '@popovers/search-operation-popover/search-operation-popover.component';
+import { DashboardOperationComponent } from '@modals/dashboard-operation/dashboard-operation.component';
 
 @Component({
   selector: 'app-operation',
@@ -76,12 +77,16 @@ export class OperationPage implements OnInit {
 
   /** MODALS */
 
-  openOperationModal(
-      row: OperationModel = new OperationModel(null, null, new OperationTypeModel(), this.filterOperations.searchMoto),
-      create: boolean = true) {
+  openOperationModal(row: OperationModel = new OperationModel(null, null, new OperationTypeModel(), this.filterOperations.searchMoto),
+                     create: boolean = true) {
     this.rowSelected = row;
     this.dataInputModel = new ModalInputModel(create, this.rowSelected);
-    this.openModal();
+    this.openModal(AddEditOperationComponent);
+  }
+
+  openDashboardOperation() {
+    this.dataInputModel = new ModalInputModel(true, null, this.operations);
+    this.openModal(DashboardOperationComponent);
   }
 
   deleteOperation(row: OperationModel) {
@@ -93,10 +98,10 @@ export class OperationPage implements OnInit {
     this.commonService.alertInfo('ALERT.AddMotoToAddOperation');
   }
 
-  async openModal() {
+  async openModal(modalComponent: any) {
 
     const modal = await this.modalController.create({
-      component: AddEditOperationComponent,
+      component: modalComponent,
       componentProps: this.dataInputModel
     });
 

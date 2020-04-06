@@ -58,6 +58,13 @@ export class CommonService {
 
     // COMMON UTILS METHODS
 
+    monthDiff(dateIni: Date, dateFin: Date): number {
+        let months: number = (dateFin.getFullYear() - dateIni.getFullYear()) * 12;
+        months -= dateIni.getMonth() + 1;
+        months += dateFin.getMonth();
+        return months <= 0 ? 0 : months;
+    }
+
     /** ORDER BY */
     orderBy(data: any[], prop: string = null): any[] {
         return data.sort((x, y) => this.compareData(x, y , prop));

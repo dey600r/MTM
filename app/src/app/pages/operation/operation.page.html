@@ -1,8 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      <ion-title class="align-center">{{ 'COMMON.OPERATION' | translate }}</ion-title>
-    </ion-title>
+    <ion-button slot="start" fill="clear" (click)="openDashboardOperation()">
+      <ion-icon size="large" name="pie"></ion-icon>
+    </ion-button>
+    <ion-title class="align-center">{{ 'COMMON.OPERATION' | translate }}</ion-title>
     <ion-button slot="end" fill="clear" (click)="showPopover()">
       <ion-icon size="large" name="filter"></ion-icon>
     </ion-button>

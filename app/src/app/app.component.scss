@@ -2,6 +2,14 @@
     width: 100%;
 }
 
+.margin-top0 {
+    margin-top: 0px;
+}
+
+.margin-top8 {
+    margin-top: 8px;
+}
+
 .margin-left80 {
     margin-left: 80%;
 }
@@ -151,6 +159,10 @@
 .text-overflow {
     text-overflow: inherit;
     overflow: inherit;
+}
+
+.position-fixed {
+    position: fixed;
 }
 
 .button-circle {
