@@ -15,8 +15,8 @@
       <ion-icon size="large" name="bicycle"></ion-icon>
       <h3 class="header-list">{{ m.nameMoto }}</h3>
       <ion-button fill="clear" (click)="hideMotos[i] = !hideMotos[i]">
-        <ion-icon *ngIf="hideMotos[i]" size="small" [color]="getColorMotoPercent(m)" name="caret-down"></ion-icon>
-        <ion-icon *ngIf="!hideMotos[i]" size="small" [color]="getColorMotoPercent(m)" name="caret-up"></ion-icon>
+        <ion-icon *ngIf="hideMotos[i]" size="small" color="primary" name="caret-down"></ion-icon>
+        <ion-icon *ngIf="!hideMotos[i]" size="small" color="primary" name="caret-up"></ion-icon>
       </ion-button>
     </ion-list-header>
     <ion-item button *ngFor="let w of m.listWearReplacement" [hidden]="hideMotos[i]">
@@ -26,27 +26,22 @@
       <div class="main-div">
         <div class="table-row">
           <div class="progress-bar">
-            <ion-label>{{ w.nameMaintenanceElement }}</ion-label>
+            <ion-label>{{ w.descriptionMaintenance }}</ion-label>
           </div>
           <div class="badge">  
-            <ion-badge [color]="getColorPercent(w, false)" *ngIf="w.timeMaintenace > 0">
+            <ion-badge [color]="w.warningMonths" *ngIf="w.timeMaintenace > 0">
               {{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</ion-badge>
           </div>
         </div>
         <div class="table-row">
           <div class="progress-bar margin-top8">
-            <ion-progress-bar [color]="getColorPercent(w, true)" [value]="w.percentKms"></ion-progress-bar>
+            <ion-progress-bar [color]="w.warningKms" [value]="w.percentKms"></ion-progress-bar>
           </div>
           <div class="bagde">
-            <ion-badge [color]="getColorPercent(w, true)">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</ion-badge>
+            <ion-badge [color]="w.warningKms">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</ion-badge>
           </div>
         </div>
       </div>
-      <!-- <ion-list-header>
-        <ion-label>{{ w.nameMaintenanceElement }}</ion-label>
-      </ion-list-header>
-      <ion-progress-bar [color]="getColorPercent(w, true)" [value]="w.percentKms"></ion-progress-bar>
-      <ion-badge slot="end" [color]="getColorPercent(w, true)">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</ion-badge> -->
     </ion-item>
   </ion-list>
 </ion-content>

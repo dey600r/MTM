@@ -1,11 +1,8 @@
-export enum FilterGroupMotoOpTypeReplacement {
-    MOTO = 'M',
-    OPERATION_TYPE = 'O'
-}
+import { FilterGroupMotoOpTypeReplacementEnum } from '@utils/index';
 
 export class SearchDashboardModel {
-    filterGrouper: FilterGroupMotoOpTypeReplacement;
-    constructor(f: FilterGroupMotoOpTypeReplacement = FilterGroupMotoOpTypeReplacement.MOTO) {
+    filterGrouper: FilterGroupMotoOpTypeReplacementEnum;
+    constructor(f: FilterGroupMotoOpTypeReplacementEnum = FilterGroupMotoOpTypeReplacementEnum.MOTO) {
         this.filterGrouper = f;
     }
 }

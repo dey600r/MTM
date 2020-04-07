@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { DataBaseService, CommonService, OperationService } from '@services/index';
 import { OperationModel, MotoModel, ModalInputModel, ModalOutputModel, SearchOperationModel, OperationTypeModel } from '@models/index';
-import { ConstantsColumns, Constants, ActionDB } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
@@ -126,7 +126,7 @@ export class OperationPage implements OnInit {
         }, {
           text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
-            this.operationService.saveOperation(this.rowSelected, ActionDB.delete).then(x => {
+            this.operationService.saveOperation(this.rowSelected, ActionDBEnum.DELETE).then(x => {
               this.commonService.showToast('PAGE_OPERATION.DeleteSaveOperation', {operation: this.rowSelected.description});
             }).catch(e => {
               this.commonService.showToast('PAGE_OPERATION.ErrorSaveOperation');

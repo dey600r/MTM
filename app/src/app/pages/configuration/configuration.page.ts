@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
-import { ConstantsColumns, ActionDB } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel, MotoModel, OperationModel
 } from '@models/index';
@@ -122,7 +122,7 @@ export class ConfigurationPage implements OnInit {
             motosDeleteConfig.forEach((x, index) => {
               x.configuration.id = 1;
             });
-            this.configurationService.saveConfiguration(this.rowConfSelected, ActionDB.delete, motosDeleteConfig).then(x => {
+            this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, motosDeleteConfig).then(x => {
               this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveConfiguration',
                 { configuration: this.rowConfSelected.name });
             }).catch(e => {
@@ -168,7 +168,7 @@ export class ConfigurationPage implements OnInit {
         }, {
           text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
-            this.configurationService.saveMaintenance(this.rowMainSelected, ActionDB.delete, configurationWithMaintenance).then(x => {
+            this.configurationService.saveMaintenance(this.rowMainSelected, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
               this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveMaintenance',
                 { maintenance: this.rowMainSelected.description });
             }).catch(e => {
@@ -217,7 +217,8 @@ export class ConfigurationPage implements OnInit {
         }, {
           text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
-            this.configurationService.saveMaintenanceElement(this.rowReplSelected, ActionDB.delete, operationsWithReplacement).then(x => {
+            this.configurationService.saveMaintenanceElement(this.rowReplSelected,
+                ActionDBEnum.DELETE, operationsWithReplacement).then(x => {
               this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveReplacement',
                 { replacement: this.rowReplSelected.name });
             }).catch(e => {
@@ -237,9 +238,9 @@ export class ConfigurationPage implements OnInit {
 
   getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
     switch (maintenanceElement.id) {
-      case 1: case 2: case 22: case 23:
+      case 1: case 2: case 22: case 23: case 25: case 28: case 29:
         return 'disc';
-      case 4: case 5:
+      case 4: case 5: case 27:
         return 'basket';
       case 6:
         return 'flash';
@@ -251,10 +252,12 @@ export class ConfigurationPage implements OnInit {
         return 'layers';
       case 18: case 19:
         return 'eyedrop';
-      case 10: case 17: case 20: case 21:
+      case 10: case 17: case 20: case 21: case 26:
         return 'settings';
       case 24:
         return 'battery-charging';
+      case 30: case 31:
+        return 'swap-vertical';
       default:
         return this.getRandomIcon(maintenanceElement.id);
     }
@@ -262,11 +265,12 @@ export class ConfigurationPage implements OnInit {
   }
 
   getRandomIcon(rand: number): string {
-    if (rand <= 30) {
+    const min = 40;
+    if (rand <= min) {
       return 'cube';
-    } else if (rand > 30 && rand <= 40) {
+    } else if (rand > min && rand <= (min + 15)) {
       return 'bulb';
-    } else if (rand > 40 && rand <= 55) {
+    } else if (rand > (min + 15) && rand <= (min + 25)) {
       return 'bandage';
     } else {
       return 'briefcase';

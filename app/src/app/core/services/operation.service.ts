@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
+
+// UTILS
 import { OperationModel, OperationTypeModel, MotoModel, SearchOperationModel, MaintenanceElementModel } from '@models/index';
 import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
-import { ConstantsTable, ConstantsColumns, ActionDB } from '@utils/index';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { CommonService } from './common.service';
+import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,7 @@ export class OperationService {
         = new BehaviorSubject<SearchOperationModel>(this.searchOperation);
 
     constructor(private dbService: DataBaseService,
-                private sqlService: SqlService,
-                private commonService: CommonService) {
+                private sqlService: SqlService) {
     }
 
     // SEARCHER OPERATION
@@ -38,25 +38,25 @@ export class OperationService {
 
     // SAVE OPERATION
 
-    saveOperation(op: OperationModel, action: ActionDB) {
+    saveOperation(op: OperationModel, action: ActionDBEnum) {
         let sqlDB = '';
         const dataDB: any[] = [];
         const listLoadTable: string[] = [ConstantsTable.TABLE_MTM_OPERATION];
         let scriptDB = false;
         switch (action) {
-            case ActionDB.create:
+            case ActionDBEnum.CREATE:
                 sqlDB = this.sqlService.insertSqlOperation([op]);
                 sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
                 scriptDB = true;
                 break;
-            case ActionDB.update:
+            case ActionDBEnum.UPDATE:
                 sqlDB = this.sqlService.updateSqlOperation([op]);
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
                     ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, [op.id]);
                 sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
                 scriptDB = true;
                 break;
-            case ActionDB.delete:
+            case ActionDBEnum.DELETE:
                 sqlDB = this.getSqlDeleteOperation(op);
                 scriptDB = true;
                 break;

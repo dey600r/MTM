@@ -5,7 +5,7 @@ import { ModalController, Platform, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDB, ConstantsColumns } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns } from '@utils/index';
 import { DataBaseService, MotoService, CommonService, OperationService } from '@services/index';
 import { MotoModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
@@ -115,7 +115,7 @@ export class MotoPage implements OnInit {
         }, {
           text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
-            this.motoService.saveMoto(this.rowSelected, ActionDB.delete, ops).then(x => {
+            this.motoService.saveMoto(this.rowSelected, ActionDBEnum.DELETE, ops).then(x => {
               this.commonService.showToast('PAGE_MOTO.DeleteSaveMoto',
                 { moto: `${this.rowSelected.brand} ${this.rowSelected.model}` });
             }).catch(e => {

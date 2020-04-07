@@ -10,11 +10,12 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "launch:android": "cd C:\\Users\\dey_portatil\\AppData\\Local\\Android\\Sdk\\emulator && emulator -avd Pixel_2_API_28",
     "deploy:app-store-android": "ionic cordova run android --verbose --release --prod",
-    "deploy:prod-android": "ionic cordova run android --verbose",
+    "deploy:prod-android": "ionic cordova run android",
     "emulate:prod-android": "ionic cordova emulate android --verbose",
-    "deploy:debug-android": "ionic cordova run android --device -l --debug --verbose",
-    "emulate:debug-android": "ionic cordova emulate android --device -l --debug --verbose"
+    "deploy:debug-android": "ionic cordova run android --device -l --debug",
+    "emulate:debug-android": "ionic cordova emulate android -l --debug"
   },
   "private": true,
   "dependencies": {

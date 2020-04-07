@@ -1,3 +1,5 @@
+import { WarningWearEnum } from '@utils/index';
+
 export class WearMotoProgressBarModel {
     idMoto = -1;
     nameMoto = '';
@@ -12,10 +14,13 @@ export class WearReplacementProgressBarModel {
     kmOperation = 0;
     dateOperation: Date = null;
     idMaintenance = -1;
+    descriptionMaintenance = '';
     kmMaintenance = 0;
     timeMaintenace = 0;
     calculateKms = 0;
     calculateMonths = 0;
     percentKms = 0;
+    warningKms: WarningWearEnum = WarningWearEnum.SUCCESS;
     percentMonths = 0;
+    warningMonths: WarningWearEnum = WarningWearEnum.SUCCESS;
 }

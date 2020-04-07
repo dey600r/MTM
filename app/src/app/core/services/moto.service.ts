@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { MotoModel, ConfigurationModel, OperationModel } from '@models/index';
+import { MotoModel, OperationModel } from '@models/index';
 import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
-import { ConstantsTable, ConstantsColumns, ActionDB } from '@utils/index';
+import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
 import { OperationService } from './operation.service';
 
 @Injectable({
@@ -15,17 +15,17 @@ export class MotoService {
                 private operationService: OperationService) {
     }
 
-    saveMoto(moto: MotoModel, action: ActionDB, operations: OperationModel[] = []) {
+    saveMoto(moto: MotoModel, action: ActionDBEnum, operations: OperationModel[] = []) {
         let sqlDB = '';
         let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_MOTO];
         switch (action) {
-            case ActionDB.create:
+            case ActionDBEnum.CREATE:
                 sqlDB = this.sqlService.insertSqlMoto([moto]);
                 break;
-            case ActionDB.update:
+            case ActionDBEnum.UPDATE:
                 sqlDB = this.sqlService.updateSqlMoto([moto]);
                 break;
-            case ActionDB.delete:
+            case ActionDBEnum.DELETE:
                 if (!!operations && operations.length > 0) { // DELETE OPERATION ASSOCIATED
                     sqlDB = this.operationService.getSqlDeleteMotoOperation(operations);
                     listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_OPERATION];

@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDB } from '@app/core/utils';
+import { ActionDBEnum } from '@app/core/utils';
 import {
   ModalInputModel, ModalOutputModel, MaintenanceModel,
   MaintenanceFreqModel, MaintenanceElementModel
@@ -80,7 +80,7 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
     this.submited = true;
     if (this.isValidForm(f)) {
       this.configurationService.saveMaintenance(this.maintenance,
-          (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
         this.commonService.showToast((this.modalInputModel.isCreate ?
             'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),

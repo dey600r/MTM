@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDB, ConstantsColumns } from '@utils/index';
+import { Constants, ActionDBEnum, ConstantsColumns } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MotoModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
@@ -132,7 +132,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       );
     }
     this.operationService.saveOperation(this.operation,
-      (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+      (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
       this.closeModal();
       this.commonService.showToast(
         this.modalInputModel.isCreate ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation',

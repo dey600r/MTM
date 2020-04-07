@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDB, ConstantsColumns, Constants } from '@app/core/utils';
+import { ActionDBEnum, ConstantsColumns, Constants } from '@utils/index';
 import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel, OperationModel } from '@models/index';
 import { DataBaseService, MotoService, CommonService } from '@services/index';
 
@@ -84,7 +84,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
           this.moto.dateKms = new Date();
         }
 
-        this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+        this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
           this.commonService.showToast((
             this.modalInputModel.isCreate ? 'PAGE_MOTO.AddSaveMoto' : 'PAGE_MOTO.EditSaveMoto'),

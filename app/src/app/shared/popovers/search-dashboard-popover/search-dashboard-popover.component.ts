@@ -5,8 +5,9 @@ import { PopoverController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { SearchDashboardModel, FilterGroupMotoOpTypeReplacement } from '@models/index';
+import { SearchDashboardModel } from '@models/index';
 import { DashboardService } from '@services/index';
+import { FilterGroupMotoOpTypeReplacementEnum } from '@utils/index';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { DashboardService } from '@services/index';
   export class SearchDashboardPopOverComponent implements OnInit {
 
     searchDashboard: SearchDashboardModel = this.dashboardService.getSearchDashboard();
-    filterGrouper: FilterGroupMotoOpTypeReplacement;
+    filterGrouper: FilterGroupMotoOpTypeReplacementEnum;
 
     constructor(private popoverController: PopoverController,
                 private dashboardService: DashboardService,

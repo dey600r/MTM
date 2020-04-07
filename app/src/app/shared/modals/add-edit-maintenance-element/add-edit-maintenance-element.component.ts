@@ -3,7 +3,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 
 // UTILS
-import { ActionDB } from '@app/core/utils';
+import { ActionDBEnum } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, MaintenanceElementModel } from '@models/index';
 import { CommonService, ConfigurationService } from '@services/index';
 
@@ -44,7 +44,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
     this.submited = true;
     if (this.isValidForm(f)) {
       this.configurationService.saveMaintenanceElement(this.maintenanceElement,
-          (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
         this.commonService.showToast((this.modalInputModel.isCreate ?
           'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),

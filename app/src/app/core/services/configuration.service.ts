@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import {
     MaintenanceElementModel, ConfigurationModel, MotoModel, MaintenanceModel, OperationModel
 } from '@models/index';
-import { ConstantsColumns, ActionDB, ConstantsTable, Constants } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, ConstantsTable, Constants } from '@utils/index';
 import { CommonService } from './common.service';
 import { DataBaseService } from './data-base.service';
 import { SqlService } from './sql.service';
@@ -47,21 +47,21 @@ export class ConfigurationService {
     // SAVE
 
     /** CONFIGURATION */
-    saveConfiguration(configuration: ConfigurationModel, action: ActionDB, motos: MotoModel[] = []) {
+    saveConfiguration(configuration: ConfigurationModel, action: ActionDBEnum, motos: MotoModel[] = []) {
         let sqlDB = '';
         let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_CONFIGURATION];
         switch (action) {
-            case ActionDB.create:
+            case ActionDBEnum.CREATE:
                 sqlDB = this.sqlService.insertSqlConfiguration([configuration]);
                 sqlDB += this.sqlService.insertSqlConfigurationMaintenance(configuration);
                 break;
-            case ActionDB.update:
+            case ActionDBEnum.UPDATE:
                 sqlDB = this.sqlService.updateSqlConfiguration([configuration]);
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
                     ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION, [configuration.id]);
                 sqlDB += this.sqlService.insertSqlConfigurationMaintenance(configuration);
                 break;
-            case ActionDB.delete:
+            case ActionDBEnum.DELETE:
                 sqlDB = this.getSqlDeleteConfiguration(configuration, motos);
                 listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_MOTO];
                 break;
@@ -85,17 +85,17 @@ export class ConfigurationService {
     }
 
     /** MAINTENANCE */
-    saveMaintenance(maintenance: MaintenanceModel, action: ActionDB, configurations: ConfigurationModel[] = []) {
+    saveMaintenance(maintenance: MaintenanceModel, action: ActionDBEnum, configurations: ConfigurationModel[] = []) {
         let sqlDB = '';
         let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_MAINTENANCE];
         switch (action) {
-            case ActionDB.create:
+            case ActionDBEnum.CREATE:
                 sqlDB = this.sqlService.insertSqlMaintenance([maintenance]);
                 break;
-            case ActionDB.update:
+            case ActionDBEnum.UPDATE:
                 sqlDB = this.sqlService.updateSqlMaintenance([maintenance]);
                 break;
-            case ActionDB.delete:
+            case ActionDBEnum.DELETE:
                 if (!!configurations && configurations.length > 0) {
                     sqlDB = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT, // DELETE CONFIG MAINTENANCE
                         ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, [maintenance.id]);
@@ -109,17 +109,17 @@ export class ConfigurationService {
     }
 
     /** MAINTENANCE ELEMENT / REPLACEMENT */
-    saveMaintenanceElement(replacement: MaintenanceElementModel, action: ActionDB, operations: OperationModel[] = []) {
+    saveMaintenanceElement(replacement: MaintenanceElementModel, action: ActionDBEnum, operations: OperationModel[] = []) {
         let sqlDB = '';
         let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT];
         switch (action) {
-            case ActionDB.create:
+            case ActionDBEnum.CREATE:
                 sqlDB = this.sqlService.insertSqlMaintenanceElement([replacement]);
                 break;
-            case ActionDB.update:
+            case ActionDBEnum.UPDATE:
                 sqlDB = this.sqlService.updateSqlMaintenanceElement([replacement]);
                 break;
-            case ActionDB.delete:
+            case ActionDBEnum.DELETE:
                 if (!!operations && operations.length > 0) {
                     sqlDB = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
                         ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT, [replacement.id]);

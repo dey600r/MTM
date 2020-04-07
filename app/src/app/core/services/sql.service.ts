@@ -293,7 +293,9 @@ export class SqlService {
   getMapMaintenance(data: any, conf: boolean): MaintenanceModel {
     return (conf ? {
       id: Number(data.idMaintenance),
-      description: data.descriptionMaintenance,
+      description: (data.masterMaintenance === Constants.DATABASE_YES ?
+        this.translator.instant(`DB.${data.descriptionMaintenance}`)
+        : data.descriptionMaintenance),
       maintenanceElement: this.getMapMaintenanceElement(data, true),
       maintenanceFreq: this.getMapMaintenanceFreq(data, true),
       km: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM]),
@@ -303,7 +305,9 @@ export class SqlService {
       master: data.masterMaintenance === Constants.DATABASE_YES
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
-      description: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION],
+      description: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER] === Constants.DATABASE_YES ?
+        this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION]}`)
+        : data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION]),
       maintenanceElement: this.getMapMaintenanceElement(data, true),
       maintenanceFreq: this.getMapMaintenanceFreq(data, true),
       km: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM]),

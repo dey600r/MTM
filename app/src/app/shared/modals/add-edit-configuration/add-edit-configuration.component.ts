@@ -4,7 +4,7 @@ import { Form } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 // UTILS
-import { ActionDB, ConstantsColumns } from '@app/core/utils';
+import { ActionDBEnum, ConstantsColumns } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, ConfigurationModel, MaintenanceModel } from '@models/index';
 import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
 
@@ -75,7 +75,7 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
         }
       }
       this.configurationService.saveConfiguration(this.configuration,
-          (this.modalInputModel.isCreate ? ActionDB.create : ActionDB.update)).then(res => {
+          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
         this.commonService.showToast(
           (this.modalInputModel.isCreate ? 'PAGE_CONFIGURATION.AddSaveConfiguration' : 'PAGE_CONFIGURATION.EditSaveConfiguration'),
