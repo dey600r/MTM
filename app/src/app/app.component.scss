@@ -46,6 +46,10 @@
     text-align: end;
 }
 
+.btn-width {
+    width: 56px;
+}
+
 .btn-color {
     color:var(--ion-color-primary-tint);
 }
@@ -91,7 +95,6 @@
 }
 
 .btn-header {
-    width: 18%;
     padding-bottom: 10px;
 }
 
@@ -100,6 +103,7 @@
     text-align: center;
     width: 80%;
     padding-top: 10px;
+    padding-right: 0px;
 }
 
 .row-block {
@@ -180,4 +184,9 @@
 
 .background-gray {
     background:var(--ion-color-medium-shade);
+}
+
+.label-filter {
+    text-align: center;
+    width: 100%;
 }

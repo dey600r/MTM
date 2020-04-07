@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform, PopoverController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -12,9 +12,6 @@ import {
 } from '@models/index';
 import { WarningWearEnum } from '@utils/index';
 
-// COMPONENTS
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
-
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -22,7 +19,6 @@ import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popo
 })
 export class HomePage implements OnInit {
 
-  currentPopover = null;
   wears: WearMotoProgressBarModel[] = [];
   hideMotos: boolean[] = [];
 
@@ -31,7 +27,6 @@ export class HomePage implements OnInit {
               private dbService: DataBaseService,
               private translator: TranslateService,
               private dashboardService: DashboardService,
-              private popoverController: PopoverController,
               private configurationService: ConfigurationService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
@@ -61,18 +56,31 @@ export class HomePage implements OnInit {
     });
   }
 
+  getIconKms(warning: WarningWearEnum): string {
+    switch (warning) {
+      case WarningWearEnum.SUCCESS:
+        return 'checkmark-circle';
+      case WarningWearEnum.WARNING:
+        return 'warning';
+      case WarningWearEnum.DANGER:
+        return 'nuclear';
+    }
+  }
+
+  getColorKms(warning: WarningWearEnum) {
+    switch (warning) {
+      case WarningWearEnum.SUCCESS:
+        return 'success';
+      case WarningWearEnum.WARNING:
+        return 'warning';
+      case WarningWearEnum.DANGER:
+        return 'nuclear';
+    }
+  }
+
   getIconMaintenance(wear: WearReplacementProgressBarModel): string {
     return this.configurationService.getIconMaintenance(
       new MaintenanceModel(null, null, new MaintenanceFreqModel(wear.codeMaintenanceFreq)));
-  }
-
-  async showPopover(ev: any) {
-    this.currentPopover = await this.popoverController.create({
-      component: SearchDashboardPopOverComponent,
-      event: ev,
-      translucent: true
-    });
-    return await this.currentPopover.present();
   }
 
 }

@@ -10,7 +10,7 @@ import {
     ConfigurationModel, MotoModel, MaintenanceModel, WearMotoProgressBarModel, WearReplacementProgressBarModel
 } from '@models/index';
 import { CommonService } from './common.service';
-import { ConstantsColumns, FilterGroupMotoOpTypeReplacementEnum, WarningWearEnum, Constants } from '../utils';
+import { ConstantsColumns, WarningWearEnum } from '../utils';
 
 @Injectable({
     providedIn: 'root'
@@ -29,9 +29,14 @@ export class DashboardService {
         return (w < h ? [w - 5, (h / 3) - 10] : [w - 5, h - 10]);
     }
 
+    /** DASHBOADS */
+
     // MOTO OP TYPE EXPENSES
-    getDashboardModelMotoExpenses(view: any[], data: OperationModel[]): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardMotoExpenses(data));
+    getDashboardModelMotoExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
+        return new DashboardModel(view, this.mapOperationToDashboardMotoExpenses(data), null,
+            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.MOTORBIKE'),
+            filter.showAxisLabel, this.translator.instant('COMMON.MOTORBIKE'),
+            filter.showAxisLabel, this.translator.instant('COMMON.PRICE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
     mapOperationToDashboardMotoExpenses(data: OperationModel[]): any[] {
@@ -52,8 +57,11 @@ export class DashboardService {
     }
 
     // MOTO PER MONTH EXPENSES
-    getDashboardModelMotoPerTime(view: any[], data: OperationModel[]): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardMotoPerTimeExpenses(data));
+    getDashboardModelMotoPerTime(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
+        return new DashboardModel(view, this.mapOperationToDashboardMotoPerTimeExpenses(data), null,
+        filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.MOTORBIKE'),
+        filter.showAxisLabel, this.translator.instant('COMMON.MOTORBIKE'),
+        filter.showAxisLabel, this.translator.instant('COMMON.PRICE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
     mapOperationToDashboardMotoPerTimeExpenses(data: OperationModel[]): any[] {
@@ -79,8 +87,11 @@ export class DashboardService {
     }
 
     // MOTO OP TYPE EXPENSES
-    getDashboardModelMotoOpTypeExpenses(view: any[], data: OperationModel[]): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardMotoOpTypeExpenses(data));
+    getDashboardModelMotoOpTypeExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
+        return new DashboardModel(view, this.mapOperationToDashboardMotoOpTypeExpenses(data), null,
+        filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.MOTORBIKE'),
+        filter.showAxisLabel, this.translator.instant('COMMON.MOTORBIKE'),
+        filter.showAxisLabel, this.translator.instant('COMMON.PRICE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
     mapOperationToDashboardMotoOpTypeExpenses(data: OperationModel[]): any[] {
@@ -116,9 +127,11 @@ export class DashboardService {
     }
 
     // OPERATION TYPE EXPENSES
-    getDashboardModelOpTypeExpenses(view: any[], data: OperationModel[]): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardOpTypeExpenses(data), null, true, true, true, false,
-        this.translator.instant('COMMON.OP_TYPE'), false, '', false, '', true, false, 'right');
+    getDashboardModelOpTypeExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
+        return new DashboardModel(view, this.mapOperationToDashboardOpTypeExpenses(data), null,
+        filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OP_TYPE'),
+        filter.showAxisLabel, this.translator.instant('COMMON.OPERATION_TYPE'),
+        filter.showAxisLabel, this.translator.instant('COMMON.PRICE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
     mapOperationToDashboardOpTypeExpenses(data: OperationModel[]): any[] {
@@ -137,6 +150,8 @@ export class DashboardService {
         });
         return result;
     }
+
+    /** NOTIFICATIONS */
 
     // MOTO REPLACEMENTS WEAR
     getWearReplacementToMoto(operations: OperationModel[], motos: MotoModel[],
@@ -157,9 +172,14 @@ export class DashboardService {
                             wearReplacement = [... wearReplacement, maintenanceWear];
                         }
                     });
+                    const sumSuccess: number = ((maintenancesMoto.length - wearReplacement.length) +
+                        wearReplacement.filter(x => x.warningKms === WarningWearEnum.SUCCESS &&
+                                                    x.warningMonths === WarningWearEnum.SUCCESS).length) / maintenancesMoto.length;
                     result = [...result, {
                         idMoto: moto.id,
                         nameMoto: `${moto.brand} ${moto.model}`,
+                        percent: sumSuccess,
+                        warning: this.getPercentMoto(wearReplacement),
                         listWearReplacement: this.orderMaintenanceWear(wearReplacement)
                     }];
                 }
@@ -170,7 +190,7 @@ export class DashboardService {
     }
 
     orderMaintenanceWear(maintenanceWear: WearReplacementProgressBarModel[]): WearReplacementProgressBarModel[] {
-        let result: WearReplacementProgressBarModel[] = []
+        let result: WearReplacementProgressBarModel[] = [];
         const wearReplacementDanger: WearReplacementProgressBarModel[] =
             maintenanceWear.filter(x => x.warningKms === WarningWearEnum.DANGER);
         const wearReplacementWarning: WearReplacementProgressBarModel[] =
@@ -183,6 +203,18 @@ export class DashboardService {
         this.commonService.orderBy(wearReplacementSuccess, 'calculateKms').forEach(x => result = [...result, x]);
 
         return result;
+    }
+
+    getPercentMoto(wearReplacement: WearReplacementProgressBarModel[]): WarningWearEnum {
+        let warninSuccess: WarningWearEnum = WarningWearEnum.SUCCESS;
+        if (wearReplacement.some(x => x.warningKms === WarningWearEnum.DANGER ||
+            x.warningMonths === WarningWearEnum.DANGER)) {
+            warninSuccess = WarningWearEnum.DANGER;
+        } else if (wearReplacement.some(x => x.warningKms === WarningWearEnum.WARNING ||
+            x.warningMonths === WarningWearEnum.WARNING)) {
+            warninSuccess = WarningWearEnum.WARNING;
+        }
+        return warninSuccess;
     }
 
     calculateMaintenace(moto: MotoModel, operations: OperationModel[],
@@ -333,8 +365,8 @@ export class DashboardService {
         return this.searchDashboard;
     }
 
-    setSearchDashboard(f: FilterGroupMotoOpTypeReplacementEnum = FilterGroupMotoOpTypeReplacementEnum.MOTO) {
-        this.searchDashboard = new SearchDashboardModel(f);
+    setSearchDashboard(filter: SearchDashboardModel) {
+        this.searchDashboard = filter;
         this.behaviourSearchDashboard.next(this.searchDashboard);
     }
 }

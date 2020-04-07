@@ -5,21 +5,32 @@
 
 .main-div {
   width: 100%;
-  padding: 8px 0px 8px 0px;
+  padding: 20px 0px 0px 0px;
 }
 
 .progress-bar {
-  max-width: 80%;
-  min-width: 70%;
-  flex: 1 1 auto;
-  padding-right: 10px;
+  padding: 0px 16px 0px 16px;
+  // max-width: 80%;
+  // min-width: 70%;
+  // flex: 1 1 auto;
+  // padding-right: 10px;
 }
 
-.bagde {
-  min-width: 10%;
+.avatar-row {
+  margin-top: 14px;
+  margin-bottom: 2px;
 }
 
 .table-row {
   display: flex;
   flex-direction: row;
+}
+
+.p-row {
+  margin: 4px 8px 8px 2px;
+  color: var(--ion-color-step-600,#666);
+}
+
+.icon-row {
+  margin: 4px 2px 8px 3px;
 }

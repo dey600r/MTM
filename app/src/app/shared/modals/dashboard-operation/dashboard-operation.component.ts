@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { Platform, ModalController, NavParams } from '@ionic/angular';
+import { Platform, ModalController, NavParams, PopoverController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 // UTILS
-import { DataBaseService, DashboardService } from '@services/index';
+import { DashboardService } from '@services/index';
 import { DashboardModel, OperationModel, ModalInputModel, ModalOutputModel } from '@models/index';
+
+// COMPONENTS
+import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
   selector: 'dashboard-operation',
@@ -23,21 +26,23 @@ export class DashboardOperationComponent implements OnInit, OnDestroy {
     // MODEL FORM
     dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
     dashboardMotoExpenses: DashboardModel = new DashboardModel([], []);
+    currentPopover = null;
 
     // DATA
     operations: OperationModel[] = [];
     motoModel = '';
 
     // SUBSCRIPTION
+    searchSubscription: Subscription = new Subscription();
     screenSubscription: Subscription = new Subscription();
 
     constructor(private platform: Platform,
-                private dbService: DataBaseService,
                 private navParams: NavParams,
                 private screenOrientation: ScreenOrientation,
                 private changeDetector: ChangeDetectorRef,
                 private dashboardService: DashboardService,
-                private modalController: ModalController) {
+                private modalController: ModalController,
+                private popoverController: PopoverController) {
   }
 
     ngOnInit() {
@@ -47,11 +52,13 @@ export class DashboardOperationComponent implements OnInit, OnDestroy {
         this.operations = this.modalInputModel.dataList;
         this.motoModel = (!!this.operations && this.operations.length > 0 ?
             `${this.operations[0].moto.brand} ${this.operations[0].moto.model}` : '');
-        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-        this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoPerTime(windowsSize, this.operations);
-        this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations);
+        this.searchSubscription = this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
+          const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+          this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoPerTime(windowsSize, this.operations, filter);
+          this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
+        });
 
-        this.screenOrientation.onChange().subscribe(() => {
+        this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
             const windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
             this.dashboardMotoExpenses.view = windowSize;
             this.dashboardOpTypeExpenses.view = windowSize;
@@ -61,11 +68,21 @@ export class DashboardOperationComponent implements OnInit, OnDestroy {
     }
 
   ngOnDestroy() {
+    this.searchSubscription.unsubscribe();
     this.screenSubscription.unsubscribe();
   }
 
   async closeModal() {
     this.modalOutputModel = new ModalOutputModel(true);
     await this.modalController.dismiss(this.modalOutputModel);
+  }
+
+  async showPopover(ev: any) {
+    this.currentPopover = await this.popoverController.create({
+      component: SearchDashboardPopOverComponent,
+      event: ev,
+      translucent: true
+    });
+    return await this.currentPopover.present();
   }
 }

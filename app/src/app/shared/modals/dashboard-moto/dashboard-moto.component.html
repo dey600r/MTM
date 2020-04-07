@@ -1,10 +1,14 @@
 <ion-header>
     <ion-toolbar>
+        <!-- Button show filter -->
+        <ion-button slot="start" fill="clear" (click)="showPopover()" class="btn-width">
+            <ion-icon size="large" class="btn-color" name="filter"></ion-icon>
+        </ion-button>
         <!-- Title -->
         <ion-title class="title-header">{{ 'COMMON.CHARTS' | translate }}</ion-title>
         <!-- Button Close -->
-        <ion-button fill="clear" (click)="closeModal()" class="btn-header">
-        <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
+        <ion-button fill="clear" (click)="closeModal()" class="btn-header btn-width">
+            <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
         </ion-button>
     </ion-toolbar>
 </ion-header>
@@ -22,8 +26,11 @@
         [xAxis]="dashboardMotoExpenses.showXAxis"
         [yAxis]="dashboardMotoExpenses.showYAxis"
         [legend]="dashboardMotoExpenses.showLegend"
+        [legendTitle]="dashboardMotoExpenses.legendTitle"
+        [legendPosition]="dashboardMotoExpenses.legendPosition"
         [showXAxisLabel]="dashboardMotoExpenses.showXAxisLabel"
         [showYAxisLabel]="dashboardMotoExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardMotoExpenses.showDataLabel"
         [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
         [yAxisLabel]="dashboardMotoExpenses.yAxisLabel">
     </ngx-charts-bar-vertical>

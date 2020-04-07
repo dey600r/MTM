@@ -3,6 +3,8 @@ import { WarningWearEnum } from '@utils/index';
 export class WearMotoProgressBarModel {
     idMoto = -1;
     nameMoto = '';
+    percent = 0;
+    warning: WarningWearEnum = WarningWearEnum.SUCCESS;
     listWearReplacement: WearReplacementProgressBarModel[] = [];
 }
 

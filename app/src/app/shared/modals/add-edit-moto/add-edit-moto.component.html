@@ -4,7 +4,7 @@
     <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">{{ 'PAGE_MOTO.AddNewMoto' | translate }}</ion-title>
     <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">{{ 'PAGE_MOTO.EditMoto' | translate }}</ion-title>
     <!-- Button Close -->
-    <ion-button fill="clear" (click)="closeModal()" class="btn-header">
+    <ion-button fill="clear" (click)="closeModal()" class="btn-header btn-width">
       <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
     </ion-button>
   </ion-toolbar>

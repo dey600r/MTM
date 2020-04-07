@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 
-// LIBRARIES
-import { TranslateService } from '@ngx-translate/core';
-
 // UTILS
 import { SearchDashboardModel } from '@models/index';
 import { DashboardService } from '@services/index';
 import { FilterGroupMotoOpTypeReplacementEnum } from '@utils/index';
-
 
 @Component({
     selector: 'app-search-dashboard-popover',
@@ -21,8 +17,7 @@ import { FilterGroupMotoOpTypeReplacementEnum } from '@utils/index';
     filterGrouper: FilterGroupMotoOpTypeReplacementEnum;
 
     constructor(private popoverController: PopoverController,
-                private dashboardService: DashboardService,
-                private translator: TranslateService) {
+                private dashboardService: DashboardService) {
         this.searchDashboard = this.dashboardService.getSearchDashboard();
         this.filterGrouper = this.searchDashboard.filterGrouper;
     }
@@ -32,7 +27,13 @@ import { FilterGroupMotoOpTypeReplacementEnum } from '@utils/index';
 
     onChangeFilterGrouper() {
         this.searchDashboard.filterGrouper = this.filterGrouper;
-        this.dashboardService.setSearchDashboard(this.searchDashboard.filterGrouper);
+        this.dashboardService.setSearchDashboard(
+            new SearchDashboardModel(this.searchDashboard.filterGrouper,
+                                    this.searchDashboard.showAxis,
+                                    this.searchDashboard.showLegend,
+                                    this.searchDashboard.showAxisLabel,
+                                    this.searchDashboard.showDataLabel,
+                                    this.searchDashboard.doghnut));
     }
 
     closePopover() {
@@ -40,5 +41,7 @@ import { FilterGroupMotoOpTypeReplacementEnum } from '@utils/index';
     }
 
     clearFilter() {
+        this.searchDashboard = new SearchDashboardModel();
+        this.onChangeFilterGrouper();
     }
 }

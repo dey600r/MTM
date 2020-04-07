@@ -1,12 +1,8 @@
 <ion-list>
     <ion-list-header>
-        <ion-label>{{ 'COMMON.FILTER' | translate }}</ion-label>
+        <ion-label class="label-filter"><h2>{{ 'COMMON.FILTER' | translate }}</h2></ion-label>
         <ion-label>
-            <!-- <ion-chip outline color="primary" (click)="clearFilter()">
-                <ion-icon size="small" name="hourglass"></ion-icon>
-                <ion-label>{{ 'COMMON.CLEAN' | translate }}</ion-label>
-            </ion-chip> -->
-            <ion-button slot="end" fill="clear" (click)="closePopover()">
+            <ion-button slot="end" fill="clear" (click)="closePopover()" class="btn-width">
                 <ion-icon size="large" name="close-circle-outline"></ion-icon>
             </ion-button>
         </ion-label>
@@ -22,5 +18,32 @@
                 </ion-segment-button>
             </ion-segment>
         </ion-toolbar>
+    </ion-item>
+    <ion-item>
+        <ion-label>Show axis</ion-label>
+        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showAxis" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
+    </ion-item>
+    <ion-item>
+        <ion-label>Show legend</ion-label>
+        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showLegend" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
+    </ion-item>
+    <ion-item>
+        <ion-label>Show axis label</ion-label>
+        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showAxisLabel" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
+    </ion-item>
+    <ion-item>
+        <ion-label>Show data label</ion-label>
+        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showDataLabel" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
+    </ion-item>
+    <ion-item>
+        <ion-label>Doghnut</ion-label>
+        <ion-toggle color="primary" [(ngModel)]="searchDashboard.doghnut" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
+    </ion-item>
+    <!-- Clear -->
+    <ion-item>
+        <ion-chip slot="end" outline color="primary" (click)="clearFilter()">
+            <ion-icon size="small" name="hourglass"></ion-icon>
+            <ion-label>{{ 'COMMON.CLEAN' | translate }}</ion-label>
+        </ion-chip>
     </ion-item>
 </ion-list>

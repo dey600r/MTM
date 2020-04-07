@@ -3,9 +3,6 @@
     <ion-title>
       <ion-title class="align-center">{{ 'PAGE_HOME.HOME' | translate }}</ion-title>
     </ion-title>
-    <ion-button slot="end" fill="clear" (click)="showPopover()">
-      <ion-icon size="large" name="filter"></ion-icon>
-    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -19,27 +16,27 @@
         <ion-icon *ngIf="!hideMotos[i]" size="small" color="primary" name="caret-up"></ion-icon>
       </ion-button>
     </ion-list-header>
+    <div *ngIf="hideMotos[i]" class="progress-bar">
+      <ion-progress-bar [color]="m.warning" [value]="m.percent"></ion-progress-bar>
+    </div>
     <ion-item button *ngFor="let w of m.listWearReplacement" [hidden]="hideMotos[i]">
-      <ion-avatar slot="start" class="max-width10">
-        <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(w)"></ion-icon>
+      <ion-avatar slot="start" class="max-width10 avatar-row">
+        <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(w)"></ion-icon>
       </ion-avatar>
       <div class="main-div">
-        <div class="table-row">
-          <div class="progress-bar">
+        <div>
+          <div>
             <ion-label>{{ w.descriptionMaintenance }}</ion-label>
           </div>
-          <div class="badge">  
-            <ion-badge [color]="w.warningMonths" *ngIf="w.timeMaintenace > 0">
-              {{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</ion-badge>
+          <div class="table-row">
+            <ion-icon class="icon-row" size="small" [color]="w.warningKms" [name]="getIconKms(w.warningKms)"></ion-icon>
+            <p class="p-row">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</p>
+            <ion-icon *ngIf="w.timeMaintenace > 0" class="icon-row" size="small" [color]="w.warningMonths" [name]="getIconKms(w.warningMonths)"></ion-icon>
+            <p *ngIf="w.timeMaintenace > 0" class="p-row">{{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</p> 
           </div>
         </div>
-        <div class="table-row">
-          <div class="progress-bar margin-top8">
-            <ion-progress-bar [color]="w.warningKms" [value]="w.percentKms"></ion-progress-bar>
-          </div>
-          <div class="bagde">
-            <ion-badge [color]="w.warningKms">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</ion-badge>
-          </div>
+        <div>
+          <ion-progress-bar [color]="w.warningKms" [value]="w.percentKms"></ion-progress-bar>
         </div>
       </div>
     </ion-item>
