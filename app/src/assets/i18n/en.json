@@ -31,12 +31,20 @@
         "REPLACEMENT": "Spare part",
         "WORKSHOP": "Workshop",
         "ME": "Me",
+        "MONTH": "Month",
         "MONTHS": "Months",
         "FREQUENCY": "Frequency",
         "INIT": "Init",
         "WEAR": "Wear",
         "CHARTS": "Boards",
-        "EXPENSES": "Expenses"
+        "EXPENSES": "Expenses",
+        "DATE_PURCHASE": "Date Purchase",
+        "SHOW_AXIS": "Show axis",
+        "SHOW_LEGEND": "Show legend",
+        "SHOW_AXIS_LABELS": "Show axis label",
+        "SHOW_DATA_LABELS": "Show data label",
+        "SHOW_DOGHNUT": "Show doghnut",
+        "CALCULATE_PER_MONTH": "Calculate per month"
     },
     "PAGE_HOME": {
         "HOME": "Home",

@@ -77,6 +77,7 @@ export class DashboardMotoComponent implements OnInit, OnDestroy {
   async showPopover(ev: any) {
     this.currentPopover = await this.popoverController.create({
       component: SearchDashboardPopOverComponent,
+      componentProps: new ModalInputModel(false),
       event: ev,
       translucent: true
     });

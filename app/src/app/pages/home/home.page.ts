@@ -56,6 +56,28 @@ export class HomePage implements OnInit {
     });
   }
 
+  getClassProgressbar(warning: WarningWearEnum, styles: string): string {
+    switch (warning) {
+      case WarningWearEnum.SUCCESS:
+        return `${styles} quizz-progress-success`;
+      case WarningWearEnum.WARNING:
+        return `${styles} quizz-progress-warning`;
+      case WarningWearEnum.DANGER:
+        return `${styles} quizz-progress-danger`;
+    }
+  }
+
+  getClassIcon(warning: WarningWearEnum, styles: string): string {
+    switch (warning) {
+      case WarningWearEnum.SUCCESS:
+        return `${styles} icon-color-success`;
+      case WarningWearEnum.WARNING:
+        return `${styles} icon-color-warning`;
+      case WarningWearEnum.DANGER:
+        return `${styles} icon-color-danger`;
+    }
+  }
+
   getIconKms(warning: WarningWearEnum): string {
     switch (warning) {
       case WarningWearEnum.SUCCESS:

@@ -1,3 +1,4 @@
+BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "mtmMoto" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"model"	TEXT NOT NULL,
@@ -214,3 +215,4 @@ INSERT INTO "mtmOperationType" ("id","code","description") VALUES (5,'A','ACCESO
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (6,'O','OTHERS');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (7,'MH','MAINTENANCE_HOME');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (8,'FH','FAILURE_HOME');
+COMMIT;

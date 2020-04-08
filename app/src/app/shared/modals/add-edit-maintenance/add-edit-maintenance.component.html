@@ -69,12 +69,14 @@
             [(ngModel)]="maintenance.time"></ion-input>
         </ion-item>
         <ion-item>
+          <ion-icon class="ion-icon-margin" slot="start" size="large" name="navigate-circle"></ion-icon>
           <ion-label>
             <h2>{{ 'COMMON.INIT' | translate }}</h2>
           </ion-label>
           <ion-toggle #maintenanceInit name="maintenanceInit" color="primary" [(ngModel)]="maintenance.init"></ion-toggle>
         </ion-item>
         <ion-item>
+          <ion-icon class="ion-icon-margin" slot="start" size="large" name="notifications-circle"></ion-icon>
           <ion-label>
             <h2>{{ 'COMMON.WEAR' | translate }}</h2>
           </ion-label>

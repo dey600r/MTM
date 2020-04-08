@@ -220,6 +220,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     const maxDate = this.calculateMaxDate(this.operation);
     const minKm = this.calculateMinKm(this.operation);
     const maxKm = this.calculateMaxKm(this.operation);
+    const moto: MotoModel = this.motos.find(x => x.id === this.operation.moto.id);
 
     // Validate min and max date operation
     if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
@@ -231,13 +232,12 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
                 `${this.translator.instant('COMMON.OR')} `;
     } else if (!!minDate && !(!!maxDate) && dateSelected < minDate) {
       msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
-                {
-                  dateIni: this.commonService.getDateString(minDate)
-                })} ` +
+                { dateIni: this.commonService.getDateString(minDate) })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
     } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
-      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateLower',
+      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
                 {
+                  dateIni: this.commonService.getDateString(moto.datePurchase),
                   dateFin: this.commonService.getDateString(maxDate)
                 })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
@@ -247,15 +247,17 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
       msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: maxKm});
     } else if (!(!!maxKm) && kmSelected < minKm) {
-      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween',
-        {kmIni: minKm, kmFin: this.motos.find(x => x.id === this.operation.moto.id).km});
+      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: moto.km});
     }
 
     // Validate max km moto
-    if (!!this.motos && this.motos.length > 0 && msgResult === '' &&
-      this.motos.some(x => x.id === this.operation.moto.id && this.operation.km > x.km)) {
-      msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower',
-        { kmFin: this.motos.find(x => x.id === this.operation.moto.id).km});
+    if (!!this.motos && this.motos.length > 0 && msgResult === '') {
+      if (moto.km < this.operation.km) {
+        msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower', { kmFin: moto.km});
+      } else if (new Date(moto.datePurchase) > new Date(this.operation.date)) {
+        msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
+                { dateIni: this.commonService.getDateString(moto.datePurchase) })}`;
+      }
     }
 
     return msgResult;

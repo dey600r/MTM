@@ -38,10 +38,10 @@
       <ion-label class="min-width40" (click)="openOperationModal(op, false)">
         <h2 class="text-overflow">{{ op.description }}</h2>
         <h3>{{ op.km }} km</h3>
-        <p>{{ op.price }} €</p>
       </ion-label>
       <ion-label class="padding-left10" (click)="openOperationModal(op, false)">
         <p>{{ op.date | dateFormatCalendarPipe }}</p>
+        <p>{{ op.price }} €</p>
       </ion-label>
       <!-- Buttons delete -->
       <ion-label class="align-right">

@@ -19,6 +19,8 @@ export class WearReplacementProgressBarModel {
     descriptionMaintenance = '';
     kmMaintenance = 0;
     timeMaintenace = 0;
+    initMaintenance = false;
+    wearMaintenance = false;
     calculateKms = 0;
     calculateMonths = 0;
     percentKms = 0;

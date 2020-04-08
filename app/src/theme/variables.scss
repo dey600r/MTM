@@ -74,4 +74,12 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  /** PROGRESS BAR */
+  --ion-color-progressbar-success-buffer: rgba(0, 188, 0, 0.35);
+  --ion-color-progressbar-success-progress: rgba(0, 145, 0, 0.5);
+  --ion-color-progressbar-warning-buffer: rgba(188, 128, 0, 0.35);
+  --ion-color-progressbar-warning-progress: rgba(255, 208, 0, 0.5);
+  --ion-color-progressbar-danger-buffer: rgba(188, 0, 0, 0.35);
+  --ion-color-progressbar-danger-progress: rgba(188, 0, 0, 0.5);
 }

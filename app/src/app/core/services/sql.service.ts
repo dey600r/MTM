@@ -49,6 +49,7 @@ export class SqlService {
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, m.${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
       `m.${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}, ` +
+      `m.${ConstantsColumns.COLUMN_MTM_MOTO_DATE_PURCHASE}, ` +
       `c.${ConstantsColumns.COLUMN_MTM_ID} as idConfiguration, ` +
       `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME} as nameConfiguration, ` +
       `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} as descriptionConfiguration ` +
@@ -180,7 +181,8 @@ export class SqlService {
           km: Number(row[ConstantsColumns.COLUMN_MTM_MOTO_KM]),
           configuration: this.getMapConfiguration(row, true),
           kmsPerMonth: row[ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH],
-          dateKms: new Date(row[ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS])
+          dateKms: new Date(row[ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS]),
+          datePurchase: row[ConstantsColumns.COLUMN_MTM_MOTO_DATE_PURCHASE]
         }];
       }
     }
@@ -242,7 +244,7 @@ export class SqlService {
             moto: new MotoModel(
               row.modelMoto,
               row.brandMoto,
-              null, null, null, null, null,
+              null, null, null, null, null, null,
               row.idMoto),
             km: Number(row[ConstantsColumns.COLUMN_MTM_OPERATION_KM]),
             date: row[ConstantsColumns.COLUMN_MTM_OPERATION_DATE],
@@ -381,10 +383,11 @@ export class SqlService {
         `(${ConstantsColumns.COLUMN_MTM_MOTO_MODEL}, ${ConstantsColumns.COLUMN_MTM_MOTO_BRAND}, ` +
         `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}, ` +
         `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}, ` +
-        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}) `;
+        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}, ${ConstantsColumns.COLUMN_MTM_MOTO_DATE_PURCHASE}) `;
       motos.forEach((x, index) => {
         sql += `SELECT '${x.model}', '${x.brand}', ${x.year}, ${x.km}, ${x.configuration.id}, ` +
-          `${x.kmsPerMonth}, '${this.commonService.getDateStringToDB(x.dateKms)}' `;
+          `${x.kmsPerMonth}, '${this.commonService.getDateStringToDB(x.dateKms)}', ` +
+          `'${this.commonService.getDateStringToDB(x.datePurchase)}' `;
         if ((index + 1) < motos.length) {
           sql += ' UNION ';
         }
@@ -516,7 +519,8 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}=${x.year}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}=${x.km}, ` +
         `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=${x.configuration.id}, ` +
         `${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=${x.kmsPerMonth}, ` +
-        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}=${this.commonService.getDateStringToDB(x.dateKms)} ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}='${this.commonService.getDateStringToDB(x.dateKms)}', ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_PURCHASE}='${this.commonService.getDateStringToDB(x.datePurchase)}' ` +
         `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
       });
     }

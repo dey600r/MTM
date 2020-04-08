@@ -9,6 +9,7 @@ export class ConstantsColumns {
     static COLUMN_MTM_MOTO_CONFIGURATION = 'idConfiguration';
     static COLUMN_MTM_MOTO_KMS_PER_MONTH = 'kmsPerMonth';
     static COLUMN_MTM_MOTO_DATE_KMS = 'dateKms';
+    static COLUMN_MTM_MOTO_DATE_PURCHASE = 'datePurchase';
 
     // CONFIGURATION
     static COLUMN_MTM_CONFIGURATION_NAME = 'name';

@@ -54,6 +54,15 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.DATE_PURCHASE' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidDate(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidDate(formAddMoto)" color="danger">{{ 'PAGE_OPERATION.AddDate' | translate }}</ion-text>
+        </ion-label>
+        <ion-datetime #motoDate name="motoDate" [displayFormat]="formatDate" required [placeholder]="translateSelect" [(ngModel)]="moto.datePurchase"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
           <ion-text>{{ 'COMMON.CONFIGURATION' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidConfiguration(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>

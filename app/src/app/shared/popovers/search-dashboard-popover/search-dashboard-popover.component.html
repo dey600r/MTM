@@ -1,42 +1,48 @@
 <ion-list>
     <ion-list-header>
+        <!-- Tittle -->
         <ion-label class="label-filter"><h2>{{ 'COMMON.FILTER' | translate }}</h2></ion-label>
+        <!-- Button Close -->
         <ion-label>
             <ion-button slot="end" fill="clear" (click)="closePopover()" class="btn-width">
                 <ion-icon size="large" name="close-circle-outline"></ion-icon>
             </ion-button>
         </ion-label>
     </ion-list-header>
-    <ion-item>
-        <ion-toolbar>
-            <ion-segment [value]="filterGrouper" [(ngModel)]="filterGrouper" (ionChange)="onChangeFilterGrouper()">
-                <ion-segment-button value="M">
-                <ion-icon size="large" name="bicycle"></ion-icon>
-                </ion-segment-button>
-                <ion-segment-button value="O">
-                <ion-icon size="large" name="construct"></ion-icon>
-                </ion-segment-button>
-            </ion-segment>
-        </ion-toolbar>
+    <!-- Filters -->
+    <ion-item *ngIf="modalInputModel.isCreate">
+        <ion-label>{{ 'COMMON.CALCULATE_PER_MONTH' | translate }}</ion-label>
+        <ion-select [placeholder]="this.translateSelect" interface="popover"
+            [(ngModel)]="this.filterMonth" (ionChange)="onChangeFilterGrouper()">
+            <ion-select-option [(value)]="m.id" *ngFor="let m of months">{{ m.name }}</ion-select-option>
+        </ion-select>
     </ion-item>
     <ion-item>
-        <ion-label>Show axis</ion-label>
+        <ion-label>{{ 'COMMON.OP_TYPE' | translate }}</ion-label>
+        <ion-select [placeholder]="this.translateSelect" multiple="true" 
+            [cancelText]="this.translateCancel" [okText]="this.translateAccept"
+            [(ngModel)]="this.filterOpType" (ionChange)="onChangeFilterGrouper()">
+            <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationTypes">{{ ot.description }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+    <ion-item>
+        <ion-label>{{ 'COMMON.SHOW_AXIS' | translate }}</ion-label>
         <ion-toggle color="primary" [(ngModel)]="searchDashboard.showAxis" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
     </ion-item>
     <ion-item>
-        <ion-label>Show legend</ion-label>
+        <ion-label>{{ 'COMMON.SHOW_LEGEND' | translate }}</ion-label>
         <ion-toggle color="primary" [(ngModel)]="searchDashboard.showLegend" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
     </ion-item>
     <ion-item>
-        <ion-label>Show axis label</ion-label>
+        <ion-label>{{ 'COMMON.SHOW_AXIS_LABELS' | translate }}</ion-label>
         <ion-toggle color="primary" [(ngModel)]="searchDashboard.showAxisLabel" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
     </ion-item>
     <ion-item>
-        <ion-label>Show data label</ion-label>
+        <ion-label>{{ 'COMMON.SHOW_DATA_LABELS' | translate }}</ion-label>
         <ion-toggle color="primary" [(ngModel)]="searchDashboard.showDataLabel" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
     </ion-item>
     <ion-item>
-        <ion-label>Doghnut</ion-label>
+        <ion-label>{{ 'COMMON.SHOW_DOGHNUT' | translate }}</ion-label>
         <ion-toggle color="primary" [(ngModel)]="searchDashboard.doghnut" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
     </ion-item>
     <!-- Clear -->

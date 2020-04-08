@@ -1,16 +1,19 @@
-import { FilterGroupMotoOpTypeReplacementEnum } from '@utils/index';
+import { FilterMonthsEnum } from '@utils/index';
+import { OperationTypeModel } from './operation-type.model';
 
 export class SearchDashboardModel {
-    filterGrouper: FilterGroupMotoOpTypeReplacementEnum;
+    showPerMont: FilterMonthsEnum;
+    showOpType: OperationTypeModel[];
     showAxis: boolean;
     showLegend: boolean;
     showAxisLabel: boolean;
     showDataLabel: boolean;
     doghnut: boolean;
-    constructor(f: FilterGroupMotoOpTypeReplacementEnum = FilterGroupMotoOpTypeReplacementEnum.MOTO,
+    constructor(month: FilterMonthsEnum = FilterMonthsEnum.MONTH, ot: OperationTypeModel[] = [],
                 axis: boolean = true, legend: boolean = false, axisLabel: boolean = false,
                 dataLabel: boolean = false, dog: boolean = false) {
-        this.filterGrouper = f;
+        this.showPerMont = month;
+        this.showOpType = ot;
         this.showAxis = axis;
         this.showLegend = legend;
         this.showAxisLabel = axisLabel;

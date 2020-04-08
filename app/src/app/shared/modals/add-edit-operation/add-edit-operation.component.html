@@ -104,7 +104,7 @@
           <ion-icon *ngIf="this.submited && !isValidPrice(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidPrice(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddPrice' | translate }}</ion-text>
         </ion-label>
-        <ion-input #opPrice name="opPrice" placeholder="10 €" required type="number" min="0" [(ngModel)]="operation.price"></ion-input>
+        <ion-input #opPrice name="opPrice" placeholder="10 €" required inputmode="decimal" min="0" [(ngModel)]="operation.price"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">

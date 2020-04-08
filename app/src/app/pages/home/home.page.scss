@@ -10,10 +10,6 @@
 
 .progress-bar {
   padding: 0px 16px 0px 16px;
-  // max-width: 80%;
-  // min-width: 70%;
-  // flex: 1 1 auto;
-  // padding-right: 10px;
 }
 
 .avatar-row {
@@ -26,6 +22,13 @@
   flex-direction: row;
 }
 
+.icon-notification {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
 .p-row {
   margin: 4px 8px 8px 2px;
   color: var(--ion-color-step-600,#666);
@@ -33,4 +36,40 @@
 
 .icon-row {
   margin: 4px 2px 8px 3px;
+}
+
+.icon-color-success {
+  --ion-color-base: var(--ion-color-progressbar-success-buffer);
+}
+
+.icon-color-warning {
+  --ion-color-base: var(--ion-color-progressbar-warning-buffer);
+}
+
+.icon-color-danger {
+  --ion-color-base: var(--ion-color-progressbar-danger-buffer);
+}
+
+.quizz-progress-success {
+  ion-progress-bar {
+    --background: green;
+    --buffer-background: var(--ion-color-progressbar-success-buffer);
+    --progress-background: var(--ion-color-progressbar-success-progress);
+  }
+}
+
+.quizz-progress-warning {
+  ion-progress-bar {
+    --background: orange;
+    --buffer-background: var(--ion-color-progressbar-warning-buffer);
+    --progress-background: var(--ion-color-progressbar-warning-progress);
+  }
+}
+
+.quizz-progress-danger {
+  ion-progress-bar {
+    --background: red;
+    --buffer-background: var(--ion-color-progressbar-danger-buffer);
+    --progress-background: var(--ion-color-progressbar-danger-progress);
+  }
 }

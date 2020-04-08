@@ -4,9 +4,10 @@ export enum ActionDBEnum {
     DELETE = 3
 }
 
-export enum FilterGroupMotoOpTypeReplacementEnum {
-    MOTO = 'M',
-    OPERATION_TYPE = 'O'
+export enum FilterMonthsEnum {
+    MONTH = 1,
+    QUARTER = 4,
+    YEAR = 12
 }
 
 export enum WarningWearEnum {

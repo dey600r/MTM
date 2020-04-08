@@ -57,7 +57,7 @@ export class OperationPage implements OnInit {
       this.filterOperations = this.operationService.getSearchOperation();
       this.operationService.setSearchOperation((!!data && data.length > 0 ?
         (this.filterOperations.searchMoto.brand !== null ? this.filterOperations.searchMoto : data[0].moto) :
-        new MotoModel(null, null, null, null, null, null, null, 0)));
+        new MotoModel(null, null, null, null, null, null, null, null, 0)));
       this.operationService.getObserverSearchOperation().subscribe(filter => {
         this.filterOperations = filter;
         if (this.filterOperations.searchMoto.brand !== null) {

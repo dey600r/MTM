@@ -24,9 +24,9 @@
       </ion-list-header>
       <ion-item button *ngFor="let c of configurations" [hidden]="hideConfiguration">
         <!-- Labels -->
-        <ion-label (click)="openConfigurationModal(c, false)">
-          <h2>{{ c.name }}</h2>
-          <h3>{{ c.description }}</h3>
+        <ion-label class="min-width75" (click)="openConfigurationModal(c, false)">
+          <h2 class="text-overflow">{{ c.name }}</h2>
+          <h3 class="text-overflow">{{ c.description }}</h3>
         </ion-label>
         <!-- Buttons edit / create -->
         <ion-label *ngIf="c.master" class="align-right">

@@ -29,6 +29,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
   // DATA
   configurations: ConfigurationModel[] = [];
   operations: OperationModel[] = [];
+  formatDate = this.commonService.getFormatCalendar();
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
@@ -36,6 +37,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
 
   // TRANSLATE
   translateYearBetween = '';
+  translateSelect = '';
 
   constructor(
     private modalController: ModalController,
@@ -46,6 +48,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     private commonService: CommonService
   ) {
     this.translateYearBetween = this.translator.instant('PAGE_MOTO.AddYearBetween', { year: new Date().getFullYear()});
+    this.translateSelect = this.translator.instant('COMMON.SELECT');
   }
 
   ngOnInit() {
@@ -55,6 +58,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     this.moto = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.moto.id = -1;
+      this.moto.datePurchase = null;
     }
 
     this.configurationSubscription = this.dbService.getConfigurations().subscribe(data => {
@@ -127,6 +131,10 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     return f.motoKm !== undefined && f.motoKm.validity.valid;
   }
 
+  isValidDate(f: any): boolean {
+    return f.motoDate !== undefined && f.motoDate.validity.valid;
+  }
+
   isValidKmMin(f: any): boolean {
     return this.isValidKm(f) && f.motoKm.valueAsNumber >= 0;
   }
@@ -142,9 +150,15 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
   validateDateAndKmToOperations(): string {
     let msg = '';
 
-    if (!!this.operations && this.operations.length > 0 && this.operations.some(x => this.moto.km < x.km)) {
-      msg = this.translator.instant('PAGE_MOTO.AddKmHigher',
+    if (!!this.operations && this.operations.length > 0) {
+      const purchase: Date = new Date(this.moto.datePurchase);
+      if (this.operations.some(x => this.moto.km < x.km)) {
+        msg = this.translator.instant('PAGE_MOTO.AddKmHigher',
         { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM)});
+      } else if (this.operations.some(x => purchase > new Date(x.date))) {
+        msg = this.translator.instant('PAGE_OPERATION.AddDateLower',
+        { dateFin: this.commonService.getDateString(this.commonService.min(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_DATE))});
+      }
     }
 
     return msg;

@@ -31,12 +31,20 @@
         "REPLACEMENT": "Recambio",
         "WORKSHOP": "Taller",
         "ME": "Yo",
+        "MONTH": "Mes",
         "MONTHS": "Meses",
         "FREQUENCY": "Frecuencia",
         "INIT": "Inicial",
         "WEAR": "Desgaste",
         "CHARTS": "Gráficos",
-        "EXPENSES": "Gastos"
+        "EXPENSES": "Gastos",
+        "DATE_PURCHASE": "Fecha compra",
+        "SHOW_AXIS": "Mostrar ejes",
+        "SHOW_LEGEND": "Mostrar leyenda",
+        "SHOW_AXIS_LABELS": "Mostrar nombre ejes",
+        "SHOW_DATA_LABELS": "Mostrar datos",
+        "SHOW_DOGHNUT": "Modo Donut",
+        "CALCULATE_PER_MONTH": "Cálculo por mes:"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
