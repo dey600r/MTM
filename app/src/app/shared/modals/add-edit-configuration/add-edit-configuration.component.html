@@ -1,19 +1,30 @@
 <ion-header>
     <ion-toolbar>
         <!-- Title -->
-        <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">{{ 'PAGE_CONFIGURATION.AddNewConfiguration' | translate }}</ion-title>
-        <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">{{ 'PAGE_CONFIGURATION.EditConfiguration' | translate }}</ion-title>
+        <ion-title *ngIf="this.modalInputModel.isCreate" class="align-center padding-left30">{{ 'PAGE_CONFIGURATION.AddNewConfiguration' | translate }}</ion-title>
+        <ion-title *ngIf="!this.modalInputModel.isCreate" class="align-center padding-left30">{{ 'PAGE_CONFIGURATION.EditConfiguration' | translate }}</ion-title>
         <!-- Button Close -->
-        <ion-button fill="clear" (click)="closeModal()" class="btn-header btn-width">
+        <ion-button fill="clear" slot="end" (click)="closeModal()" class="btn-width">
             <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
         </ion-button>
+        <!-- <div class="table-row">
+          <div class="title-header padding-left30">
+            <ion-title *ngIf="this.modalInputModel.isCreate" >{{ 'PAGE_CONFIGURATION.AddNewConfiguration' | translate }}</ion-title>
+            <ion-title *ngIf="!this.modalInputModel.isCreate">{{ 'PAGE_CONFIGURATION.EditConfiguration' | translate }}</ion-title>
+          </div>
+          <div class="justify-end">
+            <ion-button fill="clear" (click)="closeModal()" class="btn-width">
+              <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div> -->
     </ion-toolbar>
 </ion-header>
   
 <ion-content>
     <!-- Form -->
     <form #formAddConfiguration name="formAddConfiguration" (ngSubmit)="saveData(formAddConfiguration)" novalidate>
-      <ion-list lines="full">
+      <ion-list lines="full" class="margin-bottom35">
         <!-- Input control -->
         <ion-item>
           <ion-label position="stacked">

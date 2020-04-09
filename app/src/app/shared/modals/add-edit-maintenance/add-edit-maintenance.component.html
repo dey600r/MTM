@@ -1,10 +1,10 @@
 <ion-header>
     <ion-toolbar>
         <!-- Title -->
-        <ion-title *ngIf="this.modalInputModel.isCreate" class="title-header">{{ 'PAGE_CONFIGURATION.AddNewMaintenance' | translate }}</ion-title>
-        <ion-title *ngIf="!this.modalInputModel.isCreate" class="title-header">{{ 'PAGE_CONFIGURATION.EditMaintenance' | translate }}</ion-title>
+        <ion-title *ngIf="this.modalInputModel.isCreate" class="align-center padding-left30">{{ 'PAGE_CONFIGURATION.AddNewMaintenance' | translate }}</ion-title>
+        <ion-title *ngIf="!this.modalInputModel.isCreate" class="align-center padding-left30">{{ 'PAGE_CONFIGURATION.EditMaintenance' | translate }}</ion-title>
         <!-- Button Close -->
-        <ion-button fill="clear" (click)="closeModal()" class="btn-header btn-width">
+        <ion-button fill="clear" (click)="closeModal()" class="btn-width" slot="end">
             <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
         </ion-button>
     </ion-toolbar>
@@ -73,7 +73,7 @@
           <ion-label>
             <h2>{{ 'COMMON.INIT' | translate }}</h2>
           </ion-label>
-          <ion-toggle #maintenanceInit name="maintenanceInit" color="primary" [(ngModel)]="maintenance.init"></ion-toggle>
+          <ion-toggle [disabled]="isInitDisabled()" #maintenanceInit name="maintenanceInit" color="primary" [(ngModel)]="maintenance.init"></ion-toggle>
         </ion-item>
         <ion-item>
           <ion-icon class="ion-icon-margin" slot="start" size="large" name="notifications-circle"></ion-icon>

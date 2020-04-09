@@ -84,7 +84,8 @@ import { FilterMonthsEnum, ConstantsColumns } from '@utils/index';
                                     this.searchDashboard.showLegend,
                                     this.searchDashboard.showAxisLabel,
                                     this.searchDashboard.showDataLabel,
-                                    this.searchDashboard.doghnut));
+                                    this.searchDashboard.doghnut,
+                                    this.searchDashboard.showMyData));
     }
 
     closePopover() {

@@ -37,6 +37,7 @@
         "INIT": "Inicial",
         "WEAR": "Desgaste",
         "CHARTS": "Gráficos",
+        "EXPENSE": "Gasto",
         "EXPENSES": "Gastos",
         "DATE_PURCHASE": "Fecha compra",
         "SHOW_AXIS": "Mostrar ejes",
@@ -44,7 +45,9 @@
         "SHOW_AXIS_LABELS": "Mostrar nombre ejes",
         "SHOW_DATA_LABELS": "Mostrar datos",
         "SHOW_DOGHNUT": "Modo Donut",
-        "CALCULATE_PER_MONTH": "Cálculo por mes:"
+        "SHOW_MY_DATA": "Mostrar mis datos",
+        "CALCULATE_PER_MONTH": "Cálculo por mes",
+        "DATE_OPERATION": "Fecha operación"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -70,7 +73,7 @@
         "ConfirmDeleteMoto": "La moto {{moto}} se va a borrar. ¿Desea continuar?",
         "ConfirmDeleteMotoOperation": "La moto {{moto}} y sus operaciones se van a borrar. ¿Desea continuar?",
         "ExpensesPerMoto": "Gastos por moto",
-        "ExpensesPerOperationType": "Gastos por tipo de op."
+        "ExpensesPerOperationType": "Gastos por tipo de operación"
     },
     "PAGE_OPERATION": {
         "YOURS_OPERATIONS": "Operaciones de la moto",
@@ -139,6 +142,7 @@
         "OTHERS": "Otros",
         "MAINTENANCE_HOME": "Mantemiento Casero",
         "FAILURE_HOME": "Averia Casera",
+        "SPARE_PARTS": "Recambios",
         "FRONT_WHEEL": "Rueda delantera",
         "BACK_WHEEL": "Rueda trasera",
         "ENGINE_OIL": "Aceite motor",
@@ -169,6 +173,7 @@
         "BACK_WHEEL_VALVE": "Válvula rueda trasera",
         "RIGHT_DUMPER_SEALS": "Retén amortiguador derecho",
         "LEFT_DUMPER_SEALS": "Retén amortiguador izquierdo",
+        "PETROL_TAP": "Grifo de gasolina",
         "CHANGE_FRONT_WHEEL": "Cambio de Rueda delantera",
         "CHANGE_BACK_WHEEL": "Cambio de Rueda trasera",
         "CHANGE_ENGINE_OIL": "Cambio de Aceite motor",
@@ -199,6 +204,7 @@
         "CHANGE_BACK_WHEEL_VALVE": "Cambio Válvula rueda trasera",
         "CHANGE_RIGHT_DUMPER_SEALS": "Cambio Retén amortiguador derecho",
         "CHANGE_LEFT_DUMPER_SEALS": "Cambio Retén amortiguador izquierdo",
+        "CHANGE_PETROL_TAP": "Cambio Grifo de gasolina",
         "ADJUST_VALVES": "Reglaje de vávulas",
         "FIRST_CHANGE_ENGINE_OIL": "Primer cambio de aceite",
         "FIRST_CHANGE_OIL_FILTER": "Primer cambio filtro de aceite",

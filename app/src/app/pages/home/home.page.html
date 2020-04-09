@@ -36,13 +36,17 @@
           </div>
           <div class="table-row">
             <!-- KMS -->
-            <ion-icon [class]="getClassIcon(w.warningKms, 'icon-row')" [color]="getClassIcon(w.warningKms, '')" size="small"
-            [name]="getIconKms(w.warningKms)"></ion-icon>
-            <p class="p-row">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</p>
+            <div class="margin-right5 table-row">
+              <ion-icon [class]="getClassIcon(w.warningKms, 'icon-row')" [color]="getClassIcon(w.warningKms, '')" size="small"
+              [name]="getIconKms(w.warningKms)"></ion-icon>
+              <p class="p-row">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</p>
+            </div>
             <!-- MONTHS -->
-            <ion-icon *ngIf="w.timeMaintenace > 0" [color]="getClassIcon(w.warningMonths, '')" size="small"
-              [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
-            <p *ngIf="w.timeMaintenace > 0" class="p-row">{{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</p>
+            <div class="margin-right5 table-row">
+              <ion-icon *ngIf="w.timeMaintenace > 0" [color]="getClassIcon(w.warningMonths, '')" size="small"
+                [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
+              <p *ngIf="w.timeMaintenace > 0" class="p-row">{{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</p>
+            </div>
             <!-- ICON -->
             <div class="icon-notification">
               <ion-icon *ngIf="w.initMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"

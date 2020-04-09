@@ -21,6 +21,9 @@ export class Constants {
     static MAINTENANCE_FREQ_ONCE_CODE = 'O';
     static MAINTENANCE_FREQ_CALENDAR_CODE = 'C';
 
+    static OWNER_YO = 'yo';
+    static OWNER_ME = 'me';
+
     static DATABASE_YES = 'Y';
     static DATABASE_NO = 'N';
 }

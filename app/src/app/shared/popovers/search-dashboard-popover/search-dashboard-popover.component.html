@@ -45,6 +45,10 @@
         <ion-label>{{ 'COMMON.SHOW_DOGHNUT' | translate }}</ion-label>
         <ion-toggle color="primary" [(ngModel)]="searchDashboard.doghnut" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
     </ion-item>
+    <ion-item>
+        <ion-label>{{ 'COMMON.SHOW_MY_DATA' | translate }}</ion-label>
+        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showMyData" (ionChange)="onChangeFilterGrouper()"></ion-toggle>
+    </ion-item>
     <!-- Clear -->
     <ion-item>
         <ion-chip slot="end" outline color="primary" (click)="clearFilter()">

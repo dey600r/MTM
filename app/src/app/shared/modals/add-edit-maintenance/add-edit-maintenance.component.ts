@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum } from '@app/core/utils';
+import { ActionDBEnum, Constants } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MaintenanceModel,
   MaintenanceFreqModel, MaintenanceElementModel
@@ -79,6 +79,9 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   saveData(f: Form) {
     this.submited = true;
     if (this.isValidForm(f)) {
+      if (this.isInitDisabled()) {
+        this.maintenance.init = false;
+      }
       this.configurationService.saveMaintenance(this.maintenance,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
@@ -89,6 +92,11 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
         this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveMaintenance');
       });
     }
+  }
+
+  isInitDisabled(): boolean {
+    return !this.maintenanceFreqs.some(x => x.id === this.maintenance.maintenanceFreq.id &&
+      x.code === Constants.MAINTENANCE_FREQ_ONCE_CODE);
   }
 
   async closeModal() {

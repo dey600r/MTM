@@ -10,7 +10,7 @@ import {
     ConfigurationModel, MotoModel, MaintenanceModel, WearMotoProgressBarModel, WearReplacementProgressBarModel
 } from '@models/index';
 import { CommonService } from './common.service';
-import { ConstantsColumns, WarningWearEnum, FilterMonthsEnum } from '../utils';
+import { ConstantsColumns, WarningWearEnum, FilterMonthsEnum, Constants } from '../utils';
 
 @Injectable({
     providedIn: 'root'
@@ -36,15 +36,16 @@ export class DashboardService {
         return new DashboardModel(view, this.mapOperationToDashboardMotoExpenses(data, filter), null,
             filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.MOTORBIKE'),
             filter.showAxisLabel, this.translator.instant('COMMON.MOTORBIKE'),
-            filter.showAxisLabel, this.translator.instant('COMMON.PRICE'), true, filter.doghnut, 'below', filter.showDataLabel);
+            filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
     mapOperationToDashboardMotoExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
         let result: any[] = [];
-        data.forEach(x => {
+        const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
+        operationPreFilter.forEach(x => {
             if (!result.some((z: any) => z.id === x.moto.id)) {
                 const sumPrice: number = this.commonService.sum(
-                    data.filter(z => z.moto.id === x.moto.id &&
+                    operationPreFilter.filter(z => z.moto.id === x.moto.id &&
                         (filter.showOpType.length === 0 ||
                         filter.showOpType.some(f => f.id === z.operationType.id))),
                     ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
@@ -61,30 +62,35 @@ export class DashboardService {
     // MOTO PER MONTH EXPENSES
     getDashboardModelMotoPerTime(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
         return new DashboardModel(view, this.mapOperationToDashboardMotoPerTimeExpenses(data, filter), null,
-        filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.MOTORBIKE'),
-        filter.showAxisLabel, this.translator.instant('COMMON.MOTORBIKE'),
-        filter.showAxisLabel, this.translator.instant('COMMON.PRICE'), true, filter.doghnut, 'below', filter.showDataLabel);
+            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.DATE'),
+            filter.showAxisLabel, this.translator.instant('COMMON.DATE'),
+            filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
     mapOperationToDashboardMotoPerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
         let result: any[] = [];
         if (!!data && data.length > 0) {
-            const minYear: number = new Date(this.commonService.min(data, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
-            const maxYear: number = new Date(this.commonService.max(data, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
-            const iterator: number = filter.showPerMont;
-            for (let i = minYear; i <= maxYear; i++) {
-                for (let j = 0; j < 12; j += iterator) {
-                    const ops: OperationModel[] = data.filter(x =>
-                        new Date(x.date).getMonth() >= j && new Date(x.date).getMonth() < (j + iterator) &&
-                        new Date(x.date).getFullYear() === i &&
-                        (filter.showOpType.length === 0 ||
-                        filter.showOpType.some(f => f.id === x.operationType.id)));
-                    if (!!ops && ops.length > 0) {
-                        const sumPrice: number = this.commonService.sum(ops, ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
-                        result = [...result, {
-                            name: this.getRangeDates(i, j, iterator),
-                            value: sumPrice
-                        }];
+            const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
+            if (!!operationPreFilter && operationPreFilter.length > 0) {
+                const iterator: number = filter.showPerMont;
+                const minYear: number =
+                    new Date(this.commonService.min(operationPreFilter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
+                const maxYear: number =
+                    new Date(this.commonService.max(operationPreFilter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
+                for (let i = minYear; i <= maxYear; i++) {
+                    for (let j = 0; j < 12; j += iterator) {
+                        const ops: OperationModel[] = operationPreFilter.filter(x =>
+                            new Date(x.date).getMonth() >= j && new Date(x.date).getMonth() < (j + iterator) &&
+                            new Date(x.date).getFullYear() === i &&
+                            (filter.showOpType.length === 0 ||
+                            filter.showOpType.some(f => f.id === x.operationType.id)));
+                        if (!!ops && ops.length > 0) {
+                            const sumPrice: number = this.commonService.sum(ops, ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
+                            result = [...result, {
+                                name: this.getRangeDates(i, j, iterator),
+                                value: sumPrice
+                            }];
+                        }
                     }
                 }
             }
@@ -109,15 +115,16 @@ export class DashboardService {
         return new DashboardModel(view, this.mapOperationToDashboardMotoOpTypeExpenses(data, filter), null,
         filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.MOTORBIKE'),
         filter.showAxisLabel, this.translator.instant('COMMON.MOTORBIKE'),
-        filter.showAxisLabel, this.translator.instant('COMMON.PRICE'), true, filter.doghnut, 'below', filter.showDataLabel);
+        filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
     mapOperationToDashboardMotoOpTypeExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
         let result: any[] = [];
-        data.forEach(x => {
+        const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
+        operationPreFilter.forEach(x => {
             let dash: any = result.find(y => y.name === x.moto.model);
             const sumPrice: number = this.commonService.sum(
-                data.filter(z => z.moto.id === x.moto.id && z.operationType.id === x.operationType.id &&
+                operationPreFilter.filter(z => z.moto.id === x.moto.id && z.operationType.id === x.operationType.id &&
                     (filter.showOpType.length === 0 ||
                     filter.showOpType.some(f => f.id === z.operationType.id))),
                 ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
@@ -149,17 +156,18 @@ export class DashboardService {
     // OPERATION TYPE EXPENSES
     getDashboardModelOpTypeExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
         return new DashboardModel(view, this.mapOperationToDashboardOpTypeExpenses(data, filter), null,
-        filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OP_TYPE'),
-        filter.showAxisLabel, this.translator.instant('COMMON.OPERATION_TYPE'),
-        filter.showAxisLabel, this.translator.instant('COMMON.PRICE'), true, filter.doghnut, 'below', filter.showDataLabel);
+            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OPERATION_TYPE'),
+            filter.showAxisLabel, this.translator.instant('COMMON.OPERATION_TYPE'),
+            filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
     mapOperationToDashboardOpTypeExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
         let result: any[] = [];
-        data.forEach(x => {
+        const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
+        operationPreFilter.forEach(x => {
             if (!result.some((z: any) => z.id === x.operationType.id)) {
                 const sumPrice: number = this.commonService.sum(
-                    data.filter(z => z.operationType.id === x.operationType.id &&
+                    operationPreFilter.filter(z => z.operationType.id === x.operationType.id &&
                         (filter.showOpType.length === 0 ||
                         filter.showOpType.some(f => f.id === z.operationType.id))),
                     ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
@@ -171,6 +179,18 @@ export class DashboardService {
             }
         });
         return result;
+    }
+
+    getPrefilterOperation(data: OperationModel[], filter: SearchDashboardModel): OperationModel[] {
+        let operationPreFilter: OperationModel[] = [];
+        if (filter.showMyData) {
+            operationPreFilter = data.filter(x => x.owner === null || x.owner.toLowerCase() === Constants.OWNER_ME ||
+                x.owner.toLowerCase() === Constants.OWNER_YO);
+        } else {
+            operationPreFilter = data.filter(x => x.owner !== null && x.owner.toLowerCase() !== Constants.OWNER_ME &&
+                x.owner.toLowerCase() !== Constants.OWNER_YO);
+        }
+        return operationPreFilter;
     }
 
     /** NOTIFICATIONS */

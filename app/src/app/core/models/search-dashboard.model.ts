@@ -9,9 +9,10 @@ export class SearchDashboardModel {
     showAxisLabel: boolean;
     showDataLabel: boolean;
     doghnut: boolean;
+    showMyData: boolean;
     constructor(month: FilterMonthsEnum = FilterMonthsEnum.MONTH, ot: OperationTypeModel[] = [],
                 axis: boolean = true, legend: boolean = false, axisLabel: boolean = false,
-                dataLabel: boolean = false, dog: boolean = false) {
+                dataLabel: boolean = false, dog: boolean = false, myData: boolean = true) {
         this.showPerMont = month;
         this.showOpType = ot;
         this.showAxis = axis;
@@ -19,5 +20,6 @@ export class SearchDashboardModel {
         this.showAxisLabel = axisLabel;
         this.showDataLabel = dataLabel;
         this.doghnut = dog;
+        this.showMyData = myData;
     }
 }
