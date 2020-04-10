@@ -31,8 +31,7 @@ import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.compon
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
-import { DashboardMotoComponent } from '@modals/dashboard-moto/dashboard-moto.component';
-import { DashboardOperationComponent } from '@modals/dashboard-operation/dashboard-operation.component';
+import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
 import { SearchOperationPopOverComponent } from '@popovers/search-operation-popover/search-operation-popover.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { PipeModule } from '@pipes/pipes.module';
@@ -45,8 +44,7 @@ import { PipeModule } from '@pipes/pipes.module';
     AddEditOperationComponent,
     AddEditMaintenanceComponent,
     AddEditMaintenanceElementComponent,
-    DashboardMotoComponent,
-    DashboardOperationComponent,
+    DashboardComponent,
     SearchOperationPopOverComponent,
     SearchDashboardPopOverComponent
   ],
@@ -56,8 +54,7 @@ import { PipeModule } from '@pipes/pipes.module';
     AddEditOperationComponent,
     AddEditMaintenanceComponent,
     AddEditMaintenanceElementComponent,
-    DashboardMotoComponent,
-    DashboardOperationComponent,
+    DashboardComponent,
     SearchOperationPopOverComponent,
     SearchDashboardPopOverComponent
   ],

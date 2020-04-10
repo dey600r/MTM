@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
-import { ConstantsColumns, ActionDBEnum } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel, MotoModel, OperationModel
 } from '@models/index';
@@ -23,6 +23,15 @@ import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance
 })
 export class ConfigurationPage implements OnInit {
 
+  // MODAL
+  dataReturned: ModalOutputModel;
+
+  // MODEL FORM
+  rowConfSelected: ConfigurationModel = new ConfigurationModel();
+  rowMainSelected: MaintenanceModel = new MaintenanceModel();
+  rowReplSelected: MaintenanceElementModel = new MaintenanceElementModel();
+
+  // DATA
   motos: MotoModel[] = [];
   operations: OperationModel[] = [];
   configurations: ConfigurationModel[] = [];
@@ -32,12 +41,6 @@ export class ConfigurationPage implements OnInit {
   hideConfiguration = false;
   hideMaintenance = true;
   hideReplacement = true;
-
-  dataInputModel: ModalInputModel;
-  dataReturned: ModalOutputModel;
-  rowConfSelected: ConfigurationModel = new ConfigurationModel();
-  rowMainSelected: MaintenanceModel = new MaintenanceModel();
-  rowReplSelected: MaintenanceElementModel = new MaintenanceElementModel();
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -86,8 +89,7 @@ export class ConfigurationPage implements OnInit {
 
   openConfigurationModal(row: ConfigurationModel = new ConfigurationModel(), create: boolean = true) {
     this.rowConfSelected = row;
-    this.dataInputModel = new ModalInputModel(create, this.rowConfSelected);
-    this.openModal(AddEditConfigurationComponent);
+    this.openModal(AddEditConfigurationComponent, new ModalInputModel(create, this.rowConfSelected, [], PageEnum.CONFIGURATION));
   }
 
   deleteConfiguration(row: ConfigurationModel) {
@@ -140,8 +142,7 @@ export class ConfigurationPage implements OnInit {
 
   openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
     this.rowMainSelected = row;
-    this.dataInputModel = new ModalInputModel(create, this.rowMainSelected);
-    this.openModal(AddEditMaintenanceComponent);
+    this.openModal(AddEditMaintenanceComponent, new ModalInputModel(create, this.rowMainSelected, [], PageEnum.CONFIGURATION));
   }
 
   deleteMaintenance(row: MaintenanceModel) {
@@ -190,8 +191,7 @@ export class ConfigurationPage implements OnInit {
 
   openReplacementModal(row: MaintenanceElementModel = new MaintenanceElementModel(), create: boolean = true) {
     this.rowReplSelected = row;
-    this.dataInputModel = new ModalInputModel(create, this.rowReplSelected);
-    this.openModal(AddEditMaintenanceElementComponent);
+    this.openModal(AddEditMaintenanceElementComponent, new ModalInputModel(create, this.rowReplSelected, [], PageEnum.CONFIGURATION));
   }
 
   deleteReplacement(row: MaintenanceElementModel) {
@@ -279,11 +279,11 @@ export class ConfigurationPage implements OnInit {
 
   /** COMMON */
 
-  async openModal(modalComponent: any) {
+  async openModal(modalComponent: any, inputModel: ModalInputModel) {
 
     const modal = await this.modalController.create({
       component: modalComponent,
-      componentProps: this.dataInputModel
+      componentProps: inputModel
     });
 
     modal.onDidDismiss().then((dataReturned) => {

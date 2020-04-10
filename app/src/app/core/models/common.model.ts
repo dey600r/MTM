@@ -1,3 +1,5 @@
+import { PageEnum } from '@utils/index';
+
 export class BaseModel {
     id: number;
     constructor(id: number = 1) {
@@ -9,10 +11,15 @@ export class ModalInputModel {
     isCreate: boolean;
     data: any;
     dataList: any[];
-    constructor(create: boolean = true, d: any = null, dl: any[] = []) {
+    parentPage: PageEnum;
+    action: string;
+    constructor(create: boolean = true, d: any = null, dl: any[] = [], parentPage: PageEnum = PageEnum.HOME,
+                act: string = '') {
         this.isCreate = create;
         this.data = d;
         this.dataList = dl;
+        this.parentPage = parentPage;
+        this.action = act;
     }
 }
 

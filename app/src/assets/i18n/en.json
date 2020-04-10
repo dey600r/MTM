@@ -131,7 +131,13 @@
     },
     "ALERT" : {
         "INFO": "Info",
-        "AddMotoToAddOperation": "Add motorbike before add operations"
+        "AddMotoToAddOperation": "Add motorbike before add operations",
+        "MotoEmpty": "There isn't moto",
+        "AddMoto": "You must add moto",
+        "OperationEmpty": "There isn't operation",
+        "AddOperation": "You must operation",
+        "ConfigurationEmpty": "There isn't maintenance associated to configuration",
+        "AddConfiguration": "You must associate maintenance to configuration"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

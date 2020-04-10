@@ -1,9 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <ion-button slot="start" fill="clear" (click)="openDashboardOperation()" class="btn-width">
+    <!-- Button chart -->
+    <ion-button *ngIf="this.operations.length > 0" slot="start" fill="clear" 
+      (click)="openDashboardOperation()" class="btn-width">
       <ion-icon size="large" name="pie"></ion-icon>
     </ion-button>
+    <!-- Button info -->
+    <ion-button *ngIf="this.operations.length === 0" slot="start" fill="clear"
+      (click)="showModalInfoOperation()" class="btn-width">
+      <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
+    </ion-button>
+    <!-- Tittle -->
     <ion-title class="align-center">{{ 'COMMON.OPERATION' | translate }}</ion-title>
+    <!-- Button filter -->
     <ion-button slot="end" fill="clear" (click)="showPopover()" class="btn-width">
       <ion-icon size="large" name="filter"></ion-icon>
     </ion-button>
@@ -24,11 +33,18 @@
       </ion-button>
       <!-- Button info -->
       <ion-button *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null" 
-        fill="clear" (click)="showModalInfo()">
+        fill="clear" (click)="showModalInfoMoto()">
         <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
       </ion-button>
     </ion-list-header>
-
+    <div *ngIf="operations.length === 0" class="info-content">
+      <div class="info-main">
+          <div>
+              <ion-icon size="large" name="construct"></ion-icon>
+              <h2 class="margin-top5">{{ 'ALERT.OperationEmpty' | translate }}</h2>
+          </div>
+      </div>
+    </div>
     <ion-item button *ngFor="let op of operations">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10" (click)="openOperationModal(op, false)">

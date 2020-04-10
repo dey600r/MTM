@@ -54,7 +54,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList);
+      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
     this.moto = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.moto.id = -1;

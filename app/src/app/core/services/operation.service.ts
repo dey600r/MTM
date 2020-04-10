@@ -40,29 +40,23 @@ export class OperationService {
 
     saveOperation(op: OperationModel, action: ActionDBEnum) {
         let sqlDB = '';
-        const dataDB: any[] = [];
         const listLoadTable: string[] = [ConstantsTable.TABLE_MTM_OPERATION];
-        let scriptDB = false;
         switch (action) {
             case ActionDBEnum.CREATE:
                 sqlDB = this.sqlService.insertSqlOperation([op]);
                 sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
-                scriptDB = true;
                 break;
             case ActionDBEnum.UPDATE:
                 sqlDB = this.sqlService.updateSqlOperation([op]);
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
                     ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, [op.id]);
                 sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
-                scriptDB = true;
                 break;
             case ActionDBEnum.DELETE:
                 sqlDB = this.getSqlDeleteOperation(op);
-                scriptDB = true;
                 break;
         }
-        return (scriptDB ? this.dbService.executeScriptDataBase(sqlDB, listLoadTable) :
-            this.dbService.executeSqlDataBase(sqlDB, dataDB, listLoadTable));
+        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
     }
 
     getSqlDeleteOperation(operation: OperationModel): string {

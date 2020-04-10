@@ -17,12 +17,17 @@ export class Constants {
     static OPERATION_TYPE_OTHER = 'O';
     static OPERATION_TYPE_ACCESSORIES = 'A';
     static OPERATION_TYPE_CLOTHES = 'C';
+    static OPERATION_TYPE_SPARE_PARTS = 'R';
 
     static MAINTENANCE_FREQ_ONCE_CODE = 'O';
     static MAINTENANCE_FREQ_CALENDAR_CODE = 'C';
 
     static OWNER_YO = 'yo';
     static OWNER_ME = 'me';
+
+    static STATE_INFO_OPERATION_EMPTY = 'operation_empty';
+    static STATE_INFO_MOTO_EMPTY = 'moto_empty';
+    static STATE_INFO_NOTIFICATION_EMPTY = 'notification_empty';
 
     static DATABASE_YES = 'Y';
     static DATABASE_NO = 'N';

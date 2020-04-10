@@ -8,6 +8,8 @@
 </ion-header>
 
 <ion-content fullscreen>
+  <!-- INFO -->
+  <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- List Moto -->
   <ion-list *ngFor="let m of wears; let i = index;">
     <ion-list-header>

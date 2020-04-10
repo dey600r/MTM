@@ -10,7 +10,7 @@
         </ion-label>
     </ion-list-header>
     <!-- Filters -->
-    <ion-item *ngIf="modalInputModel.isCreate">
+    <ion-item *ngIf="isParentPageOperation()">
         <ion-label>{{ 'COMMON.CALCULATE_PER_MONTH' | translate }}</ion-label>
         <ion-select [placeholder]="this.translateSelect" interface="popover"
             [(ngModel)]="this.filterMonth" (ionChange)="onChangeFilterGrouper()">

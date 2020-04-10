@@ -3,13 +3,17 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MotoPage } from './moto.page';
-
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+
+// LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+// UTILS
 import { environment } from '../../../environments/environment';
+
+// COMPONENT
+import { MotoPage } from './moto.page';
 
 @NgModule({
   imports: [

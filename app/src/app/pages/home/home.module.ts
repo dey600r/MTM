@@ -14,6 +14,7 @@ import { environment } from '../../../environments/environment';
 
 // COMPONENT
 import { HomePage } from './home.page';
+import { AppInfoComponent } from '@components/info/app-info.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,7 @@ import { HomePage } from './home.page';
     })
   ],
   providers: [TranslateStore],
-  declarations: [HomePage]
+  declarations: [HomePage, AppInfoComponent]
 })
 export class HomePageModule {}
 

@@ -15,3 +15,16 @@ export enum WarningWearEnum {
     WARNING = 'warning',
     DANGER = 'danger'
 }
+
+export enum PageEnum {
+    HOME = 1,
+    MOTO = 2,
+    OPERATION = 3,
+    CONFIGURATION = 4,
+    MODAL_MOTO = 5,
+    MODAL_OPERATION = 6,
+    MODAL_CONFIGURATION = 7,
+    MODAL_MAINTENANCE = 8,
+    MODAL_MAINTENANCE_ELEMENT = 9,
+    MODAL_DASHBOARD = 10
+}

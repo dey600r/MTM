@@ -5,13 +5,13 @@ import { ModalController, Platform, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants } from '@utils/index';
 import { DataBaseService, MotoService, CommonService, OperationService } from '@services/index';
 import { MotoModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
 // COMPONENTS
 import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
-import { DashboardMotoComponent } from '@modals/dashboard-moto/dashboard-moto.component';
+import { DashboardComponent } from '@modals/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-moto',
@@ -20,11 +20,16 @@ import { DashboardMotoComponent } from '@modals/dashboard-moto/dashboard-moto.co
 })
 export class MotoPage implements OnInit {
 
+  // MODAL
+  dataReturned: ModalOutputModel;
+
+  // MODEL
+  rowSelected: MotoModel = new MotoModel();
+  activateInfo = false;
+
+  // DATA
   motos: MotoModel[] = [];
   operations: OperationModel[] = [];
-  dataInputModel: ModalInputModel;
-  dataReturned: ModalOutputModel;
-  rowSelected: MotoModel = new MotoModel();
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -55,8 +60,8 @@ export class MotoPage implements OnInit {
       this.motos = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MOTO_BRAND);
     });
 
-    this.dbService.getOperations().subscribe(data => {
-      this.operations = data;
+    this.dbService.getOperations().subscribe(op => {
+      this.operations = op;
     });
   }
 
@@ -64,8 +69,7 @@ export class MotoPage implements OnInit {
 
   openMotoModal(row: MotoModel = new MotoModel(), create: boolean = true) {
     this.rowSelected = row;
-    this.dataInputModel = new ModalInputModel(create, this.rowSelected);
-    this.openModal(AddEditMotoComponent);
+    this.openModal(AddEditMotoComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.MOTO));
   }
 
   deleteMoto(row: MotoModel) {
@@ -74,18 +78,22 @@ export class MotoPage implements OnInit {
   }
 
   openDashboardMoto() {
-    this.openModal(DashboardMotoComponent);
+    this.openModal(DashboardComponent, new ModalInputModel(false, null, this.operations, PageEnum.MOTO));
+  }
+
+  showModalInfo() {
+    this.commonService.alertInfo('ALERT.AddMoto');
   }
 
   changeFilterOperation(idMoto: number) {
     this.operationService.setSearchOperation(this.motos.find(x => x.id === idMoto));
   }
 
-  async openModal(modalComponent: any) {
+  async openModal(modalComponent: any, inputModel: ModalInputModel) {
 
     const modal = await this.modalController.create({
       component: modalComponent,
-      componentProps: this.dataInputModel
+      componentProps: inputModel
     });
 
     modal.onDidDismiss().then((dataReturned) => {

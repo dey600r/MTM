@@ -7,12 +7,12 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { DataBaseService, CommonService, OperationService } from '@services/index';
 import { OperationModel, MotoModel, ModalInputModel, ModalOutputModel, SearchOperationModel, OperationTypeModel } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 import { SearchOperationPopOverComponent } from '@popovers/search-operation-popover/search-operation-popover.component';
-import { DashboardOperationComponent } from '@modals/dashboard-operation/dashboard-operation.component';
+import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-operation',
@@ -21,14 +21,17 @@ import { DashboardOperationComponent } from '@modals/dashboard-operation/dashboa
 })
 export class OperationPage implements OnInit {
 
+  // MODAL
+  dataReturned: ModalOutputModel;
+
+  // MODEL
+  rowSelected: OperationModel = new OperationModel();
   currentPopover = null;
-  operations: OperationModel[] = [];
-  nameFilterMoto = '';
   filterOperations: SearchOperationModel = new SearchOperationModel();
 
-  dataInputModel: ModalInputModel;
-  dataReturned: ModalOutputModel;
-  rowSelected: OperationModel = new OperationModel();
+  // DATA
+  operations: OperationModel[] = [];
+  nameFilterMoto = '';
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -55,9 +58,9 @@ export class OperationPage implements OnInit {
   initPage() {
     this.dbService.getOperations().subscribe(data => {
       this.filterOperations = this.operationService.getSearchOperation();
-      this.operationService.setSearchOperation((!!data && data.length > 0 ?
-        (this.filterOperations.searchMoto.brand !== null ? this.filterOperations.searchMoto : data[0].moto) :
-        new MotoModel(null, null, null, null, null, null, null, null, 0)));
+      this.operationService.setSearchOperation((this.filterOperations.searchMoto.brand !== null ?
+        (!!data && data.length > 0 ? data[0].moto : new MotoModel(null, null, null, null, null, null, null, null, 0)) :
+        this.filterOperations.searchMoto));
       this.operationService.getObserverSearchOperation().subscribe(filter => {
         this.filterOperations = filter;
         if (this.filterOperations.searchMoto.brand !== null) {
@@ -80,13 +83,11 @@ export class OperationPage implements OnInit {
   openOperationModal(row: OperationModel = new OperationModel(null, null, new OperationTypeModel(), this.filterOperations.searchMoto),
                      create: boolean = true) {
     this.rowSelected = row;
-    this.dataInputModel = new ModalInputModel(create, this.rowSelected);
-    this.openModal(AddEditOperationComponent);
+    this.openModal(AddEditOperationComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.OPERATION));
   }
 
   openDashboardOperation() {
-    this.dataInputModel = new ModalInputModel(true, null, this.operations);
-    this.openModal(DashboardOperationComponent);
+    this.openModal(DashboardComponent, new ModalInputModel(true, null, this.operations, PageEnum.OPERATION));
   }
 
   deleteOperation(row: OperationModel) {
@@ -94,15 +95,19 @@ export class OperationPage implements OnInit {
     this.showConfirmDelete();
   }
 
-  showModalInfo() {
+  showModalInfoMoto() {
     this.commonService.alertInfo('ALERT.AddMotoToAddOperation');
   }
 
-  async openModal(modalComponent: any) {
+  showModalInfoOperation() {
+    this.commonService.alertInfo('ALERT.AddOperation');
+  }
+
+  async openModal(modalComponent: any, inputModel: ModalInputModel) {
 
     const modal = await this.modalController.create({
       component: modalComponent,
-      componentProps: this.dataInputModel
+      componentProps: inputModel
     });
 
     modal.onDidDismiss().then((dataReturned) => {
@@ -176,6 +181,8 @@ export class OperationPage implements OnInit {
         return 'construct';
       case Constants.OPERATION_TYPE_OTHER:
         return 'body';
+      case Constants.OPERATION_TYPE_SPARE_PARTS:
+        return 'repeat';
     }
   }
 }

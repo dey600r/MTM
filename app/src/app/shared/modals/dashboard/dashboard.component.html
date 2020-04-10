@@ -8,15 +8,17 @@
         <ion-title class="align-center">{{ 'COMMON.CHARTS' | translate }}</ion-title>
         <!-- Button Close -->
         <ion-button fill="clear" (click)="closeModal()" class="btn-width" slot="end">
-            <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
+        <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
         </ion-button>
     </ion-toolbar>
 </ion-header>
 
+
 <ion-content>
     <ion-list-header>
         <ion-icon size="large" name="bicycle"></ion-icon>
-        <h3 class="header-list">{{ 'PAGE_MOTO.ExpensesPerMoto' | translate }}</h3>
+        <h3 *ngIf="isParentPageMoto()" class="header-list">{{ 'PAGE_MOTO.ExpensesPerMoto' | translate }}</h3>
+        <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }} {{ motoModel }}</h3>
     </ion-list-header>
     <ngx-charts-bar-vertical
         [view]="dashboardMotoExpenses.view"

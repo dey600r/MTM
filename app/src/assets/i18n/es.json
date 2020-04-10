@@ -131,7 +131,13 @@
     },
     "ALERT" : {
         "INFO": "Info",
-        "AddMotoToAddOperation": "Añada sus motos antes de incluir las operaciones"
+        "AddMotoToAddOperation": "Añada sus motos antes de incluir las operaciones",
+        "MotoEmpty": "No se encuentran motos",
+        "AddMoto": "Añada motos",
+        "OperationEmpty": "No se encuentran operaciones",
+        "AddOperation": "Añada operaciones",
+        "ConfigurationEmpty": "No se encuentran mantenimientos asociados a la configuración",
+        "AddConfiguration": "Añada mantenimientos a la configuración"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",
