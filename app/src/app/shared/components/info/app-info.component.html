@@ -21,7 +21,7 @@
                 </div>
                 <div [ngClass]="{'info-icon': true, 'dissapear': !isOperationEmpty() && !isNotificationEmpty()}">
                     <p class="info-p-left" *ngIf="isOperationEmpty()">{{ 'ALERT.AddOperation' | translate }}</p>
-                    <p class="info-p-right margin-right5" *ngIf="isNotificationEmpty()">{{ 'ALERT.AddConfiguration' | translate }}</p>
+                    <p class="info-p-right margin-right10" *ngIf="isNotificationEmpty()">{{ 'ALERT.AddConfiguration' | translate }}</p>
                 </div>
             </div>
             <div class="info-tab">

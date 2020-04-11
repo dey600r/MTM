@@ -11,9 +11,19 @@ import { Constants } from '@utils/index';
 })
 export class CommonService {
 
+    private dateLastUse = new Date();
+
     constructor(private translator: TranslateService,
                 private alertController: AlertController,
                 private toastController: ToastController) {
+    }
+
+    getDateLastUse(): Date {
+        return this.dateLastUse;
+    }
+
+    setDateLastUse(): void {
+        this.dateLastUse = new Date();
     }
 
     // COMMON UTILS METHODS STRINGS

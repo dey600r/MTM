@@ -24,7 +24,7 @@
             <ion-text *ngIf="this.submited && !isValidDescription(formAddMaintenance)" 
                 color="danger">{{ 'PAGE_OPERATION.AddDescription' | translate }}</ion-text>
           </ion-label>
-          <ion-input #maintenanceDescription name="maintenanceDescription" placeholder="--" required type="text" 
+          <ion-input #maintenanceDescription name="maintenanceDescription" placeholder="--" autocapitalize required type="text" 
             [(ngModel)]="maintenance.description"></ion-input>
         </ion-item>
         <ion-item>

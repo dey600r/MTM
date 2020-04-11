@@ -24,7 +24,7 @@
               <ion-text *ngIf="this.submited && !isValidName(formAddReplacement)" 
                   color="danger">{{ 'PAGE_CONFIGURATION.AddName' | translate }}</ion-text>
             </ion-label>
-            <ion-input #replacementName name="replacementName" placeholder="--" required type="text" 
+            <ion-input #replacementName name="replacementName" placeholder="--" autocapitalize required type="text" 
               [(ngModel)]="maintenanceElement.name"></ion-input>
           </ion-item>
         <ion-item>
@@ -36,7 +36,7 @@
             <ion-text *ngIf="this.submited && !isValidDescription(formAddReplacement)" 
                 color="danger">{{ 'AddDescription' | translate }}</ion-text>
           </ion-label>
-          <ion-input #replacementDescription name="replacementDescription" placeholder="--" required type="text" 
+          <ion-input #replacementDescription name="replacementDescription" autocapitalize placeholder="--" required type="text" 
             [(ngModel)]="maintenanceElement.description"></ion-input>
         </ion-item>
       </ion-list>

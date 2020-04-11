@@ -7,17 +7,6 @@
         <ion-button fill="clear" slot="end" (click)="closeModal()" class="btn-width">
             <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
         </ion-button>
-        <!-- <div class="table-row">
-          <div class="title-header padding-left30">
-            <ion-title *ngIf="this.modalInputModel.isCreate" >{{ 'PAGE_CONFIGURATION.AddNewConfiguration' | translate }}</ion-title>
-            <ion-title *ngIf="!this.modalInputModel.isCreate">{{ 'PAGE_CONFIGURATION.EditConfiguration' | translate }}</ion-title>
-          </div>
-          <div class="justify-end">
-            <ion-button fill="clear" (click)="closeModal()" class="btn-width">
-              <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
-            </ion-button>
-          </div>
-        </div> -->
     </ion-toolbar>
 </ion-header>
   
@@ -35,7 +24,7 @@
             <ion-text *ngIf="this.submited && !isValidName(formAddConfiguration)" 
                 color="danger">{{ 'PAGE_CONFIGURATION.AddName' | translate }}</ion-text>
           </ion-label>
-          <ion-input #configurationName name="configurationName" placeholder="Yamaha" required type="text" 
+          <ion-input #configurationName name="configurationName" placeholder="Yamaha" autocapitalize required type="text" 
             [(ngModel)]="configuration.name"></ion-input>
         </ion-item>
         <ion-item>
@@ -47,7 +36,7 @@
             <ion-text *ngIf="this.submited && !isValidDescription(formAddConfiguration)" 
                 color="danger">{{ 'AddDescription' | translate }}</ion-text>
           </ion-label>
-          <ion-input #configurationDescription name="configurationDescription" placeholder="--" required type="text" 
+          <ion-input #configurationDescription name="configurationDescription" autocapitalize placeholder="--" required type="text" 
             [(ngModel)]="configuration.description"></ion-input>
         </ion-item>
         <ion-item *ngFor="let m of maintenances; let i = index">

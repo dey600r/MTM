@@ -21,7 +21,7 @@
           <ion-icon *ngIf="this.submited && !isValidBrand(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidBrand(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddBrand' | translate }}</ion-text>
         </ion-label>
-        <ion-input #motoBrand name="motoBrand" placeholder="Yamaha" required type="text" [(ngModel)]="moto.brand"></ion-input>
+        <ion-input #motoBrand name="motoBrand" placeholder="Yamaha" autocapitalize required type="text" [(ngModel)]="moto.brand"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
@@ -30,7 +30,7 @@
           <ion-icon *ngIf="this.submited && !isValidModel(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidModel(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddModel' | translate }}</ion-text>
         </ion-label>
-        <ion-input #motoModel name="motoModel" placeholder="R6" required type="text" [(ngModel)]="moto.model"></ion-input>
+        <ion-input #motoModel name="motoModel" placeholder="R6" required autocapitalize type="text" [(ngModel)]="moto.model"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">

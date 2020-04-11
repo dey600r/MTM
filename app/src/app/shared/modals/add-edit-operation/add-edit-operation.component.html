@@ -22,7 +22,7 @@
           <ion-icon *ngIf="this.submited && !isValidDescription(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidDescription(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddDescription' | translate }}</ion-text>
         </ion-label>
-        <ion-input #opDescription name="opDescription" placeholder="--" required type="text" [(ngModel)]="operation.description"></ion-input>
+        <ion-input #opDescription name="opDescription" placeholder="--" autocapitalize required type="text" [(ngModel)]="operation.description"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
@@ -89,13 +89,13 @@
         <ion-label position="stacked">
           <ion-text>{{ 'COMMON.LOCATION' | translate }}</ion-text>
         </ion-label>
-        <ion-input #opLocation name="opLocation" [placeholder]="translateWorkshop" type="text" [(ngModel)]="operation.location"></ion-input>
+        <ion-input #opLocation name="opLocation" [placeholder]="translateWorkshop" autocapitalize type="text" [(ngModel)]="operation.location"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
           <ion-text>{{ 'COMMON.OWNER' | translate }}</ion-text>
         </ion-label>
-        <ion-input #opOwner name="opOwner" [placeholder]="translateMe" type="text" [(ngModel)]="operation.owner"></ion-input>
+        <ion-input #opOwner name="opOwner" [placeholder]="translateMe" autocapitalize type="text" [(ngModel)]="operation.owner"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">

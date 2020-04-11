@@ -23,6 +23,7 @@ export class DataBaseService {
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   motos = new BehaviorSubject([]);
+  motosData: MotoModel[] = [];
   configuration = new BehaviorSubject([]);
   operation = new BehaviorSubject([]);
   operationType = new BehaviorSubject([]);
@@ -138,7 +139,8 @@ export class DataBaseService {
   loadDataOnObserver(table: string, data: any[]) {
     switch (table) {
       case ConstantsTable.TABLE_MTM_MOTO:
-        this.motos.next(this.sqlService.mapDataToObserver(table, data));
+        this.motosData = this.sqlService.mapDataToObserver(table, data);
+        this.motos.next(this.motosData);
         break;
       case ConstantsTable.TABLE_MTM_CONFIGURATION:
         this.configuration.next(this.sqlService.mapDataToObserver(table, data));
