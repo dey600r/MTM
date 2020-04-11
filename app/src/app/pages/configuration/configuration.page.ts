@@ -257,7 +257,7 @@ export class ConfigurationPage implements OnInit {
       case 24:
         return 'battery-charging';
       case 30: case 31:
-        return 'swap-vertical';
+        return 'barcode';
       default:
         return this.getRandomIcon(maintenanceElement.id);
     }

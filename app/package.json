@@ -1,8 +1,8 @@
 {
   "name": "MTM",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "version": "1.0.0",
+  "author": "David Jimenez Galiana",
+  "homepage": "dey125r@gmail.com",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -18,6 +18,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/build-optimizer": "^0.801.2",
     "@angular/animations": "^8.1.2",
     "@angular/cdk": "^8.1.2",
     "@angular/common": "~8.1.2",
@@ -32,10 +33,10 @@
     "@ionic-native/sqlite": "^5.18.0",
     "@ionic-native/sqlite-porter": "^5.18.0",
     "@ionic-native/status-bar": "^5.0.0",
-    "@ionic/angular": "^4.7.1",
+    "@ionic/angular": "^4.11.9",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
-    "@swimlane/ngx-charts": "^13.0.2",
+    "@swimlane/ngx-charts": "^12.0.1",
     "caniuse-lite": "^1.0.30001016",
     "cordova-android": "^8.1.0",
     "cordova-plugin-screen-orientation": "^3.0.2",

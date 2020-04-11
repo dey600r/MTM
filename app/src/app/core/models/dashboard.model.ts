@@ -43,6 +43,7 @@ export class DashboardModel {
     }
 
     getColorSchemeDefault(): any {
-        return { domain: ['#1CEAF6', '#1C9BF6', '#1C32F6', '#971CF6', '#D91CF6', '#1CF69F', '#C8F61C', '#F6931C']};
+        return { domain: ['#1CEAF6', '#1C9BF6', '#1C32F6', '#971CF6', '#D91CF6', '#1CF69F',
+            '#C8F61C', '#F6931C', '#5FF61C', '#FD1203', '#FD0371', '#FAFD03']};
     }
 }
