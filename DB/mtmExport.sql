@@ -1,4 +1,16 @@
 BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "mtmMoto" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"model"	TEXT NOT NULL,
+	"brand"	TEXT NOT NULL,
+	"year"	INTEGER NOT NULL,
+	"km"	INTEGER NOT NULL,
+	"idConfiguration"	INTEGER NOT NULL,
+	"kmsPerMonth"	INTEGER NOT NULL,
+	"dateKms"	TEXT NOT NULL,
+	"datePurchase"	TEXT NOT NULL,
+	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id")
+);
 CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"description"	TEXT NOT NULL,
@@ -23,17 +35,6 @@ CREATE TABLE IF NOT EXISTS "mtmMaintenanceElement" (
 	"name"	TEXT NOT NULL,
 	"description"	TEXT,
 	"master"	TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS "mtmMoto" (
-	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	"model"	TEXT NOT NULL,
-	"brand"	TEXT NOT NULL,
-	"year"	INTEGER NOT NULL,
-	"km"	INTEGER NOT NULL,
-	"idConfiguration"	INTEGER NOT NULL,
-	"kmsPerMonth"	INTEGER NOT NULL,
-	"dateKms"	TEXT NOT NULL,
-	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id")
 );
 CREATE TABLE IF NOT EXISTS "mtmConfigMaintenance" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -103,9 +104,6 @@ INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaint
 INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","master") VALUES (27,'CHANGE_CLUTCH_WIRE',25,2,50000,48,'N','Y','Y');
 INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","master") VALUES (28,'CHANGE_STEERING_BEARING_KIT',20,2,50000,60,'N','Y','Y');
 INSERT INTO "mtmConfiguration" ("id","name","description","master") VALUES (1,'Fabrica','Configuración de fábrica','Y');
-INSERT INTO "mtmConfiguration" ("id","name","description","master") VALUES (2,'Yamaha','Configuración de Yamaha','N');
-INSERT INTO "mtmConfiguration" ("id","name","description","master") VALUES (3,'Kawasaki','Configuración de Kawasaki','N');
-INSERT INTO "mtmConfiguration" ("id","name","description","master") VALUES (4,'Honda','Configuración de Honda','N');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (1,'FRONT_WHEEL','CHANGE_FRONT_WHEEL','Y');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (2,'BACK_WHEEL','CHANGE_BACK_WHEEL','Y');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (3,'ENGINE_OIL','CHANGE_ENGINE_OIL','Y');
@@ -136,10 +134,7 @@ INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES 
 INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (29,'BACK_WHEEL_VALVE','CHANGE_BACK_WHEEL_VALVE','Y');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (30,'RIGHT_DUMPER_SEALS','CHANGE_RIGHT_DUMPER_SEALS','Y');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (31,'LEFT_DUMPER_SEALS','CHANGE_LEFT_DUMPER_SEALS','Y');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (1,'R6','Yamaha',2005,85300,2,150,'2019-12-01');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (2,'GT 125 R','Hyosung',2006,75600,1,30,'2019-12-01');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (3,'Ninja600','Kawasaki',2006,74000,3,100,'2019-12-01');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms") VALUES (4,'CBRF','Honda',2004,50000,4,140,'2020-03-22');
+INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (32,'PETROL_TAP','CHANGE_PETROL_TAP','Y');
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (1,1,1);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (2,1,2);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (3,1,3);
@@ -167,27 +162,6 @@ INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALU
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (25,1,25);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (26,1,26);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (27,1,27);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (1,1,6);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (2,2,3);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (3,2,4);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (4,2,5);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (5,3,1);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (6,3,2);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (7,3,3);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (8,3,4);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (9,3,5);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (10,3,6);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (11,5,3);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (12,5,4);
-INSERT INTO "mtmOpMaintElem" ("id","idOperation","idMaintenanceElement") VALUES (13,5,6);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (1,'Revision','Cambio de bujias crk10',7,1,15000.0,'2019-12-01','Garaje','Yo',32.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (2,'Revision','Cambio de aceite y filtros',2,2,50000.0,'2020-01-01','Garaje','Yo',40.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (3,'Revision','Cambio de aceite, filtros, ruedas y bujias',8,1,80000.0,'2020-03-03','Garaje','Yo',300.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (4,'Compra motocard','Compra casco shoei',5,1,40000.0,'2020-02-01','Motocard','Yo',456.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (5,'Revision','Cambio de aceite y filtros',1,3,40000.0,'2019-04-02','Garaje','Jose',130.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (6,'Compra aliexpress','Compra cupula negra',6,2,66600.0,'2020-02-14','Aliexpress','Yo',12.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (7,'Compra nilmoto','Compra caballete deltantero y trasero',4,1,60000.0,'2020-03-01','Nilmoto','Yo',200.0,NULL);
-INSERT INTO "mtmOperation" ("id","description","details","idOperationType","idMoto","km","date","location","owner","price","document") VALUES (8,'Compra motocard','Compra chaqueta alpinestar',3,3,40000.0,'2019-05-23','Motocard','Yo',240.0,NULL);
 INSERT INTO "mtmMaintenanceFreq" ("id","code","description") VALUES (1,'O','ONCE');
 INSERT INTO "mtmMaintenanceFreq" ("id","code","description") VALUES (2,'C','CALENDAR');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (1,'MW','MAINTENANCE_WORKSHOP');
@@ -198,4 +172,5 @@ INSERT INTO "mtmOperationType" ("id","code","description") VALUES (5,'A','ACCESO
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (6,'O','OTHERS');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (7,'MH','MAINTENANCE_HOME');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (8,'FH','FAILURE_HOME');
+INSERT INTO "mtmOperationType" ("id","code","description") VALUES (9,'R','SPARE_PARTS');
 COMMIT;

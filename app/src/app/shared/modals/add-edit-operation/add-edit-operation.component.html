@@ -35,18 +35,6 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.OPERATION_TYPE' | translate }}</ion-text>
-          <ion-text color="danger">*</ion-text>
-          <ion-icon *ngIf="this.submited && !isValidOperationType(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidOperationType(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddOperationType' | translate }}</ion-text>
-        </ion-label>
-        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="required" interface="popover" 
-           required [(ngModel)]="operation.operationType.id">
-          <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationType">{{ ot.description }}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked">
           <ion-text>{{ 'COMMON.MOTORBIKE' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidMoto(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
@@ -55,6 +43,18 @@
         <ion-select #opMoto name="opMoto" [placeholder]="this.translateSelect" required interface="popover" 
           [(ngModel)]="operation.moto.id" disabled="true">
           <ion-select-option [(value)]="m.id" *ngFor="let m of motos">{{ m.brand + ' ' + m.model }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.OPERATION_TYPE' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidOperationType(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidOperationType(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddOperationType' | translate }}</ion-text>
+        </ion-label>
+        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="required" interface="popover" 
+           required [(ngModel)]="operation.operationType.id">
+          <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationType">{{ ot.description }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
@@ -87,6 +87,15 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.PRICE' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidPrice(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidPrice(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddPrice' | translate }}</ion-text>
+        </ion-label>
+        <ion-input #opPrice name="opPrice" placeholder="10 €" required inputmode="decimal" min="0" [(ngModel)]="operation.price"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
           <ion-text>{{ 'COMMON.LOCATION' | translate }}</ion-text>
         </ion-label>
         <ion-input #opLocation name="opLocation" [placeholder]="translateWorkshop" autocapitalize type="text" [(ngModel)]="operation.location"></ion-input>
@@ -97,16 +106,7 @@
         </ion-label>
         <ion-input #opOwner name="opOwner" [placeholder]="translateMe" autocapitalize type="text" [(ngModel)]="operation.owner"></ion-input>
       </ion-item>
-      <ion-item>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.PRICE' | translate }}</ion-text>
-          <ion-text color="danger">*</ion-text>
-          <ion-icon *ngIf="this.submited && !isValidPrice(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidPrice(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddPrice' | translate }}</ion-text>
-        </ion-label>
-        <ion-input #opPrice name="opPrice" placeholder="10 €" required inputmode="decimal" min="0" [(ngModel)]="operation.price"></ion-input>
-      </ion-item>
-      <ion-item>
+      <ion-item *ngIf="false">
         <ion-label position="stacked">
           <ion-text>{{ 'COMMON.DOCUMENT' | translate }}</ion-text>
         </ion-label>

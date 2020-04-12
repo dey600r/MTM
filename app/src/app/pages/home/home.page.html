@@ -12,10 +12,10 @@
   <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- List Moto -->
   <ion-list *ngFor="let m of wears; let i = index;">
-    <ion-list-header>
+    <ion-list-header (click)="hideMotos[i] = !hideMotos[i]">
       <ion-icon size="large" name="bicycle"></ion-icon>
       <h3 class="header-list">{{ m.nameMoto }}</h3>
-      <ion-button fill="clear" (click)="hideMotos[i] = !hideMotos[i]">
+      <ion-button fill="clear">
         <ion-icon *ngIf="hideMotos[i]" size="small" color="primary" name="caret-down"></ion-icon>
         <ion-icon *ngIf="!hideMotos[i]" size="small" color="primary" name="caret-up"></ion-icon>
       </ion-button>

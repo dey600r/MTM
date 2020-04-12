@@ -39,7 +39,7 @@
       <ion-label class="min-width40" (click)="openMotoModal(m, false)">
         <h2>{{ m.brand }}</h2>
         <h3>{{ m.model }}</h3>
-        <p>{{ m.year }}</p>
+        <p>{{ m.datePurchase | dateFormatCalendarPipe }}</p>
       </ion-label>
       <ion-label class="padding-left10" (click)="openMotoModal(m, false)">
         <h3>{{ m.km }} km</h3>

@@ -11,6 +11,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // UTILS
 import { environment } from '../../../environments/environment';
+import { PipeModule } from '@pipes/pipes.module';
 
 // COMPONENT
 import { MotoPage } from './moto.page';
@@ -28,7 +29,8 @@ import { MotoPage } from './moto.page';
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
+    }),
+    PipeModule
   ],
   providers: [TranslateStore],
   declarations: [MotoPage]
