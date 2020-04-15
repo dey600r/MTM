@@ -14,8 +14,8 @@
         <ion-icon size="large" name="cog" (click)="hideConfiguration = !hideConfiguration"></ion-icon>
         <h3 class="header-list" (click)="hideConfiguration = !hideConfiguration">{{ 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS' | translate }}</h3>
         <ion-button class="margin-right-15" fill="clear" (click)="hideConfiguration = !hideConfiguration">
-          <ion-icon *ngIf="hideConfiguration" size="small" class="btn-color" name="caret-down"></ion-icon>
-          <ion-icon *ngIf="!hideConfiguration" size="small" class="btn-color" name="caret-up"></ion-icon>
+          <ion-icon *ngIf="hideConfiguration" size="small" class="btn-color" name="caret-down-circle"></ion-icon>
+          <ion-icon *ngIf="!hideConfiguration" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
         </ion-button>
         <!-- Button Create -->
         <ion-button fill="clear" (click)="openConfigurationModal()">
@@ -53,8 +53,8 @@
         <!-- Title -->
         <h3 class="header-list" (click)="hideMaintenance = !hideMaintenance">{{ 'PAGE_CONFIGURATION.MAINTENANCES' | translate }}</h3>
         <ion-button class="margin-right-15" fill="clear" (click)="hideMaintenance = !hideMaintenance">
-          <ion-icon *ngIf="hideMaintenance" size="small" class="btn-color" name="caret-down"></ion-icon>
-          <ion-icon *ngIf="!hideMaintenance" size="small" class="btn-color" name="caret-up"></ion-icon>
+          <ion-icon *ngIf="hideMaintenance" size="small" class="btn-color" name="caret-down-circle"></ion-icon>
+          <ion-icon *ngIf="!hideMaintenance" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
         </ion-button>
         <!-- Button Create -->
         <ion-button fill="clear" (click)="openMaintenanceModal()">
@@ -98,8 +98,8 @@
         <!-- Tittle -->
         <h3 class="header-list" (click)="hideReplacement = !hideReplacement">{{ 'PAGE_CONFIGURATION.REPLACEMENTS' | translate }}</h3>
         <ion-button class="margin-right-15" fill="clear" (click)="hideReplacement = !hideReplacement">
-          <ion-icon *ngIf="hideReplacement" size="small" class="btn-color" name="caret-down"></ion-icon>
-          <ion-icon *ngIf="!hideReplacement" size="small" class="btn-color" name="caret-up"></ion-icon>
+          <ion-icon *ngIf="hideReplacement" size="small" class="btn-color" name="caret-down-circle"></ion-icon>
+          <ion-icon *ngIf="!hideReplacement" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
         </ion-button>
         <!-- Button Create -->
         <ion-button fill="clear" (click)="openReplacementModal()">

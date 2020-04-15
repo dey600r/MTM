@@ -32,6 +32,7 @@ import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-o
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
 import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
+import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
 import { SearchOperationPopOverComponent } from '@popovers/search-operation-popover/search-operation-popover.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { PipeModule } from '@pipes/pipes.module';
@@ -45,6 +46,7 @@ import { PipeModule } from '@pipes/pipes.module';
     AddEditMaintenanceComponent,
     AddEditMaintenanceElementComponent,
     DashboardComponent,
+    InfoNotificationComponent,
     SearchOperationPopOverComponent,
     SearchDashboardPopOverComponent
   ],
@@ -55,6 +57,7 @@ import { PipeModule } from '@pipes/pipes.module';
     AddEditMaintenanceComponent,
     AddEditMaintenanceElementComponent,
     DashboardComponent,
+    InfoNotificationComponent,
     SearchOperationPopOverComponent,
     SearchDashboardPopOverComponent
   ],

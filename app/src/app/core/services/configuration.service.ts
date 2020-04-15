@@ -35,15 +35,6 @@ export class ConfigurationService {
         return order;
     }
 
-    getIconMaintenance(maintenance: MaintenanceModel): string {
-        switch (maintenance.maintenanceFreq.code) {
-          case Constants.MAINTENANCE_FREQ_ONCE_CODE:
-            return 'alarm';
-          case Constants.MAINTENANCE_FREQ_CALENDAR_CODE:
-            return 'calendar';
-        }
-      }
-
     // SAVE
 
     /** CONFIGURATION */
@@ -108,6 +99,15 @@ export class ConfigurationService {
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
     }
 
+    getIconMaintenance(maintenance: MaintenanceModel): string {
+        switch (maintenance.maintenanceFreq.code) {
+          case Constants.MAINTENANCE_FREQ_ONCE_CODE:
+            return 'alarm';
+          case Constants.MAINTENANCE_FREQ_CALENDAR_CODE:
+            return 'calendar';
+        }
+    }
+
     /** MAINTENANCE ELEMENT / REPLACEMENT */
     saveMaintenanceElement(replacement: MaintenanceElementModel, action: ActionDBEnum, operations: OperationModel[] = []) {
         let sqlDB = '';
@@ -130,6 +130,46 @@ export class ConfigurationService {
                 break;
         }
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+    }
+
+    getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
+        switch (maintenanceElement.id) {
+          case 1: case 2: case 22: case 23: case 25: case 28: case 29:
+            return 'disc';
+          case 4: case 5: case 27:
+            return 'basket';
+          case 6:
+            return 'flash';
+          case 9: case 14: case 15:
+            return 'thermometer';
+          case 3: case 7: case 8: case 12: case 32:
+            return 'color-fill';
+          case 11: case 13: case 16:
+            return 'layers';
+          case 18: case 19:
+            return 'eyedrop';
+          case 10: case 17: case 20: case 21: case 26:
+            return 'settings';
+          case 24:
+            return 'battery-charging';
+          case 30: case 31:
+            return 'barcode';
+          default:
+            return this.getRandomIcon(maintenanceElement.id);
+        }
+    }
+
+    getRandomIcon(rand: number): string {
+        const min = 40;
+        if (rand <= min) {
+            return 'cube';
+        } else if (rand > min && rand <= (min + 15)) {
+            return 'bulb';
+        } else if (rand > (min + 15) && rand <= (min + 25)) {
+            return 'bandage';
+        } else {
+            return 'briefcase';
+        }
     }
 
 }

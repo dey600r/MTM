@@ -71,7 +71,7 @@ export class CommonService {
     monthDiff(dateIni: Date, dateFin: Date): number {
         let months: number = (dateFin.getFullYear() - dateIni.getFullYear()) * 12;
         months -= dateIni.getMonth() + 1;
-        months += dateFin.getMonth();
+        months += dateFin.getMonth() + 1;
         return months <= 0 ? 0 : months;
     }
 

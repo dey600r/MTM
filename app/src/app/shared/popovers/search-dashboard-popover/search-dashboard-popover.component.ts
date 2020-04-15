@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { SearchDashboardModel, OperationTypeModel, ModalInputModel } from '@models/index';
 import { DashboardService, CommonService, DataBaseService } from '@services/index';
-import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
+import { FilterMonthsEnum, ConstantsColumns, PageEnum, FilterKmTimeEnum } from '@utils/index';
 
 @Component({
     selector: 'app-search-dashboard-popover',
@@ -85,7 +85,8 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
                                     this.searchDashboard.showAxisLabel,
                                     this.searchDashboard.showDataLabel,
                                     this.searchDashboard.doghnut,
-                                    this.searchDashboard.showMyData));
+                                    this.searchDashboard.showMyData,
+                                    this.searchDashboard.filterKmTime));
     }
 
     closePopover() {
@@ -96,6 +97,10 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
         this.searchDashboard = new SearchDashboardModel();
         this.filterOpType = [];
         this.onChangeFilterGrouper();
+    }
+
+    isParentPageHome() {
+        return this.modalInputModel.parentPage === PageEnum.HOME;
     }
 
     isParentPageMoto() {

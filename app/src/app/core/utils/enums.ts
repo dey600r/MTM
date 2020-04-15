@@ -28,3 +28,8 @@ export enum PageEnum {
     MODAL_MAINTENANCE_ELEMENT = 9,
     MODAL_DASHBOARD = 10
 }
+
+export enum FilterKmTimeEnum {
+    KM = 'KM',
+    TIME = 'TIME'
+}

@@ -1,4 +1,4 @@
-import { FilterMonthsEnum } from '@utils/index';
+import { FilterMonthsEnum, FilterKmTimeEnum } from '@utils/index';
 import { OperationTypeModel } from './operation-type.model';
 
 export class SearchDashboardModel {
@@ -10,9 +10,11 @@ export class SearchDashboardModel {
     showDataLabel: boolean;
     doghnut: boolean;
     showMyData: boolean;
+    filterKmTime: FilterKmTimeEnum;
     constructor(month: FilterMonthsEnum = FilterMonthsEnum.MONTH, ot: OperationTypeModel[] = [],
                 axis: boolean = true, legend: boolean = false, axisLabel: boolean = false,
-                dataLabel: boolean = false, dog: boolean = false, myData: boolean = true) {
+                dataLabel: boolean = false, dog: boolean = false, myData: boolean = true,
+                kmTime: FilterKmTimeEnum = FilterKmTimeEnum.KM) {
         this.showPerMont = month;
         this.showOpType = ot;
         this.showAxis = axis;
@@ -21,5 +23,6 @@ export class SearchDashboardModel {
         this.showDataLabel = dataLabel;
         this.doghnut = dog;
         this.showMyData = myData;
+        this.filterKmTime = kmTime;
     }
 }

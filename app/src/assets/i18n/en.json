@@ -7,6 +7,7 @@
         "NAME": "Name",
         "OR": "or",
         "OPERATION": "Operation",
+        "OPERATIONS": "Operations",
         "MOTORBIKE": "Motorbike",
         "MOTORBIKES": "Motorbikes",
         "SEARCHER": "Searcher",
@@ -47,7 +48,11 @@
         "SHOW_DOGHNUT": "Show doghnut",
         "SHOW_MY_DATA": "Show my data",
         "CALCULATE_PER_MONTH": "Calculate per month",
-        "DATE_OPERATION": "Date operation"
+        "DATE_OPERATION": "Date operation",
+        "RECORDS": "Records",
+        "SUMMARY": "Summary",
+        "ESTIMATED": "Estimated",
+        "REAL": "Real"
     },
     "PAGE_HOME": {
         "HOME": "Home",

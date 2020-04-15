@@ -1,0 +1,130 @@
+<ion-header>
+    <ion-toolbar>
+        <!-- Button show filter -->
+        <ion-button slot="start" fill="clear" (click)="showPopover($event)" class="btn-width">
+            <ion-icon size="large" class="btn-color" name="filter"></ion-icon>
+        </ion-button>
+        <!-- Title -->
+        <ion-title class="align-center">{{ wear.nameMoto }}</ion-title>
+        <!-- Button Close -->
+        <ion-button fill="clear" (click)="closeModal()" class="btn-width" slot="end">
+          <ion-icon size="large" class="btn-color" name="close-circle-outline"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content fullscreen>
+  <!-- CHART -->
+  <ion-list>
+    <ion-list-header (click)="hideGraph = !hideGraph">
+      <ion-icon size="large" name="bar-chart"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.CHARTS' | translate }}</h3>
+      <ion-button fill="clear">
+        <ion-icon *ngIf="hideGraph" size="small" color="primary" name="caret-down-circle"></ion-icon>
+        <ion-icon *ngIf="!hideGraph" size="small" color="primary" name="caret-up-circle"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <div [hidden]="hideGraph">
+      <ngx-charts-line-chart
+        [view]="dashboardRecordsMaintenance.view"
+        [scheme]="dashboardRecordsMaintenance.colorScheme"
+        [results]="dashboardRecordsMaintenance.data"
+        [gradient]="dashboardRecordsMaintenance.gradient"
+        [xAxis]="dashboardRecordsMaintenance.showXAxis"
+        [yAxis]="dashboardRecordsMaintenance.showYAxis"
+        [legend]="dashboardRecordsMaintenance.showLegend"
+        [legendTitle]="dashboardRecordsMaintenance.legendTitle"
+        [legendPosition]="dashboardRecordsMaintenance.legendPosition"
+        [showXAxisLabel]="dashboardRecordsMaintenance.showXAxisLabel"
+        [showYAxisLabel]="dashboardRecordsMaintenance.showYAxisLabel"
+        [xAxisLabel]="dashboardRecordsMaintenance.xAxisLabel"
+        [yAxisLabel]="dashboardRecordsMaintenance.yAxisLabel">
+      </ngx-charts-line-chart>
+    </div>
+  </ion-list>
+  
+  <!-- RESUME -->
+  <ion-list>
+    <ion-list-header (click)="hideSummary = !hideSummary">
+      <ion-icon size="large" name="analytics"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.SUMMARY' | translate }}</h3>
+      <ion-button fill="clear">
+        <ion-icon *ngIf="hideSummary" size="small" color="primary" name="caret-down-circle"></ion-icon>
+        <ion-icon *ngIf="!hideSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <ion-item [hidden]="hideSummary">
+      <ion-label>
+        <p>Moto km {{ dataMaintenance.kmMoto }} km</p>
+        <p *ngIf="dataMaintenance.kmMoto !== motoKmEstimated">Moto km estimated {{ motoKmEstimated }} km</p>
+      </ion-label>
+    </ion-item>
+    <ion-item [hidden]="hideSummary">
+      <p>Fiabilidad {{ dataMaintenance.listWearReplacement[0].nameMaintenanceElement }} {{ wear.percent }} %</p>
+      <ion-icon size="small" color="primary" name="skull"></ion-icon>
+    </ion-item>
+    <ion-item [hidden]="hideSummary">
+      <ion-label>
+        <p>Proxima revision {{ dataMaintenance.listWearReplacement[0].kmOperation }}/ Maintentenance {{ dataMaintenance.listWearReplacement[0].kmMaintenance}} km</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <!-- List Records Maintenance -->
+  <ion-list>
+    <ion-list-header (click)="hideRecords = !hideRecords">
+      <ion-icon size="large" [name]="getIconReplacement()"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ wear.listWearReplacement[0].nameMaintenanceElement }}</h3>
+      <ion-button fill="clear">
+        <ion-icon *ngIf="hideRecords" size="small" color="primary" name="caret-down-circle"></ion-icon>
+        <ion-icon *ngIf="!hideRecords" size="small" color="primary" name="caret-up-circle"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <!-- Items Maintenances -->
+    <ion-item button *ngFor="let w of wear.listWearReplacement" [hidden]="hideRecords" (click)="showInfo(w)">
+      <!-- Ivatar -->
+      <ion-avatar slot="start" class="max-width10 avatar-row">
+        <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(w)"></ion-icon>
+      </ion-avatar>
+      <div class="main-div">
+        <div>
+          <!-- Label -->
+          <div>
+            <ion-label>{{ (w.descriptionOperation === null ? w.descriptionMaintenance : w.descriptionOperation) }}</ion-label>
+          </div>
+          <div class="table-row">
+            <!-- KMS -->
+            <div class="margin-right5 table-row">
+              <ion-icon [class]="getClassIcon(w.warningKms, 'icon-row')" [color]="getClassIcon(w.warningKms, '')" size="small"
+              [name]="getIconKms(w.warningKms)"></ion-icon>
+              <p class="p-row">{{ getKmPercent(w) }} km</p>
+            </div>
+            <!-- ICON -->
+            <div class="icon-notification">
+              <ion-icon *ngIf="w.initMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
+              [class]="getClassIcon(w.warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
+              <ion-icon *ngIf="!w.initMaintenance && w.wearMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
+                [class]="getClassIcon(w.warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
+            </div>
+          </div>
+            <!-- Progress bar maintenace -->
+          <div [class]="getClassProgressbar(w.warningKms, '')">
+            <ion-progress-bar [value]="w.percentKms"></ion-progress-bar>
+          </div>
+          <div *ngIf="w.timeMaintenance > 0" class="table-row">
+            <!-- MONTHS -->
+            <div class="margin-right5 table-row">
+              <ion-icon [color]="getClassIcon(w.warningMonths, '')" size="small"
+                [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
+              <p class="p-row">{{ getTimePercent(w) }}</p>
+            </div>
+          </div>
+            <!-- Progress bar maintenace -->
+          <div *ngIf="w.timeMaintenance > 0" [class]="getClassProgressbar(w.warningMonths, '')">
+            <ion-progress-bar [value]="w.percentMonths"></ion-progress-bar>
+          </div>
+        </div>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>

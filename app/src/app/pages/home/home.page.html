@@ -16,8 +16,8 @@
       <ion-icon size="large" name="bicycle"></ion-icon>
       <h3 class="header-list">{{ m.nameMoto }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideMotos[i]" size="small" color="primary" name="caret-down"></ion-icon>
-        <ion-icon *ngIf="!hideMotos[i]" size="small" color="primary" name="caret-up"></ion-icon>
+        <ion-icon *ngIf="hideMotos[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
+        <ion-icon *ngIf="!hideMotos[i]" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
     <!-- Progress bar moto -->
@@ -25,7 +25,7 @@
       <ion-progress-bar [value]="m.percent"></ion-progress-bar>
     </div>
     <!-- Items Maintenances -->
-    <ion-item button *ngFor="let w of m.listWearReplacement" [hidden]="hideMotos[i]">
+    <ion-item button *ngFor="let w of m.listWearReplacement" [hidden]="hideMotos[i]" (click)="openInfoNotification(m, w)">
       <!-- Ivatar -->
       <ion-avatar slot="start" class="max-width10 avatar-row">
         <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(w)"></ion-icon>
@@ -45,9 +45,9 @@
             </div>
             <!-- MONTHS -->
             <div class="margin-right5 table-row">
-              <ion-icon *ngIf="w.timeMaintenace > 0" [color]="getClassIcon(w.warningMonths, '')" size="small"
+              <ion-icon *ngIf="w.timeMaintenance > 0" [color]="getClassIcon(w.warningMonths, '')" size="small"
                 [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
-              <p *ngIf="w.timeMaintenace > 0" class="p-row">{{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</p>
+              <p *ngIf="w.timeMaintenance > 0" class="p-row">{{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</p>
             </div>
             <!-- ICON -->
             <div class="icon-notification">
@@ -57,10 +57,10 @@
                 [class]="getClassIcon(w.warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
             </div>
           </div>
-        </div>
-        <!-- Progress bar maintenace -->
-        <div [class]="getClassProgressbar(w.warningKms, '')">
-          <ion-progress-bar [value]="w.percentKms"></ion-progress-bar>
+          <!-- Progress bar maintenace -->
+          <div [class]="getClassProgressbar(w.warningKms, '')">
+            <ion-progress-bar [value]="w.percentKms"></ion-progress-bar>
+          </div>
         </div>
       </div>
     </ion-item>

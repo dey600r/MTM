@@ -7,6 +7,7 @@
         "NAME": "Nombre",
         "OR": "o",
         "OPERATION": "Operación",
+        "OPERATIONS": "Operaciones",
         "MOTORBIKE": "Moto",
         "MOTORBIKES": "Motos",
         "SEARCHER": "Buscador",
@@ -47,7 +48,11 @@
         "SHOW_DOGHNUT": "Modo Donut",
         "SHOW_MY_DATA": "Mostrar mis datos",
         "CALCULATE_PER_MONTH": "Cálculo por mes",
-        "DATE_OPERATION": "Fecha operación"
+        "DATE_OPERATION": "Fecha operación",
+        "RECORDS": "Registro",
+        "SUMMARY": "Resumen",
+        "ESTIMATED": "Estimado",
+        "REAL": "Real"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",

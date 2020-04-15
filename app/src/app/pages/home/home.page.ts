@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -8,10 +9,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { DataBaseService, DashboardService, ConfigurationService } from '@services/index';
 import {
   SearchDashboardModel, WearMotoProgressBarModel, WearReplacementProgressBarModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, MotoModel, ConfigurationModel
+  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, MotoModel, ModalOutputModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
-import { Subscription } from 'rxjs';
+
+// COMPONENTS
+import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +24,7 @@ import { Subscription } from 'rxjs';
 export class HomePage implements OnInit {
 
   // MODAL
+  dataReturned: ModalOutputModel = new ModalOutputModel();
   input: ModalInputModel = new ModalInputModel();
 
   // DATA
@@ -28,6 +32,7 @@ export class HomePage implements OnInit {
   activateInfo = false;
   wears: WearMotoProgressBarModel[] = [];
   hideMotos: boolean[] = [];
+  operations: OperationModel[] = [];
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
@@ -38,7 +43,8 @@ export class HomePage implements OnInit {
               private dbService: DataBaseService,
               private translator: TranslateService,
               private dashboardService: DashboardService,
-              private configurationService: ConfigurationService) {
+              private configurationService: ConfigurationService,
+              private modalController: ModalController) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -56,8 +62,10 @@ export class HomePage implements OnInit {
           if (!!maintenances && maintenances.length > 0) {
             this.motoSubscription = this.dbService.getMotos().subscribe(motos => {
               this.operationSubscription.unsubscribe();
+              this.operations = [];
               if (!!motos && motos.length > 0) {
                 this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
+                  this.operations = operations;
                   this.wears = this.dashboardService.getWearReplacementToMoto(operations, motos, configurations, maintenances);
                   this.wears.forEach((x, index) => this.hideMotos[index] = (index !== 0));
                   this.activateInfo = this.activateModeInfo(motos, operations, this.wears);
@@ -85,52 +93,48 @@ export class HomePage implements OnInit {
   }
 
   getClassProgressbar(warning: WarningWearEnum, styles: string): string {
-    switch (warning) {
-      case WarningWearEnum.SUCCESS:
-        return `${styles} quizz-progress-success`;
-      case WarningWearEnum.WARNING:
-        return `${styles} quizz-progress-warning`;
-      case WarningWearEnum.DANGER:
-        return `${styles} quizz-progress-danger`;
-    }
+    return this.dashboardService.getClassProgressbar(warning, styles);
   }
 
   getClassIcon(warning: WarningWearEnum, styles: string): string {
-    switch (warning) {
-      case WarningWearEnum.SUCCESS:
-        return `${styles} icon-color-success`;
-      case WarningWearEnum.WARNING:
-        return `${styles} icon-color-warning`;
-      case WarningWearEnum.DANGER:
-        return `${styles} icon-color-danger`;
-    }
+    return this.dashboardService.getClassIcon(warning, styles);
   }
 
   getIconKms(warning: WarningWearEnum): string {
-    switch (warning) {
-      case WarningWearEnum.SUCCESS:
-        return 'checkmark-circle';
-      case WarningWearEnum.WARNING:
-        return 'warning';
-      case WarningWearEnum.DANGER:
-        return 'nuclear';
-    }
+    return this.dashboardService.getIconKms(warning);
   }
 
   getColorKms(warning: WarningWearEnum) {
-    switch (warning) {
-      case WarningWearEnum.SUCCESS:
-        return 'success';
-      case WarningWearEnum.WARNING:
-        return 'warning';
-      case WarningWearEnum.DANGER:
-        return 'nuclear';
-    }
+    return this.dashboardService.getColorKms(warning);
   }
 
   getIconMaintenance(wear: WearReplacementProgressBarModel): string {
     return this.configurationService.getIconMaintenance(
       new MaintenanceModel(null, null, new MaintenanceFreqModel(wear.codeMaintenanceFreq)));
+  }
+
+  // MODALS
+
+  openInfoNotification(m: WearMotoProgressBarModel, w: WearReplacementProgressBarModel) {
+    this.openModal(InfoNotificationComponent, new ModalInputModel(true,
+      new WearMotoProgressBarModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
+        m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.warning, [w]), this.operations, PageEnum.HOME));
+  }
+
+  async openModal(modalComponent: any, inputModel: ModalInputModel) {
+
+    const modal = await this.modalController.create({
+      component: modalComponent,
+      componentProps: inputModel
+    });
+
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned !== null) {
+        this.dataReturned = dataReturned.data;
+      }
+    });
+
+    return await modal.present();
   }
 
 }
