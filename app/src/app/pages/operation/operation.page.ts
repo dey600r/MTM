@@ -96,11 +96,11 @@ export class OperationPage implements OnInit {
   }
 
   showModalInfoMoto() {
-    this.commonService.alertInfo('ALERT.AddMotoToAddOperation');
+    this.commonService.showToast('ALERT.AddMotoToAddOperation');
   }
 
   showModalInfoOperation() {
-    this.commonService.alertInfo('ALERT.AddOperationToExpenses');
+    this.commonService.showToast('ALERT.AddOperationToExpenses');
   }
 
   async openModal(modalComponent: any, inputModel: ModalInputModel) {

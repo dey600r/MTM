@@ -56,7 +56,12 @@
     },
     "PAGE_HOME": {
         "HOME": "Home",
-        "WearReplacement": "Wear of spare parts"
+        "WearReplacement": "Wear of spare parts",
+        "MotoKm": "The kilometers of the motorbike are {{km}} km",
+        "MotoEstimatedKm": "The kilometer estimated are {{km}} km",
+        "RELIABILITY": "Reliability",
+        "NextChangeKm": "Next change of {{maintenance}} is at {{km}} km",
+        "NotExistRecords": "It doesn't exist records to {{maintenance}}. You need drive you motorbike more"
     },
     "PAGE_MOTO": {
         "YOURS_MOTORBIKES": "Yours Motorbikes",
@@ -144,7 +149,11 @@
         "AddOperation": "You must add operation",
         "AddOperationToExpenses": "You must add operations to see the expenses",
         "ConfigurationEmpty": "There isn't maintenance associated to configuration",
-        "AddConfiguration": "You must associate maintenance to configuration"
+        "AddConfiguration": "You must associate maintenance to configuration",
+        "InfoNotOperationKmTime": "You must add operation to pass maintenance before {{km}} km or {{time}}",
+        "InfoNotOperationKm": "You must add operation to pass maintenance before {{km}} km",
+        "InfoOperationKm": "You have an operation at {{kmop}} km to pass maintenance of {{km}} km",
+        "InfoOperationTime": " and pass at {{timeop}} before {{time}}"        
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

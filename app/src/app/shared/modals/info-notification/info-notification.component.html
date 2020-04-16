@@ -1,7 +1,7 @@
 <ion-header>
     <ion-toolbar>
         <!-- Button show filter -->
-        <ion-button slot="start" fill="clear" (click)="showPopover($event)" class="btn-width">
+        <ion-button *ngIf="isCalendar" slot="start" fill="clear" (click)="showPopover($event)" class="btn-width">
             <ion-icon size="large" class="btn-color" name="filter"></ion-icon>
         </ion-button>
         <!-- Title -->
@@ -15,9 +15,34 @@
 
 
 <ion-content fullscreen>
-  <!-- CHART -->
+  <!-- RESUME -->
   <ion-list>
-    <ion-list-header (click)="hideGraph = !hideGraph">
+    <ion-list-header (click)="hideSummary = !hideSummary">
+      <ion-icon size="large" name="analytics"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.SUMMARY' | translate }} {{ nameMaintenance }}</h3>
+      <ion-button fill="clear">
+        <ion-icon *ngIf="hideSummary" size="small" color="primary" name="caret-down-circle"></ion-icon>
+        <ion-icon *ngIf="!hideSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <ion-item [hidden]="hideSummary">
+      <p>{{ labelMotoKm }}</p>
+    </ion-item>
+    <ion-item [hidden]="hideSummary">
+      <p>{{ labelReliability }}</p>
+      <p slot="end">{{ labelPercent }} %</p>
+      <ion-icon slot="end" size="small" [class]="getIconPercent('color')" [color]="getIconPercent('color')" [name]="getIconPercent('icon')"></ion-icon>
+    </ion-item>
+    <ion-item [hidden]="hideSummary">
+      <p>{{ labelNextChange }}</p>
+    </ion-item>
+    <ion-item *ngIf="labelNotRecord !== ''">
+      <p>{{ labelNotRecord }}</p>
+    </ion-item>
+  </ion-list>
+  <!-- CHART -->
+  <ion-list *ngIf="isCalendar">
+    <ion-list-header (click)="refreshChart()">
       <ion-icon size="large" name="bar-chart"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.CHARTS' | translate }}</h3>
       <ion-button fill="clear">
@@ -43,38 +68,11 @@
       </ngx-charts-line-chart>
     </div>
   </ion-list>
-  
-  <!-- RESUME -->
-  <ion-list>
-    <ion-list-header (click)="hideSummary = !hideSummary">
-      <ion-icon size="large" name="analytics"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.SUMMARY' | translate }}</h3>
-      <ion-button fill="clear">
-        <ion-icon *ngIf="hideSummary" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <ion-item [hidden]="hideSummary">
-      <ion-label>
-        <p>Moto km {{ dataMaintenance.kmMoto }} km</p>
-        <p *ngIf="dataMaintenance.kmMoto !== motoKmEstimated">Moto km estimated {{ motoKmEstimated }} km</p>
-      </ion-label>
-    </ion-item>
-    <ion-item [hidden]="hideSummary">
-      <p>Fiabilidad {{ dataMaintenance.listWearReplacement[0].nameMaintenanceElement }} {{ wear.percent }} %</p>
-      <ion-icon size="small" color="primary" name="skull"></ion-icon>
-    </ion-item>
-    <ion-item [hidden]="hideSummary">
-      <ion-label>
-        <p>Proxima revision {{ dataMaintenance.listWearReplacement[0].kmOperation }}/ Maintentenance {{ dataMaintenance.listWearReplacement[0].kmMaintenance}} km</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
   <!-- List Records Maintenance -->
-  <ion-list>
+  <ion-list *ngIf="isCalendar">
     <ion-list-header (click)="hideRecords = !hideRecords">
       <ion-icon size="large" [name]="getIconReplacement()"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ wear.listWearReplacement[0].nameMaintenanceElement }}</h3>
+      <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ nameMaintenanceElement }}</h3>
       <ion-button fill="clear">
         <ion-icon *ngIf="hideRecords" size="small" color="primary" name="caret-down-circle"></ion-icon>
         <ion-icon *ngIf="!hideRecords" size="small" color="primary" name="caret-up-circle"></ion-icon>

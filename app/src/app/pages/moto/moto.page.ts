@@ -82,7 +82,7 @@ export class MotoPage implements OnInit {
   }
 
   showModalInfo() {
-    this.commonService.alertInfo('ALERT.AddMotorbikeToExpenses');
+    this.commonService.showToast('ALERT.AddMotorbikeToExpenses');
   }
 
   changeFilterOperation(idMoto: number) {

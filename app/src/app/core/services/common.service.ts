@@ -42,9 +42,13 @@ export class CommonService {
 
     // TOAST
 
-    async showToast(msg: string, data: any = null, delay: number = Constants.DELAY_TOAST) {
+    showToast(msg: string, data: any = null, delay: number = Constants.DELAY_TOAST) {
+        this.showMsgToast(this.translator.instant(msg, data), delay);
+    }
+
+    async showMsgToast(msg: string, delay: number = Constants.DELAY_TOAST) {
         const toast = await this.toastController.create({
-            message: this.translator.instant(msg, data),
+            message: msg,
             duration: delay
         });
         toast.present();

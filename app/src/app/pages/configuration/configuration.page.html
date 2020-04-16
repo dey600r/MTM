@@ -70,8 +70,14 @@
         <ion-label class="min-width75" (click)="openMaintenanceModal(m, false)">
           <h2 class="text-overflow">{{ m.description }}</h2>
           <h3 class="text-overflow">{{ m.maintenanceElement.name }}</h3>
-          <p *ngIf="m.time > 0">{{ m.km }} km / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
-          <p *ngIf="m.time <= 0">{{ m.km }} km </p>
+          <div class="table-row">
+            <p *ngIf="m.time > 0" class="p-color">{{ m.km }} km / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+            <p *ngIf="m.time <= 0" class="p-color">{{ m.km }} km </p>
+            <div class="icon-notification">
+              <ion-icon *ngIf="m.init" class="icon-color" slot="end" size="small" name="navigate-circle"></ion-icon>
+              <ion-icon *ngIf="!m.init && m.wear" class="icon-color" slot="end" size="small" name="notifications-circle"></ion-icon>
+            </div>
+          </div>
         </ion-label>
         <!-- Buttons edit / delete -->
         <ion-label *ngIf="m.master" class="align-right">

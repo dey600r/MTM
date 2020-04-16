@@ -357,10 +357,12 @@ export class DashboardService {
 
     calculateMaintenace(moto: MotoModel, operations: OperationModel[],
                         main: MaintenanceModel): WearReplacementProgressBarModel {
-        if (main.init) {
-            return this.calculateInitMaintenace(moto, operations, main);
-        } else if (main.wear) {
-            return this.calculateWearMaintenace(moto, operations, main);
+        if (main.maintenanceFreq.code === Constants.MAINTENANCE_FREQ_ONCE_CODE) {
+            if (main.init) {
+                return this.calculateInitMaintenace(moto, operations, main);
+            } else if (main.wear) {
+                return this.calculateWearMaintenace(moto, operations, main);
+            }
         } else {
             return this.calculateNormalMaintenace(moto, operations, main);
         }
@@ -481,9 +483,9 @@ export class DashboardService {
             calculateKms: calKms,
             calculateMonths: calMonths,
             percentKms: percentKm,
-            warningKms: this.getWarningMaintenance(percentKm),
+            warningKms: (main.wear ? this.getWarningWear(percentKm) : this.getWarningMaintenance(percentKm)),
             percentMonths: percentMonth,
-            warningMonths: this.getWarningMaintenance(percentMonth),
+            warningMonths: (main.wear ? this.getWarningWear(percentMonth) : this.getWarningMaintenance(percentMonth)),
         };
     }
 
@@ -506,7 +508,7 @@ export class DashboardService {
     }
 
     calculatePercent(total: number, value: number): number {
-        return (value >= 0 ? (total - value) / total : 1);
+        return (total === 0 ? 0 : (value >= 0 ? (total - value) / total : 1));
     }
 
     calculateKmMotoEstimated(moto: MotoModel): number {
@@ -580,13 +582,21 @@ export class DashboardService {
                     calculateKms: calculateKmEstimate,
                     calculateMonths: calculateTimeEstimate,
                     percentKms: percentKm,
-                    warningKms: this.getWarningRecordsMaintenance(percentKm * (calculateKmEstimate >= 0 ? 1 : -1)),
+                    warningKms: (wear.wearMaintenance ?
+                        this.getWarningWearRecordsMaintenance(percentKm * (calculateKmEstimate >= 0 ? 1 : -1), op.km === null) :
+                        this.getWarningRecordsMaintenance(percentKm * (calculateKmEstimate >= 0 ? 1 : -1))),
                     percentMonths: percentTime,
-                    warningMonths: this.getWarningRecordsMaintenance(percentTime * (calculateTimeEstimate >= 0 ? 1 : -1)),
+                    warningMonths: (wear.wearMaintenance ?
+                        this.getWarningWearRecordsMaintenance(percentTime * (calculateTimeEstimate >= 0 ? 1 : -1), op.km === null) :
+                        this.getWarningRecordsMaintenance(percentTime * (calculateTimeEstimate >= 0 ? 1 : -1))),
                 }];
 
                 if (!!op && op.id !== null) {
-                    percentMoto += (calculateKmEstimate >= 0 ? 1 : 1 - percentKm);
+                    if (percentKm > percentTime) {
+                        percentMoto += (calculateKmEstimate >= 0 ? 1 : 1 - percentKm);
+                    } else {
+                        percentMoto += (calculateTimeEstimate >= 0 ? 1 : 1 - percentTime);
+                    }
                 }
                 kmCalculate += wear.kmMaintenance;
                 timeCalculate += wear.timeMaintenance;
@@ -598,7 +608,9 @@ export class DashboardService {
                 datePurchaseMoto: motoWear.datePurchaseMoto,
                 kmsPerMonthMoto: motoWear.kmsPerMonthMoto,
                 dateKmsMoto: motoWear.dateKmsMoto,
-                percent: Math.round((percentMoto / wearReplacement.length) * 100),
+                percent: Math.round(((percentMoto +
+                    (1 - (wear.percentKms > wear.percentMonths ? wear.percentKms : wear.percentMonths))) /
+                    (wearReplacement.length + 1)) * 100),
                 warning: this.getPercentMoto(wearReplacement),
                 listWearReplacement: this.commonService.orderBy(wearReplacement, 'kmMaintenance')
             };
@@ -611,6 +623,16 @@ export class DashboardService {
             return WarningWearEnum.WARNING;
         } else if (percent >= 1 || percent <= 0) {
             return WarningWearEnum.DANGER;
+        } else {
+            return WarningWearEnum.SUCCESS;
+        }
+    }
+
+    getWarningWearRecordsMaintenance(percent: number, op: boolean): WarningWearEnum {
+        if (op && (percent >= 1 || percent <= 0)) {
+            return WarningWearEnum.DANGER;
+        } else if (percent >= 1 || percent <= 0) {
+            return WarningWearEnum.WARNING;
         } else {
             return WarningWearEnum.SUCCESS;
         }

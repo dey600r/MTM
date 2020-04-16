@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, Output } from '@angular/core';
 
 // LIBRARIES
-import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
@@ -18,9 +17,7 @@ export class AppInfoComponent implements OnInit, OnDestroy {
   @Input() inputInfo: ModalInputModel = new ModalInputModel();
   @Output() modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
-  constructor(
-    private translator: TranslateService,
-  ) {
+  constructor() {
    }
 
   ngOnInit() {

@@ -56,7 +56,12 @@
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
-        "WearReplacement": "Desgaste de recambios"
+        "WearReplacement": "Desgaste de recambios",
+        "MotoKm": "Los kilómetros de la moto son {{km}} km",
+        "MotoEstimatedKm": "Los kilómetros estimados son {{km}} km",
+        "RELIABILITY": "Fiabilidad",
+        "NextChangeKm": "El próximo cambio de {{maintenance}} es a los {{km}} km",
+        "NotExistRecords": "No existen registros para {{maintenance}}. Necesitas conducir mas la moto"
     },
     "PAGE_MOTO": {
         "YOURS_MOTORBIKES": "Tus Motos",
@@ -144,7 +149,11 @@
         "AddOperation": "Añada operaciones",
         "AddOperationToExpenses": "Añada operaciones para ver los gastos",
         "ConfigurationEmpty": "No se encuentran mantenimientos asociados a la configuración",
-        "AddConfiguration": "Añada mantenimientos a la configuración"
+        "AddConfiguration": "Añada mantenimientos a la configuración",
+        "InfoNotOperationKmTime": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} km o {{time}}",
+        "InfoNotOperationKm": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} km",
+        "InfoOperationKm": "Has pasadola revisión a los {{kmop}} km para el mantenimiento de los {{km}} km",
+        "InfoOperationTime": " y con fecha {{timeop}} antes de la fecha requerida {{time}}"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",
