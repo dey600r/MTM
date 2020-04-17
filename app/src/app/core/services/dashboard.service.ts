@@ -49,11 +49,7 @@ export class DashboardService {
                         (filter.showOpType.length === 0 ||
                         filter.showOpType.some(f => f.id === z.operationType.id))),
                     ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
-                result = [...result, {
-                    id: x.moto.id,
-                    name: x.moto.model,
-                    value: sumPrice
-                }];
+                result = [...result, this.getDataDashboard(x.moto.model, sumPrice, x.moto.id)];
             }
         });
         return result;
@@ -86,10 +82,7 @@ export class DashboardService {
                             filter.showOpType.some(f => f.id === x.operationType.id)));
                         if (!!ops && ops.length > 0) {
                             const sumPrice: number = this.commonService.sum(ops, ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
-                            result = [...result, {
-                                name: this.getRangeDates(i, j, iterator),
-                                value: sumPrice
-                            }];
+                            result = [...result, this.getDataDashboard(this.getRangeDates(i, j, iterator), sumPrice)];
                         }
                     }
                 }
@@ -131,21 +124,11 @@ export class DashboardService {
             if (sumPrice > 0) {
                 if (!!dash) {
                     if (!dash.series.some((z: any) => z.id === x.operationType.id)) {
-                        dash.series = [...dash.series, {
-                            id: x.operationType.id,
-                            name: x.operationType.description,
-                            value: sumPrice
-                        }];
+                        dash.series = [...dash.series, this.getDataDashboard(x.operationType.description, sumPrice, x.operationType.id)];
                     }
                 } else {
-                    dash = {
-                        name: x.moto.model,
-                        series: [{
-                            id: x.operationType.id,
-                            name: x.operationType.description,
-                            value: sumPrice
-                        }]
-                    };
+                    dash = this.getDataSeriesDashboard(x.moto.model,
+                        [this.getDataDashboard(x.operationType.description, sumPrice, x.operationType.id)]);
                     result = [...result, dash];
                 }
             }
@@ -171,11 +154,7 @@ export class DashboardService {
                         (filter.showOpType.length === 0 ||
                         filter.showOpType.some(f => f.id === z.operationType.id))),
                     ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
-                result = [...result, {
-                    id: x.operationType.id,
-                    name: x.operationType.description,
-                    value: sumPrice
-                }];
+                result = [...result, this.getDataDashboard(x.operationType.description, sumPrice, x.operationType.id)];
             }
         });
         return result;
@@ -212,36 +191,22 @@ export class DashboardService {
     mapWearToDashboardKmRecordMaintenances(data: WearMotoProgressBarModel): any[] {
         let result: any[] = [];
         if (!!data && data.listWearReplacement.length > 0) {
-            const estimated: any = {
-                name: this.translator.instant('COMMON.ESTIMATED'),
-                series: []
-            };
-            const real: any = {
-                name: this.translator.instant('COMMON.REAL'),
-                series: []
-            };
+            const estimated: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'),
+                [this.getDataDashboard('0km', 0 )]);
+            const real: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'),
+                [this.getDataDashboard('0km', 0 )]);
             const kmMaintenance: number =
                 data.listWearReplacement[data.listWearReplacement.length - 1].kmMaintenance / data.listWearReplacement.length;
             const kmEstimated: number = this.calculateKmMotoEstimated(new MotoModel(null, null, 0, data.kmMoto,
                 null, data.kmsPerMonthMoto, data.dateKmsMoto, data.datePurchaseMoto));
             data.listWearReplacement.forEach((x, index) => {
-                estimated.series = [...estimated.series, {
-                    name: `${x.kmMaintenance}km`,
-                    value: kmMaintenance
-                }];
-                real.series = [...real.series, {
-                    name: `${x.kmMaintenance}km`,
-                    value: (x.kmOperation === null ? 0 : (x.kmMaintenance - x.calculateKms) - (kmMaintenance * index))
-                }];
+                estimated.series = [...estimated.series, this.getDataDashboard(`${x.kmMaintenance}km`, kmMaintenance)];
+                real.series = [...real.series,
+                    this.getDataDashboard(`${x.kmMaintenance}km`,
+                    (x.kmOperation === null ? 0 : (x.kmMaintenance - x.calculateKms) - (kmMaintenance * index)))];
             });
-            estimated.series = [...estimated.series, {
-                name: `${kmEstimated}km`,
-                value: kmMaintenance
-            }];
-            real.series = [...real.series, {
-                name: `${kmEstimated}km`,
-                value: 0
-            }];
+            estimated.series = [...estimated.series, this.getDataDashboard(`${kmEstimated}km`, kmMaintenance)];
+            real.series = [...real.series, this.getDataDashboard(`${kmEstimated}km`, 0)];
             result = [estimated, real];
         }
         return result;
@@ -250,39 +215,33 @@ export class DashboardService {
     mapWearToDashboardTimeRecordMaintenances(data: WearMotoProgressBarModel): any[] {
         let result: any[] = [];
         if (!!data && data.listWearReplacement.length > 0) {
-            const estimated: any = {
-                name: this.translator.instant('COMMON.ESTIMATED'),
-                series: []
-            };
-            const real: any = {
-                name: this.translator.instant('COMMON.REAL'),
-                series: []
-            };
+            const estimated: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'),
+                [this.getDataDashboard('0km', 0 )]);
+            const real: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'),
+                [this.getDataDashboard('0km', 0 )]);
             const timeMaintenance: number =
                 data.listWearReplacement[data.listWearReplacement.length - 1].timeMaintenance / data.listWearReplacement.length;
             const kmEstimated: number = this.calculateKmMotoEstimated(new MotoModel(null, null, 0, data.kmMoto,
                 null, data.kmsPerMonthMoto, data.dateKmsMoto, data.datePurchaseMoto));
             data.listWearReplacement.forEach(x => {
-                estimated.series = [...estimated.series, {
-                    name: `${x.kmMaintenance}km`,
-                    value: x.timeMaintenance
-                }];
-                real.series = [...real.series, {
-                    name: `${x.kmMaintenance}km`,
-                    value: (x.kmOperation === null ? 0 : (x.timeMaintenance - x.calculateMonths))
-                }];
+                estimated.series = [...estimated.series, this.getDataDashboard(`${x.kmMaintenance}km`, x.timeMaintenance)];
+                real.series = [...real.series,
+                    this.getDataDashboard(`${x.kmMaintenance}km`, (x.kmOperation === null ? 0 : (x.timeMaintenance - x.calculateMonths)))];
             });
-            estimated.series = [...estimated.series, {
-                name: `${kmEstimated}km`,
-                value: timeMaintenance + data.listWearReplacement[data.listWearReplacement.length - 1].timeMaintenance
-            }];
-            real.series = [...real.series, {
-                name: `${kmEstimated}km`,
-                value: 0
-            }];
+            estimated.series = [...estimated.series, this.getDataDashboard(`${kmEstimated}km`,
+                timeMaintenance + data.listWearReplacement[data.listWearReplacement.length - 1].timeMaintenance)];
+            real.series = [...real.series, this.getDataDashboard(`${kmEstimated}km`, 0)];
             result = [estimated, real];
         }
         return result;
+    }
+
+    getDataDashboard(n: string, v: any, i: number = -1): any {
+        return { id: i, name: n, value: v};
+    }
+
+    getDataSeriesDashboard(n: string, s: any[], i: number = -1): any {
+        return { id: i, name: n, series: s};
     }
 
     /** NOTIFICATIONS */
@@ -511,16 +470,28 @@ export class DashboardService {
         return (total === 0 ? 0 : (value >= 0 ? (total - value) / total : 1));
     }
 
+    calculatePercentNegative(total: number, value: number): number {
+        return (total === 0 ? 0 : (value >= 0 ? value / total : 1));
+    }
+
     calculateKmMotoEstimated(moto: MotoModel): number {
         return moto.km + (moto.kmsPerMonth * this.commonService.monthDiff(new Date(moto.dateKms), new Date()));
+    }
+
+    calculateDateMaintenanceKmMotoEstimated(moto: MotoModel, km: number): Date {
+        const diff: number = (km - moto.km) / moto.kmsPerMonth;
+        const date: Date = new Date(moto.dateKms);
+        date.setMonth(date.getMonth() + diff);
+        return date;
     }
 
     getWearReplacement(motoWear: WearMotoProgressBarModel, operations: OperationModel[]): WearMotoProgressBarModel {
         let result: WearMotoProgressBarModel = new WearMotoProgressBarModel();
 
         // Km Moto estimated
-        const kmMoto: number = this.calculateKmMotoEstimated(new MotoModel(null, null, 0, motoWear.kmMoto,
-            null, motoWear.kmsPerMonthMoto, motoWear.dateKmsMoto, motoWear.datePurchaseMoto));
+        const moto: MotoModel = new MotoModel(null, null, 0, motoWear.kmMoto,
+            null, motoWear.kmsPerMonthMoto, motoWear.dateKmsMoto, motoWear.datePurchaseMoto);
+        const kmMoto: number = this.calculateKmMotoEstimated(moto);
         const wear: WearReplacementProgressBarModel = motoWear.listWearReplacement[0];
         // Operation with maintenance selected
         const operationsMoto: OperationModel[] = operations.filter(x => x.moto.id === motoWear.idMoto &&
@@ -533,6 +504,7 @@ export class DashboardService {
             let wearReplacement: WearReplacementProgressBarModel[] = [];
             let percentMoto = 0;
             const iterations: number = (kmMoto - wear.kmMaintenance) / wear.kmMaintenance;
+            let opLast = new OperationModel();
             for (let i = 0; i < iterations; i++) {
                 const calcKm: number = (kmCalculate + wear.kmMaintenance); // km should maintenance
                 const estimatedKmOperation: number = wear.kmMaintenance / 2; // km estimated maintenance
@@ -542,29 +514,31 @@ export class DashboardService {
                 const ops: OperationModel[] = operationsMoto.filter(x =>
                     !wearReplacement.some(y => y.idOperation === x.id) &&
                     ((x.km >= kmCalculate && x.km < calcCompKm) ||
-                    (x.km < calcCompKm &&
+                    ((opLast.id === null ? 0 : opLast.km) <= x.km && x.km < calcCompKm &&
                     this.commonService.monthDiff(motoWear.datePurchaseMoto, new Date(x.date)) <= calcTime)));
                 let op = new OperationModel();
                 op.id = null;
                 let calcDiffTime = 0;
                 let calculateKmEstimate = 0;
                 let calculateTimeEstimate = 0;
+                let percentKm = 1;
+                let percentTime = 1;
                 if (!!ops && ops.length > 0) {
-                    const min: number = this.commonService.min(ops, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
-                    op = ops.find(x => x.km === min);
+                    opLast = this.getOperationsNearKmTime(moto, ops, calcKm, calcTime);
+                    op = opLast;
                     calcDiffTime = this.commonService.monthDiff(motoWear.datePurchaseMoto, new Date(op.date));
                     calculateKmEstimate = calcKm - op.km;
                     calculateTimeEstimate = calcTime - calcDiffTime;
+                    percentKm = (calculateKmEstimate >= 0 ?
+                        this.calculatePercent(wear.kmMaintenance, calculateKmEstimate) :
+                        this.calculatePercentNegative(wear.kmMaintenance, calculateKmEstimate * -1));
+                    percentTime = (calculateTimeEstimate >= 0 ?
+                        this.calculatePercent(calcTime, calculateTimeEstimate) :
+                        this.calculatePercentNegative(calcTime, calculateTimeEstimate * -1));
                 } else {
                     calculateKmEstimate = -estimatedKmOperation;
                     calculateTimeEstimate = calcTime - diffDateToday;
                 }
-                const percentKm: number =
-                    this.calculatePercent(wear.kmMaintenance,
-                        (calculateKmEstimate >= 0 ? calculateKmEstimate : estimatedKmOperation + calculateKmEstimate));
-                const percentTime: number =
-                    this.calculatePercent(calcTime,
-                        (calculateTimeEstimate >= 0 ? calculateTimeEstimate : calcTime - diffDateToday + calculateTimeEstimate));
                 wearReplacement = [... wearReplacement, {
                     idMaintenanceElement: wear.idMaintenanceElement,
                     nameMaintenanceElement: wear.nameMaintenanceElement,
@@ -593,14 +567,19 @@ export class DashboardService {
 
                 if (!!op && op.id !== null) {
                     if (percentKm > percentTime) {
-                        percentMoto += (calculateKmEstimate >= 0 ? 1 : 1 - percentKm);
+                        percentMoto += (calculateKmEstimate >= 0 ? 1 : 1 - (percentKm > 1 ? 1 : percentKm));
                     } else {
-                        percentMoto += (calculateTimeEstimate >= 0 ? 1 : 1 - percentTime);
+                        percentMoto += (calculateTimeEstimate >= 0 ? 1 : 1 - (percentTime > 1 ? 1 : percentTime));
                     }
                 }
                 kmCalculate += wear.kmMaintenance;
                 timeCalculate += wear.timeMaintenance;
             }
+            const diffOpMaint: number = (wearReplacement.length > operationsMoto.length ?
+                0 : wearReplacement.length - operationsMoto.length);
+            const percentTotal: number = ((percentMoto + diffOpMaint +
+                (1 - (wear.percentKms > wear.percentMonths ? wear.percentKms : wear.percentMonths))) /
+                (wearReplacement.length + diffOpMaint + 1));
             result = {
                 idMoto: motoWear.idMoto,
                 nameMoto: motoWear.nameMoto,
@@ -608,14 +587,38 @@ export class DashboardService {
                 datePurchaseMoto: motoWear.datePurchaseMoto,
                 kmsPerMonthMoto: motoWear.kmsPerMonthMoto,
                 dateKmsMoto: motoWear.dateKmsMoto,
-                percent: Math.round(((percentMoto +
-                    (1 - (wear.percentKms > wear.percentMonths ? wear.percentKms : wear.percentMonths))) /
-                    (wearReplacement.length + 1)) * 100),
+                percent: Math.round(percentTotal * 100),
                 warning: this.getPercentMoto(wearReplacement),
                 listWearReplacement: this.commonService.orderBy(wearReplacement, 'kmMaintenance')
             };
         }
         return result;
+    }
+
+    getOperationsNearKmTime(moto: MotoModel, operations: OperationModel[], km: number, time: number) {
+        let operation: OperationModel = null;
+        let percent = 1;
+        operations.forEach(x => {
+            const near: number = (km - x.km) * (km < x.km ? -1 : 1);
+            const perc: number = near / km;
+            if (percent > perc) {
+                percent = perc;
+                operation = x;
+            } else if (time !== 0) {
+                const datePurchase: Date = new Date(moto.datePurchase);
+                datePurchase.setMonth(datePurchase.getMonth() + time);
+                if (new Date(x.date) < datePurchase) {
+                    const timeMaint: number = this.commonService.monthDiff(new Date(moto.datePurchase), new Date(x.date));
+                    const nearT: number = (time - timeMaint) * (time < timeMaint ? -1 : 1);
+                    const percT: number = nearT / time;
+                    if (percent > percT) {
+                        percent = perc;
+                        operation = x;
+                    }
+                }
+            }
+        });
+        return operation;
     }
 
     getWarningRecordsMaintenance(percent: number): WarningWearEnum {
@@ -643,33 +646,37 @@ export class DashboardService {
     getClassProgressbar(warning: WarningWearEnum, styles: string): string {
         switch (warning) {
             case WarningWearEnum.SUCCESS:
-            return `${styles} quizz-progress-success`;
+                return `${styles} quizz-progress-success`;
             case WarningWearEnum.WARNING:
-            return `${styles} quizz-progress-warning`;
+                return `${styles} quizz-progress-warning`;
             case WarningWearEnum.DANGER:
-            return `${styles} quizz-progress-danger`;
+                return `${styles} quizz-progress-danger`;
         }
     }
 
     getClassIcon(warning: WarningWearEnum, styles: string): string {
         switch (warning) {
             case WarningWearEnum.SUCCESS:
-            return `${styles} icon-color-success`;
+                return `${styles} icon-color-success`;
             case WarningWearEnum.WARNING:
-            return `${styles} icon-color-warning`;
+                return `${styles} icon-color-warning`;
             case WarningWearEnum.DANGER:
-            return `${styles} icon-color-danger`;
+                return `${styles} icon-color-danger`;
+            case WarningWearEnum.SKULL:
+                return `${styles} icon-color-skull`;
         }
     }
 
     getIconKms(warning: WarningWearEnum): string {
         switch (warning) {
             case WarningWearEnum.SUCCESS:
-            return 'checkmark-circle';
+                return 'checkmark-circle';
             case WarningWearEnum.WARNING:
-            return 'warning';
+                return 'warning';
             case WarningWearEnum.DANGER:
-            return 'nuclear';
+                return 'nuclear';
+            case WarningWearEnum.SKULL:
+                return 'skull';
         }
     }
 

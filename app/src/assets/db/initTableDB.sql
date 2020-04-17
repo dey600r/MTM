@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
 );
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms","datePurchase") VALUES (1,'R6','Yamaha',2005,85300,2,150,'2020-04-10','2006-09-19');
-INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms","datePurchase") VALUES (2,'gt125r','Hyosung',2006,75600,3,30,'2020-04-10','2006-09-12');
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms","datePurchase") VALUES (1,'R6','Yamaha',2005,87650,2,650,'2020-04-10','2006-09-19');
+INSERT INTO "mtmMoto" ("id","model","brand","year","km","idConfiguration","kmsPerMonth","dateKms","datePurchase") VALUES (2,'gt125r','Hyosung',2006,75600,3,50,'2020-04-10','2006-09-12');
 INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","master") VALUES (1,'FIRST_CHANGE_ENGINE_OIL',3,'1',1000,6,'Y','N','Y');
 INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","master") VALUES (2,'FIRST_CHANGE_OIL_FILTER',5,'1',1000,6,'Y','N','Y');
 INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","master") VALUES (3,'CHANGE_AIR_FILTER',4,'2',16000,24,'N','N','Y');

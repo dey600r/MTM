@@ -276,6 +276,10 @@
     --ion-color-base: var(--ion-color-progressbar-danger-buffer);
 }
 
+.icon-color-skull {
+    --ion-color-base: var(--ion-color-progressbar-danger-progress);
+}
+
 .quizz-progress-success {
     ion-progress-bar {
         --background: green;

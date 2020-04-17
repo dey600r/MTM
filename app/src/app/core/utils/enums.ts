@@ -13,7 +13,8 @@ export enum FilterMonthsEnum {
 export enum WarningWearEnum {
     SUCCESS = 'success',
     WARNING = 'warning',
-    DANGER = 'danger'
+    DANGER = 'danger',
+    SKULL = 'skull'
 }
 
 export enum PageEnum {

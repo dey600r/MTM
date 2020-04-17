@@ -11,10 +11,12 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:prod-android": "ionic cordova build android --release --prod",
+    "build:debug-android": "ionic cordova build android --debug",
+    "emulate:prod-android": "ionic cordova emulate android",
+    "emulate:debug-android": "ionic cordova emulate android -l --debug",
     "deploy:prod-android": "ionic cordova run android --prod --release -- -- --keystore=mtm-release-key.keystore --alias=mtm --device",
-    "emulate:prod-android": "ionic cordova emulate android --verbose",
-    "deploy:debug-android": "ionic cordova run android --device -l --debug",
-    "emulate:debug-android": "ionic cordova emulate android -l --debug"
+    "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
+    "deploy:debug-android": "ionic cordova run android --device -l --debug"
   },
   "private": true,
   "dependencies": {

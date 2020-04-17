@@ -60,7 +60,8 @@
         "MotoKm": "Los kilómetros de la moto son {{km}} km",
         "MotoEstimatedKm": "Los kilómetros estimados son {{km}} km",
         "RELIABILITY": "Fiabilidad",
-        "NextChangeKm": "El próximo cambio de {{maintenance}} es a los {{km}} km",
+        "NextChangeKm": "El próximo cambio de {{maintenance}} es a los {{km}} km en la fecha prevista {{date}}",
+        "NextChangeTime": " o por el paso del tiempo en {{time}}",
         "NotExistRecords": "No existen registros para {{maintenance}}. Necesitas conducir mas la moto"
     },
     "PAGE_MOTO": {

@@ -108,20 +108,37 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
     this.nameMaintenance = wear.descriptionMaintenance;
     this.nameMaintenanceElement = wear.nameMaintenanceElement;
-    this.motoKmEstimated = this.dashboardService.calculateKmMotoEstimated(new MotoModel(null, null, 0, this.dataMaintenance.kmMoto,
-      null, this.dataMaintenance.kmsPerMonthMoto, this.dataMaintenance.dateKmsMoto, this.dataMaintenance.datePurchaseMoto));
+    const moto: MotoModel = new MotoModel(null, null, 0, this.dataMaintenance.kmMoto,
+      null, this.dataMaintenance.kmsPerMonthMoto, this.dataMaintenance.dateKmsMoto, this.dataMaintenance.datePurchaseMoto);
+    this.motoKmEstimated = this.dashboardService.calculateKmMotoEstimated(moto);
 
     this.labelMotoKm = this.translator.instant('PAGE_HOME.MotoKm', { km: this.dataMaintenance.kmMoto });
     if (this.dataMaintenance.kmMoto !== this.motoKmEstimated) {
       this.labelMotoKm += '\n' + this.translator.instant('PAGE_HOME.MotoEstimatedKm', { km: this.dataMaintenance.kmMoto });
     }
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
+    let kmMaintenane = 0;
+    if (wear.kmOperation === null) {
+      const mant: number = (wear.kmMaintenance < this.motoKmEstimated ? this.motoKmEstimated / wear.kmMaintenance : 1);
+      kmMaintenane = wear.kmMaintenance * Math.floor(mant) + wear.kmMaintenance;
+    } else {
+      kmMaintenane = wear.kmOperation + wear.kmMaintenance;
+      kmMaintenane = (kmMaintenane < this.motoKmEstimated ? this.motoKmEstimated : kmMaintenane);
+    }
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
-      {maintenance: this.nameMaintenanceElement, km: this.motoKmEstimated + wear.calculateKms});
+      {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
+        date: this.commonService.getDateString(this.dashboardService.calculateDateMaintenanceKmMotoEstimated(moto, kmMaintenane))});
     if (wear.timeMaintenance !== 0) {
-      const date: Date = new Date();
-      date.setMonth(date.getMonth() + wear.calculateMonths);
-      this.labelNextChange += ` ${this.translator.instant('COMMON.OR')} ${this.commonService.getDateString(date)}`;
+      const date: Date = new Date(moto.datePurchase);
+      const monthMoto: number = this.commonService.monthDiff(date, new Date());
+      if (wear.kmOperation === null) {
+        const mantMonth: number = (wear.timeMaintenance < monthMoto ? monthMoto / wear.timeMaintenance : 1);
+        date.setMonth(date.getMonth() + wear.timeMaintenance * Math.floor(mantMonth) + wear.timeMaintenance);
+      } else {
+        const mantMonth = this.commonService.monthDiff(new Date(moto.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
+        date.setMonth(date.getMonth() + (mantMonth < monthMoto ? monthMoto : mantMonth));
+      }
+      this.labelNextChange += ` ${this.translator.instant('PAGE_HOME.NextChangeTime', { time: this.commonService.getDateString(date) })}`;
     }
   }
 
@@ -186,10 +203,15 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getIconPercent(type: string): string {
-    if (this.labelPercent < 60) {
-      return (type === 'color' ? this.dashboardService.getClassIcon(WarningWearEnum.DANGER, '') : 'skull');
-    } else if (this.labelPercent >= 60 && this.labelPercent < 80) {
-      return (type === 'color' ? this.dashboardService.getClassIcon(WarningWearEnum.WARNING, '') : 'warning');
+    if (this.labelPercent < 25) {
+      return (type === 'color' ?
+        this.dashboardService.getClassIcon(WarningWearEnum.SKULL, '') : this.getIconKms(WarningWearEnum.SKULL));
+    } else if (this.labelPercent >= 25 && this.labelPercent < 50) {
+      return (type === 'color' ?
+        this.dashboardService.getClassIcon(WarningWearEnum.DANGER, '') : this.getIconKms(WarningWearEnum.DANGER));
+    } else if (this.labelPercent >= 50 && this.labelPercent < 75) {
+      return (type === 'color' ?
+        this.dashboardService.getClassIcon(WarningWearEnum.WARNING, '') : this.getIconKms(WarningWearEnum.WARNING));
     } else {
       return (type === 'color' ? this.dashboardService.getClassIcon(WarningWearEnum.SUCCESS, '') : 'checkmark-done-circle');
     }
