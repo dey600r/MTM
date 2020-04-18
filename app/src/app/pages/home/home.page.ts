@@ -6,10 +6,10 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, DashboardService, ConfigurationService } from '@services/index';
+import { DataBaseService, DashboardService, ConfigurationService, ControlService } from '@services/index';
 import {
   SearchDashboardModel, WearMotoProgressBarModel, WearReplacementProgressBarModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, MotoModel, ModalOutputModel
+  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, MotoModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
 
@@ -24,7 +24,6 @@ import { InfoNotificationComponent } from '@modals/info-notification/info-notifi
 export class HomePage implements OnInit {
 
   // MODAL
-  dataReturned: ModalOutputModel = new ModalOutputModel();
   input: ModalInputModel = new ModalInputModel();
 
   // DATA
@@ -44,7 +43,7 @@ export class HomePage implements OnInit {
               private translator: TranslateService,
               private dashboardService: DashboardService,
               private configurationService: ConfigurationService,
-              private modalController: ModalController) {
+              private controlService: ControlService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -78,6 +77,22 @@ export class HomePage implements OnInit {
         });
       }
     });
+  }
+
+  ionViewDidEnter() {
+    console.log('HOLA2');
+  }
+
+  ionViewWillEnter() {
+    console.log('HOLA');
+  }
+
+  ionViewWillLeave() {
+    console.log('ADIOS');
+  }
+
+  ionViewDidLeave() {
+    console.log('ADIOS2');
   }
 
   activateModeInfo(m: MotoModel[], op: OperationModel[], w: WearMotoProgressBarModel[]): boolean {
@@ -116,25 +131,9 @@ export class HomePage implements OnInit {
   // MODALS
 
   openInfoNotification(m: WearMotoProgressBarModel, w: WearReplacementProgressBarModel) {
-    this.openModal(InfoNotificationComponent, new ModalInputModel(true,
+    this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
       new WearMotoProgressBarModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
         m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.warning, [w]), this.operations, PageEnum.HOME));
-  }
-
-  async openModal(modalComponent: any, inputModel: ModalInputModel) {
-
-    const modal = await this.modalController.create({
-      component: modalComponent,
-      componentProps: inputModel
-    });
-
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned !== null) {
-        this.dataReturned = dataReturned.data;
-      }
-    });
-
-    return await modal.present();
   }
 
 }

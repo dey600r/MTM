@@ -18,6 +18,7 @@
         "YEAR": "Year",
         "KM": "Kilometers",
         "CONFIGURATION": "Configuration",
+        "MAINTENANCE": "Maintenance",
         "KM_PER_MONTH": "Kms per month",
         "DESCRIPTION": "Description",
         "DETAILS": "Details",
@@ -105,7 +106,8 @@
         "EditSaveOperation": "The operation {{operation}} has been modified succesfully",
         "DeleteSaveOperation": "The operation {{operation}} has been deleted succesfully",
         "ErrorSaveOperation": "There was an erro while saving operation data",
-        "ConfirmDeleteOperation": "The operation {{operation}} will be deleted. Do you wish continue?"
+        "ConfirmDeleteOperation": "The operation {{operation}} will be deleted. Do you wish continue?",
+        "ConfirmSaveToDeleteReplacement": "The replacement will be deleted. Do you wish continue?"
     },
     "PAGE_CONFIGURATION": {
         "YOURS_CONFIGURATIONS": "Configurations",
@@ -154,7 +156,8 @@
         "InfoNotOperationKmTime": "You must add operation to pass maintenance before {{km}} km or {{time}}",
         "InfoNotOperationKm": "You must add operation to pass maintenance before {{km}} km",
         "InfoOperationKm": "You have an operation at {{kmop}} km to pass maintenance of {{km}} km",
-        "InfoOperationTime": " and pass at {{timeop}} before {{time}}"        
+        "InfoOperationTime": " and pass at {{timeop}} before {{time}}" ,
+        "ExitApp": "The application will close. Do you wish to continue?"       
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

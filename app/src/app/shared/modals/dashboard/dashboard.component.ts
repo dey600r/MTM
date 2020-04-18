@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { Platform, ModalController, NavParams, PopoverController } from '@ionic/angular';
+import { Platform, ModalController, NavParams } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 // UTILS
-import { DashboardService } from '@services/index';
+import { DashboardService, ControlService } from '@services/index';
 import { DashboardModel, OperationModel, ModalInputModel, ModalOutputModel } from '@models/index';
 import { PageEnum } from '@utils/index';
 
@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 private changeDetector: ChangeDetectorRef,
                 private dashboardService: DashboardService,
                 private modalController: ModalController,
-                private popoverController: PopoverController) {
+                private controlService: ControlService) {
   }
 
   ngOnInit() {
@@ -82,14 +82,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     await this.modalController.dismiss(this.modalOutputModel);
   }
 
-  async showPopover(ev: any) {
-    this.currentPopover = await this.popoverController.create({
-      component: SearchDashboardPopOverComponent,
-      componentProps: this.modalInputModel,
-      event: ev,
-      translucent: true
-    });
-    return await this.currentPopover.present();
+  showPopover(ev: any) {
+    this.controlService.showPopover(PageEnum.MODAL_DASHBOARD, ev, SearchDashboardPopOverComponent, this.modalInputModel);
   }
 
   isParentPageMoto() {

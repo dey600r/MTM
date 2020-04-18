@@ -7,9 +7,9 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, Constants } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, Constants, PageEnum } from '@utils/index';
 import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel, OperationModel } from '@models/index';
-import { DataBaseService, MotoService, CommonService } from '@services/index';
+import { DataBaseService, MotoService, CommonService, ControlService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-moto',
@@ -45,7 +45,8 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     private dbService: DataBaseService,
     private translator: TranslateService,
     private motoService: MotoService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private controlService: ControlService
   ) {
     this.translateYearBetween = this.translator.instant('PAGE_MOTO.AddYearBetween', { year: new Date().getFullYear()});
     this.translateSelect = this.translator.instant('COMMON.SELECT');
@@ -81,7 +82,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     if (this.isValidForm(f)) {
       const result = this.validateDateAndKmToOperations();
       if (result !== '') {
-        this.commonService.showToast(result, null, Constants.DELAY_TOAST_HIGHER);
+        this.controlService.showToast(PageEnum.MODAL_MOTO, result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
         // Save date to change km to calculate maintenance
         if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.moto.km) {
@@ -90,11 +91,11 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
 
         this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
-          this.commonService.showToast((
+          this.controlService.showToast(PageEnum.MODAL_MOTO, (
             this.modalInputModel.isCreate ? 'PAGE_MOTO.AddSaveMoto' : 'PAGE_MOTO.EditSaveMoto'),
             { moto: this.moto.model });
         }).catch(e => {
-          this.commonService.showToast('PAGE_MOTO.ErrorSaveMoto');
+          this.controlService.showToast(PageEnum.MODAL_MOTO, 'PAGE_MOTO.ErrorSaveMoto');
         });
       }
     }

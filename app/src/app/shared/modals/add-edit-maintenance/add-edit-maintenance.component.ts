@@ -7,12 +7,12 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, Constants } from '@utils/index';
+import { ActionDBEnum, Constants, PageEnum } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MaintenanceModel,
   MaintenanceFreqModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
+import { DataBaseService, ConfigurationService, ControlService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-maintenance',
@@ -46,7 +46,7 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
     private dbService: DataBaseService,
     private configurationService: ConfigurationService,
     private translator: TranslateService,
-    private commonService: CommonService
+    private controlService: ControlService
   ) {
     this.translateSelect = this.translator.instant('COMMON.SELECT');
   }
@@ -85,11 +85,11 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
       this.configurationService.saveMaintenance(this.maintenance,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.commonService.showToast((this.modalInputModel.isCreate ?
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, (this.modalInputModel.isCreate ?
             'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),
           { maintenance: this.maintenance.description });
       }).catch(e => {
-        this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveMaintenance');
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
       });
     }
   }

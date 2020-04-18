@@ -10,8 +10,8 @@ import {
   ModalInputModel, ModalOutputModel, WearMotoProgressBarModel, WearReplacementProgressBarModel,
   MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, MotoModel
 } from '@models/index';
-import { DashboardService, ConfigurationService, CommonService } from '@services/index';
-import { WarningWearEnum, Constants } from '@utils/index';
+import { DashboardService, ConfigurationService, CommonService, ControlService } from '@services/index';
+import { WarningWearEnum, Constants, PageEnum } from '@utils/index';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
@@ -42,6 +42,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     motoKmEstimated = 0;
     nameMaintenanceElement = '';
     nameMaintenance = '';
+    labelNameMoto = '';
     labelMotoKm = '';
     labelReliability = '';
     labelPercent = 0;
@@ -58,6 +59,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
                 private dashboardService: DashboardService,
                 private configurationService: ConfigurationService,
                 private commonService: CommonService,
+                private controlService: ControlService,
                 private screenOrientation: ScreenOrientation,
                 private changeDetector: ChangeDetectorRef,
                 private popoverController: PopoverController,
@@ -106,6 +108,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   configureResume() {
     this.dataMaintenance = this.modalInputModel.data;
     const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
+    this.labelNameMoto = this.dataMaintenance.nameMoto;
     this.nameMaintenance = wear.descriptionMaintenance;
     this.nameMaintenanceElement = wear.nameMaintenanceElement;
     const moto: MotoModel = new MotoModel(null, null, 0, this.dataMaintenance.kmMoto,
@@ -239,17 +242,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
           { timeop: this.commonService.getDateString(dateOperation), time: this.commonService.getDateString(dateMaintenance) });
       }
     }
-    this.commonService.showMsgToast(msg, Constants.DELAY_TOAST_HIGH);
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
-  async showPopover(ev: any) {
-    this.currentPopover = await this.popoverController.create({
-      component: SearchDashboardPopOverComponent,
-      componentProps: this.modalInputModel,
-      event: ev,
-      translucent: true
-    });
-    return await this.currentPopover.present();
+  showPopover(ev: any) {
+    this.controlService.showPopover(PageEnum.MODAL_INFO, ev, SearchDashboardPopOverComponent, this.modalInputModel);
   }
 
   async closeModal() {

@@ -18,6 +18,7 @@
         "YEAR": "Año",
         "KM": "Kilometros",
         "CONFIGURATION": "Configuración",
+        "MAINTENANCE": "Mantenimiento",
         "KM_PER_MONTH": "Kms por mes",
         "DESCRIPTION": "Descripción",
         "DETAILS": "Detalles",
@@ -105,7 +106,8 @@
         "EditSaveOperation": "La operación {{operation}} ha sido modificada correctamente",
         "DeleteSaveOperation": "La operación {{operation}} ha sido borrada correctamente",
         "ErrorSaveOperation": "Ha ocurrido un error guardando los datos de la operación",
-        "ConfirmDeleteOperation": "La operación {{operation}} se va a borrar. ¿Desea continuar?"
+        "ConfirmDeleteOperation": "La operación {{operation}} se va a borrar. ¿Desea continuar?",
+        "ConfirmSaveToDeleteReplacement": "Los recambios se van a borrar. ¿Desea continuar?"
     },
     "PAGE_CONFIGURATION": {
         "YOURS_CONFIGURATIONS": "Configuraciones",
@@ -154,7 +156,8 @@
         "InfoNotOperationKmTime": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} km o {{time}}",
         "InfoNotOperationKm": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} km",
         "InfoOperationKm": "Has pasadola revisión a los {{kmop}} km para el mantenimiento de los {{km}} km",
-        "InfoOperationTime": " y con fecha {{timeop}} antes de la fecha requerida {{time}}"
+        "InfoOperationTime": " y con fecha {{timeop}} antes de la fecha requerida {{time}}",
+        "ExitApp": "La aplicación se va a cerrar. ¿Desea continuar?" 
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",

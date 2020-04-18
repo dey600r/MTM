@@ -7,11 +7,11 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDBEnum, ConstantsColumns } from '@utils/index';
+import { Constants, ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MotoModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, OperationService, CommonService, ConfigurationService } from '@services/index';
+import { DataBaseService, OperationService, CommonService, ConfigurationService, ControlService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-operation',
@@ -57,6 +57,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     private translator: TranslateService,
     private operationService: OperationService,
     private commonService: CommonService,
+    private controlService: ControlService,
     private configurationService: ConfigurationService
   ) {
     this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
@@ -111,7 +112,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     if (this.isValidForm(f)) {
       const result = this.validateDateToKm();
       if (result !== '') {
-        this.commonService.showToast(result, null, Constants.DELAY_TOAST_HIGHER);
+        this.controlService.showToast(PageEnum.MODAL_OPERATION, result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
         if (!this.modalInputModel.isCreate && this.maintenanceElementSelect.length > 0 &&
           !this.isOperationTypeWithReplacement()) {
@@ -134,11 +135,11 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     this.operationService.saveOperation(this.operation,
       (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
       this.closeModal();
-      this.commonService.showToast(
+      this.controlService.showToast(PageEnum.MODAL_OPERATION,
         this.modalInputModel.isCreate ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation',
           { operation: this.operation.description });
     }).catch(e => {
-      this.commonService.showToast('PAGE_OPERATION.ErrorSaveOperation');
+      this.controlService.showToast(PageEnum.MODAL_OPERATION, 'PAGE_OPERATION.ErrorSaveOperation');
     });
   }
 
@@ -147,25 +148,16 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     await this.modalController.dismiss(this.modalOutputModel);
   }
 
-  async showConfirmSaveWithDelete() {
-    const alert = await this.alertController.create({
-      header: this.translator.instant('COMMON.OPERATION'),
-      message: this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation'),
-      buttons: [
-        {
-          text: this.translator.instant('COMMON.CANCEL'),
-          role: 'cancel',
-          cssClass: 'secondary'
-        }, {
-          text: this.translator.instant('COMMON.ACCEPT'),
-          handler: () => {
-            this.saveOperation();
-          }
+  showConfirmSaveWithDelete() {
+    this.controlService.showConfirm(PageEnum.MODAL_OPERATION, this.translator.instant('COMMON.OPERATION'),
+      this.translator.instant('PAGE_OPERATION.ConfirmSaveToDeleteReplacement'),
+      {
+        text: this.translator.instant('COMMON.ACCEPT'),
+        handler: () => {
+          this.saveOperation();
         }
-      ]
-    });
-
-    await alert.present();
+      }
+    );
   }
 
   isValidForm(f: any): boolean {

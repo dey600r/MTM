@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { SearchDashboardModel, OperationTypeModel, ModalInputModel } from '@models/index';
 import { DashboardService, CommonService, DataBaseService } from '@services/index';
-import { FilterMonthsEnum, ConstantsColumns, PageEnum, FilterKmTimeEnum } from '@utils/index';
+import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
 
 @Component({
     selector: 'app-search-dashboard-popover',

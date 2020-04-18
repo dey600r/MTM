@@ -3,9 +3,9 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 
 // UTILS
-import { ActionDBEnum } from '@app/core/utils';
+import { ActionDBEnum, PageEnum } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, MaintenanceElementModel } from '@models/index';
-import { CommonService, ConfigurationService } from '@services/index';
+import { ConfigurationService, ControlService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-maintenance-element',
@@ -25,7 +25,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
-    private commonService: CommonService,
+    private controlService: ControlService,
     private configurationService: ConfigurationService
   ) {
   }
@@ -46,11 +46,11 @@ export class AddEditMaintenanceElementComponent implements OnInit {
       this.configurationService.saveMaintenanceElement(this.maintenanceElement,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.commonService.showToast((this.modalInputModel.isCreate ?
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, (this.modalInputModel.isCreate ?
           'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),
           { replacement: this.maintenanceElement.name });
       }).catch(e => {
-        this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveReplacement');
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
       });
     }
   }

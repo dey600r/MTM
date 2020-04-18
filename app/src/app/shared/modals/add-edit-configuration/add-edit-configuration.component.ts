@@ -4,9 +4,9 @@ import { Form } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns } from '@app/core/utils';
+import { ActionDBEnum, ConstantsColumns, PageEnum } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, ConfigurationModel, MaintenanceModel } from '@models/index';
-import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
+import { DataBaseService, CommonService, ConfigurationService, ControlService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-configuration',
@@ -35,6 +35,7 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
     private navParams: NavParams,
     private dbService: DataBaseService,
     private commonService: CommonService,
+    private controlService: ControlService,
     private configurationService: ConfigurationService
   ) {
   }
@@ -77,11 +78,11 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
       this.configurationService.saveConfiguration(this.configuration,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.commonService.showToast(
+        this.controlService.showToast(PageEnum.MODAL_CONFIGURATION,
           (this.modalInputModel.isCreate ? 'PAGE_CONFIGURATION.AddSaveConfiguration' : 'PAGE_CONFIGURATION.EditSaveConfiguration'),
           { configuration: this.configuration.name });
       }).catch(e => {
-        this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveConfiguration');
+        this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
       });
     }
   }

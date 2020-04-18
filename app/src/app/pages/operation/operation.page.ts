@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform, ModalController, AlertController, PopoverController } from '@ionic/angular';
+import { Platform, AlertController, PopoverController } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, CommonService, OperationService } from '@services/index';
+import { DataBaseService, CommonService, OperationService, ControlService } from '@services/index';
 import { OperationModel, MotoModel, ModalInputModel, ModalOutputModel, SearchOperationModel, OperationTypeModel } from '@models/index';
 import { ConstantsColumns, Constants, ActionDBEnum, PageEnum } from '@utils/index';
 
@@ -26,7 +26,6 @@ export class OperationPage implements OnInit {
 
   // MODEL
   rowSelected: OperationModel = new OperationModel();
-  currentPopover = null;
   filterOperations: SearchOperationModel = new SearchOperationModel();
 
   // DATA
@@ -35,10 +34,10 @@ export class OperationPage implements OnInit {
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
-              private modalController: ModalController,
               private translator: TranslateService,
               private alertController: AlertController,
               private commonService: CommonService,
+              private controlService: ControlService,
               private operationService: OperationService,
               public popoverController: PopoverController) {
     this.platform.ready().then(() => {
@@ -83,11 +82,13 @@ export class OperationPage implements OnInit {
   openOperationModal(row: OperationModel = new OperationModel(null, null, new OperationTypeModel(), this.filterOperations.searchMoto),
                      create: boolean = true) {
     this.rowSelected = row;
-    this.openModal(AddEditOperationComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.OPERATION));
+    this.controlService.openModal(PageEnum.OPERATION,
+      AddEditOperationComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.OPERATION));
   }
 
   openDashboardOperation() {
-    this.openModal(DashboardComponent, new ModalInputModel(true, null, this.operations, PageEnum.OPERATION));
+    this.controlService.openModal(PageEnum.OPERATION,
+      DashboardComponent, new ModalInputModel(true, null, this.operations, PageEnum.OPERATION));
   }
 
   deleteOperation(row: OperationModel) {
@@ -96,65 +97,36 @@ export class OperationPage implements OnInit {
   }
 
   showModalInfoMoto() {
-    this.commonService.showToast('ALERT.AddMotoToAddOperation');
+    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddMotoToAddOperation');
   }
 
   showModalInfoOperation() {
-    this.commonService.showToast('ALERT.AddOperationToExpenses');
+    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddOperationToExpenses');
   }
 
-  async openModal(modalComponent: any, inputModel: ModalInputModel) {
-
-    const modal = await this.modalController.create({
-      component: modalComponent,
-      componentProps: inputModel
-    });
-
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned !== null) {
-        this.dataReturned = dataReturned.data;
-      }
-    });
-
-    return await modal.present();
-  }
-
-  async showConfirmDelete() {
-    const alert = await this.alertController.create({
-      header: this.translator.instant('COMMON.OPERATION'),
-      message: this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation', {operation: this.rowSelected.description}),
-      buttons: [
-        {
-          text: this.translator.instant('COMMON.CANCEL'),
-          role: 'cancel',
-          cssClass: 'secondary'
-        }, {
-          text: this.translator.instant('COMMON.ACCEPT'),
-          handler: () => {
-            this.operationService.saveOperation(this.rowSelected, ActionDBEnum.DELETE).then(x => {
-              this.commonService.showToast('PAGE_OPERATION.DeleteSaveOperation', {operation: this.rowSelected.description});
-            }).catch(e => {
-              this.commonService.showToast('PAGE_OPERATION.ErrorSaveOperation');
-            });
-          }
+  showConfirmDelete() {
+    this.controlService.showConfirm(PageEnum.OPERATION, this.translator.instant('COMMON.OPERATION'),
+      this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation', {operation: this.rowSelected.description}),
+      {
+        text: this.translator.instant('COMMON.ACCEPT'),
+        handler: () => {
+          this.operationService.saveOperation(this.rowSelected, ActionDBEnum.DELETE).then(x => {
+            this.controlService.showToast(PageEnum.OPERATION,
+              'PAGE_OPERATION.DeleteSaveOperation', {operation: this.rowSelected.description});
+          }).catch(e => {
+            this.controlService.showToast(PageEnum.OPERATION, 'PAGE_OPERATION.ErrorSaveOperation');
+          });
         }
-      ]
-    });
-
-    await alert.present();
+      }
+    );
   }
 
-  async showPopover(ev: any) {
-    this.currentPopover = await this.popoverController.create({
-      component: SearchOperationPopOverComponent,
-      event: ev,
-      translucent: true
-    });
-    return await this.currentPopover.present();
+  showPopover(ev: any) {
+    this.controlService.showPopover(PageEnum.OPERATION, ev, SearchOperationPopOverComponent, new ModalInputModel());
   }
 
   closePopover() {
-    this.currentPopover.dissmis();
+    this.controlService.closePopover();
   }
 
   /** ICONS */

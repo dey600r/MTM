@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, Platform, AlertController } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, CommonService, ConfigurationService } from '@services/index';
+import { DataBaseService, CommonService, ConfigurationService, ControlService } from '@services/index';
 import { ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel, MotoModel, OperationModel
@@ -44,10 +44,10 @@ export class ConfigurationPage implements OnInit {
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
-              private modalController: ModalController,
               private translator: TranslateService,
               private alertController: AlertController,
               private commonService: CommonService,
+              private controlService: ControlService,
               private configurationService: ConfigurationService) {
       this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
@@ -89,7 +89,8 @@ export class ConfigurationPage implements OnInit {
 
   openConfigurationModal(row: ConfigurationModel = new ConfigurationModel(), create: boolean = true) {
     this.rowConfSelected = row;
-    this.openModal(AddEditConfigurationComponent, new ModalInputModel(create, this.rowConfSelected, [], PageEnum.CONFIGURATION));
+    this.controlService.openModal(PageEnum.CONFIGURATION,
+      AddEditConfigurationComponent, new ModalInputModel(create, this.rowConfSelected, [], PageEnum.CONFIGURATION));
   }
 
   deleteConfiguration(row: ConfigurationModel) {
@@ -97,7 +98,7 @@ export class ConfigurationPage implements OnInit {
     this.showConfirmDeleteConfiguration();
   }
 
-  async showConfirmDeleteConfiguration() {
+  showConfirmDeleteConfiguration() {
     const motosDeleteConfig: MotoModel[] = this.motos.filter(x => x.configuration.id === this.rowConfSelected.id);
     let msg: string = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfiguration',
       {configuration: this.rowConfSelected.name});
@@ -110,39 +111,30 @@ export class ConfigurationPage implements OnInit {
         {configuration: this.rowConfSelected.name, moto: motosName});
     }
 
-    const alert = await this.alertController.create({
-      header: this.translator.instant('COMMON.CONFIGURATION'),
-      message: msg,
-      buttons: [
-        {
-          text: this.translator.instant('COMMON.CANCEL'),
-          role: 'cancel',
-          cssClass: 'secondary'
-        }, {
-          text: this.translator.instant('COMMON.ACCEPT'),
-          handler: () => {
-            motosDeleteConfig.forEach((x, index) => {
-              x.configuration.id = 1;
-            });
-            this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, motosDeleteConfig).then(x => {
-              this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveConfiguration',
-                { configuration: this.rowConfSelected.name });
-            }).catch(e => {
-              this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveConfiguration');
-            });
-          }
+    this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,
+      {
+        text: this.translator.instant('COMMON.ACCEPT'),
+        handler: () => {
+          motosDeleteConfig.forEach((x, index) => {
+            x.configuration.id = 1;
+          });
+          this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, motosDeleteConfig).then(x => {
+            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveConfiguration',
+              { configuration: this.rowConfSelected.name });
+          }).catch(e => {
+            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+          });
         }
-      ]
-    });
-
-    await alert.present();
+      }
+    );
   }
 
   /** MAINTENANCE */
 
   openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
     this.rowMainSelected = row;
-    this.openModal(AddEditMaintenanceComponent, new ModalInputModel(create, this.rowMainSelected, [], PageEnum.CONFIGURATION));
+    this.controlService.openModal(PageEnum.CONFIGURATION,
+      AddEditMaintenanceComponent, new ModalInputModel(create, this.rowMainSelected, [], PageEnum.CONFIGURATION));
   }
 
   deleteMaintenance(row: MaintenanceModel) {
@@ -150,37 +142,28 @@ export class ConfigurationPage implements OnInit {
     this.showConfirmDeleteMaintenance();
   }
 
-  async showConfirmDeleteMaintenance() {
+  showConfirmDeleteMaintenance() {
     let msg = 'PAGE_CONFIGURATION.ConfirmDeleteMaintenance';
     const configurationWithMaintenance: ConfigurationModel[] =
       this.configurations.filter(x => x.listMaintenance.some(y => y.id === this.rowMainSelected.id));
     if (!!configurationWithMaintenance && configurationWithMaintenance.length > 0) {
       msg = 'PAGE_CONFIGURATION.ConfirmDeleteMaintenanceWithConfigururation';
     }
+    msg = this.translator.instant(msg, { maintenance: this.rowMainSelected.description });
 
-    const alert = await this.alertController.create({
-      header: this.translator.instant('COMMON.CONFIGURATION'),
-      message: this.translator.instant(msg, { maintenance: this.rowMainSelected.description }),
-      buttons: [
-        {
-          text: this.translator.instant('COMMON.CANCEL'),
-          role: 'cancel',
-          cssClass: 'secondary'
-        }, {
-          text: this.translator.instant('COMMON.ACCEPT'),
-          handler: () => {
-            this.configurationService.saveMaintenance(this.rowMainSelected, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
-              this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveMaintenance',
-                { maintenance: this.rowMainSelected.description });
-            }).catch(e => {
-              this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveMaintenance');
-            });
-          }
+    this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.MAINTENANCE'), msg,
+      {
+        text: this.translator.instant('COMMON.ACCEPT'),
+        handler: () => {
+          this.configurationService.saveMaintenance(this.rowMainSelected, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
+            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveMaintenance',
+              { maintenance: this.rowMainSelected.description });
+          }).catch(e => {
+            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
+          });
         }
-      ]
-    });
-
-    await alert.present();
+      }
+    );
   }
 
   getIconMaintenance(maintenance: MaintenanceModel): string {
@@ -191,7 +174,8 @@ export class ConfigurationPage implements OnInit {
 
   openReplacementModal(row: MaintenanceElementModel = new MaintenanceElementModel(), create: boolean = true) {
     this.rowReplSelected = row;
-    this.openModal(AddEditMaintenanceElementComponent, new ModalInputModel(create, this.rowReplSelected, [], PageEnum.CONFIGURATION));
+    this.controlService.openModal(PageEnum.CONFIGURATION,
+      AddEditMaintenanceElementComponent, new ModalInputModel(create, this.rowReplSelected, [], PageEnum.CONFIGURATION));
   }
 
   deleteReplacement(row: MaintenanceElementModel) {
@@ -199,37 +183,28 @@ export class ConfigurationPage implements OnInit {
     this.showConfirmDeleteReplacement();
   }
 
-  async showConfirmDeleteReplacement() {
+  showConfirmDeleteReplacement() {
     let msg = 'PAGE_CONFIGURATION.ConfirmDeleteReplacement';
     const operationsWithReplacement: OperationModel[] =
       this.operations.filter(x => x.listMaintenanceElement.some(y => y.id === this.rowReplSelected.id));
     if (!!operationsWithReplacement && operationsWithReplacement.length > 0) {
       msg = 'PAGE_CONFIGURATION.ConfirmDeleteReplacementWithOperations';
     }
-    const alert = await this.alertController.create({
-      header: this.translator.instant('COMMON.CONFIGURATION'),
-      message: this.translator.instant(msg, {replacement: this.rowReplSelected.name}),
-      buttons: [
-        {
-          text: this.translator.instant('COMMON.CANCEL'),
-          role: 'cancel',
-          cssClass: 'secondary'
-        }, {
-          text: this.translator.instant('COMMON.ACCEPT'),
-          handler: () => {
-            this.configurationService.saveMaintenanceElement(this.rowReplSelected,
-                ActionDBEnum.DELETE, operationsWithReplacement).then(x => {
-              this.commonService.showToast('PAGE_CONFIGURATION.DeleteSaveReplacement',
-                { replacement: this.rowReplSelected.name });
-            }).catch(e => {
-              this.commonService.showToast('PAGE_CONFIGURATION.ErrorSaveReplacement');
-            });
-          }
+    msg = this.translator.instant(msg, {replacement: this.rowReplSelected.name});
+    this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.REPLACEMENT'), msg,
+      {
+        text: this.translator.instant('COMMON.ACCEPT'),
+        handler: () => {
+          this.configurationService.saveMaintenanceElement(this.rowReplSelected,
+              ActionDBEnum.DELETE, operationsWithReplacement).then(x => {
+            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveReplacement',
+              { replacement: this.rowReplSelected.name });
+          }).catch(e => {
+            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
+          });
         }
-      ]
-    });
-
-    await alert.present();
+      }
+    );
   }
 
   isNotValidToDeleteReplacement(replacement: MaintenanceElementModel): boolean {
@@ -238,23 +213,5 @@ export class ConfigurationPage implements OnInit {
 
   getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
     return this.configurationService.getIconReplacement(maintenanceElement);
-  }
-
-  /** COMMON */
-
-  async openModal(modalComponent: any, inputModel: ModalInputModel) {
-
-    const modal = await this.modalController.create({
-      component: modalComponent,
-      componentProps: inputModel
-    });
-
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned !== null) {
-        this.dataReturned = dataReturned.data;
-      }
-    });
-
-    return await modal.present();
   }
 }

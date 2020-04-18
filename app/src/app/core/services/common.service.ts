@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ToastController, AlertController } from '@ionic/angular';
+
+// LIBRARY ANGULAR
 import { TranslateService } from '@ngx-translate/core';
 import * as Moment from 'moment';
 
@@ -11,19 +12,7 @@ import { Constants } from '@utils/index';
 })
 export class CommonService {
 
-    private dateLastUse = new Date();
-
-    constructor(private translator: TranslateService,
-                private alertController: AlertController,
-                private toastController: ToastController) {
-    }
-
-    getDateLastUse(): Date {
-        return this.dateLastUse;
-    }
-
-    setDateLastUse(): void {
-        this.dateLastUse = new Date();
+    constructor(private translator: TranslateService) {
     }
 
     // COMMON UTILS METHODS STRINGS
@@ -38,36 +27,6 @@ export class CommonService {
 
     getFormatCalendar() {
         return this.translator.currentLang === 'es' ? Constants.DATE_FORMAT_ES : Constants.DATE_FORMAT_EN;
-    }
-
-    // TOAST
-
-    showToast(msg: string, data: any = null, delay: number = Constants.DELAY_TOAST) {
-        this.showMsgToast(this.translator.instant(msg, data), delay);
-    }
-
-    async showMsgToast(msg: string, delay: number = Constants.DELAY_TOAST) {
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: delay
-        });
-        toast.present();
-    }
-
-    // ALERTS
-
-    alertInfo(msg: string) {
-        this.alert('ALERT.INFO', msg);
-    }
-
-    async alert(header: string, msg: string) {
-        const alert = await this.alertController.create({
-            header: this.translator.instant(header),
-            subHeader: '',
-            message: this.translator.instant(msg),
-            buttons: [this.translator.instant(`COMMON.ACCEPT`)]
-        });
-        await alert.present();
     }
 
     // COMMON UTILS METHODS

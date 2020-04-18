@@ -31,4 +31,6 @@ export class Constants {
 
     static DATABASE_YES = 'Y';
     static DATABASE_NO = 'N';
+
+    static IONIC_APP = 'app';
 }
