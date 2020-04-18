@@ -53,7 +53,9 @@
         "RECORDS": "Registro",
         "SUMMARY": "Resumen",
         "ESTIMATED": "Estimado",
-        "REAL": "Real"
+        "REAL": "Real",
+        "LOADING": "Cargando...",
+        "EXIT": "Salir"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",

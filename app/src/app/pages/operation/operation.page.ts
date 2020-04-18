@@ -52,6 +52,7 @@ export class OperationPage implements OnInit {
   /** INIT */
 
   ngOnInit() {
+
   }
 
   initPage() {

@@ -68,6 +68,7 @@ export class HomePage implements OnInit {
                   this.wears = this.dashboardService.getWearReplacementToMoto(operations, motos, configurations, maintenances);
                   this.wears.forEach((x, index) => this.hideMotos[index] = (index !== 0));
                   this.activateInfo = this.activateModeInfo(motos, operations, this.wears);
+                  this.controlService.closeLoader();
                 });
               } else {
                 this.activateInfo = this.activateModeInfo(motos, [], []);
@@ -80,19 +81,11 @@ export class HomePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log('HOLA2');
-  }
-
-  ionViewWillEnter() {
-    console.log('HOLA');
-  }
-
-  ionViewWillLeave() {
-    console.log('ADIOS');
-  }
-
-  ionViewDidLeave() {
-    console.log('ADIOS2');
+    // RELOAD NOTIFICATIONS
+    if (this.controlService.getDateLastUse().toDateString() !== new Date().toDateString()) {
+      this.dbService.motos.next(this.dbService.motosData);
+      this.controlService.setDateLastUse();
+    }
   }
 
   activateModeInfo(m: MotoModel[], op: OperationModel[], w: WearMotoProgressBarModel[]): boolean {

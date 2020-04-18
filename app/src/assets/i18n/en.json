@@ -53,7 +53,9 @@
         "RECORDS": "Records",
         "SUMMARY": "Summary",
         "ESTIMATED": "Estimated",
-        "REAL": "Real"
+        "REAL": "Real",
+        "LOADING": "Loading...",
+        "EXIT": "Exit"
     },
     "PAGE_HOME": {
         "HOME": "Home",

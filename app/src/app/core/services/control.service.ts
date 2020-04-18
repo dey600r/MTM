@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastController, AlertController, Platform, ModalController, PopoverController } from '@ionic/angular';
+import { ToastController, AlertController, Platform, ModalController, PopoverController, LoadingController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARY ANGULAR
@@ -9,6 +9,7 @@ import * as Moment from 'moment';
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
 import { Constants, PageEnum } from '@utils/index';
+import { stringify } from 'querystring';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,6 @@ export class ControlService {
 
     private dateLastUse = new Date();
     private dataReturned = new ModalOutputModel();
-    private currentPopover = null;
     private listPages: PageEnum[] = [PageEnum.HOME, PageEnum.MOTO, PageEnum.OPERATION, PageEnum.CONFIGURATION];
 
     // SUBSCRIPTION
@@ -28,8 +28,8 @@ export class ControlService {
                 private toastController: ToastController,
                 private modalController: ModalController,
                 private popoverController: PopoverController,
+                private loadingController: LoadingController,
                 private platform: Platform) {
-        this.activateButtonExist(PageEnum.HOME);
     }
 
     getDateLastUse(): Date {
@@ -63,7 +63,7 @@ export class ControlService {
     activateButtonExist(parent: PageEnum) {
         if (this.isPage(parent)) {
             this.exitButtonSubscripion = this.platform.backButton.subscribe(() => {
-                this.showConfirm(PageEnum.HOME, this.translator.instant('ALERT.INFO'),
+                this.showConfirm(PageEnum.HOME, this.translator.instant('COMMON.EXIT'),
                     this.translator.instant('ALERT.ExitApp'),
                     {
                         text: this.translator.instant('COMMON.ACCEPT'),
@@ -77,6 +77,29 @@ export class ControlService {
 
     desactivateButtonExist() {
         this.exitButtonSubscripion.unsubscribe();
+    }
+
+    // LOADING
+
+    async showLoader(parent: PageEnum) {
+        this.desactivateButtonExist();
+        const loader = await this.loadingController.create({
+            spinner: 'bubbles',
+            duration: 5000,
+            message: this.translator.instant('Loading...'),
+            translucent: true,
+            cssClass: 'custom-loader-class',
+            backdropDismiss: false
+        });
+        await loader.present();
+
+        await loader.onDidDismiss().then(() => {
+            this.activateButtonExist(parent);
+        });
+    }
+
+    closeLoader() {
+        this.loadingController.getTop().then(r => { if (!!r) { r.dismiss(); } } );
     }
 
     // CONFIRMS
@@ -143,20 +166,20 @@ export class ControlService {
 
     async showPopover(parent: PageEnum, ev: any, modalComponent: any, inputModel: ModalInputModel) {
         this.desactivateButtonExist();
-        this.currentPopover = await this.popoverController.create({
+        const currentPopover = await this.popoverController.create({
             component: modalComponent,
             componentProps: inputModel,
             event: ev,
             translucent: true
         });
-        this.currentPopover.onDidDismiss().then((dataReturned) => {
+        currentPopover.onDidDismiss().then((dataReturned) => {
             this.activateButtonExist(parent);
         });
-        return await this.currentPopover.present();
+        return await currentPopover.present();
     }
 
     closePopover() {
-        this.currentPopover.dissmis();
+        this.popoverController.dismiss();
     }
 
     // MODALS

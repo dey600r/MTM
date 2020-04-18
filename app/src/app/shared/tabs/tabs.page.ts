@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { DataBaseService, ControlService } from '@services/index';
 import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -11,21 +10,11 @@ import { TranslateService } from '@ngx-translate/core';
 export class TabsPage {
 
   constructor(private platform: Platform,
-              private translator: TranslateService,
-              private dbService: DataBaseService,
-              private controlService: ControlService) {
+              private translator: TranslateService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
       this.translator.use(userLang);
     });
-  }
-
-  goHome() {
-    // RELOAD NOTIFICATIONS
-    if (this.controlService.getDateLastUse().toDateString() !== new Date().toDateString()) {
-      this.dbService.motos.next(this.dbService.motosData);
-      this.controlService.setDateLastUse();
-    }
   }
 }

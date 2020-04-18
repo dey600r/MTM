@@ -63,6 +63,7 @@ export class MotoPage implements OnInit {
     this.dbService.getOperations().subscribe(op => {
       this.operations = op;
     });
+
   }
 
   /** MODALS */
