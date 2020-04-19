@@ -2,18 +2,18 @@
   <ion-toolbar>
     <!-- Button chart -->
     <ion-button *ngIf="this.operations.length > 0" slot="start" fill="clear" 
-      (click)="openDashboardOperation()" class="btn-width">
+      (click)="openDashboardOperation()" class="btn-width-header">
       <ion-icon size="large" name="bar-chart"></ion-icon>
     </ion-button>
     <!-- Button info -->
     <ion-button *ngIf="this.operations.length === 0" slot="start" fill="clear"
-      (click)="showModalInfoOperation()" class="btn-width">
+      (click)="showModalInfoOperation()" class="btn-width-header">
       <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
     </ion-button>
     <!-- Tittle -->
     <ion-title class="align-center">{{ 'COMMON.OPERATION' | translate }}</ion-title>
     <!-- Button filter -->
-    <ion-button slot="end" fill="clear" (click)="showPopover($event)" class="btn-width">
+    <ion-button slot="end" fill="clear" (click)="showPopover($event)" class="btn-width-header">
       <ion-icon size="large" name="filter"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -28,11 +28,11 @@
         class="header-list">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h3>
       <h3 *ngIf="this.filterOperations.searchMoto.brand !== null" class="header-list">{{ 'COMMON.OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
       <!-- Button create -->
-      <ion-button *ngIf="this.filterOperations.searchMoto.brand !== null" fill="clear" (click)="openOperationModal()">
+      <ion-button class="btn-width-list" *ngIf="this.filterOperations.searchMoto.brand !== null" fill="clear" (click)="openOperationModal()">
         <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
       </ion-button>
       <!-- Button info -->
-      <ion-button *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null" 
+      <ion-button class="btn-width-list" *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null" 
         fill="clear" (click)="showModalInfoMoto()">
         <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
       </ion-button>
@@ -62,7 +62,7 @@
       <!-- Buttons delete -->
       <ion-label class="align-right">
         <ion-label>
-          <ion-button fill="clear" (click)="deleteOperation(op)">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteOperation(op)">
             <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
           </ion-button>
         </ion-label>

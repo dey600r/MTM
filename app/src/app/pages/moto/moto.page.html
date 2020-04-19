@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar>
     <!-- Button chart -->
-    <ion-button class="btn-width position-fixed margin-top0 index-top"
+    <ion-button class="btn-width-header position-fixed margin-top0 index-top"
       *ngIf="this.motos.length > 0" slot="start" fill="clear" (click)="openDashboardMoto()">
       <ion-icon size="large" name="bar-chart"></ion-icon>
     </ion-button>
     <!-- Button info -->
-    <ion-button class="btn-width position-fixed margin-top-5 index-top"
+    <ion-button class="btn-width-header position-fixed margin-top-5 index-top"
       *ngIf="this.motos.length === 0" fill="clear" (click)="showModalInfo()">
       <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
     </ion-button>
@@ -22,7 +22,7 @@
       <ion-icon size="large" name="bicycle"></ion-icon>
       <h3 class="header-list">{{ 'PAGE_MOTO.YOURS_MOTORBIKES' | translate }}</h3>
       <!-- Button create -->
-      <ion-button fill="clear" (click)="openMotoModal()">
+      <ion-button class="btn-width-list" fill="clear" (click)="openMotoModal()">
         <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
       </ion-button>
     </ion-list-header>
@@ -51,13 +51,13 @@
       <!-- Buttons edit / delete -->
       <ion-label class="align-right">
         <ion-label>
-          <ion-button fill="clear" routerLink="/tabs/operationTab" routerDirection="root"
+          <ion-button class="btn-width-row" fill="clear" routerLink="/tabs/operationTab" routerDirection="root"
           (click)="changeFilterOperation(m.id)">
             <ion-icon size="large" class="btn-color" name="eye"></ion-icon>
           </ion-button>
         </ion-label>
         <ion-label>
-          <ion-button fill="clear" (click)="deleteMoto(m)">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteMoto(m)">
             <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
           </ion-button>
         </ion-label>

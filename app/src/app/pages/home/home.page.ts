@@ -71,6 +71,7 @@ export class HomePage implements OnInit {
                   this.controlService.closeLoader();
                 });
               } else {
+                this.controlService.closeLoader();
                 this.activateInfo = this.activateModeInfo(motos, [], []);
               }
             });

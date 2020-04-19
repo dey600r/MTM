@@ -18,7 +18,7 @@
           <ion-icon *ngIf="!hideConfiguration" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
         </ion-button>
         <!-- Button Create -->
-        <ion-button fill="clear" (click)="openConfigurationModal()">
+        <ion-button class="btn-width-list" fill="clear" (click)="openConfigurationModal()">
           <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
         </ion-button>
       </ion-list-header>
@@ -31,14 +31,14 @@
         <!-- Buttons edit / create -->
         <ion-label *ngIf="c.master" class="align-right">
           <ion-label>
-            <ion-button fill="clear" disabled="true" class="min-height29">
+            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
               <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
             </ion-button>
           </ion-label>
         </ion-label>
         <ion-label *ngIf="!c.master" class="align-right">
           <ion-label>
-            <ion-button fill="clear" (click)="deleteConfiguration(c)">
+            <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
               <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
             </ion-button>
           </ion-label>
@@ -57,7 +57,7 @@
           <ion-icon *ngIf="!hideMaintenance" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
         </ion-button>
         <!-- Button Create -->
-        <ion-button fill="clear" (click)="openMaintenanceModal()">
+        <ion-button class="btn-width-list" fill="clear" (click)="openMaintenanceModal()">
           <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
         </ion-button>
       </ion-list-header>
@@ -82,14 +82,14 @@
         <!-- Buttons edit / delete -->
         <ion-label *ngIf="m.master" class="align-right">
           <ion-label>
-            <ion-button fill="clear" disabled="true" class="min-height29">
+            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
               <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
             </ion-button>
           </ion-label>
         </ion-label>
         <ion-label *ngIf="!m.master" class="align-right">
           <ion-label>
-            <ion-button fill="clear" (click)="deleteMaintenance(m)">
+            <ion-button class="btn-width-row" fill="clear" (click)="deleteMaintenance(m)">
               <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
             </ion-button>
           </ion-label>
@@ -108,7 +108,7 @@
           <ion-icon *ngIf="!hideReplacement" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
         </ion-button>
         <!-- Button Create -->
-        <ion-button fill="clear" (click)="openReplacementModal()">
+        <ion-button class="btn-width-list" fill="clear" (click)="openReplacementModal()">
           <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
         </ion-button>
       </ion-list-header>
@@ -125,14 +125,14 @@
         <!-- Buttons edit / delete -->
         <ion-label *ngIf="me.master" class="align-right">
           <ion-label>
-            <ion-button fill="clear" disabled="true" class="min-height29">
+            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
               <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
             </ion-button>
           </ion-label>
         </ion-label>
         <ion-label *ngIf="!me.master" class="align-right">
           <ion-label>
-            <ion-button fill="clear" (click)="deleteReplacement(me)" [disabled]="isNotValidToDeleteReplacement(me)">
+            <ion-button class="btn-width-row" fill="clear" (click)="deleteReplacement(me)" [disabled]="isNotValidToDeleteReplacement(me)">
               <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
             </ion-button>
           </ion-label>

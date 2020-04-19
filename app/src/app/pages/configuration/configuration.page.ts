@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform, AlertController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -8,7 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { DataBaseService, CommonService, ConfigurationService, ControlService } from '@services/index';
 import { ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
 import {
-  MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel, MotoModel, OperationModel
+  MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
+  MotoModel, OperationModel
 } from '@models/index';
 
 // COMPONENTS
@@ -45,7 +46,6 @@ export class ConfigurationPage implements OnInit {
   constructor(private platform: Platform,
               private dbService: DataBaseService,
               private translator: TranslateService,
-              private alertController: AlertController,
               private commonService: CommonService,
               private controlService: ControlService,
               private configurationService: ConfigurationService) {
