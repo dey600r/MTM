@@ -1,5 +1,5 @@
-import { IonicModule } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { RouterModule, RouteReuseStrategy, PreloadAllModules } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,11 +16,12 @@ import { environment } from '../../../environments/environment';
 import { ConfigurationPage } from './configuration.page';
 
 @NgModule({
+  declarations: [ConfigurationPage],
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    RouterModule.forChild([{ path: '', component: ConfigurationPage }]),
+    RouterModule.forChild([{ path: '', component: ConfigurationPage}]),
     HttpClientModule,
     TranslateModule.forChild({
       loader: {
@@ -31,7 +32,6 @@ import { ConfigurationPage } from './configuration.page';
     })
   ],
   providers: [TranslateStore],
-  declarations: [ConfigurationPage]
 })
 export class ConfigurationPageModule {}
 

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform, AlertController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/index';
-import { DataBaseService, MotoService, CommonService, ControlService, OperationService } from '@services/index';
+import { DataBaseService, MotoService, CommonService, ControlService, DashboardService } from '@services/index';
 import { MotoModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
 // COMPONENTS
@@ -30,15 +30,15 @@ export class MotoPage implements OnInit {
   // DATA
   motos: MotoModel[] = [];
   operations: OperationModel[] = [];
+  loaded = false;
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
               private translator: TranslateService,
-              private alertController: AlertController,
               private motoService: MotoService,
               private commonService: CommonService,
               private controlService: ControlService,
-              private operationService: OperationService) {
+              private dashboarService: DashboardService) {
       this.platform.ready().then(() => {
         let userLang = navigator.language.split('-')[0];
         userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -51,11 +51,11 @@ export class MotoPage implements OnInit {
   ngOnInit() {
     this.dbService.getMotos().subscribe(data => {
       if (!!data && data.length > 0) {
-        if (this.operationService.getSearchOperation().searchMoto.brand === null) {
-          this.operationService.setSearchOperation(data[0]);
+        if (this.dashboarService.getSearchDashboard().searchMoto.brand === null) {
+          this.dashboarService.setSearchOperation(data[0]);
         }
       } else {
-        this.operationService.setSearchOperation();
+        this.dashboarService.setSearchOperation();
       }
       this.motos = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MOTO_BRAND);
     });
@@ -64,6 +64,12 @@ export class MotoPage implements OnInit {
       this.operations = op;
     });
 
+  }
+
+  ionViewDidEnter() {
+    if (!this.loaded) {
+      setTimeout(() => { this.loaded = this.motoService.closeLoader(); }, 1000);
+    }
   }
 
   /** MODALS */
@@ -89,7 +95,7 @@ export class MotoPage implements OnInit {
   }
 
   changeFilterOperation(idMoto: number) {
-    this.operationService.setSearchOperation(this.motos.find(x => x.id === idMoto));
+    this.dashboarService.setSearchOperation(this.motos.find(x => x.id === idMoto));
   }
 
   showConfirmDelete() {

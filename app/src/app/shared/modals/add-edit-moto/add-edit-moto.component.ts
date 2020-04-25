@@ -14,7 +14,7 @@ import { DataBaseService, MotoService, CommonService, ControlService } from '@se
 @Component({
   selector: 'app-add-edit-moto',
   templateUrl: 'add-edit-moto.component.html',
-  styleUrls: ['add-edit-moto.component.scss', '../../../app.component.scss']
+  styleUrls: ['../../../app.component.scss']
 })
 export class AddEditMotoComponent implements OnInit, OnDestroy {
 

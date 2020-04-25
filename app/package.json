@@ -1,8 +1,9 @@
 {
-  "name": "MTM",
-  "version": "1.0.0",
+  "name": "MtM",
+  "version": "2.0.1",
   "author": "David Jimenez Galiana",
   "homepage": "dey125r@gmail.com",
+  "main": "./src/electron-started.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -16,7 +17,8 @@
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
     "deploy:prod-android": "ionic cordova run android --prod --release -- -- --keystore=mtm-release-key.keystore --alias=mtm --device",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
-    "deploy:debug-android": "ionic cordova run android --device -l --debug"
+    "deploy:debug-android": "ionic cordova run android --device -l --debug",
+    "electron-serve": "ng build && electron ."
   },
   "private": true,
   "dependencies": {
@@ -41,8 +43,10 @@
     "@swimlane/ngx-charts": "^13.0.4",
     "caniuse-lite": "^1.0.30001016",
     "cordova-android": "^8.1.0",
+    "cordova-electron": "^1.1.1",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "cordova-sqlite-storage": "^4.0.0",
+    "cordova-windows": "^7.0.1",
     "core-js": "^2.5.4",
     "es6-promise-plugin": "^4.2.2",
     "moment": "^2.24.0",
@@ -73,6 +77,8 @@
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
+    "electron": "^8.2.3",
+    "electron-packager": "^14.2.1",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -101,7 +107,9 @@
       "cordova-plugin-screen-orientation": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "windows",
+      "electron"
     ]
   }
 }

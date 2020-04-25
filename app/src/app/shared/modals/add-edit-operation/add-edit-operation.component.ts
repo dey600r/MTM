@@ -16,7 +16,7 @@ import { DataBaseService, OperationService, CommonService, ConfigurationService,
 @Component({
   selector: 'app-add-edit-operation',
   templateUrl: 'add-edit-operation.component.html',
-  styleUrls: ['add-edit-operation.component.scss', '../../../app.component.scss']
+  styleUrls: ['../../../app.component.scss']
 })
 export class AddEditOperationComponent implements OnInit, OnDestroy {
 

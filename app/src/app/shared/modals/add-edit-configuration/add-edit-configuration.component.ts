@@ -11,7 +11,7 @@ import { DataBaseService, CommonService, ConfigurationService, ControlService } 
 @Component({
   selector: 'app-add-edit-configuration',
   templateUrl: 'add-edit-configuration.component.html',
-  styleUrls: ['add-edit-configuration.component.scss', '../../../app.component.scss']
+  styleUrls: ['../../../app.component.scss']
 })
 export class AddEditConfigurationComponent implements OnInit, OnDestroy {
 

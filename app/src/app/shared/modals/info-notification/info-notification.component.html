@@ -25,15 +25,15 @@
         <ion-icon *ngIf="!hideSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <ion-item [hidden]="hideSummary">
+    <ion-item *ngIf="!hideSummary">
       <p>{{ labelMotoKm }}</p>
     </ion-item>
-    <ion-item [hidden]="hideSummary">
+    <ion-item *ngIf="!hideSummary">
       <p>{{ labelReliability }}</p>
       <p slot="end">{{ labelPercent }} %</p>
       <ion-icon slot="end" size="small" [class]="getIconPercent('color')" [color]="getIconPercent('color')" [name]="getIconPercent('icon')"></ion-icon>
     </ion-item>
-    <ion-item [hidden]="hideSummary">
+    <ion-item *ngIf="!hideSummary">
       <p>{{ labelNextChange }}</p>
     </ion-item>
     <ion-item *ngIf="labelNotRecord !== ''">
@@ -42,16 +42,45 @@
   </ion-list>
   <!-- CHART -->
   <ion-list *ngIf="isCalendar">
-    <ion-list-header (click)="refreshChart()">
+    <ion-list-header (click)="refreshChartExpenses()">
       <ion-icon size="large" name="bar-chart"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.CHARTS' | translate }}</h3>
+      <h3 class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
       <ion-button fill="clear">
         <ion-icon *ngIf="hideGraph" size="small" color="primary" name="caret-down-circle"></ion-icon>
         <ion-icon *ngIf="!hideGraph" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <div [hidden]="hideGraph">
-      <ngx-charts-line-chart
+    <div *ngIf="!hideGraph">
+      <ngx-charts-bar-vertical
+        [view]="dashboardMotoExpenses.view"
+        [scheme]="dashboardMotoExpenses.colorScheme"
+        [results]="dashboardMotoExpenses.data"
+        [gradient]="dashboardMotoExpenses.gradient"
+        [xAxis]="dashboardMotoExpenses.showXAxis"
+        [yAxis]="dashboardMotoExpenses.showYAxis"
+        [legend]="dashboardMotoExpenses.showLegend"
+        [legendTitle]="dashboardMotoExpenses.legendTitle"
+        [legendPosition]="dashboardMotoExpenses.legendPosition"
+        [showXAxisLabel]="dashboardMotoExpenses.showXAxisLabel"
+        [showYAxisLabel]="dashboardMotoExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardMotoExpenses.showDataLabel"
+        [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
+        [yAxisLabel]="dashboardMotoExpenses.yAxisLabel">
+      </ngx-charts-bar-vertical>
+    </div>
+  </ion-list>
+  <!-- List Records Maintenance -->
+  <ion-list *ngIf="isCalendar">
+    <ion-list-header (click)="refreshChart()">
+      <ion-icon size="large" [name]="getIconReplacement()"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ nameMaintenanceElement }}</h3>
+      <ion-button fill="clear">
+        <ion-icon *ngIf="hideRecords" size="small" color="primary" name="caret-down-circle"></ion-icon>
+        <ion-icon *ngIf="!hideRecords" size="small" color="primary" name="caret-up-circle"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <ion-item *ngIf="!hideRecords" class="item-border-color-white">
+      <ngx-charts-line-chart class="margin-chart"
         [view]="dashboardRecordsMaintenance.view"
         [scheme]="dashboardRecordsMaintenance.colorScheme"
         [results]="dashboardRecordsMaintenance.data"
@@ -66,63 +95,55 @@
         [xAxisLabel]="dashboardRecordsMaintenance.xAxisLabel"
         [yAxisLabel]="dashboardRecordsMaintenance.yAxisLabel">
       </ngx-charts-line-chart>
-    </div>
-  </ion-list>
-  <!-- List Records Maintenance -->
-  <ion-list *ngIf="isCalendar">
-    <ion-list-header (click)="hideRecords = !hideRecords">
-      <ion-icon size="large" [name]="getIconReplacement()"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ nameMaintenanceElement }}</h3>
-      <ion-button fill="clear">
-        <ion-icon *ngIf="hideRecords" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideRecords" size="small" color="primary" name="caret-up-circle"></ion-icon>
-      </ion-button>
-    </ion-list-header>
+    </ion-item>
     <!-- Items Maintenances -->
-    <ion-item button *ngFor="let w of wear.listWearReplacement" [hidden]="hideRecords" (click)="showInfo(w)">
-      <!-- Ivatar -->
-      <ion-avatar slot="start" class="max-width10 avatar-row">
-        <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(w)"></ion-icon>
-      </ion-avatar>
-      <div class="main-div">
-        <div>
-          <!-- Label -->
+    <div *ngIf="!hideRecords">
+      <ion-item button *ngFor="let w of wear.listWearReplacement" (click)="showInfo(w)">
+        <!-- Ivatar -->
+        <ion-avatar slot="start" class="max-width10 avatar-row">
+          <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(w)"></ion-icon>
+        </ion-avatar>
+        <div class="main-div">
           <div>
-            <ion-label>{{ (w.descriptionOperation === null ? w.descriptionMaintenance : w.descriptionOperation) }}</ion-label>
-          </div>
-          <div class="table-row">
-            <!-- KMS -->
-            <div class="margin-right5 table-row">
-              <ion-icon [class]="getClassIcon(w.warningKms, 'icon-row')" [color]="getClassIcon(w.warningKms, '')" size="small"
-              [name]="getIconKms(w.warningKms)"></ion-icon>
-              <p class="p-row">{{ getKmPercent(w) }} km</p>
+            <!-- Label -->
+            <div>
+              <ion-label>{{ (w.descriptionOperation === null ? w.descriptionMaintenance : w.descriptionOperation) }}</ion-label>
             </div>
-            <!-- ICON -->
-            <div class="icon-notification">
-              <ion-icon *ngIf="w.initMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
-              [class]="getClassIcon(w.warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
-              <ion-icon *ngIf="!w.initMaintenance && w.wearMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
-                [class]="getClassIcon(w.warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
+            <div class="table-row">
+              <!-- KMS -->
+              <div class="margin-right5 table-row">
+                <ion-icon [class]="getClassIcon(w.warningKms, 'icon-row')" [color]="getClassIcon(w.warningKms, '')" size="small"
+                [name]="getIconKms(w.warningKms)"></ion-icon>
+                <p class="p-row">{{ getKmPercent(w) }} km</p>
+              </div>
+              <!-- ICON -->
+              <div class="icon-notification">
+                <ion-icon *ngIf="w.initMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
+                [class]="getClassIcon(w.warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
+                <ion-icon *ngIf="!w.initMaintenance && w.wearMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
+                  [class]="getClassIcon(w.warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
+              </div>
             </div>
-          </div>
-            <!-- Progress bar maintenace -->
-          <div [class]="getClassProgressbar(w.warningKms, '')">
-            <ion-progress-bar [value]="w.percentKms"></ion-progress-bar>
-          </div>
-          <div *ngIf="w.timeMaintenance > 0" class="table-row">
-            <!-- MONTHS -->
-            <div class="margin-right5 table-row">
-              <ion-icon [color]="getClassIcon(w.warningMonths, '')" size="small"
-                [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
-              <p class="p-row">{{ getTimePercent(w) }}</p>
+              <!-- Progress bar maintenace -->
+            <div [class]="getClassProgressbar(w.warningKms, '')">
+              <ion-progress-bar [value]="w.percentKms"></ion-progress-bar>
             </div>
-          </div>
-            <!-- Progress bar maintenace -->
-          <div *ngIf="w.timeMaintenance > 0" [class]="getClassProgressbar(w.warningMonths, '')">
-            <ion-progress-bar [value]="w.percentMonths"></ion-progress-bar>
+            <div *ngIf="w.timeMaintenance > 0" class="table-row">
+              <!-- MONTHS -->
+              <div class="margin-right5 table-row">
+                <ion-icon [color]="getClassIcon(w.warningMonths, '')" size="small"
+                  [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
+                <p class="p-row">{{ getTimePercent(w) }}</p>
+              </div>
+            </div>
+              <!-- Progress bar maintenace -->
+            <div *ngIf="w.timeMaintenance > 0" [class]="getClassProgressbar(w.warningMonths, '')">
+              <ion-progress-bar [value]="w.percentMonths"></ion-progress-bar>
+            </div>
           </div>
         </div>
-      </div>
-    </ion-item>
+      </ion-item>
+    </div>
+    
   </ion-list>
 </ion-content>

@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [hidden]="!loaded">
   <ion-toolbar>
     <!-- Button chart -->
     <ion-button *ngIf="this.operations.length > 0" slot="start" fill="clear" 
@@ -19,20 +19,20 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen>
+<ion-content fullscreen [hidden]="!loaded">
   <ion-list>
     <ion-list-header>
       <!-- Title -->
       <ion-icon size="large" name="construct"></ion-icon>
-      <h3 *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null"
+      <h3 *ngIf="this.operations.length === 0 && this.filterDashboard.searchMoto.brand === null"
         class="header-list">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h3>
-      <h3 *ngIf="this.filterOperations.searchMoto.brand !== null" class="header-list">{{ 'COMMON.OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
+      <h3 *ngIf="this.filterDashboard.searchMoto.brand !== null" class="header-list">{{ 'COMMON.OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
       <!-- Button create -->
-      <ion-button class="btn-width-list" *ngIf="this.filterOperations.searchMoto.brand !== null" fill="clear" (click)="openOperationModal()">
+      <ion-button class="btn-width-list" *ngIf="this.filterDashboard.searchMoto.brand !== null" fill="clear" (click)="openOperationModal()">
         <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
       </ion-button>
       <!-- Button info -->
-      <ion-button class="btn-width-list" *ngIf="this.operations.length === 0 && this.filterOperations.searchMoto.brand === null" 
+      <ion-button class="btn-width-list" *ngIf="this.operations.length === 0 && this.filterDashboard.searchMoto.brand === null" 
         fill="clear" (click)="showModalInfoMoto()">
         <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
       </ion-button>
@@ -66,6 +66,44 @@
             <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
           </ion-button>
         </ion-label>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<!-- SKELETON LOADER INITAL -->
+<ion-header *ngIf="!loaded">
+  <ion-toolbar>
+    <ion-title style="padding-left: 20%; padding-right: 20%;">
+      <ion-skeleton-text animated></ion-skeleton-text>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!loaded">
+  <ion-list>
+    <ion-list-header>
+      <ion-label style="width: 80%">
+        <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+      </ion-label>
+      <ion-label>
+        <ion-spinner color="primary" name="bubbles"></ion-spinner>
+      </ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let i of [1, 2, 3, 4, 5]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </p>
+        <p>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </p>
       </ion-label>
     </ion-item>
   </ion-list>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform, ModalController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -15,6 +15,7 @@ import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
+
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,7 @@ export class HomePage implements OnInit {
   wears: WearMotoProgressBarModel[] = [];
   hideMotos: boolean[] = [];
   operations: OperationModel[] = [];
+  loaded = false;
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
@@ -68,10 +70,10 @@ export class HomePage implements OnInit {
                   this.wears = this.dashboardService.getWearReplacementToMoto(operations, motos, configurations, maintenances);
                   this.wears.forEach((x, index) => this.hideMotos[index] = (index !== 0));
                   this.activateInfo = this.activateModeInfo(motos, operations, this.wears);
-                  this.controlService.closeLoader();
+                  this.loaded = this.dashboardService.closeLoader();
                 });
               } else {
-                this.controlService.closeLoader();
+                this.loaded = this.dashboardService.closeLoader();
                 this.activateInfo = this.activateModeInfo(motos, [], []);
               }
             });
@@ -120,6 +122,10 @@ export class HomePage implements OnInit {
   getIconMaintenance(wear: WearReplacementProgressBarModel): string {
     return this.configurationService.getIconMaintenance(
       new MaintenanceModel(null, null, new MaintenanceFreqModel(wear.codeMaintenanceFreq)));
+  }
+
+  getDateCalculateMonths(wear: WearReplacementProgressBarModel): string {
+    return this.dashboardService.getDateCalculateMonths(wear);
   }
 
   // MODALS

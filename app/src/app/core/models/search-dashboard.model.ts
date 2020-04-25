@@ -1,9 +1,13 @@
 import { FilterMonthsEnum, FilterKmTimeEnum } from '@utils/index';
+import { MaintenanceElementModel } from './maintenance-element.model';
+import { MotoModel } from './moto.model';
 import { OperationTypeModel } from './operation-type.model';
 
 export class SearchDashboardModel {
     showPerMont: FilterMonthsEnum;
-    showOpType: OperationTypeModel[];
+    searchMoto: MotoModel = new MotoModel();
+    searchOperationType: OperationTypeModel[];
+    searchMaintenanceElement: MaintenanceElementModel[] = [];
     showAxis: boolean;
     showLegend: boolean;
     showAxisLabel: boolean;
@@ -11,12 +15,14 @@ export class SearchDashboardModel {
     doghnut: boolean;
     showMyData: boolean;
     filterKmTime: FilterKmTimeEnum;
-    constructor(month: FilterMonthsEnum = FilterMonthsEnum.MONTH, ot: OperationTypeModel[] = [],
-                axis: boolean = true, legend: boolean = false, axisLabel: boolean = false,
+    constructor(month: FilterMonthsEnum = FilterMonthsEnum.MONTH, sm: MotoModel = new MotoModel(), sot: OperationTypeModel[] = [],
+                sme: MaintenanceElementModel[] = [], axis: boolean = true, legend: boolean = false, axisLabel: boolean = false,
                 dataLabel: boolean = false, dog: boolean = false, myData: boolean = true,
                 kmTime: FilterKmTimeEnum = FilterKmTimeEnum.KM) {
         this.showPerMont = month;
-        this.showOpType = ot;
+        this.searchMoto = sm;
+        this.searchOperationType = sot;
+        this.searchMaintenanceElement = sme;
         this.showAxis = axis;
         this.showLegend = legend;
         this.showAxisLabel = axisLabel;

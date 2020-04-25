@@ -38,6 +38,12 @@ export class CommonService {
         return months <= 0 ? 0 : months;
     }
 
+    dayDiff(dateIni: Date, dateFin: Date): number {
+        const diffc: number = dateFin.getTime() - dateIni.getTime();
+        const days: number = Math.round(Math.abs(diffc / (1000 * 60 * 60 * 24)));
+        return days <= 0 ? 0 : days;
+    }
+
     /** ORDER BY */
     orderBy(data: any[], prop: string = null): any[] {
         return data.sort((x, y) => this.compareData(x, y , prop));

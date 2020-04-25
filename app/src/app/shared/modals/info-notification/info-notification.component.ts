@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ModalController, NavParams, Platform, PopoverController } from '@ionic/angular';
+import { ModalController, NavParams, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -30,6 +30,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
     // MODEL FORM
     wear: WearMotoProgressBarModel = new WearMotoProgressBarModel();
+    dashboardMotoExpenses: DashboardModel = new DashboardModel([], []);
     dashboardRecordsMaintenance: DashboardModel = new DashboardModel([], []);
     currentPopover = null;
     hideGraph = true;
@@ -62,7 +63,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
                 private controlService: ControlService,
                 private screenOrientation: ScreenOrientation,
                 private changeDetector: ChangeDetectorRef,
-                private popoverController: PopoverController,
                 private translator: TranslateService) {
   }
 
@@ -77,8 +77,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     if (this.wear.listWearReplacement.length > 0) {
       this.labelPercent = this.wear.percent;
       this.searchSubscription = this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
+        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (!this.hideGraph) {
-          const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+          this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoPerTime(windowsSize,
+            this.modalInputModel.dataList.filter(x => this.wear.listWearReplacement.some(y => y.idOperation === x.id)), filter);
+        }
+        if (!this.hideRecords) {
           this.dashboardRecordsMaintenance =
             this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter);
         }
@@ -86,6 +90,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
       this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
         const windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+        this.dashboardMotoExpenses.view = windowSize;
         this.dashboardRecordsMaintenance.view = windowSize;
         this.changeDetector.detectChanges();
       });
@@ -117,7 +122,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
     this.labelMotoKm = this.translator.instant('PAGE_HOME.MotoKm', { km: this.dataMaintenance.kmMoto });
     if (this.dataMaintenance.kmMoto !== this.motoKmEstimated) {
-      this.labelMotoKm += '\n' + this.translator.instant('PAGE_HOME.MotoEstimatedKm', { km: this.dataMaintenance.kmMoto });
+      this.labelMotoKm += '\n' + this.translator.instant('PAGE_HOME.MotoEstimatedKm', { km: this.motoKmEstimated });
     }
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
     let kmMaintenane = 0;
@@ -128,11 +133,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       kmMaintenane = wear.kmOperation + wear.kmMaintenance;
       kmMaintenane = (kmMaintenane < this.motoKmEstimated ? this.motoKmEstimated : kmMaintenane);
     }
-    this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
-      {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
-        date: this.commonService.getDateString(this.dashboardService.calculateDateMaintenanceKmMotoEstimated(moto, kmMaintenane))});
+    let date: Date = new Date(4000, 1, 1);
+    const dateMaintenanceKmMotoEstimated: Date = this.dashboardService.calculateDateMaintenanceKmMotoEstimated(moto, kmMaintenane);
     if (wear.timeMaintenance !== 0) {
-      const date: Date = new Date(moto.datePurchase);
+      date = new Date(moto.datePurchase);
       const monthMoto: number = this.commonService.monthDiff(date, new Date());
       if (wear.kmOperation === null) {
         const mantMonth: number = (wear.timeMaintenance < monthMoto ? monthMoto / wear.timeMaintenance : 1);
@@ -141,11 +145,20 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         const mantMonth = this.commonService.monthDiff(new Date(moto.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
         date.setMonth(date.getMonth() + (mantMonth < monthMoto ? monthMoto : mantMonth));
       }
-      this.labelNextChange += ` ${this.translator.instant('PAGE_HOME.NextChangeTime', { time: this.commonService.getDateString(date) })}`;
+      this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
+      {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
+        date: this.commonService.getDateString((date > dateMaintenanceKmMotoEstimated ? dateMaintenanceKmMotoEstimated : date))});
     }
   }
 
   refreshChart() {
+    this.hideRecords = !this.hideRecords;
+    if (!this.hideRecords) {
+      this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
+    }
+  }
+
+  refreshChartExpenses() {
     this.hideGraph = !this.hideGraph;
     if (!this.hideGraph) {
       this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());

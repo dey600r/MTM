@@ -16,7 +16,7 @@ import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popo
 @Component({
   selector: 'dashboard',
   templateUrl: 'dashboard.component.html',
-  styleUrls: ['dashboard.component.scss', '../../../app.component.scss']
+  styleUrls: ['../../../app.component.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
@@ -82,8 +82,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     await this.modalController.dismiss(this.modalOutputModel);
   }
 
+  getParent(page: PageEnum): PageEnum {
+    return (page === PageEnum.MOTO ? PageEnum.MODAL_DASHBOARD_MOTO : PageEnum.MODAL_DASHBOARD_OPERATION);
+  }
+
   showPopover(ev: any) {
-    this.controlService.showPopover(PageEnum.MODAL_DASHBOARD, ev, SearchDashboardPopOverComponent, this.modalInputModel);
+    this.controlService.showPopover(this.getParent(this.modalInputModel.parentPage), ev, SearchDashboardPopOverComponent,
+      new ModalInputModel(this.modalInputModel.isCreate, this.modalInputModel.data, this.modalInputModel.dataList,
+        this.getParent(this.modalInputModel.parentPage)));
   }
 
   isParentPageMoto() {

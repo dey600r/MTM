@@ -2,38 +2,36 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 // UTILS
-import { OperationModel, OperationTypeModel, MotoModel, SearchOperationModel, MaintenanceElementModel } from '@models/index';
+import { OperationModel, OperationTypeModel, MotoModel, MaintenanceElementModel } from '@models/index';
 import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
-import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
+import { ConstantsTable, ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
+import { ControlService } from './control.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class OperationService {
 
-    private searchOperation: SearchOperationModel = new SearchOperationModel();
-    public behaviourSearchOperation: BehaviorSubject<SearchOperationModel>
-        = new BehaviorSubject<SearchOperationModel>(this.searchOperation);
+    private loaded = false;
 
     constructor(private dbService: DataBaseService,
-                private sqlService: SqlService) {
+                private sqlService: SqlService,
+                private controlService: ControlService) {
     }
 
-    // SEARCHER OPERATION
-
-    getObserverSearchOperation(): Observable<SearchOperationModel> {
-        return this.behaviourSearchOperation.asObservable();
+    showLoader() {
+        if (!this.loaded) {
+            this.controlService.showLoader(PageEnum.CONFIGURATION);
+        }
     }
 
-    getSearchOperation(): SearchOperationModel {
-        return this.searchOperation;
-    }
-
-    setSearchOperation(sm: MotoModel = new MotoModel(), sot: OperationTypeModel[] = [],
-                       sme: MaintenanceElementModel[] = []) {
-        this.searchOperation = new SearchOperationModel(sm, sot, sme);
-        this.behaviourSearchOperation.next(this.searchOperation);
+    closeLoader(): boolean {
+        if (!this.loaded) {
+            this.controlService.closeLoader();
+            this.loaded = true;
+        }
+        return this.loaded;
     }
 
     // SAVE OPERATION

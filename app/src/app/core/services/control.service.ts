@@ -85,7 +85,7 @@ export class ControlService {
         this.desactivateButtonExist();
         const loader = await this.loadingController.create({
             spinner: 'bubbles',
-            duration: 5000,
+            duration: 3000,
             message: this.translator.instant('Loading...'),
             translucent: true,
             cssClass: 'custom-loader-class',

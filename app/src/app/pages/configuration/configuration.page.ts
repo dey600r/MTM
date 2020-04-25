@@ -20,7 +20,7 @@ import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance
 @Component({
   selector: 'app-configuration',
   templateUrl: 'configuration.page.html',
-  styleUrls: ['configuration.page.scss', '../../app.component.scss']
+  styleUrls: ['../../app.component.scss']
 })
 export class ConfigurationPage implements OnInit {
 
@@ -42,6 +42,8 @@ export class ConfigurationPage implements OnInit {
   hideConfiguration = false;
   hideMaintenance = true;
   hideReplacement = true;
+
+  loaded = false;
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -83,6 +85,12 @@ export class ConfigurationPage implements OnInit {
     this.dbService.getMaintenanceElement().subscribe(data => {
       this.maintenanceElements = this.configurationService.orderMaintenanceElement(data);
     });
+  }
+
+  ionViewDidEnter() {
+    if (!this.loaded) {
+      setTimeout(() => { this.loaded = this.configurationService.closeLoader(); }, 1000);
+    }
   }
 
   /** CONFIGURATION */

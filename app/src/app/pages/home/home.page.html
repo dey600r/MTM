@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [hidden]="!loaded">
   <ion-toolbar>
     <!-- Tittle -->
     <ion-title>
@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen>
+<ion-content fullscreen [hidden]="!loaded">
   <!-- INFO -->
   <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- List Moto -->
@@ -47,7 +47,7 @@
             <div class="margin-right5 table-row">
               <ion-icon *ngIf="w.timeMaintenance > 0" [color]="getClassIcon(w.warningMonths, '')" size="small"
                 [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
-              <p *ngIf="w.timeMaintenance > 0" class="p-row">{{ w.calculateMonths * (w.calculateMonths < 0 ? -1 : 1) }} {{ 'COMMON.MONTHS' | translate }}</p>
+              <p *ngIf="w.timeMaintenance > 0" class="p-row">{{ getDateCalculateMonths(w) }}</p>
             </div>
             <!-- ICON -->
             <div class="icon-notification">
@@ -63,6 +63,64 @@
           </div>
         </div>
       </div>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<!-- SKELETON LOADER INITAL -->
+<ion-header *ngIf="!loaded">
+  <ion-toolbar>
+    <ion-title style="padding-left: 20%; padding-right: 20%;">
+      <ion-skeleton-text animated></ion-skeleton-text>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!loaded">
+  <ion-list>
+    <ion-list-header>
+      <ion-label style="width: 80%">
+        <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+      </ion-label>
+      <ion-label>
+        <ion-spinner color="primary" name="bubbles"></ion-spinner>
+      </ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let i of [1, 2]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>
+      <ion-label style="width: 80%">
+        <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+      </ion-label>
+      <ion-label>
+        <ion-spinner color="primary" name="bubbles"></ion-spinner>
+      </ion-label>
+    </ion-list-header>
+    <ion-item>
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3>
+          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+        </h3>
+        <p>
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+        </p>
+      </ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

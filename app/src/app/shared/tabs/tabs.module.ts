@@ -30,7 +30,7 @@ import { environment } from '../../../environments/environment';
   ],
   exports: [],
   providers: [TranslateStore],
-  declarations: [TabsPage]
+  declarations: [TabsPage],
 })
 export class TabsPageModule {}
 

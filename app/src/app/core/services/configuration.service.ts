@@ -4,19 +4,37 @@ import { Injectable } from '@angular/core';
 import {
     MaintenanceElementModel, ConfigurationModel, MotoModel, MaintenanceModel, OperationModel
 } from '@models/index';
-import { ConstantsColumns, ActionDBEnum, ConstantsTable, Constants } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, ConstantsTable, Constants, PageEnum } from '@utils/index';
 import { CommonService } from './common.service';
 import { DataBaseService } from './data-base.service';
 import { SqlService } from './sql.service';
+import { ControlService } from './control.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ConfigurationService {
 
+    private loaded = false;
+
     constructor(private commonService: CommonService,
                 private dbService: DataBaseService,
-                private sqlService: SqlService) {
+                private sqlService: SqlService,
+                private controlService: ControlService) {
+    }
+
+    showLoader() {
+        if (!this.loaded) {
+            this.controlService.showLoader(PageEnum.CONFIGURATION);
+        }
+    }
+
+    closeLoader(): boolean {
+        if (!this.loaded) {
+            this.controlService.closeLoader();
+            this.loaded = true;
+        }
+        return this.loaded;
     }
 
     // COMMON

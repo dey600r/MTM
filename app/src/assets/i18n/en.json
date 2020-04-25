@@ -16,6 +16,7 @@
         "BRAND": "Brand",
         "MODEL": "Model",
         "YEAR": "Year",
+        "YEARS": "Years",
         "KM": "Kilometers",
         "CONFIGURATION": "Configuration",
         "MAINTENANCE": "Maintenance",
