@@ -145,10 +145,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         const mantMonth = this.commonService.monthDiff(new Date(moto.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
         date.setMonth(date.getMonth() + (mantMonth < monthMoto ? monthMoto : mantMonth));
       }
-      this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
+    }
+    this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
       {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
         date: this.commonService.getDateString((date > dateMaintenanceKmMotoEstimated ? dateMaintenanceKmMotoEstimated : date))});
-    }
   }
 
   refreshChart() {
@@ -175,10 +175,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getIconKms(warning: WarningWearEnum): string {
     return this.dashboardService.getIconKms(warning);
-  }
-
-  getColorKms(warning: WarningWearEnum) {
-    return this.dashboardService.getColorKms(warning);
   }
 
   getIconMaintenance(wear: WearReplacementProgressBarModel): string {
@@ -254,6 +250,52 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         msg += this.translator.instant('ALERT.InfoOperationTime',
           { timeop: this.commonService.getDateString(dateOperation), time: this.commonService.getDateString(dateMaintenance) });
       }
+    }
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+  }
+
+  showInfoMoto() {
+    const msg = this.translator.instant('ALERT.LastUpdateMotoKm',
+      { date: this.commonService.getDateString(new Date(this.dataMaintenance.dateKmsMoto)) });
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+  }
+
+  showInfoReliability() {
+    let msg = '';
+    if (this.wear.listWearReplacement.length > 0) {
+      const wear: WearReplacementProgressBarModel = this.wear.listWearReplacement[0];
+      msg = (wear.timeMaintenance === 0 ?
+        this.translator.instant('ALERT.InfoReliabilityPercentKm',
+          { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm }) :
+        this.translator.instant('ALERT.InfoReliabilityPercentTime',
+          { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm, percentTime: this.wear.percentTime }));
+    } else {
+      const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
+      msg = (wear.timeMaintenance === 0 ?
+        this.translator.instant('ALERT.InfoReliabilityPercentKm',
+          { maintenance: wear.descriptionMaintenance, percentKm: Math.floor(wear.percentKms) }) :
+        this.translator.instant('ALERT.InfoReliabilityPercentTime',
+          { maintenance: wear.descriptionMaintenance, percentKm: Math.floor(wear.percentKms),
+            percentTime: Math.floor(wear.percentMonths) }));
+    }
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+  }
+
+  showInfoMaintenance() {
+    const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
+    let msg = '';
+    if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
+      msg = (wear.timeMaintenance === 0 ?
+        this.translator.instant('ALERT.InfoMaintenanceCalendarKm',
+          { maintenance: wear.descriptionMaintenance, km: wear.kmMaintenance }) :
+        this.translator.instant('ALERT.InfoMaintenanceCalendarTime',
+          { maintenance: wear.descriptionMaintenance, km: wear.kmMaintenance, time: wear.timeMaintenance }));
+    } else {
+      msg = (wear.timeMaintenance === 0 ?
+        this.translator.instant('ALERT.InfoMaintenanceWearKm',
+          { maintenance: wear.descriptionMaintenance, km: wear.kmMaintenance }) :
+        this.translator.instant('ALERT.InfoMaintenanceWearTime',
+          { maintenance: wear.descriptionMaintenance, km: wear.kmMaintenance, time: wear.timeMaintenance }));
     }
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }

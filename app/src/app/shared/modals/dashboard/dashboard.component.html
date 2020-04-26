@@ -15,7 +15,7 @@
 
 
 <ion-content>
-    <ion-list-header>
+    <ion-list-header class="padding-list-header">
         <ion-icon size="large" name="bicycle"></ion-icon>
         <h3 *ngIf="isParentPageMoto()" class="header-list">{{ 'PAGE_MOTO.ExpensesPerMoto' | translate }}</h3>
         <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }} {{ motoModel }}</h3>
@@ -36,7 +36,7 @@
         [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
         [yAxisLabel]="dashboardMotoExpenses.yAxisLabel">
     </ngx-charts-bar-vertical>
-    <ion-list-header>
+    <ion-list-header class="padding-list-header">
         <ion-icon size="large" name="construct"></ion-icon>
         <h3 class="header-list">{{ 'PAGE_MOTO.ExpensesPerOperationType' | translate }}</h3>
     </ion-list-header>

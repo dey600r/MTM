@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { MotoModel, OperationModel } from '@models/index';
 import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
-import { ConstantsTable, ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
-import { ControlService } from './control.service';
+import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
 import { OperationService } from './operation.service';
 
 @Injectable({
@@ -15,22 +14,7 @@ export class MotoService {
 
     constructor(private dbService: DataBaseService,
                 private sqlService: SqlService,
-                private operationService: OperationService,
-                private controlService: ControlService) {
-    }
-
-    showLoader() {
-        if (!this.loaded) {
-            this.controlService.showLoader(PageEnum.CONFIGURATION);
-        }
-    }
-
-    closeLoader(): boolean {
-        if (!this.loaded) {
-            this.controlService.closeLoader();
-            this.loaded = true;
-        }
-        return this.loaded;
+                private operationService: OperationService) {
     }
 
     saveMoto(moto: MotoModel, action: ActionDBEnum, operations: OperationModel[] = []) {

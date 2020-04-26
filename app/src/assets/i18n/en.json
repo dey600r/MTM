@@ -160,7 +160,16 @@
         "InfoNotOperationKm": "You must add operation to pass maintenance before {{km}} km",
         "InfoOperationKm": "You have an operation at {{kmop}} km to pass maintenance of {{km}} km",
         "InfoOperationTime": " and pass at {{timeop}} before {{time}}" ,
-        "ExitApp": "The application will close. Do you wish to continue?"       
+        "ExitApp": "The application will close. Do you wish to continue?",
+        "InfoMaintenanceCalendarKm": "{{maintenance}} is configurated each {{km}} km",
+        "InfoMaintenanceCalendarTime": "{{maintenance}} is configurated each {{km}} km or {{time}} months",
+        "InfoMaintenanceWearKm": "{{maintenance}} is configurated to {{km}} km",
+        "InfoMaintenanceWearTime": "{{maintenance}} is configurated to {{km}} km or {{time}} months",
+        "LastUpdateMotoKm":"The last time when the motorbike's km were update were on {{date}}",
+        "InfoMaintenanceInit": "Used to first change spare parts, for example first change oil engine",
+        "InfoMaintenanceWear": "Used to notify a certain kilometers or months",
+        "InfoReliabilityPercentKm": "Reliability of {{maintenance}} by kilometers is {{percentKm}}%",
+        "InfoReliabilityPercentTime": "Reliability of {{maintenance}} by kilometers is {{percentKm}}% and reliability of time is {{percentTime}}%"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

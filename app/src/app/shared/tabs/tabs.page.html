@@ -1,22 +1,22 @@
 <ion-tabs>
 
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="homeTab">
+    <ion-tab-button tab="homeTab" style="max-width: none;">
       <ion-icon name="stats-chart"></ion-icon>
       <ion-label>{{ 'PAGE_HOME.HOME' | translate }}</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="motoTab" (click)="clickTab('moto')">
+    <ion-tab-button tab="motoTab" style="max-width: none;">
       <ion-icon name="bicycle"></ion-icon>
       <ion-label>{{ 'COMMON.MOTORBIKE' | translate }}</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="operationTab" (click)="clickTab('operation')">
+    <ion-tab-button tab="operationTab" style="max-width: none;">
       <ion-icon name="construct"></ion-icon>
       <ion-label>{{ 'COMMON.OPERATION' | translate }}</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="configurationTab" (click)="clickTab('configuration')">
+    <ion-tab-button tab="configurationTab" style="max-width: none;">
       <ion-icon name="cog"></ion-icon>
       <ion-label>{{ 'COMMON.CONFIGURATION' | translate }}</ion-label>
     </ion-tab-button>

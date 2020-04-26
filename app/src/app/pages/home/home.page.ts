@@ -70,10 +70,10 @@ export class HomePage implements OnInit {
                   this.wears = this.dashboardService.getWearReplacementToMoto(operations, motos, configurations, maintenances);
                   this.wears.forEach((x, index) => this.hideMotos[index] = (index !== 0));
                   this.activateInfo = this.activateModeInfo(motos, operations, this.wears);
-                  this.loaded = this.dashboardService.closeLoader();
+                  this.timeOutLoader();
                 });
               } else {
-                this.loaded = this.dashboardService.closeLoader();
+                this.timeOutLoader();
                 this.activateInfo = this.activateModeInfo(motos, [], []);
               }
             });
@@ -86,8 +86,16 @@ export class HomePage implements OnInit {
   ionViewDidEnter() {
     // RELOAD NOTIFICATIONS
     if (this.controlService.getDateLastUse().toDateString() !== new Date().toDateString()) {
+      this.loaded = false;
       this.dbService.motos.next(this.dbService.motosData);
       this.controlService.setDateLastUse();
+    }
+    this.timeOutLoader();
+  }
+
+  timeOutLoader() {
+    if (!this.loaded) {
+      setTimeout(() => { this.loaded = true; }, 2000);
     }
   }
 
@@ -115,10 +123,6 @@ export class HomePage implements OnInit {
     return this.dashboardService.getIconKms(warning);
   }
 
-  getColorKms(warning: WarningWearEnum) {
-    return this.dashboardService.getColorKms(warning);
-  }
-
   getIconMaintenance(wear: WearReplacementProgressBarModel): string {
     return this.configurationService.getIconMaintenance(
       new MaintenanceModel(null, null, new MaintenanceFreqModel(wear.codeMaintenanceFreq)));
@@ -133,7 +137,7 @@ export class HomePage implements OnInit {
   openInfoNotification(m: WearMotoProgressBarModel, w: WearReplacementProgressBarModel) {
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
       new WearMotoProgressBarModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
-        m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.warning, [w]), this.operations, PageEnum.HOME));
+        m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.percentKm, m.percentTime, m.warning, [w]), this.operations, PageEnum.HOME));
   }
 
 }

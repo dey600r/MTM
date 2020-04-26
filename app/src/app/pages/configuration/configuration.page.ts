@@ -89,7 +89,7 @@ export class ConfigurationPage implements OnInit {
 
   ionViewDidEnter() {
     if (!this.loaded) {
-      setTimeout(() => { this.loaded = this.configurationService.closeLoader(); }, 1000);
+      setTimeout(() => { this.loaded = true; }, 1200);
     }
   }
 

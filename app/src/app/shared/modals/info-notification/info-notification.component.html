@@ -17,7 +17,7 @@
 <ion-content fullscreen>
   <!-- RESUME -->
   <ion-list>
-    <ion-list-header (click)="hideSummary = !hideSummary">
+    <ion-list-header (click)="hideSummary = !hideSummary" class="padding-list-header">
       <ion-icon size="large" name="analytics"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.SUMMARY' | translate }} {{ nameMaintenance }}</h3>
       <ion-button fill="clear">
@@ -25,15 +25,15 @@
         <ion-icon *ngIf="!hideSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <ion-item *ngIf="!hideSummary">
+    <ion-item *ngIf="!hideSummary" button (click)="showInfoMoto()">
       <p>{{ labelMotoKm }}</p>
     </ion-item>
-    <ion-item *ngIf="!hideSummary">
+    <ion-item *ngIf="!hideSummary" button (click)="showInfoReliability()">
       <p>{{ labelReliability }}</p>
       <p slot="end">{{ labelPercent }} %</p>
       <ion-icon slot="end" size="small" [class]="getIconPercent('color')" [color]="getIconPercent('color')" [name]="getIconPercent('icon')"></ion-icon>
     </ion-item>
-    <ion-item *ngIf="!hideSummary">
+    <ion-item *ngIf="!hideSummary" button (click)="showInfoMaintenance()">
       <p>{{ labelNextChange }}</p>
     </ion-item>
     <ion-item *ngIf="labelNotRecord !== ''">
@@ -42,7 +42,7 @@
   </ion-list>
   <!-- CHART -->
   <ion-list *ngIf="isCalendar">
-    <ion-list-header (click)="refreshChartExpenses()">
+    <ion-list-header (click)="refreshChartExpenses()" class="padding-list-header">
       <ion-icon size="large" name="bar-chart"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
       <ion-button fill="clear">
@@ -71,7 +71,7 @@
   </ion-list>
   <!-- List Records Maintenance -->
   <ion-list *ngIf="isCalendar">
-    <ion-list-header (click)="refreshChart()">
+    <ion-list-header (click)="refreshChart()" class="padding-list-header">
       <ion-icon size="large" [name]="getIconReplacement()"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ nameMaintenanceElement }}</h3>
       <ion-button fill="clear">

@@ -16,7 +16,7 @@
 </ion-header>
 <ion-content fullscreen [hidden]="!loaded">
   <ion-list>
-    <ion-list-header>
+    <ion-list-header class="padding-list-header">
       <!-- Title -->
       <ion-icon size="large" name="bicycle"></ion-icon>
       <h3 class="header-list">{{ 'PAGE_MOTO.YOURS_MOTORBIKES' | translate }}</h3>
@@ -75,28 +75,23 @@
 </ion-header>
 <ion-content *ngIf="!loaded">
   <ion-list>
-    <ion-list-header>
-      <ion-label style="width: 80%">
-        <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+    <ion-list-header class="padding-list-header">
+      <ion-label style="width: 85%">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
       </ion-label>
       <ion-label>
-        <ion-spinner color="primary" name="bubbles"></ion-spinner>
+        <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
       </ion-label>
     </ion-list-header>
     <ion-item *ngFor="let i of [1, 2]">
-      <ion-avatar slot="start">
-        <ion-skeleton-text animated></ion-skeleton-text>
-      </ion-avatar>
       <ion-label>
-        <h3>
-          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-        </h3>
-        <p>
-          <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
-        </p>
-        <p>
-          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-        </p>
+        <h3><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></h3>
+        <h2><ion-skeleton-text animated style="width: 30%"></ion-skeleton-text></h2>
+        <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
+      </ion-label>
+      <ion-label>
+        <p><ion-skeleton-text animated style="width: 45%"></ion-skeleton-text></p>
+        <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
       </ion-label>
     </ion-item>
   </ion-list>

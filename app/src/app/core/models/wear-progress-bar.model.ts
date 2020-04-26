@@ -8,10 +8,12 @@ export class WearMotoProgressBarModel {
     kmsPerMonthMoto = 0;
     dateKmsMoto: Date = new Date();
     percent = 0;
+    percentKm = 0;
+    percentTime = 0;
     warning: WarningWearEnum = WarningWearEnum.SUCCESS;
     listWearReplacement: WearReplacementProgressBarModel[] = [];
     constructor(id: number = -1, name: string = '', km: number = 0, dateP: Date = new Date(),
-                kmsM: number = 0, dateK: Date = new Date(), per: number = 0,
+                kmsM: number = 0, dateK: Date = new Date(), per: number = 0, perKm: number = 0, perTime: number = 0,
                 war: WarningWearEnum = WarningWearEnum.SUCCESS,
                 list: WearReplacementProgressBarModel[] = []) {
         this.idMoto = id;
@@ -21,6 +23,8 @@ export class WearMotoProgressBarModel {
         this.kmsPerMonthMoto = kmsM;
         this.dateKmsMoto = dateK;
         this.percent = per;
+        this.percentKm = perKm;
+        this.percentTime = perTime;
         this.warning = war;
         this.listWearReplacement = list;
     }

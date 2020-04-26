@@ -85,7 +85,7 @@ export class OperationPage implements OnInit {
 
   ionViewDidEnter() {
     if (!this.loaded) {
-      setTimeout(() => { this.loaded = this.operationService.closeLoader(); }, 1000);
+      setTimeout(() => { this.loaded = true; }, 1200);
     }
   }
 

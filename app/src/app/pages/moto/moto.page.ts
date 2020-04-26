@@ -68,7 +68,7 @@ export class MotoPage implements OnInit {
 
   ionViewDidEnter() {
     if (!this.loaded) {
-      setTimeout(() => { this.loaded = this.motoService.closeLoader(); }, 1000);
+      setTimeout(() => { this.loaded = true; }, 1000);
     }
   }
 

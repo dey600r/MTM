@@ -12,7 +12,7 @@
   <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- List Moto -->
   <ion-list *ngFor="let m of wears; let i = index;">
-    <ion-list-header (click)="hideMotos[i] = !hideMotos[i]">
+    <ion-list-header (click)="hideMotos[i] = !hideMotos[i]" class="padding-list-header">
       <ion-icon size="large" name="bicycle"></ion-icon>
       <h3 class="header-list">{{ m.nameMoto }}</h3>
       <ion-button fill="clear">
@@ -77,49 +77,20 @@
 </ion-header>
 
 <ion-content *ngIf="!loaded">
-  <ion-list>
-    <ion-list-header>
-      <ion-label style="width: 80%">
-        <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+  <ion-list *ngFor="let i of [1, 2]">
+    <ion-list-header class="padding-list-header">
+      <ion-label style="width: 85%">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
       </ion-label>
       <ion-label>
-        <ion-spinner color="primary" name="bubbles"></ion-spinner>
+        <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
       </ion-label>
     </ion-list-header>
     <ion-item *ngFor="let i of [1, 2]">
-      <ion-avatar slot="start">
-        <ion-skeleton-text animated></ion-skeleton-text>
-      </ion-avatar>
+      <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
       <ion-label>
-        <h3>
-          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
-        </h3>
-        <p>
-          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
-        </p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-  <ion-list>
-    <ion-list-header>
-      <ion-label style="width: 80%">
-        <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-      </ion-label>
-      <ion-label>
-        <ion-spinner color="primary" name="bubbles"></ion-spinner>
-      </ion-label>
-    </ion-list-header>
-    <ion-item>
-      <ion-avatar slot="start">
-        <ion-skeleton-text animated></ion-skeleton-text>
-      </ion-avatar>
-      <ion-label>
-        <h3>
-          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
-        </h3>
-        <p>
-          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
-        </p>
+        <h3><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></h3>
+        <p><ion-skeleton-text animated style="width: 75%"></ion-skeleton-text></p>
       </ion-label>
     </ion-item>
   </ion-list>

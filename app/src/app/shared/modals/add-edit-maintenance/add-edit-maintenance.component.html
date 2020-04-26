@@ -68,16 +68,16 @@
           <ion-input #maintenanceTime name="maintenanceTime" placeholder="--" type="number" min="0" 
             [(ngModel)]="maintenance.time"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-icon class="ion-icon-margin" slot="start" size="large" name="navigate-circle"></ion-icon>
-          <ion-label>
+        <ion-item button>
+          <ion-icon class="ion-icon-margin" slot="start" size="large" name="navigate-circle" (click)="showInfoInit()"></ion-icon>
+          <ion-label (click)="showInfoInit()">
             <h2>{{ 'COMMON.INIT' | translate }}</h2>
           </ion-label>
           <ion-toggle [disabled]="isInitDisabled()" #maintenanceInit name="maintenanceInit" color="primary" [(ngModel)]="maintenance.init"></ion-toggle>
         </ion-item>
         <ion-item>
-          <ion-icon class="ion-icon-margin" slot="start" size="large" name="notifications-circle"></ion-icon>
-          <ion-label>
+          <ion-icon class="ion-icon-margin" slot="start" size="large" name="notifications-circle" (click)="showInfoWear()"></ion-icon>
+          <ion-label (click)="showInfoWear()">
             <h2>{{ 'COMMON.WEAR' | translate }}</h2>
           </ion-label>
           <ion-toggle #maintenanceWear name="maintenanceWear" color="primary" [(ngModel)]="maintenance.wear"></ion-toggle>

@@ -15,10 +15,7 @@ import { ConfigurationService, MotoService, OperationService } from '@services/i
 export class TabsPage {
 
   constructor(private platform: Platform,
-              private translator: TranslateService,
-              private motoService: MotoService,
-              private operationService: OperationService,
-              private configurationService: ConfigurationService) {
+              private translator: TranslateService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -26,17 +23,4 @@ export class TabsPage {
     });
   }
 
-  clickTab(type: string) {
-    switch (type) {
-      case 'moto':
-        this.motoService.showLoader();
-        break;
-      case 'operation':
-          this.operationService.showLoader();
-          break;
-      case 'configuration':
-        this.configurationService.showLoader();
-        break;
-    }
-  }
 }

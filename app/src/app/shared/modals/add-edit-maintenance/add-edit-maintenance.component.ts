@@ -94,6 +94,14 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
     }
   }
 
+  showInfoInit() {
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, this.translator.instant('ALERT.InfoMaintenanceInit'), Constants.DELAY_TOAST_HIGH);
+  }
+
+  showInfoWear() {
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, this.translator.instant('ALERT.InfoMaintenanceWear'), Constants.DELAY_TOAST_HIGH);
+  }
+
   isInitDisabled(): boolean {
     return !this.maintenanceFreqs.some(x => x.id === this.maintenance.maintenanceFreq.id &&
       x.code === Constants.MAINTENANCE_FREQ_ONCE_CODE);

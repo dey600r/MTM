@@ -1,37 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
 
 // UTILS
-import { OperationModel, OperationTypeModel, MotoModel, MaintenanceElementModel } from '@models/index';
+import { OperationModel } from '@models/index';
 import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
-import { ConstantsTable, ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
-import { ControlService } from './control.service';
+import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
 })
 export class OperationService {
 
-    private loaded = false;
-
     constructor(private dbService: DataBaseService,
-                private sqlService: SqlService,
-                private controlService: ControlService) {
-    }
-
-    showLoader() {
-        if (!this.loaded) {
-            this.controlService.showLoader(PageEnum.CONFIGURATION);
-        }
-    }
-
-    closeLoader(): boolean {
-        if (!this.loaded) {
-            this.controlService.closeLoader();
-            this.loaded = true;
-        }
-        return this.loaded;
+                private sqlService: SqlService) {
     }
 
     // SAVE OPERATION

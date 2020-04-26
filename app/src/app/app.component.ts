@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, ControlService } from '@services/index';
-import { PageEnum } from '@utils/index';
+import { PageEnum } from './core/utils';
 
 @Component({
   selector: 'app-root',
@@ -36,12 +36,12 @@ export class AppComponent {
       this.translator.use(userLang);
     }).finally(() => {
       // CONFIGURATION
-      this.controlService.showLoader(PageEnum.HOME);
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
       // DB
       this.dbService.initDB();
+      this.controlService.activateButtonExist(PageEnum.HOME);
     });
   }
 }
