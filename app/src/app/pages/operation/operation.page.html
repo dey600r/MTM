@@ -1,14 +1,9 @@
 <ion-header [hidden]="!loaded">
   <ion-toolbar>
     <!-- Button chart -->
-    <ion-button *ngIf="this.operations.length > 0" slot="start" fill="clear" 
+    <ion-button slot="start" fill="clear" 
       (click)="openDashboardOperation()" class="btn-width-header">
-      <ion-icon size="large" name="bar-chart"></ion-icon>
-    </ion-button>
-    <!-- Button info -->
-    <ion-button *ngIf="this.operations.length === 0" slot="start" fill="clear"
-      (click)="showModalInfoOperation()" class="btn-width-header">
-      <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
+      <ion-icon size="large" [name]="getIconInfoDashboard()"></ion-icon>
     </ion-button>
     <!-- Tittle -->
     <ion-title class="align-center">{{ 'COMMON.OPERATION' | translate }}</ion-title>
@@ -19,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen [hidden]="!loaded">
+<ion-content [hidden]="!loaded">
   <ion-list>
     <ion-list-header class="padding-list-header">
       <!-- Title -->
@@ -29,12 +24,12 @@
       <h3 *ngIf="this.filterDashboard.searchMoto.brand !== null" class="header-list">{{ 'COMMON.OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
       <!-- Button create -->
       <ion-button class="btn-width-list" *ngIf="this.filterDashboard.searchMoto.brand !== null" fill="clear" (click)="openOperationModal()">
-        <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
+        <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
       </ion-button>
       <!-- Button info -->
       <ion-button class="btn-width-list" *ngIf="this.operations.length === 0 && this.filterDashboard.searchMoto.brand === null" 
         fill="clear" (click)="showModalInfoMoto()">
-        <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
+        <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
     <div *ngIf="operations.length === 0" class="info-content">
@@ -51,16 +46,16 @@
         <ion-icon size="large" class="icon-color" [name]="this.getIconOperationType(op)"></ion-icon>
       </ion-avatar>
       <!-- Labels -->
-      <ion-label class="min-width40" (click)="openOperationModal(op, false)">
+      <ion-label class="min-width40 label-event-force" (click)="openOperationModal(op, false)">
         <h2 class="text-overflow">{{ op.description }}</h2>
         <h3>{{ op.km }} km</h3>
       </ion-label>
-      <ion-label class="padding-left10" (click)="openOperationModal(op, false)">
+      <ion-label class="padding-left10 label-event-force" (click)="openOperationModal(op, false)">
         <p>{{ op.date | dateFormatCalendarPipe }}</p>
         <p>{{ op.price }} €</p>
       </ion-label>
       <!-- Buttons delete -->
-      <ion-label class="align-right">
+      <ion-label class="align-right fix-width69">
         <ion-label>
           <ion-button class="btn-width-row" fill="clear" (click)="deleteOperation(op)">
             <ion-icon size="large" class="btn-color" name="trash"></ion-icon>

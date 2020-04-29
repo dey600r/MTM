@@ -135,6 +135,8 @@ export class HomePage implements OnInit {
   // MODALS
 
   openInfoNotification(m: WearMotoProgressBarModel, w: WearReplacementProgressBarModel) {
+    // Change filter operation to easy
+    this.dashboardService.setSearchOperation(new MotoModel(m.nameMoto, '', null, null, null, null, null, null, m.idMoto));
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
       new WearMotoProgressBarModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
         m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.percentKm, m.percentTime, m.warning, [w]), this.operations, PageEnum.HOME));

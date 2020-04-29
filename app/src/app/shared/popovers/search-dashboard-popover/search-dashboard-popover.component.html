@@ -5,7 +5,7 @@
         <!-- Button Close -->
         <ion-label>
             <ion-button slot="end" fill="clear" (click)="closePopover()" class="btn-width-header">
-                <ion-icon size="large" name="close-circle-outline"></ion-icon>
+                <ion-icon size="large" name="close-circle"></ion-icon>
             </ion-button>
         </ion-label>
     </ion-list-header>
@@ -22,6 +22,10 @@
                 </ion-segment-button>
             </ion-segment>
         </ion-toolbar>
+    </ion-item>
+    <ion-item *ngIf="isParentPageOperation()">
+        <ion-searchbar class="search-bar-location" [(ngModel)]="searchDashboard.searchText" showCancelButton="never" 
+            debounce="500" (ionChange)="onChangeFilterGrouper()"></ion-searchbar>
     </ion-item>
     <ion-item *ngIf="isParentPageHome() || isParentPageDashboardOperation()">
         <ion-label>{{ 'COMMON.CALCULATE_PER_MONTH' | translate }}</ion-label>

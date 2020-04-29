@@ -100,6 +100,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
         this.searchDashboard.showPerMont = this.filterMonth;
         this.dashboardService.setSearchDashboard(
             new SearchDashboardModel(this.searchDashboard.showPerMont,
+                                    this.searchDashboard.searchText,
                                     this.searchDashboard.searchMoto,
                                     this.searchDashboard.searchOperationType,
                                     this.searchDashboard.searchMaintenanceElement,
@@ -117,7 +118,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }
 
     clearFilter() {
-        this.searchDashboard = new SearchDashboardModel(FilterMonthsEnum.MONTH, this.motos.find(x => this.filterMoto === x.id));
+        this.searchDashboard = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', this.motos.find(x => this.filterMoto === x.id));
         this.filterOpType = [];
         this.filterMaintElement = [];
         this.onChangeFilterGrouper();

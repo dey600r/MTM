@@ -122,6 +122,6 @@
         <icon src="resources/windows/icon/Square310x310Logo.png" target="Square310x310Logo" />
         <icon src="resources/windows/icon/Wide310x150Logo.png" target="Wide310x150Logo" />
         <icon src="resources/windows/icon/StoreLogo.png" target="StoreLogo" />
-        <splash src="resources/windows/splash/Splash.png" target="SplashScreen" />
+        <splash src="resources/windows/splash/Splash.scale-400.png" target="SplashScreen" />
     </platform>
 </widget>

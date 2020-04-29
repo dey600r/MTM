@@ -9,7 +9,6 @@ import * as Moment from 'moment';
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
 import { Constants, PageEnum } from '@utils/index';
-import { stringify } from 'querystring';
 
 @Injectable({
     providedIn: 'root'
@@ -61,7 +60,7 @@ export class ControlService {
     // EXIT BUTTON
 
     activateButtonExist(parent: PageEnum) {
-        if (this.isPage(parent)) {
+        if (!this.platform.is('desktop') && this.isPage(parent)) {
             this.exitButtonSubscripion = this.platform.backButton.subscribe(() => {
                 this.showConfirm(PageEnum.HOME, this.translator.instant('COMMON.EXIT'),
                     this.translator.instant('ALERT.ExitApp'),

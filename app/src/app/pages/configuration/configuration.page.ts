@@ -52,9 +52,9 @@ export class ConfigurationPage implements OnInit {
               private controlService: ControlService,
               private configurationService: ConfigurationService) {
       this.platform.ready().then(() => {
-      let userLang = navigator.language.split('-')[0];
-      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-      this.translator.use(userLang);
+        let userLang = navigator.language.split('-')[0];
+        userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
+        this.translator.use(userLang);
       }).finally(() => {
         this.initPage();
       });

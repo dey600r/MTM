@@ -18,6 +18,8 @@
     "deploy:prod-android": "ionic cordova run android --prod --release -- -- --keystore=mtm-release-key.keystore --alias=mtm --device",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug",
+    "deploy:prod-windows": "ionic cordova run windows --release --prod -- --arch=x64 --appx=uap -- --platform=x64",
+    "deploy:debug-windows": "ionic cordova run windows --debug -- --arch=x64 --appx=uap -- --platform=x64",
     "electron-serve": "ng build && electron ."
   },
   "private": true,

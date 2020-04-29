@@ -38,7 +38,7 @@ export class MotoPage implements OnInit {
               private motoService: MotoService,
               private commonService: CommonService,
               private controlService: ControlService,
-              private dashboarService: DashboardService) {
+              private dashboardService: DashboardService) {
       this.platform.ready().then(() => {
         let userLang = navigator.language.split('-')[0];
         userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -51,11 +51,14 @@ export class MotoPage implements OnInit {
   ngOnInit() {
     this.dbService.getMotos().subscribe(data => {
       if (!!data && data.length > 0) {
-        if (this.dashboarService.getSearchDashboard().searchMoto.brand === null) {
-          this.dashboarService.setSearchOperation(data[0]);
+        if (this.dashboardService.getSearchDashboard().searchMoto.brand === null) {
+          this.dashboardService.setSearchOperation(data[0]);
+        } else if (data.length === this.motos.length + 1) {
+          // Insert new moto, change filter to easy
+          this.dashboardService.setSearchOperation(data.find(x => !this.motos.some(y => x.id === y.id)));
         }
       } else {
-        this.dashboarService.setSearchOperation();
+        this.dashboardService.setSearchOperation();
       }
       this.motos = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MOTO_BRAND);
     });
@@ -95,7 +98,7 @@ export class MotoPage implements OnInit {
   }
 
   changeFilterOperation(idMoto: number) {
-    this.dashboarService.setSearchOperation(this.motos.find(x => x.id === idMoto));
+    this.dashboardService.setSearchOperation(this.motos.find(x => x.id === idMoto));
   }
 
   showConfirmDelete() {

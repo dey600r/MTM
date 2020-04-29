@@ -8,13 +8,13 @@
     <!-- Button info -->
     <ion-button class="btn-width-header position-fixed margin-top-5 index-top"
       *ngIf="this.motos.length === 0" fill="clear" (click)="showModalInfo()">
-      <ion-icon size="large" class="btn-color" name="information-circle-outline"></ion-icon>
+      <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
     </ion-button>
     <!-- Tittle -->
     <ion-title class="align-center">{{ 'COMMON.MOTORBIKE' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content fullscreen [hidden]="!loaded">
+<ion-content [hidden]="!loaded">
   <ion-list>
     <ion-list-header class="padding-list-header">
       <!-- Title -->
@@ -22,7 +22,7 @@
       <h3 class="header-list">{{ 'PAGE_MOTO.YOURS_MOTORBIKES' | translate }}</h3>
       <!-- Button create -->
       <ion-button class="btn-width-list" fill="clear" (click)="openMotoModal()">
-        <ion-icon size="large" class="btn-color" name="add-circle-outline"></ion-icon>
+        <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
     <div *ngIf="motos.length === 0" class="info-content">
@@ -35,12 +35,12 @@
     </div>
     <ion-item button *ngFor="let m of motos">
       <!-- Labels -->
-      <ion-label class="min-width40" (click)="openMotoModal(m, false)">
+      <ion-label class="min-width40 label-event-force" (click)="openMotoModal(m, false)">
         <h2>{{ m.brand }}</h2>
         <h3>{{ m.model }}</h3>
         <p>{{ m.datePurchase | dateFormatCalendarPipe }}</p>
       </ion-label>
-      <ion-label class="padding-left10" (click)="openMotoModal(m, false)">
+      <ion-label class="padding-left10 label-event-force" (click)="openMotoModal(m, false)">
         <h3>{{ m.km }} km</h3>
         <ion-label class="row-block flex-items-center">
           <ion-icon name="cog"></ion-icon>
@@ -48,7 +48,7 @@
         </ion-label>
       </ion-label>
       <!-- Buttons edit / delete -->
-      <ion-label class="align-right">
+      <ion-label class="align-right fix-width69">
         <ion-label>
           <ion-button class="btn-width-row" fill="clear" routerLink="/tabs/operationTab" routerDirection="root"
           (click)="changeFilterOperation(m.id)">

@@ -72,8 +72,11 @@ export class OperationPage implements OnInit {
           this.nameFilterMoto = `${filter.searchMoto.brand} ${filter.searchMoto.model}`;
         }
         this.allOperations = data.filter(op => op.moto.id === filter.searchMoto.id);
+        const filteredText: string = filter.searchText.toLowerCase();
         this.operations = this.commonService.orderBy(
           this.allOperations.filter(op =>
+            (op.description.toLowerCase().includes(filteredText) || op.details.toLowerCase().includes(filteredText) ||
+            op.owner.toLowerCase().includes(filteredText) || op.location.toLowerCase().includes(filteredText)) &&
             (filter.searchOperationType.length === 0 || filter.searchOperationType.some(y => y.id === op.operationType.id)) &&
             (filter.searchMaintenanceElement.length === 0 ||
               filter.searchMaintenanceElement.some(y => op.listMaintenanceElement.some(z => y.id === z.id)))
@@ -143,6 +146,10 @@ export class OperationPage implements OnInit {
   }
 
   /** ICONS */
+
+  getIconInfoDashboard(): string {
+    return this.allOperations.length > 0 ? 'bar-chart' : 'information-circle';
+  }
 
   geClassIconOperationType(operation: OperationModel): string {
     return `${Constants.CLASS_ION_ICON_OPERATION_TYPE}${operation.operationType.code}`;

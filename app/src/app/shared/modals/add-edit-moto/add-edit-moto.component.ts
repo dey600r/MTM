@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum } from '@utils/index';
 import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel, OperationModel } from '@models/index';
-import { DataBaseService, MotoService, CommonService, ControlService } from '@services/index';
+import { DataBaseService, MotoService, CommonService, ControlService, DashboardService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-moto',
@@ -46,7 +46,8 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     private translator: TranslateService,
     private motoService: MotoService,
     private commonService: CommonService,
-    private controlService: ControlService
+    private controlService: ControlService,
+    private dashboardService: DashboardService
   ) {
     this.translateYearBetween = this.translator.instant('PAGE_MOTO.AddYearBetween', { year: new Date().getFullYear()});
     this.translateSelect = this.translator.instant('COMMON.SELECT');
@@ -91,6 +92,9 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
 
         this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
+          if (this.moto.id !== -1) { // Change filter operation to easy
+            this.dashboardService.setSearchOperation(this.moto);
+          }
           this.controlService.showToast(PageEnum.MODAL_MOTO, (
             this.modalInputModel.isCreate ? 'PAGE_MOTO.AddSaveMoto' : 'PAGE_MOTO.EditSaveMoto'),
             { moto: this.moto.model });
