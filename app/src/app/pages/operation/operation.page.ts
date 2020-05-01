@@ -36,6 +36,7 @@ export class OperationPage implements OnInit {
   allOperations: OperationModel[] = [];
   nameFilterMoto = '';
   loaded = false;
+  iconNameHeaderLeft = 'bar-chart';
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -67,6 +68,11 @@ export class OperationPage implements OnInit {
         (!!data && data.length > 0 ? data[0].moto : new MotoModel(null, null, null, null, null, null, null, null, 0)) :
         this.filterDashboard.searchMoto));
       this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
+        if (data.length === 0) {
+          this.iconNameHeaderLeft = 'information-circle';
+        } else {
+          this.iconNameHeaderLeft = 'bar-chart';
+        }
         this.filterDashboard = filter;
         if (this.filterDashboard.searchMoto.brand !== null) {
           this.nameFilterMoto = `${filter.searchMoto.brand} ${filter.searchMoto.model}`;
@@ -102,8 +108,12 @@ export class OperationPage implements OnInit {
   }
 
   openDashboardOperation() {
-    this.controlService.openModal(PageEnum.OPERATION,
-      DashboardComponent, new ModalInputModel(true, null, this.allOperations, PageEnum.OPERATION));
+    if (this.allOperations.length === 0) {
+      this.showModalInfoOperation();
+    } else {
+      this.controlService.openModal(PageEnum.OPERATION,
+        DashboardComponent, new ModalInputModel(true, null, this.allOperations, PageEnum.OPERATION));
+    }
   }
 
   deleteOperation(row: OperationModel) {

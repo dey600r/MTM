@@ -27,9 +27,9 @@ export class DashboardService {
     }
 
     getSizeWidthHeight(w: number, h: number): any[] {
-        const width: number = (w > 768 ? 600 : w);
-        const height: number = (h > 600 ? 600 : h);
-        return (w < h ? [width - 5, (height / 3) - 10] : [width - 10, height / 3 + 20]);
+        const width: number = (w > 768 && h > 600 ? 600 : w);
+        const height: number = (w > 768 && h > 600 ? 600 : h);
+        return [width - 15, height / 3 + 25];
     }
 
     /** DASHBOADS */
@@ -732,7 +732,10 @@ export class DashboardService {
 
     setSearchOperation(sm: MotoModel = new MotoModel(), sot: OperationTypeModel[] = [],
                        sme: MaintenanceElementModel[] = []) {
-        this.setSearchDashboard(new SearchDashboardModel(FilterMonthsEnum.MONTH, '', sm, sot, sme));
+        this.searchDashboard.searchMoto = sm;
+        this.searchDashboard.searchOperationType = sot;
+        this.searchDashboard.searchMaintenanceElement = sme;
+        this.setSearchDashboard(this.searchDashboard);
     }
 
     setSearchDashboard(filter: SearchDashboardModel) {

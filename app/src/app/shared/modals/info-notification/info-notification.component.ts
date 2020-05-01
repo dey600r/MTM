@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import * as shape from 'd3-shape';
 
 // UTILS
 import {
@@ -37,6 +38,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     hideSummary = false;
     hideRecords = true;
     isCalendar = true;
+    linear: any = shape.curveMonotoneX; // shape.curveBasis;
 
     // DATA
     dataMaintenance: WearMotoProgressBarModel = new WearMotoProgressBarModel();
@@ -89,10 +91,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       });
 
       this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-        const windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
-        this.dashboardMotoExpenses.view = windowSize;
-        this.dashboardRecordsMaintenance.view = windowSize;
-        this.changeDetector.detectChanges();
+        setTimeout(() => {
+          const windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+          this.dashboardMotoExpenses.view = windowSize;
+          this.dashboardRecordsMaintenance.view = windowSize;
+          this.changeDetector.detectChanges();
+        }, 250);
       });
     } else {
       const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
