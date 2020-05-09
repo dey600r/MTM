@@ -41,7 +41,11 @@ export class WearReplacementProgressBarModel {
     idMaintenance = -1;
     descriptionMaintenance = '';
     kmMaintenance = 0;
+    kmAcumulateMaintenance = 0;
     timeMaintenance = 0;
+    timeAcumulateMaintenance = 0;
+    fromKmMaintenance = 0;
+    toKmMaintenance = 0;
     initMaintenance = false;
     wearMaintenance = false;
     calculateKms = 0;

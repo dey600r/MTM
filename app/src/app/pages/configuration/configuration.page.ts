@@ -38,6 +38,7 @@ export class ConfigurationPage implements OnInit {
   configurations: ConfigurationModel[] = [];
   maintenances: MaintenanceModel[] = [];
   maintenanceElements: MaintenanceElementModel[] = [];
+  maxKm = 0;
 
   hideConfiguration = false;
   hideMaintenance = true;
@@ -65,6 +66,9 @@ export class ConfigurationPage implements OnInit {
 
   initPage() {
     this.dbService.getMotos().subscribe(data => {
+      if (!!data && data.length > 0) {
+        this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_MOTO_KM);
+      }
       // Filter to get less elemnts to better perfomance
       this.motos = data.filter(x => x.configuration.id !== 1);
     });
@@ -142,7 +146,7 @@ export class ConfigurationPage implements OnInit {
   openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
     this.rowMainSelected = row;
     this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditMaintenanceComponent, new ModalInputModel(create, this.rowMainSelected, [], PageEnum.CONFIGURATION));
+      AddEditMaintenanceComponent, new ModalInputModel(create, this.rowMainSelected, [this.maxKm], PageEnum.CONFIGURATION));
   }
 
   deleteMaintenance(row: MaintenanceModel) {

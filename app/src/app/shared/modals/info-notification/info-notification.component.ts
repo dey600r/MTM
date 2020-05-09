@@ -91,12 +91,17 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       });
 
       this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
+        let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+        this.dashboardMotoExpenses.view = windowSize;
+        this.dashboardRecordsMaintenance.view = windowSize;
         setTimeout(() => {
-          const windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-          this.dashboardMotoExpenses.view = windowSize;
-          this.dashboardRecordsMaintenance.view = windowSize;
-          this.changeDetector.detectChanges();
-        }, 250);
+          windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+          if (windowSize[0] === windowSize[1]) {
+            this.dashboardMotoExpenses.view = windowSize;
+            this.dashboardRecordsMaintenance.view = windowSize;
+            this.changeDetector.detectChanges();
+          }
+        }, 200);
       });
     } else {
       const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
@@ -192,11 +197,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getKmPercent(wear: WearReplacementProgressBarModel): string {
-    return `${this.getKmOperation(wear) } / ${wear.kmMaintenance}`;
+    return `${this.getKmOperation(wear) } / ${wear.kmAcumulateMaintenance}`;
   }
 
   getKmOperation(wear: WearReplacementProgressBarModel): string {
-    return `${(wear.kmOperation === null ? '--' : wear.kmMaintenance - wear.calculateKms) }`;
+    return `${(wear.kmOperation === null ? '--' : wear.kmAcumulateMaintenance - wear.calculateKms) }`;
   }
 
   getTimePercent(wear: WearReplacementProgressBarModel): string {
@@ -208,7 +213,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getDateMaintenance(wear: WearReplacementProgressBarModel): Date {
     const dateMaintenance: Date = new Date(this.wear.datePurchaseMoto);
-    dateMaintenance.setMonth(dateMaintenance.getMonth() + wear.timeMaintenance);
+    dateMaintenance.setMonth(dateMaintenance.getMonth() + wear.timeAcumulateMaintenance);
     return dateMaintenance;
   }
 
@@ -239,15 +244,15 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     let msg = '';
     if (wear.kmOperation === null) {
       if (wear.timeMaintenance === 0) {
-        msg = this.translator.instant('ALERT.InfoNotOperationKm', { km: wear.kmMaintenance });
+        msg = this.translator.instant('ALERT.InfoNotOperationKm', { km: wear.kmAcumulateMaintenance });
       } else {
         const dateMaintenance: Date = this.getDateMaintenance(wear);
         msg = this.translator.instant('ALERT.InfoNotOperationKmTime',
-          { km: wear.kmMaintenance, time: this.commonService.getDateString(dateMaintenance) });
+          { km: wear.kmAcumulateMaintenance, time: this.commonService.getDateString(dateMaintenance) });
       }
     } else {
       msg = this.translator.instant('ALERT.InfoOperationKm',
-        { kmop: wear.kmMaintenance - wear.calculateKms, km: wear.kmMaintenance });
+        { kmop: wear.kmAcumulateMaintenance - wear.calculateKms, km: wear.kmAcumulateMaintenance });
       if (wear.timeMaintenance !== 0) {
         const dateMaintenance: Date = this.getDateMaintenance(wear);
         const dateOperation: Date = this.getDateOperation(wear, dateMaintenance);
@@ -288,18 +293,26 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   showInfoMaintenance() {
     const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
     let msg = '';
+    let msgFromTo = '';
+    const translateAnd: string = this.translator.instant('COMMON.AND');
+    const translateBetween: string = this.translator.instant('COMMON.BETWEEN');
+    const translateOr: string = this.translator.instant('COMMON.OR');
+    const translateMonths: string = this.translator.instant('COMMON.MONTHS');
+    this.dataMaintenance.listWearReplacement.forEach((x, index) => {
+      msgFromTo += `${x.kmMaintenance} km`;
+      if (x.fromKmMaintenance !== 0 || x.toKmMaintenance !== null) {
+        msgFromTo += ` ${translateBetween} ${x.fromKmMaintenance} km ${translateAnd} ` +
+        `${(x.toKmMaintenance === null ? '∞' : x.toKmMaintenance)} km`;
+      }
+      msgFromTo += (x.timeMaintenance === 0 ? '' : ` ${translateOr} ${x.timeMaintenance} ${translateMonths}`);
+      msgFromTo += index + 1 === this.dataMaintenance.listWearReplacement.length ? ' ' : ` ${translateAnd} `;
+    });
     if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
-      msg = (wear.timeMaintenance === 0 ?
-        this.translator.instant('ALERT.InfoMaintenanceCalendarKm',
-          { maintenance: wear.descriptionMaintenance, km: wear.kmMaintenance }) :
-        this.translator.instant('ALERT.InfoMaintenanceCalendarTime',
-          { maintenance: wear.descriptionMaintenance, km: wear.kmMaintenance, time: wear.timeMaintenance }));
+      msg = this.translator.instant('ALERT.InfoMaintenanceCalendarTime',
+        { maintenance: wear.descriptionMaintenance, between: msgFromTo });
     } else {
-      msg = (wear.timeMaintenance === 0 ?
-        this.translator.instant('ALERT.InfoMaintenanceWearKm',
-          { maintenance: wear.descriptionMaintenance, km: wear.kmMaintenance }) :
-        this.translator.instant('ALERT.InfoMaintenanceWearTime',
-          { maintenance: wear.descriptionMaintenance, km: wear.kmMaintenance, time: wear.timeMaintenance }));
+      msg = this.translator.instant('ALERT.InfoMaintenanceWearTime',
+        { maintenance: wear.descriptionMaintenance, between: msgFromTo });
     }
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }

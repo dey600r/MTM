@@ -32,6 +32,9 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   // DATA
   maintenanceElements: MaintenanceElementModel[] = [];
   maintenanceFreqs: MaintenanceFreqModel[] = [];
+  maxKm = 100000;
+  valueRange: any = { lower: 0 , upper: 100000 };
+  showRange = '';
 
   // SUBSCRIPTION
   maintenanceElmentSubscription: Subscription = new Subscription();
@@ -56,6 +59,10 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
     this.maintenance = Object.assign({}, this.modalInputModel.data);
+    this.maxKm = (this.modalInputModel.dataList[0] === null ? 100000 : Math.round(this.modalInputModel.dataList[0] / 1000) * 1000 + 30000);
+    this.valueRange.lower = this.maintenance.fromKm;
+    this.valueRange.upper = this.maintenance.toKm === null ? this.maxKm : this.maintenance.toKm;
+    this.changeRange();
     if (this.modalInputModel.isCreate) {
       this.maintenance.id = -1;
       this.maintenance.maintenanceElement.id = null;
@@ -82,6 +89,8 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
       if (this.isInitDisabled()) {
         this.maintenance.init = false;
       }
+      this.maintenance.fromKm = this.valueRange.lower;
+      this.maintenance.toKm = (this.valueRange.upper === this.maxKm ? null : this.valueRange.upper);
       this.configurationService.saveMaintenance(this.maintenance,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
@@ -131,5 +140,10 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
 
   isValidKm(f: any): boolean {
     return f.maintenanceKm !== undefined && f.maintenanceKm.validity.valid;
+  }
+
+  changeRange() {
+    this.showRange = (this.valueRange.upper === this.maxKm && this.valueRange.lower === 0 ?
+      '' : `[ ${this.valueRange.lower}km - ${(this.valueRange.upper === this.maxKm ? '∞' : `${this.valueRange.upper}km`)} ]`);
   }
 }

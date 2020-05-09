@@ -65,12 +65,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
+      let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      this.dashboardMotoExpenses.view = windowSize;
+      this.dashboardOpTypeExpenses.view = windowSize;
       setTimeout(() => {
-        const windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-        this.dashboardMotoExpenses.view = windowSize;
-        this.dashboardOpTypeExpenses.view = windowSize;
-        this.changeDetector.detectChanges();
-      }, 250);
+        windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        if (windowSize[0] === windowSize[1]) {
+          this.dashboardMotoExpenses.view = windowSize;
+          this.dashboardOpTypeExpenses.view = windowSize;
+          this.changeDetector.detectChanges();
+        }
+      }, 200);
     });
   }
 

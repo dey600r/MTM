@@ -2,6 +2,7 @@ import { Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+// import { browserDBInstance } from 'cordova-browser';
 
 // LIBRARIES IONIC
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
@@ -39,14 +40,21 @@ export class DataBaseService {
 
   initDB() {
     this.plt.ready().then(() => {
-      this.sqlite.create({
-        name: 'mtm.db',
-        location: 'default'
-      })
-      .then((db: SQLiteObject) => {
-          this.database = db;
-          this.seedDatabase();
-      });
+      // if (!this.plt.is('cordova')) {
+      //   const db = browser.openDatabase('dev-mtm.db', '1.0', 'DEV', 5 * 1024 * 1024);
+      //   this.database = browserDBInstance(db);
+      // } else {
+          this.sqlite.create({
+            name: 'mtm.db',
+            location: 'default'
+          })
+          .then((db: SQLiteObject) => {
+              this.database = db;
+              this.seedDatabase();
+          }).catch(e => {
+            console.log('ERROR ' + e);
+          });
+      // }
     });
   }
 

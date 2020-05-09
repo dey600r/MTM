@@ -6,6 +6,8 @@
         "SELECT": "Select...",
         "NAME": "Name",
         "OR": "or",
+        "AND": "and",
+        "BETWEEN": "between",
         "OPERATION": "Operation",
         "OPERATIONS": "Operations",
         "MOTORBIKE": "Motorbike",
@@ -56,7 +58,8 @@
         "ESTIMATED": "Scheduled",
         "REAL": "Real",
         "LOADING": "Loading...",
-        "EXIT": "Exit"
+        "EXIT": "Exit",
+        "KM_RANGE": "Kilometers range"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -161,10 +164,8 @@
         "InfoOperationKm": "You have an operation at {{kmop}} km to pass maintenance of {{km}} km",
         "InfoOperationTime": " and pass at {{timeop}} before {{time}}" ,
         "ExitApp": "The application will close. Do you wish to continue?",
-        "InfoMaintenanceCalendarKm": "{{maintenance}} is configurated each {{km}} km",
-        "InfoMaintenanceCalendarTime": "{{maintenance}} is configurated each {{km}} km or {{time}} months",
-        "InfoMaintenanceWearKm": "{{maintenance}} is configurated to {{km}} km",
-        "InfoMaintenanceWearTime": "{{maintenance}} is configurated to {{km}} km or {{time}} months",
+        "InfoMaintenanceCalendarTime": "{{maintenance}} is configurated each {{between}}",
+        "InfoMaintenanceWearTime": "{{maintenance}} is configurated to {{between}}",
         "LastUpdateMotoKm":"The last time when the motorbike's km were update were on {{date}}",
         "InfoMaintenanceInit": "Used to first change spare parts, for example first change oil engine",
         "InfoMaintenanceWear": "Used to notify a certain kilometers or months",

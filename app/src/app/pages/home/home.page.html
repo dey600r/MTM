@@ -51,6 +51,10 @@
             </div>
             <!-- ICON -->
             <div class="icon-notification">
+              <ion-icon *ngIf="w.fromKmMaintenance !== 0" [color]="getClassIcon(w.warningKms, '')" size="small"
+              [class]="getClassIcon(w.warningKms, 'icon-row')" name="walk"></ion-icon>
+              <ion-icon *ngIf="w.toKmMaintenance !== null" [color]="getClassIcon(w.warningKms, '')" size="small"
+              [class]="getClassIcon(w.warningKms, 'icon-row')" name="trail-sign"></ion-icon>
               <ion-icon *ngIf="w.initMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
               [class]="getClassIcon(w.warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
               <ion-icon *ngIf="!w.initMaintenance && w.wearMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"

@@ -5,7 +5,7 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants } from '@utils/index';
 import { DataBaseService, MotoService, CommonService, ControlService, DashboardService } from '@services/index';
 import { MotoModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
@@ -94,7 +94,7 @@ export class MotoPage implements OnInit {
   }
 
   showModalInfo() {
-    this.controlService.showToast(PageEnum.MOTO, 'ALERT.AddMotorbikeToExpenses');
+    this.controlService.showToast(PageEnum.MOTO, 'ALERT.AddMotorbikeToExpenses', Constants.DELAY_TOAST_NORMAL);
   }
 
   changeFilterOperation(idMoto: number) {

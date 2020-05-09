@@ -50,7 +50,7 @@
         <ion-icon *ngIf="!hideGraph" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <div *ngIf="!hideGraph">
+    <div *ngIf="!hideGraph" class="justify-center">
       <ngx-charts-bar-vertical
         [view]="dashboardMotoExpenses.view"
         [scheme]="dashboardMotoExpenses.colorScheme"
@@ -80,7 +80,7 @@
       </ion-button>
     </ion-list-header>
     <ion-item *ngIf="!hideRecords" class="item-border-color-white">
-      <ngx-charts-line-chart class="margin-chart"
+      <ngx-charts-line-chart class="margin-chart justify-center"
         [view]="dashboardRecordsMaintenance.view"
         [scheme]="dashboardRecordsMaintenance.colorScheme"
         [results]="dashboardRecordsMaintenance.data"

@@ -10,11 +10,13 @@ export class MaintenanceModel extends BaseModel {
     time: number;
     init: boolean;
     wear: boolean;
+    fromKm: number;
+    toKm: number;
     master: boolean;
     constructor(d: string = null, me: MaintenanceElementModel = new MaintenanceElementModel(),
                 mf: MaintenanceFreqModel = new MaintenanceFreqModel(),
                 k: number = null, t: number = null, i: boolean = false, w: boolean = false,
-                m: boolean = false, id: number = 1) {
+                fr: number = 0, to: number = null, m: boolean = false, id: number = 1) {
         super(id);
         this.description = d;
         this.maintenanceElement = me;
@@ -23,6 +25,8 @@ export class MaintenanceModel extends BaseModel {
         this.time = t;
         this.init = i;
         this.wear = w;
+        this.fromKm = fr;
+        this.toKm = to;
         this.master = m;
     }
 }

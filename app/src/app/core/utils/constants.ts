@@ -1,5 +1,6 @@
 export class Constants {
-    static DELAY_TOAST = 3000;
+    static DELAY_TOAST = 1300;
+    static DELAY_TOAST_NORMAL = 3500;
     static DELAY_TOAST_HIGH = 5000;
     static DELAY_TOAST_HIGHER = 7000;
 

@@ -48,6 +48,8 @@ export class ConstantsColumns {
     static COLUMN_MTM_MAINTENANCE_TIME = 'time';
     static COLUMN_MTM_MAINTENANCE_INIT = 'init';
     static COLUMN_MTM_MAINTENANCE_WEAR = 'wear';
+    static COLUMN_MTM_MAINTENANCE_FROM = 'fromKm';
+    static COLUMN_MTM_MAINTENANCE_TO = 'toKm';
     static COLUMN_MTM_MAINTENANCE_MASTER = 'master';
 
     // MAINTENANCE ELEMENT
@@ -62,4 +64,11 @@ export class ConstantsColumns {
     // SEQUENCE
     static COLUMN_MTM_SEQUENCE_NAME = 'name';
     static COLUMN_MTM_SEQUENCE_SEQ = 'seq';
+
+    // WEAR REPLACEMENT RECORDS (MODEL)
+    static COLUMN_MODEL_NAME_MOTO = 'nameMoto';
+    static COLUMN_MODEL_KM_MAINTENANCE = 'kmMaintenance';
+    static COLUMN_MODEL_KM_ACUMULATE_MAINTENANCE = 'kmAcumulateMaintenance';
+    static COLUMN_MODEL_FROM_KM_MAINTENANCE = 'fromKmMaintenance';
+    static COLUMN_MODEL_CALCULATE_KMS = 'calculateKms';
 }

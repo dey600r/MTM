@@ -148,6 +148,17 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     await this.modalController.dismiss(this.modalOutputModel);
   }
 
+  moveCursorToEnd(event: any) {
+    const isIEOrEdge = /msie\s|trident\/|edge\//i.test(window.navigator.userAgent);
+    if (isIEOrEdge) {
+      const textarea: HTMLTextAreaElement = event.target;
+      const data: string = this.operation.details;
+      textarea.value = null;
+      // textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      textarea.value = data;
+    }
+  }
+
   showConfirmSaveWithDelete() {
     this.controlService.showConfirm(PageEnum.MODAL_OPERATION, this.translator.instant('COMMON.OPERATION'),
       this.translator.instant('PAGE_OPERATION.ConfirmSaveToDeleteReplacement'),

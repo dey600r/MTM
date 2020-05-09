@@ -68,7 +68,8 @@ export class OperationPage implements OnInit {
         (!!data && data.length > 0 ? data[0].moto : new MotoModel(null, null, null, null, null, null, null, null, 0)) :
         this.filterDashboard.searchMoto));
       this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
-        if (data.length === 0) {
+        this.allOperations = data.filter(op => op.moto.id === filter.searchMoto.id);
+        if (this.allOperations.length === 0) {
           this.iconNameHeaderLeft = 'information-circle';
         } else {
           this.iconNameHeaderLeft = 'bar-chart';
@@ -77,7 +78,6 @@ export class OperationPage implements OnInit {
         if (this.filterDashboard.searchMoto.brand !== null) {
           this.nameFilterMoto = `${filter.searchMoto.brand} ${filter.searchMoto.model}`;
         }
-        this.allOperations = data.filter(op => op.moto.id === filter.searchMoto.id);
         const filteredText: string = filter.searchText.toLowerCase();
         this.operations = this.commonService.orderBy(
           this.allOperations.filter(op =>
@@ -122,11 +122,11 @@ export class OperationPage implements OnInit {
   }
 
   showModalInfoMoto() {
-    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddMotoToAddOperation');
+    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddMotoToAddOperation', Constants.DELAY_TOAST_NORMAL);
   }
 
   showModalInfoOperation() {
-    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddOperationToExpenses');
+    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddOperationToExpenses', Constants.DELAY_TOAST_NORMAL);
   }
 
   showConfirmDelete() {

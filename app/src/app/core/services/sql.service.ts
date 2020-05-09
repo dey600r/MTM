@@ -72,8 +72,8 @@ export class SqlService {
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION} as descriptionMaintenanceFreq, ` +
     `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}, ` +
     `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME}, m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT}, ` +
-    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, ` +
-    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER} as masterMaintenance ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FROM},` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TO}, m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER} as masterMaintenance ` +
     `FROM ${ConstantsTable.TABLE_MTM_CONFIGURATION} AS c ` +
     `LEFT JOIN ${ConstantsTable.TABLE_MTM_CONFIG_MAINT} AS cm ON ` +
     `c.${ConstantsColumns.COLUMN_MTM_ID} = cm.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION} ` +
@@ -122,8 +122,8 @@ export class SqlService {
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION} as descriptionMaintenanceFreq, ` +
     `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}, ` +
     `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME}, m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT}, ` +
-    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, ` +
-    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER} ` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FROM},` +
+    `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TO}, m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER} ` +
     `FROM ${ConstantsTable.TABLE_MTM_MAINTENANCE} AS m ` +
     `JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
     `me.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_ELEMENT} ` +
@@ -304,6 +304,8 @@ export class SqlService {
       time: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME]),
       init: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT] === Constants.DATABASE_YES,
       wear: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR] === Constants.DATABASE_YES,
+      fromKm: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FROM],
+      toKm: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_TO],
       master: data.masterMaintenance === Constants.DATABASE_YES
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
@@ -316,6 +318,8 @@ export class SqlService {
       time: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME]),
       init: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT] === Constants.DATABASE_YES,
       wear: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR] === Constants.DATABASE_YES,
+      fromKm: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FROM],
+      toKm: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_TO],
       master: data.master === Constants.DATABASE_YES
     });
   }
@@ -478,11 +482,13 @@ export class SqlService {
       `(${ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_ELEMENT}, ` +
       `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MAINTENANCE_FREQ}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}, ` +
       `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT}, ` +
-      `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER}) `;
+      `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FROM}, ` +
+      `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TO}, ${ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER}) `;
       maintenance.forEach((x, index) => {
         sql += `SELECT '${x.description}', ${x.maintenanceElement.id}, ${x.maintenanceFreq.id}, ` +
           `${x.km}, ${x.time}, '${(x.init ? Constants.DATABASE_YES : Constants.DATABASE_NO)}', ` +
-          `'${(x.wear ? Constants.DATABASE_YES : Constants.DATABASE_NO)}', '${Constants.DATABASE_NO}'`;
+          `'${(x.wear ? Constants.DATABASE_YES : Constants.DATABASE_NO)}', ${x.fromKm},` +
+          `${x.toKm}, '${Constants.DATABASE_NO}'`;
         if ((index + 1) < maintenance.length) {
           sql += ' UNION ';
         }
@@ -559,7 +565,9 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM}=${x.km}, ` +
         `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TIME}=${x.time}, ` +
         `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_INIT}='${(x.init ? Constants.DATABASE_YES : Constants.DATABASE_NO)}', ` +
-        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}='${(x.wear ? Constants.DATABASE_YES : Constants.DATABASE_NO)}' ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR}='${(x.wear ? Constants.DATABASE_YES : Constants.DATABASE_NO)}', ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FROM}=${x.fromKm}, ` +
+        `${ConstantsColumns.COLUMN_MTM_MAINTENANCE_TO}=${x.toKm} ` +
         `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
       });
     }

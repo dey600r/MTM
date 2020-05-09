@@ -31,7 +31,8 @@
           <ion-icon *ngIf="this.submited && !isValidDetails(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidDetails(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddDetail' | translate }}</ion-text>
         </ion-label>
-        <ion-textarea #opDetails name="opDetails" placeholder="--" autocapitalize required [(ngModel)]="operation.details"></ion-textarea>
+        <ion-textarea #opDetails name="opDetails" inputmode="text" placeholder="--" autocapitalize required 
+        (ionFocus)="moveCursorToEnd($event)" [(ngModel)]="operation.details"></ion-textarea>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">

@@ -31,6 +31,7 @@ export class HomePage implements OnInit {
   searchDashboard: SearchDashboardModel = this.dashboardService.getSearchDashboard();
   activateInfo = false;
   wears: WearMotoProgressBarModel[] = [];
+  allWears: WearMotoProgressBarModel[] = [];
   hideMotos: boolean[] = [];
   operations: OperationModel[] = [];
   loaded = false;
@@ -67,8 +68,22 @@ export class HomePage implements OnInit {
               if (!!motos && motos.length > 0) {
                 this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
                   this.operations = operations;
-                  this.wears = this.dashboardService.getWearReplacementToMoto(operations, motos, configurations, maintenances);
-                  this.wears.forEach((x, index) => this.hideMotos[index] = (index !== 0));
+                  this.wears = [];
+                  this.allWears = this.dashboardService.getWearReplacementToMoto(operations, motos, configurations, maintenances);
+                  this.allWears.forEach((x, index) => {
+                    this.wears = [...this.wears, Object.assign({}, x)];
+                    this.hideMotos[index] = (index !== 0);
+                    let listWears: WearReplacementProgressBarModel[] = [];
+                    const kmMoto: number = this.dashboardService.calculateKmMotoEstimated(new MotoModel(null, null, 0, x.kmMoto,
+                      null, x.kmsPerMonthMoto, x.dateKmsMoto, x.datePurchaseMoto));
+                    x.listWearReplacement.forEach(z => {
+                      if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
+                        z.fromKmMaintenance <= kmMoto && (z.toKmMaintenance === null || z.toKmMaintenance >= kmMoto)) {
+                        listWears = [...listWears, z];
+                      }
+                    });
+                    this.wears.find(y => x.idMoto === y.idMoto).listWearReplacement = listWears;
+                  });
                   this.activateInfo = this.activateModeInfo(motos, operations, this.wears);
                   this.timeOutLoader();
                 });
@@ -135,11 +150,22 @@ export class HomePage implements OnInit {
   // MODALS
 
   openInfoNotification(m: WearMotoProgressBarModel, w: WearReplacementProgressBarModel) {
+    let listGroupWear: WearReplacementProgressBarModel[] = this.allWears.find(x => m.idMoto === x.idMoto).listWearReplacement.filter(x =>
+      w.idMaintenanceElement === x.idMaintenanceElement);
+    const margenGrouper = 4000;
+    listGroupWear = listGroupWear.filter(x => x.idMaintenance !== w.idMaintenance  && listGroupWear.some(y =>
+      x.idMaintenance !== y.idMaintenance && y.kmMaintenance !== x.kmMaintenance &&
+      (y.fromKmMaintenance !== null && x.toKmMaintenance !== null &&
+        y.fromKmMaintenance >= x.toKmMaintenance - margenGrouper && y.fromKmMaintenance <= x.toKmMaintenance + margenGrouper) ||
+      (y.toKmMaintenance !== null && x.fromKmMaintenance !== null &&
+        y.toKmMaintenance >= x.fromKmMaintenance - margenGrouper && y.toKmMaintenance <= x.fromKmMaintenance + margenGrouper)));
+    listGroupWear = [...listGroupWear, w];
     // Change filter operation to easy
     this.dashboardService.setSearchOperation(new MotoModel(m.nameMoto, '', null, null, null, null, null, null, m.idMoto));
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
       new WearMotoProgressBarModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
-        m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.percentKm, m.percentTime, m.warning, [w]), this.operations, PageEnum.HOME));
+        m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.percentKm, m.percentTime, m.warning, listGroupWear),
+        this.operations, PageEnum.HOME));
   }
 
 }

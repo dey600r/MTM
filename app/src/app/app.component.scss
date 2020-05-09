@@ -236,6 +236,13 @@
     justify-content: flex-end;
 }
 
+.justify-center {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+    justify-content: center;
+}
+
 .search-bar-location {
     padding-inline-start: initial;
     padding-inline-end: initial;

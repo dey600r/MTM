@@ -1,4 +1,5 @@
 const electron = require('electron');
+const sql = require('sqlite3');
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -13,7 +14,16 @@ let mainWindow;
 
 function createWindow() {
     // Create the browser window.
-    mainWindow = new BrowserWindow({width: 1200, height: 700});
+    mainWindow = new BrowserWindow({
+        width: 1000, 
+        height: 800,
+        fullscreenable: true,
+        closable: true,
+        webPreferences: {
+            allowRunningInsecureContent: false,
+            allowRendererProcessReuse: false
+        }
+    });
 
     // and load the index.html of the app.
     const startUrl = process.env.ELECTRON_START_URL || url.format({
@@ -23,7 +33,7 @@ function createWindow() {
         });
     mainWindow.loadURL(startUrl);
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {

@@ -6,6 +6,8 @@
         "SELECT": "Seleccione...",
         "NAME": "Nombre",
         "OR": "o",
+        "AND": "y",
+        "BETWEEN": "entre",
         "OPERATION": "Operación",
         "OPERATIONS": "Operaciones",
         "MOTORBIKE": "Moto",
@@ -56,7 +58,8 @@
         "ESTIMATED": "Planificado",
         "REAL": "Real",
         "LOADING": "Cargando...",
-        "EXIT": "Salir"
+        "EXIT": "Salir",
+        "KM_RANGE": "Rango de kilómetros"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -161,10 +164,8 @@
         "InfoOperationKm": "Has pasadola revisión a los {{kmop}} km para el mantenimiento de los {{km}} km",
         "InfoOperationTime": " y con fecha {{timeop}} antes de la fecha requerida {{time}}",
         "ExitApp": "La aplicación se va a cerrar. ¿Desea continuar?",
-        "InfoMaintenanceCalendarKm": "{{maintenance}} está configurado cada {{km}} km",
-        "InfoMaintenanceCalendarTime": "{{maintenance}} está configurado cada {{km}} km o {{time}} meses",
-        "InfoMaintenanceWearKm": "{{maintenance}} está configurado a los {{km}} km",
-        "InfoMaintenanceWearTime": "{{maintenance}} está configurado a los {{km}} km o {{time}} meses",
+        "InfoMaintenanceCalendarTime": "{{maintenance}} está configurado cada {{between}}",
+        "InfoMaintenanceWearTime": "{{maintenance}} está configurado a los {{between}}",
         "LastUpdateMotoKm":"La última actualización de los kilómentros de la moto fué el {{date}}",
         "InfoMaintenanceInit": "Se usa para los primeros cambios de piezas, por ejemplo para el rodaje",
         "InfoMaintenanceWear": "Se usa para notificar o avisar a una cantidad de kilómetros o meses",

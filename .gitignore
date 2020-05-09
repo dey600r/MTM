@@ -32,4 +32,7 @@ package-lock.json
 /app/plugins
 /app/www
 /app/resources
+/app/build.json
+/app/build-demo.json
 /Utils/Versions
+/Utils/Install-Ionic-Proyect.txt
