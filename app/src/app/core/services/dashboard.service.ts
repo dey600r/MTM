@@ -296,9 +296,9 @@ export class DashboardService {
                     });
                     const sumSuccess: number = ((maintenancesMoto.length - wearReplacement.length) +
                         wearReplacement.filter(x => x.warningKms !== WarningWearEnum.SUCCESS &&
-                            x.fromKmMaintenance <= kmMotoEstimated &&
-                            (x.toKmMaintenance === null || x.toKmMaintenance >= kmMotoEstimated)).length +
-                        wearReplacement.filter(x => x.warningKms === WarningWearEnum.SUCCESS &&
+                                                (x.fromKmMaintenance >= kmMotoEstimated ||
+                                                (x.toKmMaintenance !== null && x.toKmMaintenance <= kmMotoEstimated))).length +
+                            wearReplacement.filter(x => x.warningKms === WarningWearEnum.SUCCESS &&
                                                     x.warningMonths === WarningWearEnum.SUCCESS).length) / maintenancesMoto.length;
                     result = [...result, {
                         idMoto: moto.id,
@@ -493,12 +493,15 @@ export class DashboardService {
             calculateKms: calKms,
             calculateMonths: calMonths,
             percentKms: percentKm,
-            warningKms: (main.wear ? this.getWarningWear(percentKm) : this.getWarningMaintenance(percentKm,
-                op.km == null || calKms < (main.km * -1))),
+            warningKms: this.getWarningWearNormal(main.wear, percentKm, calKms, op.km, main.km),
             percentMonths: percentMonth,
-            warningMonths: (main.wear ? this.getWarningWear(percentMonth) : this.getWarningMaintenance(percentMonth,
-                op.km == null || calMonths < (main.time * -1)))
+            warningMonths: this.getWarningWearNormal(main.wear, percentMonth, calMonths, op.km, main.time)
         };
+    }
+
+    getWarningWearNormal(wear: boolean, percent: number, calc: number, opKm: number, main: number): WarningWearEnum {
+        return (wear ? this.getWarningWear(percent) : this.getWarningMaintenance(percent,
+            opKm == null || calc < (main * -1)));
     }
 
     getWarningMaintenance(percent: number, opNotFound: boolean): WarningWearEnum {
@@ -555,45 +558,36 @@ export class DashboardService {
     getWearReplacement(motoWear: WearMotoProgressBarModel, operations: OperationModel[]): WearMotoProgressBarModel {
         let result: WearMotoProgressBarModel = new WearMotoProgressBarModel();
 
-        // Km Moto estimated
-        const moto: MotoModel = new MotoModel(null, null, 0, motoWear.kmMoto,
-            null, motoWear.kmsPerMonthMoto, motoWear.dateKmsMoto, motoWear.datePurchaseMoto);
-        const kmMoto: number = this.calculateKmMotoEstimated(moto);
         if (motoWear.listWearReplacement.length > 0) {
+            // Km Moto estimated
+            const moto: MotoModel = new MotoModel(null, null, 0, motoWear.kmMoto,
+                null, motoWear.kmsPerMonthMoto, motoWear.dateKmsMoto, motoWear.datePurchaseMoto);
+            const kmMoto: number = this.calculateKmMotoEstimated(moto);
+            const diffDateToday: number = this.commonService.monthDiff(motoWear.datePurchaseMoto, new Date());
+            const listWear: WearReplacementProgressBarModel[] = this.commonService.orderBy(
+                motoWear.listWearReplacement, ConstantsColumns.COLUMN_MODEL_FROM_KM_MAINTENANCE);
+            // INIT VARIABLES
             let wearReplacement: WearReplacementProgressBarModel[] = [];
             let percentMotoKm = 0;
             let percentMotoTime = 0;
             let timeCalculate = 0;
-            const listWear: WearReplacementProgressBarModel[] = this.commonService.orderBy(
-                motoWear.listWearReplacement, ConstantsColumns.COLUMN_MODEL_FROM_KM_MAINTENANCE);
-            const listWearLength: number = listWear.length;
-            listWear.forEach((wear: WearReplacementProgressBarModel, index: number) => {
-                // Operation with maintenance selected
-                const operationsMoto: OperationModel[] = operations.filter(x => x.moto.id === motoWear.idMoto &&
+            if (listWear.some(x => x.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE)) {
+                listWear.forEach((wear: WearReplacementProgressBarModel, index: number) => {
+                    // Operation with maintenance selected
+                    const operationsMoto: OperationModel[] = operations.filter(x => x.moto.id === motoWear.idMoto &&
                     x.listMaintenanceElement.some(y => y.id === wear.idMaintenanceElement));
-                const diffDateToday: number = this.commonService.monthDiff(motoWear.datePurchaseMoto, new Date());
-
-                if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
                     const estimatedKmOperation: number = wear.kmMaintenance / 2; // km estimated maintenance
-                    const iterations: number = Math.floor(((wear.toKmMaintenance === null ? kmMoto :
-                            wear.toKmMaintenance - wear.fromKmMaintenance) + wear.kmMaintenance) / wear.kmMaintenance) -
-                            (listWearLength > 1 && index + 1 !== listWearLength ? 1 : 0);
-                    let kmCalculate = wear.fromKmMaintenance - (wear.fromKmMaintenance > 0 ? wear.kmMaintenance : 0);
-                    if (wear.fromKmMaintenance !== 0 && timeCalculate === 0) {
-                        const opCalc: OperationModel = this.getOperationsNearKmTime(moto, operationsMoto, wear.fromKmMaintenance, 0);
-                        timeCalculate = opCalc === null ? 0 : this.commonService.monthDiff(moto.datePurchase, new Date(opCalc.date));
-                    }
+                    const max: number = ((wear.toKmMaintenance === null ? kmMoto : wear.toKmMaintenance) +
+                    (listWear.length === 1 || index + 1 === listWear.length ? 0 : - wear.kmMaintenance * 2));
+                    timeCalculate = this.getInitTime(wear, moto, operationsMoto, timeCalculate);
                     let opLast = new OperationModel();
-                    for (let i = 0; i < iterations; i++) {
+                    for (let kmCalculate = this.getInitKm(wear); kmCalculate < max; kmCalculate += wear.kmMaintenance) {
                         const calcKm: number = (kmCalculate + wear.kmMaintenance); // km should maintenance
                         const calcCompKm: number = (calcKm + estimatedKmOperation); // km max should maintenance
                         const calcTime: number = (timeCalculate + wear.timeMaintenance); // time should maintenance
                         // OPERATIONS: km and time aprox to maintenance
-                        const ops: OperationModel[] = operationsMoto.filter(x =>
-                            !wearReplacement.some(y => y.idOperation === x.id) &&
-                            ((x.km >= kmCalculate && x.km < calcCompKm) ||
-                            ((opLast.id === null ? 0 : opLast.km) <= x.km && x.km < calcCompKm &&
-                            this.commonService.monthDiff(motoWear.datePurchaseMoto, new Date(x.date)) <= calcTime)));
+                        const ops: OperationModel[] = this.getOperationsFilteredKmTime(operationsMoto, wearReplacement, kmCalculate,
+                            calcCompKm, calcTime, opLast, motoWear.datePurchaseMoto);
                         let op = new OperationModel();
                         op.id = null;
                         let calcDiffTime = 0;
@@ -640,15 +634,9 @@ export class DashboardService {
                                 calculateKms: calculateKmEstimate,
                                 calculateMonths: calculateTimeEstimate,
                                 percentKms: percentKm,
-                                warningKms: (wear.wearMaintenance ?
-                                    this.getWarningWearRecordsMaintenance(
-                                        percentKm * (calculateKmEstimate >= 0 ? 1 : -1), op.km === null) :
-                                    this.getWarningRecordsMaintenance(percentKm * (calculateKmEstimate >= 0 ? 1 : -1), op.km === null)),
+                                warningKms: this.getWarningRecord(wear.wearMaintenance, calculateKmEstimate, percentKm, op.km),
                                 percentMonths: percentTime,
-                                warningMonths: (wear.wearMaintenance ?
-                                    this.getWarningWearRecordsMaintenance(
-                                        percentTime * (calculateTimeEstimate >= 0 ? 1 : -1), op.km === null) :
-                                    this.getWarningRecordsMaintenance(percentTime * (calculateTimeEstimate >= 0 ? 1 : -1), op.km === null)),
+                                warningMonths: this.getWarningRecord(wear.wearMaintenance, calculateTimeEstimate, percentTime, op.km)
                             }];
                         }
 
@@ -656,32 +644,54 @@ export class DashboardService {
                             percentMotoKm += (calculateKmEstimate >= 0 ? 1 : 1 - (percentKm > 1 ? 1 : percentKm));
                             percentMotoTime += (calculateTimeEstimate >= 0 ? 1 : 1 - (percentTime > 1 ? 1 : percentTime));
                         }
-                        kmCalculate += wear.kmMaintenance;
                         timeCalculate += wear.timeMaintenance;
                     }
-                }
-            });
-            const perKm: number = percentMotoKm * 100 / wearReplacement.length;
-            const perTime: number = percentMotoTime * 100 / wearReplacement.length;
-            result = {
-                idMoto: motoWear.idMoto,
-                nameMoto: motoWear.nameMoto,
-                kmMoto: motoWear.kmMoto,
-                datePurchaseMoto: motoWear.datePurchaseMoto,
-                kmsPerMonthMoto: motoWear.kmsPerMonthMoto,
-                dateKmsMoto: motoWear.dateKmsMoto,
-                percent: Math.round((perKm + perTime) / 2),
-                percentKm: Math.floor(perKm),
-                percentTime: Math.floor(perTime),
-                warning: this.getPercentMoto(wearReplacement, kmMoto),
-                listWearReplacement: this.commonService.orderBy(wearReplacement, ConstantsColumns.COLUMN_MODEL_KM_ACUMULATE_MAINTENANCE)
-            };
+                });
+                const perKm: number = percentMotoKm * 100 / wearReplacement.length;
+                const perTime: number = percentMotoTime * 100 / wearReplacement.length;
+                result = {
+                    idMoto: motoWear.idMoto,
+                    nameMoto: motoWear.nameMoto,
+                    kmMoto: motoWear.kmMoto,
+                    datePurchaseMoto: motoWear.datePurchaseMoto,
+                    kmsPerMonthMoto: motoWear.kmsPerMonthMoto,
+                    dateKmsMoto: motoWear.dateKmsMoto,
+                    percent: Math.round((perKm + perTime) / 2),
+                    percentKm: Math.floor(perKm),
+                    percentTime: Math.floor(perTime),
+                    warning: this.getPercentMoto(wearReplacement, kmMoto),
+                    listWearReplacement: this.commonService.orderBy(wearReplacement, ConstantsColumns.COLUMN_MODEL_KM_ACUMULATE_MAINTENANCE)
+                };
+            }
         }
 
         return result;
     }
 
-    getOperationsNearKmTime(moto: MotoModel, operations: OperationModel[], km: number, time: number) {
+    getInitKm(wear: WearReplacementProgressBarModel): number {
+        return wear.fromKmMaintenance - (wear.fromKmMaintenance > 0 ? wear.kmMaintenance : 0);
+    }
+
+    getInitTime(wear: WearReplacementProgressBarModel, moto: MotoModel, operations: OperationModel[], time: number): number {
+        let result: number = time;
+        if (wear.fromKmMaintenance !== 0 && time === 0) {
+            const opCalc: OperationModel = this.getOperationsNearKmTime(moto, operations, wear.fromKmMaintenance, 0);
+            result = opCalc === null ? 0 : this.commonService.monthDiff(moto.datePurchase, new Date(opCalc.date));
+        }
+        return result;
+    }
+
+    getOperationsFilteredKmTime(operationsMoto: OperationModel[], wearReplacement: WearReplacementProgressBarModel[],
+                                kmCalculate: number, calcCompKm: number, calcTime: number, opLast: OperationModel,
+                                datePurchaseMoto: Date): OperationModel[] {
+        return operationsMoto.filter(x =>
+                !wearReplacement.some(y => y.idOperation === x.id) &&
+                ((x.km >= kmCalculate && x.km < calcCompKm) ||
+                ((opLast.id === null ? 0 : opLast.km) <= x.km && x.km < calcCompKm &&
+                this.commonService.monthDiff(datePurchaseMoto, new Date(x.date)) <= calcTime)));
+    }
+
+    getOperationsNearKmTime(moto: MotoModel, operations: OperationModel[], km: number, time: number): OperationModel {
         let operation: OperationModel = null;
         let percent = 1;
         operations.forEach(x => {
@@ -705,6 +715,11 @@ export class DashboardService {
             }
         });
         return operation;
+    }
+
+    getWarningRecord(wear: boolean, calculateEstimate: number, percent: number, km: number): WarningWearEnum {
+        return (wear ? this.getWarningWearRecordsMaintenance(percent * (calculateEstimate >= 0 ? 1 : -1), km === null) :
+            this.getWarningRecordsMaintenance(percent * (calculateEstimate >= 0 ? 1 : -1), km === null));
     }
 
     getWarningRecordsMaintenance(percent: number, opNotFound: boolean): WarningWearEnum {

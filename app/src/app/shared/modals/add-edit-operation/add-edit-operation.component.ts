@@ -153,6 +153,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     if (isIEOrEdge) {
       const textarea: HTMLTextAreaElement = event.target;
       const data: string = this.operation.details;
+      textarea.value = 'p';
       textarea.value = null;
       // textarea.setSelectionRange(textarea.value.length, textarea.value.length);
       textarea.value = data;

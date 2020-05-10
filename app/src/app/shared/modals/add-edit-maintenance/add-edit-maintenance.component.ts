@@ -88,9 +88,12 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
     if (this.isValidForm(f)) {
       if (this.isInitDisabled()) {
         this.maintenance.init = false;
+        this.maintenance.fromKm = this.valueRange.lower;
+        this.maintenance.toKm = (this.valueRange.upper === this.maxKm ? null : this.valueRange.upper);
+      } else {
+        this.maintenance.fromKm = 0;
+        this.maintenance.toKm = null;
       }
-      this.maintenance.fromKm = this.valueRange.lower;
-      this.maintenance.toKm = (this.valueRange.upper === this.maxKm ? null : this.valueRange.upper);
       this.configurationService.saveMaintenance(this.maintenance,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
