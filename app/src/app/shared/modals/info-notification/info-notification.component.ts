@@ -104,10 +104,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         }, 200);
       });
     } else {
-      const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
+      const wear: WearReplacementProgressBarModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
       this.isCalendar = false;
       this.labelPercent = Math.round((1 -
-        (wear.timeMaintenance === 0 || wear.percentKms > wear.percentMonths ? wear.percentKms : wear.percentMonths)) * 100);
+        (wear.timeMaintenance === 0 ? wear.percentKms : (wear.percentKms + wear.percentMonths) / 2)) * 100);
       if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
         this.labelNotRecord = this.translator.instant('PAGE_HOME.NotExistRecords', {maintenance: this.nameMaintenanceElement });
       }
@@ -121,14 +121,13 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   configureResume() {
     this.dataMaintenance = this.modalInputModel.data;
-    const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
-    this.labelNameMoto = this.dataMaintenance.nameMoto;
-    this.nameMaintenance = wear.descriptionMaintenance;
-    this.nameMaintenanceElement = wear.nameMaintenanceElement;
     const moto: MotoModel = new MotoModel(null, null, 0, this.dataMaintenance.kmMoto,
       null, this.dataMaintenance.kmsPerMonthMoto, this.dataMaintenance.dateKmsMoto, this.dataMaintenance.datePurchaseMoto);
     this.motoKmEstimated = this.dashboardService.calculateKmMotoEstimated(moto);
-
+    const wear: WearReplacementProgressBarModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
+    this.labelNameMoto = this.dataMaintenance.nameMoto;
+    this.nameMaintenance = wear.descriptionMaintenance;
+    this.nameMaintenanceElement = wear.nameMaintenanceElement;
     this.labelMotoKm = this.translator.instant('PAGE_HOME.MotoKm', { km: this.dataMaintenance.kmMoto });
     if (this.dataMaintenance.kmMoto !== this.motoKmEstimated) {
       this.labelMotoKm += '\n' + this.translator.instant('PAGE_HOME.MotoEstimatedKm', { km: this.motoKmEstimated });
@@ -193,7 +192,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getIconReplacement(): string {
     return (!!this.wear && this.wear.listWearReplacement.length > 0 ? this.configurationService.getIconReplacement(
-      new MaintenanceElementModel(null, null, null, this.wear.listWearReplacement[0].idMaintenanceElement)) : '');
+      new MaintenanceElementModel(null, null, null, this.getMaintenanceNow(this.wear.listWearReplacement).idMaintenanceElement)) : '');
   }
 
   getKmPercent(wear: WearReplacementProgressBarModel): string {
@@ -272,26 +271,26 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   showInfoReliability() {
     let msg = '';
     if (this.wear.listWearReplacement.length > 0) {
-      const wear: WearReplacementProgressBarModel = this.wear.listWearReplacement[0];
+      const wear: WearReplacementProgressBarModel = this.getMaintenanceNow(this.wear.listWearReplacement);
       msg = (wear.timeMaintenance === 0 ?
         this.translator.instant('ALERT.InfoReliabilityPercentKm',
           { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm }) :
         this.translator.instant('ALERT.InfoReliabilityPercentTime',
           { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm, percentTime: this.wear.percentTime }));
     } else {
-      const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
+      const wear: WearReplacementProgressBarModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
       msg = (wear.timeMaintenance === 0 ?
         this.translator.instant('ALERT.InfoReliabilityPercentKm',
-          { maintenance: wear.descriptionMaintenance, percentKm: Math.floor(wear.percentKms) }) :
+          { maintenance: wear.descriptionMaintenance, percentKm: Math.floor((1 - wear.percentKms) * 100) }) :
         this.translator.instant('ALERT.InfoReliabilityPercentTime',
-          { maintenance: wear.descriptionMaintenance, percentKm: Math.floor(wear.percentKms),
-            percentTime: Math.floor(wear.percentMonths) }));
+          { maintenance: wear.descriptionMaintenance, percentKm: Math.floor((1 - wear.percentKms) * 100),
+            percentTime: Math.floor((1 - wear.percentMonths) * 100) }));
     }
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
   showInfoMaintenance() {
-    const wear: WearReplacementProgressBarModel = this.dataMaintenance.listWearReplacement[0];
+    const wear: WearReplacementProgressBarModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
     let msg = '';
     let msgFromTo = '';
     const translateAnd: string = this.translator.instant('COMMON.AND');
@@ -315,6 +314,15 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         { maintenance: wear.descriptionMaintenance, between: msgFromTo });
     }
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+  }
+
+  getMaintenanceNow(wears: WearReplacementProgressBarModel[]): WearReplacementProgressBarModel {
+    let result: WearReplacementProgressBarModel = wears.find(x => x.fromKmMaintenance <= this.motoKmEstimated &&
+      (x.toKmMaintenance === null || x.toKmMaintenance >= this.motoKmEstimated));
+    if (!!!result) {
+      result = wears[wears.length - 1];
+    }
+    return result;
   }
 
   showPopover(ev: any) {

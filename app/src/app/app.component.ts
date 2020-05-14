@@ -17,6 +17,7 @@ import { PageEnum } from './core/utils';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -44,4 +45,5 @@ export class AppComponent {
       this.controlService.activateButtonExist(PageEnum.HOME);
     });
   }
+
 }

@@ -77,7 +77,7 @@ export class HomePage implements OnInit {
                     const kmMoto: number = this.dashboardService.calculateKmMotoEstimated(new MotoModel(null, null, 0, x.kmMoto,
                       null, x.kmsPerMonthMoto, x.dateKmsMoto, x.datePurchaseMoto));
                     x.listWearReplacement.forEach(z => {
-                      if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
+                    if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
                         z.fromKmMaintenance <= kmMoto && (z.toKmMaintenance === null || z.toKmMaintenance >= kmMoto)) {
                         listWears = [...listWears, z];
                       }
@@ -109,8 +109,12 @@ export class HomePage implements OnInit {
   }
 
   timeOutLoader() {
+    if (document.getElementById('custom-overlay').style.display === 'flex' ||
+    document.getElementById('custom-overlay').style.display === '') {
+      setTimeout(() => { document.getElementById('custom-overlay').style.display = 'none'; }, 3000);
+    }
     if (!this.loaded) {
-      setTimeout(() => { this.loaded = true; }, 2000);
+      setTimeout(() => { this.loaded = true; }, 2500);
     }
   }
 
