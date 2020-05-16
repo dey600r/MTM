@@ -219,6 +219,7 @@
         "CHANGE_AIR_FILTER": "Change/Clean Air Filter",
         "CHANGE_OIL_FILTER": "Change Oil Filter",
         "CHANGE_SPARK_PLUG": "Change Spark Plug",
+        "CHANGE_BRAKE_FLUID": "Change Brake Fluids",
         "CHANGE_FRONT_BRAKE_FLUID": "Change Front Brake Fluid",
         "CHANGE_BACK_BRAKE_FLUID": "Change Back Brake Fluid",
         "CHANGE_COOLANT": "Change Coolant",
@@ -245,9 +246,8 @@
         "CHANGE_LEFT_DUMPER_SEALS": "Change Left Dumper Seals",
         "CHANGE_PETROL_TAP": "Change Petrol Tap",
         "ADJUST_VALVES": "Adjust Valves",
-        "FIRST_CHANGE_ENGINE_OIL": "First Change Engine Oil",
-        "FIRST_CHANGE_OIL_FILTER": "First Change Oil Filter",
-        "FIRST_CHANGE_OIL_PLUG_GASTEK": "First Change Oil Plug Gastek",
+        "FIRST_REVIEW": "First Review",
+        "BASIC_REVIEW": "Basic Review",
         "ONCE": "Once",
         "CALENDAR": "Calendar"
     }

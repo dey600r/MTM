@@ -42,7 +42,6 @@ export class ConstantsColumns {
 
     // MAINTENANCE
     static COLUMN_MTM_MAINTENANCE_DESCRIPTION = 'description';
-    static COLUMN_MTM_MAINTENANCE_MAINTENANCE_ELEMENT = 'idMaintenanceElement';
     static COLUMN_MTM_MAINTENANCE_MAINTENANCE_FREQ = 'idMaintenanceFrec';
     static COLUMN_MTM_MAINTENANCE_KM = 'km';
     static COLUMN_MTM_MAINTENANCE_TIME = 'time';
@@ -51,6 +50,10 @@ export class ConstantsColumns {
     static COLUMN_MTM_MAINTENANCE_FROM = 'fromKm';
     static COLUMN_MTM_MAINTENANCE_TO = 'toKm';
     static COLUMN_MTM_MAINTENANCE_MASTER = 'master';
+
+    // MAINTENANCE ELEMENT REL
+    static COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE = 'idMaintenance';
+    static COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE_ELEMENT = 'idMaintenanceElement';
 
     // MAINTENANCE ELEMENT
     static COLUMN_MTM_MAINTENANCE_ELEMENT_NAME = 'name';

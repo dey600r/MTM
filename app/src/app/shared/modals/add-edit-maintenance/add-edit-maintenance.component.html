@@ -34,9 +34,10 @@
             <ion-icon *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
             <ion-text *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddReplacement' | translate }}</ion-text>
           </ion-label>
-          <ion-select #maintenanceReplacement name="maintenanceReplacement" interface="popover" 
-            [placeholder]="this.translateSelect" [(ngModel)]="maintenance.maintenanceElement.id">
-            <ion-select-option [(value)]="r.id" *ngFor="let r of maintenanceElements">{{r.name}}</ion-select-option>
+          <ion-select #maintenanceReplacement name="maintenanceReplacement" multiple="true" [placeholder]="this.translateSelect"
+          [cancelText]="this.translateCancel" [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect"
+          [interfaceOptions]="customActionSheetOptions" interface="action-sheet">
+            <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>

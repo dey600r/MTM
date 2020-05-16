@@ -154,15 +154,18 @@ export class HomePage implements OnInit {
   // MODALS
 
   openInfoNotification(m: WearMotoProgressBarModel, w: WearReplacementProgressBarModel) {
-    let listGroupWear: WearReplacementProgressBarModel[] = this.allWears.find(x => m.idMoto === x.idMoto).listWearReplacement.filter(x =>
-      w.idMaintenanceElement === x.idMaintenanceElement);
-    const margenGrouper = 4000;
-    listGroupWear = listGroupWear.filter(x => x.idMaintenance !== w.idMaintenance  && listGroupWear.some(y =>
-      x.idMaintenance !== y.idMaintenance && y.kmMaintenance !== x.kmMaintenance &&
-      (y.fromKmMaintenance !== null && x.toKmMaintenance !== null &&
-        y.fromKmMaintenance >= x.toKmMaintenance - margenGrouper && y.fromKmMaintenance <= x.toKmMaintenance + margenGrouper) ||
-      (y.toKmMaintenance !== null && x.fromKmMaintenance !== null &&
-        y.toKmMaintenance >= x.fromKmMaintenance - margenGrouper && y.toKmMaintenance <= x.fromKmMaintenance + margenGrouper)));
+    let listGroupWear: WearReplacementProgressBarModel[] = [];
+    if (w.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
+      this.allWears.find(x => m.idMoto === x.idMoto).listWearReplacement.filter(x =>
+        w.idMaintenanceElement === x.idMaintenanceElement && w.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
+      const margenGrouper = 4000;
+      listGroupWear = listGroupWear.filter(x => x.idMaintenance !== w.idMaintenance  && listGroupWear.some(y =>
+        x.idMaintenance !== y.idMaintenance && y.kmMaintenance !== x.kmMaintenance &&
+        (y.fromKmMaintenance !== null && x.toKmMaintenance !== null &&
+          y.fromKmMaintenance >= x.toKmMaintenance - margenGrouper && y.fromKmMaintenance <= x.toKmMaintenance + margenGrouper) ||
+        (y.toKmMaintenance !== null && x.fromKmMaintenance !== null &&
+          y.toKmMaintenance >= x.fromKmMaintenance - margenGrouper && y.toKmMaintenance <= x.fromKmMaintenance + margenGrouper)));
+    }
     listGroupWear = [...listGroupWear, w];
     // Change filter operation to easy
     this.dashboardService.setSearchOperation(new MotoModel(m.nameMoto, '', null, null, null, null, null, null, m.idMoto));

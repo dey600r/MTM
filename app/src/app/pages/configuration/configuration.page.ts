@@ -92,6 +92,10 @@ export class ConfigurationPage implements OnInit {
   }
 
   ionViewDidEnter() {
+    if (document.getElementById('custom-overlay').style.display === 'flex' ||
+    document.getElementById('custom-overlay').style.display === '') {
+      document.getElementById('custom-overlay').style.display = 'none';
+    }
     if (!this.loaded) {
       setTimeout(() => { this.loaded = true; }, 1200);
     }
@@ -182,6 +186,10 @@ export class ConfigurationPage implements OnInit {
     return this.configurationService.getIconMaintenance(maintenance);
   }
 
+  getReplacementCommas(replacements: MaintenanceElementModel[]): string {
+    return this.configurationService.getReplacement(replacements);
+  }
+
   /** MAINTENANCE ELEMENTS / REPLACEMENT */
 
   openReplacementModal(row: MaintenanceElementModel = new MaintenanceElementModel(), create: boolean = true) {
@@ -220,7 +228,7 @@ export class ConfigurationPage implements OnInit {
   }
 
   isNotValidToDeleteReplacement(replacement: MaintenanceElementModel): boolean {
-    return !replacement.master && this.maintenances.some(x => x.maintenanceElement.id === replacement.id);
+    return !replacement.master && this.maintenances.some(x => x.listMaintenanceElement.some(y => y.id === replacement.id));
   }
 
   getIconReplacement(maintenanceElement: MaintenanceElementModel): string {

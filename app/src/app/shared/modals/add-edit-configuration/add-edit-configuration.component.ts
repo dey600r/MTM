@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum } from '@app/core/utils';
-import { ModalInputModel, ModalOutputModel, ConfigurationModel, MaintenanceModel } from '@models/index';
+import { ModalInputModel, ModalOutputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel } from '@models/index';
 import { DataBaseService, CommonService, ConfigurationService, ControlService } from '@services/index';
 
 @Component({
@@ -85,6 +85,10 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
         this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
       });
     }
+  }
+
+  getReplacementCommas(replacements: MaintenanceElementModel[]): string {
+    return this.configurationService.getReplacement(replacements);
   }
 
   async closeModal() {

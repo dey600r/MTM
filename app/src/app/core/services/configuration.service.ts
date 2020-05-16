@@ -82,21 +82,35 @@ export class ConfigurationService {
         switch (action) {
             case ActionDBEnum.CREATE:
                 sqlDB = this.sqlService.insertSqlMaintenance([maintenance]);
+                sqlDB += this.sqlService.insertSqlMaintenanceElementRel(maintenance);
                 break;
             case ActionDBEnum.UPDATE:
                 sqlDB = this.sqlService.updateSqlMaintenance([maintenance]);
+                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL,
+                    ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE, [maintenance.id]);
+                sqlDB += this.sqlService.insertSqlMaintenanceElementRel(maintenance);
                 break;
             case ActionDBEnum.DELETE:
-                if (!!configurations && configurations.length > 0) {
-                    sqlDB = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT, // DELETE CONFIG MAINTENANCE
-                        ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, [maintenance.id]);
-                    listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_CONFIG_MAINT];
-                }
-                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE,
-                    ConstantsColumns.COLUMN_MTM_ID, [maintenance.id]);
+                sqlDB = this.getSqlDeleteMaintenance(maintenance, configurations);
+                listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_CONFIG_MAINT];
                 break;
         }
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+    }
+
+    getSqlDeleteMaintenance(maintenance: MaintenanceModel, configurations: ConfigurationModel[]): string {
+        let sqlDB = '';
+        if (!!maintenance.listMaintenanceElement && maintenance.listMaintenanceElement.length > 0) {
+            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, // DELETE MAINTENANCE_ELEMENT_REL
+                    ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE, [maintenance.id]);
+        }
+        if (!!configurations && configurations.length > 0) {
+            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT, // DELETE CONFIG MAINTENANCE
+                ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, [maintenance.id]);
+        }
+        sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE,
+            ConstantsColumns.COLUMN_MTM_ID, [maintenance.id]);
+        return sqlDB;
     }
 
     getIconMaintenance(maintenance: MaintenanceModel): string {
@@ -131,6 +145,8 @@ export class ConfigurationService {
         }
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
     }
+
+    /** OTHERS */
 
     getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
         switch (maintenanceElement.id) {
@@ -171,5 +187,14 @@ export class ConfigurationService {
             return 'briefcase';
         }
     }
+
+    getReplacement(replacements: MaintenanceElementModel[]): string {
+        let msg = '';
+        replacements.forEach((x, index) => {
+          msg += x.name;
+          msg += index + 1 !== replacements.length ? ', ' : '';
+        });
+        return msg;
+      }
 
 }

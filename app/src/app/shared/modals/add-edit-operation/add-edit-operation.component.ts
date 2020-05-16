@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ModalController, NavParams, AlertController } from '@ionic/angular';
+import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -51,7 +51,6 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalController: ModalController,
-    private alertController: AlertController,
     private navParams: NavParams,
     private dbService: DataBaseService,
     private translator: TranslateService,

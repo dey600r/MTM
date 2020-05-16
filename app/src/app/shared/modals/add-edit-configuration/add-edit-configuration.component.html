@@ -47,7 +47,7 @@
           <!-- Labels -->
           <ion-label>
             <h2>{{ m.description }}</h2>
-            <h3>{{ m.maintenanceElement.name }}</h3>
+            <h3>{{ getReplacementCommas(m.listMaintenanceElement) }}</h3>
             <div class="table-row">
               <p *ngIf="m.time > 0" class="p-color">{{ m.km }} km / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
               <p *ngIf="m.time <= 0" class="p-color">{{ m.km }} km </p>

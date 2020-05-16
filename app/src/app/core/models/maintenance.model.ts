@@ -4,7 +4,7 @@ import { MaintenanceFreqModel } from './maintenance-freq.model';
 
 export class MaintenanceModel extends BaseModel {
     description: string;
-    maintenanceElement: MaintenanceElementModel;
+    listMaintenanceElement: MaintenanceElementModel[];
     maintenanceFreq: MaintenanceFreqModel;
     km: number;
     time: number;
@@ -13,13 +13,13 @@ export class MaintenanceModel extends BaseModel {
     fromKm: number;
     toKm: number;
     master: boolean;
-    constructor(d: string = null, me: MaintenanceElementModel = new MaintenanceElementModel(),
+    constructor(d: string = null, lme: MaintenanceElementModel[] = [],
                 mf: MaintenanceFreqModel = new MaintenanceFreqModel(),
                 k: number = null, t: number = null, i: boolean = false, w: boolean = false,
                 fr: number = 0, to: number = null, m: boolean = false, id: number = 1) {
         super(id);
         this.description = d;
-        this.maintenanceElement = me;
+        this.listMaintenanceElement = lme;
         this.maintenanceFreq = mf;
         this.km = k;
         this.time = t;

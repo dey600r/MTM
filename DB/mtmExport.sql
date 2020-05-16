@@ -2,7 +2,6 @@ BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"description"	TEXT NOT NULL,
-	"idMaintenanceElement"	INTEGER NOT NULL,
 	"idMaintenanceFrec"	BLOB NOT NULL,
 	"km"	INTEGER NOT NULL,
 	"time"	INTEGER,
@@ -11,8 +10,14 @@ CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
 	"fromKm"	INTEGER NOT NULL DEFAULT 0,
 	"toKm"	INTEGER,
 	"master"	TEXT NOT NULL,
-	FOREIGN KEY("idMaintenanceElement") REFERENCES "mtmMaintenanceElement"("id"),
 	FOREIGN KEY("idMaintenanceFrec") REFERENCES "mtmMaintenanceFreq"("id")
+);
+CREATE TABLE IF NOT EXISTS "mtmMaintenanceElementRel" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"idMaintenance"	INTEGER NOT NULL,
+	"idMaintenanceElement"	INTEGER NOT NULL,
+	FOREIGN KEY("idMaintenance") REFERENCES "mtmMaintenance"("id"),
+	FOREIGN KEY("idMaintenanceElement") REFERENCES "mtmMaintenanceElement"("id")
 );
 CREATE TABLE IF NOT EXISTS "mtmMoto" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -77,34 +82,56 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
 );
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (1,'FIRST_CHANGE_ENGINE_OIL',3,'1',1000,6,'Y','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (2,'FIRST_CHANGE_OIL_FILTER',5,'1',1000,6,'Y','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (3,'CHANGE_AIR_FILTER',4,'2',16000,24,'N','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (4,'CHANGE_ENGINE_OIL',3,'2',8000,12,'N','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (5,'CHANGE_OIL_FILTER',5,'2',8000,12,'N','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (6,'ADJUST_VALVES',16,2,40000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (7,'FIRST_CHANGE_OIL_PLUG_GASTEK',17,1,1000,6,'Y','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (8,'CHANGE_OIL_PLUG_GASTEK',17,2,8000,12,'N','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (9,'CHANGE_SPARK_PLUG',6,2,20000,24,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (10,'CHANGE_COOLANT',8,2,40000,36,'N','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (11,'CHANGE_FRONT_BRAKE_FLUID',7,2,16000,36,'N','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (12,'CHANGE_BACK_BRAKE_FLUID',12,2,16000,36,'N','N',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (13,'CHANGE_FRONT_BRAKE_PADS',11,2,20000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (14,'CHANGE_BACK_BRAKE_PADS',13,2,30000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (15,'CHANGE_CLUTCH_DISC',26,2,50000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (16,'CHANGE_FRONT_WHEEL',1,2,20000,72,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (17,'CHANGE_BACK_WHEEL',2,2,15000,72,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (18,'CHANGE_FRONT_WHEEL_VALVE',28,2,40000,72,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (19,'CHANGE_BACK_WHEEL_VALVE',29,2,30000,72,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (20,'CHANGE_THERMOSTAT',9,2,50000,84,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (21,'CHANGE_DRAG_KIT',10,2,30000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (22,'CHANGE_RADIATOR',14,2,50000,84,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (23,'CHANGE_CAP_RADIATOR',15,2,50000,84,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (24,'CHANGE_BATTERY',24,2,40000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (25,'CHANGE_RIGHT_DUMPER_SEALS',30,2,30000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (26,'CHANGE_LEFT_DUMPER_SEALS',31,2,30000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (27,'CHANGE_CLUTCH_WIRE',25,2,50000,48,'N','Y',0,NULL,'Y');
-INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceElement","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (28,'CHANGE_STEERING_BEARING_KIT',20,2,50000,60,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (1,'FIRST_REVIEW','1',1000,6,'Y','N',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (2,'BASIC_REVIEW','2',8000,12,'N','N',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (3,'CHANGE_AIR_FILTER','2',16000,24,'N','N',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (4,'CHANGE_SPARK_PLUG','2',20000,24,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (5,'ADJUST_VALVES','2',40000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (6,'CHANGE_COOLANT',2,40000,36,'N','N',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (7,'CHANGE_BRAKE_FLUID','2',16000,36,'N','N',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (8,'CHANGE_FRONT_BRAKE_PADS',2,20000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (9,'CHANGE_BACK_BRAKE_PADS',2,30000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (10,'CHANGE_CLUTCH_DISC',2,50000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (11,'CHANGE_FRONT_WHEEL',2,20000,72,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (12,'CHANGE_BACK_WHEEL',2,15000,72,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (13,'CHANGE_THERMOSTAT',2,50000,84,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (14,'CHANGE_DRAG_KIT',2,30000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (15,'CHANGE_RADIATOR',2,50000,84,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (16,'CHANGE_CAP_RADIATOR',2,50000,84,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (17,'CHANGE_BATTERY',2,40000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (18,'CHANGE_RIGHT_DUMPER_SEALS',2,30000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (19,'CHANGE_LEFT_DUMPER_SEALS',2,30000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (20,'CHANGE_CLUTCH_WIRE',2,50000,48,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenance" ("id","description","idMaintenanceFrec","km","time","init","wear","fromKm","toKm","master") VALUES (21,'CHANGE_STEERING_BEARING_KIT',2,50000,60,'N','Y',0,NULL,'Y');
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (1,1,3);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (2,1,5);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (3,1,17);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (4,2,3);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (5,2,5);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (6,2,17);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (7,3,4);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (8,4,6);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (9,5,6);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (10,5,16);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (11,6,8);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (12,7,7);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (13,7,12);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (14,8,11);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (15,9,13);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (16,10,26);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (17,11,1);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (18,11,28);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (19,12,2);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (20,12,29);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (21,13,9);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (22,14,10);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (23,15,14);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (24,16,15);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (25,17,24);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (26,18,30);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (27,19,31);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (28,20,25);
+INSERT INTO "mtmMaintenanceElementRel" ("id","idMaintenance","idMaintenanceElement") VALUES (29,21,20);
 INSERT INTO "mtmConfiguration" ("id","name","description","master") VALUES (1,'Fabrica','Configuración de fábrica','Y');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (1,'FRONT_WHEEL','CHANGE_FRONT_WHEEL','Y');
 INSERT INTO "mtmMaintenanceElement" ("id","name","description","master") VALUES (2,'BACK_WHEEL','CHANGE_BACK_WHEEL','Y');
@@ -158,12 +185,6 @@ INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALU
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (19,1,19);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (20,1,20);
 INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (21,1,21);
-INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (22,1,22);
-INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (23,1,23);
-INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (24,1,24);
-INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (25,1,25);
-INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (26,1,26);
-INSERT INTO "mtmConfigMaintenance" ("id","idConfiguration","idMaintenance") VALUES (27,1,27);
 INSERT INTO "mtmMaintenanceFreq" ("id","code","description") VALUES (1,'O','ONCE');
 INSERT INTO "mtmMaintenanceFreq" ("id","code","description") VALUES (2,'C','CALENDAR');
 INSERT INTO "mtmOperationType" ("id","code","description") VALUES (1,'MW','MAINTENANCE_WORKSHOP');

@@ -35,6 +35,7 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   maxKm = 100000;
   valueRange: any = { lower: 0 , upper: 100000 };
   showRange = '';
+  maintenanceElementSelect: number[] = [];
 
   // SUBSCRIPTION
   maintenanceElmentSubscription: Subscription = new Subscription();
@@ -42,6 +43,11 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
 
   // TRANSLATE
   translateSelect = '';
+  translateAccept = '';
+  translateCancel = '';
+  customActionSheetOptions: any = {
+    header: this.translator.instant('COMMON.REPLACEMENT'),
+  };
 
   constructor(
     private modalController: ModalController,
@@ -52,6 +58,8 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
     private controlService: ControlService
   ) {
     this.translateSelect = this.translator.instant('COMMON.SELECT');
+    this.translateAccept = this.translator.instant('COMMON.ACCEPT');
+    this.translateCancel = this.translator.instant('COMMON.CANCEL');
   }
 
   ngOnInit() {
@@ -65,12 +73,15 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
     this.changeRange();
     if (this.modalInputModel.isCreate) {
       this.maintenance.id = -1;
-      this.maintenance.maintenanceElement.id = null;
       this.maintenance.maintenanceFreq.id = null;
     }
 
     this.maintenanceElmentSubscription = this.dbService.getMaintenanceElement().subscribe(data => {
       this.maintenanceElements = this.configurationService.orderMaintenanceElement(data);
+      this.maintenanceElementSelect = [];
+      if (!!this.maintenance.listMaintenanceElement && this.maintenance.listMaintenanceElement.length > 0) {
+        this.maintenanceElementSelect = this.maintenance.listMaintenanceElement.map(x => x.id);
+      }
     });
 
     this.maintenanceFreqSubscription = this.dbService.getMaintenanceFreq().subscribe(data => {
@@ -94,6 +105,8 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
         this.maintenance.fromKm = 0;
         this.maintenance.toKm = null;
       }
+      this.maintenance.listMaintenanceElement = this.maintenanceElements.filter(x =>
+        this.maintenanceElementSelect.some(y => y === x.id));
       this.configurationService.saveMaintenance(this.maintenance,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
@@ -134,7 +147,8 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   }
 
   isValidReplacement(f: any): boolean {
-    return f.maintenanceReplacement !== undefined && f.maintenanceReplacement.validity.valid && !!f.maintenanceReplacement.value;
+    return f.maintenanceReplacement !== undefined && f.maintenanceReplacement.validity.valid && !!f.maintenanceReplacement.value &&
+      !!this.maintenanceElementSelect && this.maintenanceElementSelect.length > 0;
   }
 
   isValidFreq(f: any): boolean {

@@ -70,7 +70,7 @@
       <!-- Labels -->
       <ion-label class="auto-width label-event-force" (click)="openMaintenanceModal(m, false)">
         <h2 class="text-overflow">{{ m.description }}</h2>
-        <h3 class="text-overflow">{{ m.maintenanceElement.name }}</h3>
+        <h3 class="text-overflow">{{ getReplacementCommas(m.listMaintenanceElement) }}</h3>
         <div class="table-row">
           <p *ngIf="m.time > 0" class="p-color">{{ m.km }} km / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
           <p *ngIf="m.time <= 0" class="p-color">{{ m.km }} km </p>

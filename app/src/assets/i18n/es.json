@@ -219,6 +219,7 @@
         "CHANGE_AIR_FILTER": "Cambio/Limpiar de Filtro de aire",
         "CHANGE_OIL_FILTER": "Cambio de Filtro de aceite",
         "CHANGE_SPARK_PLUG": "Cambio de Bujias",
+        "CHANGE_BRAKE_FLUID": "Cambio de Líquidos de freno",
         "CHANGE_FRONT_BRAKE_FLUID": "Cambio de Liquido de frenos delantero",
         "CHANGE_BACK_BRAKE_FLUID": "Cambio de Liquido de frenos trasero",
         "CHANGE_COOLANT": "Cambio de Liquido refrigerante",
@@ -245,9 +246,8 @@
         "CHANGE_LEFT_DUMPER_SEALS": "Cambio Retén amortiguador izquierdo",
         "CHANGE_PETROL_TAP": "Cambio Grifo de gasolina",
         "ADJUST_VALVES": "Reglaje de vávulas",
-        "FIRST_CHANGE_ENGINE_OIL": "Primer cambio de aceite",
-        "FIRST_CHANGE_OIL_FILTER": "Primer cambio filtro de aceite",
-        "FIRST_CHANGE_OIL_PLUG_GASTEK": "Primer cambio Junta del tapón de aceite",
+        "FIRST_REVIEW": "Primera Revisión",
+        "BASIC_REVIEW": "Revisión Básica",
         "ONCE": "Una vez",
         "CALENDAR": "Calendario"
     }
