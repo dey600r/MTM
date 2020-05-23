@@ -1,5 +1,10 @@
 <ion-header [hidden]="!loaded">
   <ion-toolbar>
+    <!-- Button Calendar -->
+    <ion-button class="btn-width-header position-fixed margin-top0 index-top"
+      *ngIf="this.allWears.length > 0" slot="start" fill="clear" (click)="openInfoCalendar()">
+      <ion-icon size="large" name="calendar"></ion-icon>
+    </ion-button>
     <!-- Tittle -->
     <ion-title>
       <ion-title class="align-center">{{ 'PAGE_HOME.HOME' | translate }}</ion-title>

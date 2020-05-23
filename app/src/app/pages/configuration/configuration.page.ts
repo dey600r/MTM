@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -51,7 +51,8 @@ export class ConfigurationPage implements OnInit {
               private translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
-              private configurationService: ConfigurationService) {
+              private configurationService: ConfigurationService,
+              private detector: ChangeDetectorRef) {
       this.platform.ready().then(() => {
         let userLang = navigator.language.split('-')[0];
         userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -80,14 +81,17 @@ export class ConfigurationPage implements OnInit {
 
     this.dbService.getConfigurations().subscribe(data => {
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+      this.detector.detectChanges();
     });
 
     this.dbService.getMaintenance().subscribe(data => {
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+      this.detector.detectChanges();
     });
 
     this.dbService.getMaintenanceElement().subscribe(data => {
       this.maintenanceElements = this.configurationService.orderMaintenanceElement(data);
+      this.detector.detectChanges();
     });
   }
 

@@ -59,7 +59,8 @@
         "REAL": "Real",
         "LOADING": "Loading...",
         "EXIT": "Exit",
-        "KM_RANGE": "Kilometers range"
+        "KM_RANGE": "Kilometers range",
+        "CALENDAR": "Calendar"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -150,6 +151,8 @@
     },
     "ALERT" : {
         "INFO": "Info",
+        "NotificationEmptyBetween": "There are not notifications between {{dateIni}} and {{dateFin}}",
+        "NotificationEmpty": "There are not notifications",
         "AddMotoToAddOperation": "Add motorbike before add operations",
         "MotoEmpty": "There isn't moto",
         "AddMoto": "You must add moto",

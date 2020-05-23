@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -44,7 +44,8 @@ export class OperationPage implements OnInit {
               private commonService: CommonService,
               private controlService: ControlService,
               private operationService: OperationService,
-              private dashboardService: DashboardService) {
+              private dashboardService: DashboardService,
+              private detector: ChangeDetectorRef) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -88,6 +89,7 @@ export class OperationPage implements OnInit {
               filter.searchMaintenanceElement.some(y => op.listMaintenanceElement.some(z => y.id === z.id)))
           ),
           ConstantsColumns.COLUMN_MTM_OPERATION_KM);
+        this.detector.detectChanges();
       });
     });
   }

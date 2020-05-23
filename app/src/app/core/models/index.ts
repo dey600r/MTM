@@ -9,3 +9,4 @@ export * from './maintenance-freq.model';
 export * from './dashboard.model';
 export * from './search-dashboard.model';
 export * from './wear-progress-bar.model';
+export * from './info-calendar.model';

@@ -12,36 +12,7 @@ import { Constants } from '@utils/index';
 })
 export class CommonService {
 
-    constructor(private translator: TranslateService) {
-    }
-
-    // COMMON UTILS METHODS STRINGS
-
-    getDateString(date: Date): any {
-        return Moment(date).format(this.getFormatCalendar());
-    }
-
-    getDateStringToDB(date: Date): any {
-        return Moment(date).format(Constants.DATE_FORMAT_DB);
-    }
-
-    getFormatCalendar() {
-        return this.translator.currentLang === 'es' ? Constants.DATE_FORMAT_ES : Constants.DATE_FORMAT_EN;
-    }
-
-    // COMMON UTILS METHODS
-
-    monthDiff(dateIni: Date, dateFin: Date): number {
-        let months: number = (dateFin.getFullYear() - dateIni.getFullYear()) * 12;
-        months -= dateIni.getMonth() + 1;
-        months += dateFin.getMonth() + 1;
-        return months <= 0 ? 0 : months;
-    }
-
-    dayDiff(dateIni: Date, dateFin: Date): number {
-        const diffc: number = dateFin.getTime() - dateIni.getTime();
-        const days: number = Math.round(Math.abs(diffc / (1000 * 60 * 60 * 24)));
-        return days <= 0 ? 0 : days;
+    constructor() {
     }
 
     /** ORDER BY */

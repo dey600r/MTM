@@ -69,6 +69,7 @@ export class ConstantsColumns {
     static COLUMN_MTM_SEQUENCE_SEQ = 'seq';
 
     // WEAR REPLACEMENT RECORDS (MODEL)
+    static COLUMN_MODEL_DATE_PURCHASE_MOTO = 'datePurchaseMoto';
     static COLUMN_MODEL_NAME_MOTO = 'nameMoto';
     static COLUMN_MODEL_KM_MAINTENANCE = 'kmMaintenance';
     static COLUMN_MODEL_KM_ACUMULATE_MAINTENANCE = 'kmAcumulateMaintenance';

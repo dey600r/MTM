@@ -59,7 +59,8 @@
         "REAL": "Real",
         "LOADING": "Cargando...",
         "EXIT": "Salir",
-        "KM_RANGE": "Rango de kilómetros"
+        "KM_RANGE": "Rango de kilómetros",
+        "CALENDAR": "Calendario"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -150,6 +151,7 @@
     },
     "ALERT" : {
         "INFO": "Info",
+        "NotificationEmpty": "No se encuentran notificaciones entre {{dateIni}} y {{dateFin}}",
         "AddMotoToAddOperation": "Añada sus motos antes de incluir las operaciones",
         "MotoEmpty": "No se encuentran motos",
         "AddMoto": "Añada motos",

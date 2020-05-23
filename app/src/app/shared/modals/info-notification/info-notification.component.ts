@@ -11,7 +11,7 @@ import {
   ModalInputModel, ModalOutputModel, WearMotoProgressBarModel, WearReplacementProgressBarModel,
   MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, MotoModel
 } from '@models/index';
-import { DashboardService, ConfigurationService, CommonService, ControlService } from '@services/index';
+import { DashboardService, ConfigurationService, ControlService, CalendarService } from '@services/index';
 import { WarningWearEnum, Constants, PageEnum } from '@utils/index';
 
 // COMPONENTS
@@ -61,7 +61,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
                 private modalController: ModalController,
                 private dashboardService: DashboardService,
                 private configurationService: ConfigurationService,
-                private commonService: CommonService,
+                private calendarService: CalendarService,
                 private controlService: ControlService,
                 private screenOrientation: ScreenOrientation,
                 private changeDetector: ChangeDetectorRef,
@@ -142,21 +142,21 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       kmMaintenane = (kmMaintenane < this.motoKmEstimated ? this.motoKmEstimated : kmMaintenane);
     }
     let date: Date = new Date(4000, 1, 1);
-    const dateMaintenanceKmMotoEstimated: Date = this.dashboardService.calculateDateMaintenanceKmMotoEstimated(moto, kmMaintenane);
+    const dateMaintenanceKmMotoEstimated: Date = this.calendarService.calculateKmInfoNotification(moto, kmMaintenane);
     if (wear.timeMaintenance !== 0) {
       date = new Date(moto.datePurchase);
-      const monthMoto: number = this.commonService.monthDiff(date, new Date());
+      const monthMoto: number = this.calendarService.monthDiff(date, new Date());
       if (wear.kmOperation === null) {
         const mantMonth: number = (wear.timeMaintenance < monthMoto ? monthMoto / wear.timeMaintenance : 1);
         date.setMonth(date.getMonth() + wear.timeMaintenance * Math.floor(mantMonth) + wear.timeMaintenance);
       } else {
-        const mantMonth = this.commonService.monthDiff(new Date(moto.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
+        const mantMonth = this.calendarService.monthDiff(new Date(moto.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
         date.setMonth(date.getMonth() + (mantMonth < monthMoto ? monthMoto : mantMonth));
       }
     }
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
       {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
-        date: this.commonService.getDateString((date > dateMaintenanceKmMotoEstimated ? dateMaintenanceKmMotoEstimated : date))});
+        date: this.calendarService.getDateString((date > dateMaintenanceKmMotoEstimated ? dateMaintenanceKmMotoEstimated : date))});
   }
 
   refreshChart() {
@@ -206,8 +206,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   getTimePercent(wear: WearReplacementProgressBarModel): string {
     const dateMaintenance: Date = this.getDateMaintenance(wear);
     const dateOperation: Date = this.getDateOperation(wear, dateMaintenance);
-    return `${(wear.kmOperation === null ? '--' : this.commonService.getDateString(dateOperation))} /` +
-      ` ${this.commonService.getDateString(dateMaintenance)}`;
+    return `${(wear.kmOperation === null ? '--' : this.calendarService.getDateString(dateOperation))} /` +
+      ` ${this.calendarService.getDateString(dateMaintenance)}`;
   }
 
   getDateMaintenance(wear: WearReplacementProgressBarModel): Date {
@@ -247,7 +247,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       } else {
         const dateMaintenance: Date = this.getDateMaintenance(wear);
         msg = this.translator.instant('ALERT.InfoNotOperationKmTime',
-          { km: wear.kmAcumulateMaintenance, time: this.commonService.getDateString(dateMaintenance) });
+          { km: wear.kmAcumulateMaintenance, time: this.calendarService.getDateString(dateMaintenance) });
       }
     } else {
       msg = this.translator.instant('ALERT.InfoOperationKm',
@@ -256,7 +256,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         const dateMaintenance: Date = this.getDateMaintenance(wear);
         const dateOperation: Date = this.getDateOperation(wear, dateMaintenance);
         msg += this.translator.instant('ALERT.InfoOperationTime',
-          { timeop: this.commonService.getDateString(dateOperation), time: this.commonService.getDateString(dateMaintenance) });
+          { timeop: this.calendarService.getDateString(dateOperation), time: this.calendarService.getDateString(dateMaintenance) });
       }
     }
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
@@ -264,7 +264,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   showInfoMoto() {
     const msg = this.translator.instant('ALERT.LastUpdateMotoKm',
-      { date: this.commonService.getDateString(new Date(this.dataMaintenance.dateKmsMoto)) });
+      { date: this.calendarService.getDateString(new Date(this.dataMaintenance.dateKmsMoto)) });
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 

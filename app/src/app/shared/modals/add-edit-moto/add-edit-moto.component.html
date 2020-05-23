@@ -48,7 +48,7 @@
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && (!isValidKm(formAddMoto) || !isValidKmMin(formAddMoto))" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidKm(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddKm' | translate }}</ion-text>
-          <ion-text *ngIf="this.submited && isValidKm(formAddMoto) && !isValidKmMin(formAddMoto)" color="danger">{{ 'AddKmMinCero' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && isValidKm(formAddMoto) && !isValidKmMin(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddKmMinCero' | translate }}</ion-text>
         </ion-label>
         <ion-input #motoKm name="motoKm" required placeholder="50000 km" type="number" min="0" [(ngModel)]="moto.km"></ion-input>
       </ion-item>
@@ -76,8 +76,9 @@
         <ion-label position="stacked">
           <ion-text>{{ 'COMMON.KM_PER_MONTH' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
-          <ion-icon *ngIf="this.submited && !isValidKmsPerMonth(formAddMoto)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-icon *ngIf="this.submited && (!isValidKmsPerMonth(formAddMoto) || !isValidKmsPerMonthMin(formAddMoto))" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidKmsPerMonth(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddKmsPerMonth' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && isValidKmsPerMonth(formAddMoto) && !isValidKmsPerMonthMin(formAddMoto)" color="danger">{{ 'PAGE_MOTO.AddKmMinCero' | translate }}</ion-text>
         </ion-label>
         <ion-input #motoKmsPerMonth name="motoKmsPerMonth" required placeholder="150" type="number" min="0" [(ngModel)]="moto.kmsPerMonth"></ion-input>
       </ion-item>

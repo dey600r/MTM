@@ -9,14 +9,14 @@ import {
   MaintenanceFreqModel, MaintenanceModel
 } from '@models/index';
 import { ConstantsTable, ConstantsColumns, Constants } from '@utils/index';
-import { CommonService } from './common.service';
+import { CalendarService } from './calendar.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SqlService {
 
-  constructor(private commonService: CommonService,
+  constructor(private calendarService: CalendarService,
               private translator: TranslateService) {
   }
 
@@ -64,9 +64,6 @@ export class SqlService {
     `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER}, ` +
     `m.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenance, ` +
     `m.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION} as descriptionMaintenance, ` +
-    // `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
-    // `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
-    // `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceFreq, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE} as codeMaintenanceFreq, ` +
     `mf.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION} as descriptionMaintenanceFreq, ` +
@@ -411,8 +408,8 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}, ${ConstantsColumns.COLUMN_MTM_MOTO_DATE_PURCHASE}) `;
       motos.forEach((x, index) => {
         sql += `SELECT '${x.model}', '${x.brand}', ${x.year}, ${x.km}, ${x.configuration.id}, ` +
-          `${x.kmsPerMonth}, '${this.commonService.getDateStringToDB(x.dateKms)}', ` +
-          `'${this.commonService.getDateStringToDB(x.datePurchase)}' `;
+          `${x.kmsPerMonth}, '${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
+          `'${this.calendarService.getDateStringToDB(x.datePurchase)}' `;
         if ((index + 1) < motos.length) {
           sql += ' UNION ';
         }
@@ -432,7 +429,7 @@ export class SqlService {
       `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, ${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}) `;
       op.forEach((x, index) => {
         sql += `SELECT '${x.description}', '${x.details}', ${x.operationType.id}, ${x.moto.id}, ` +
-        `${x.km}, ${x.price}, '${this.commonService.getDateStringToDB(x.date)}', ${this.getValueWithCom(x.location)}, ` +
+        `${x.km}, ${x.price}, '${this.calendarService.getDateStringToDB(x.date)}', ${this.getValueWithCom(x.location)}, ` +
         `${this.getValueWithCom(x.owner)}, ${x.document}`;
         if ((index + 1) < op.length) {
           sql += ' UNION ';
@@ -565,8 +562,8 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_MOTO_YEAR}=${x.year}, ${ConstantsColumns.COLUMN_MTM_MOTO_KM}=${x.km}, ` +
         `${ConstantsColumns.COLUMN_MTM_MOTO_CONFIGURATION}=${x.configuration.id}, ` +
         `${ConstantsColumns.COLUMN_MTM_MOTO_KMS_PER_MONTH}=${x.kmsPerMonth}, ` +
-        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}='${this.commonService.getDateStringToDB(x.dateKms)}', ` +
-        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_PURCHASE}='${this.commonService.getDateStringToDB(x.datePurchase)}' ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_KMS}='${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
+        `${ConstantsColumns.COLUMN_MTM_MOTO_DATE_PURCHASE}='${this.calendarService.getDateStringToDB(x.datePurchase)}' ` +
         `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
       });
     }
@@ -584,7 +581,7 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_OPERATION_MOTO}=${x.moto.id}, ` +
         `${ConstantsColumns.COLUMN_MTM_OPERATION_KM}=${x.km}, ` +
         `${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}=${x.price}, ` +
-        `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}='${this.commonService.getDateStringToDB(x.date)}', ` +
+        `${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}='${this.calendarService.getDateStringToDB(x.date)}', ` +
         `${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}=${this.getValueWithCom(x.location)}, ` +
         `${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}=${this.getValueWithCom(x.owner)}, ` +
         `${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}=${x.document} ` +

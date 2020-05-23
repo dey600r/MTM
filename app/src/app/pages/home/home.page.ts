@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
@@ -15,7 +15,7 @@ import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
-
+import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
 
 @Component({
   selector: 'app-home',
@@ -55,7 +55,6 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-
     this.dbService.getConfigurations().subscribe(configurations => {
       this.maintenanceSubscription.unsubscribe();
       if (!!configurations && configurations.length > 0) {
@@ -156,7 +155,7 @@ export class HomePage implements OnInit {
   openInfoNotification(m: WearMotoProgressBarModel, w: WearReplacementProgressBarModel) {
     let listGroupWear: WearReplacementProgressBarModel[] = [];
     if (w.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
-      this.allWears.find(x => m.idMoto === x.idMoto).listWearReplacement.filter(x =>
+      listGroupWear = this.allWears.find(x => m.idMoto === x.idMoto).listWearReplacement.filter(x =>
         w.idMaintenanceElement === x.idMaintenanceElement && w.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
       const margenGrouper = 4000;
       listGroupWear = listGroupWear.filter(x => x.idMaintenance !== w.idMaintenance  && listGroupWear.some(y =>
@@ -173,6 +172,11 @@ export class HomePage implements OnInit {
       new WearMotoProgressBarModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
         m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.percentKm, m.percentTime, m.warning, listGroupWear),
         this.operations, PageEnum.HOME));
+  }
+
+  openInfoCalendar() {
+    this.controlService.openModal(PageEnum.HOME,
+      InfoCalendarComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
   }
 
 }

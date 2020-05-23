@@ -11,6 +11,7 @@ import {
     WearReplacementProgressBarModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
 import { CommonService } from './common.service';
+import { CalendarService } from './calendar.service';
 import { ConstantsColumns, WarningWearEnum, FilterMonthsEnum, Constants, FilterKmTimeEnum } from '../utils';
 
 @Injectable({
@@ -23,6 +24,7 @@ export class DashboardService {
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
 
     constructor(private commonService: CommonService,
+                private calendarService: CalendarService,
                 private translator: TranslateService) {
     }
 
@@ -207,11 +209,11 @@ export class DashboardService {
             data.listWearReplacement.forEach((x, index) => {
                 estimated.series = [...estimated.series, this.getDataDashboard(`${x.kmAcumulateMaintenance}km`,
                     (initKm !== 0 && x.kmMaintenance > initKm && index === 0 ? initKm : x.kmMaintenance))];
+                const realSerie: number = (x.kmOperation === null ?
+                    (x.kmAcumulateMaintenance < kmEstimated ? 0 : kmEstimated % x.kmMaintenance) :
+                    (initKm !== 0 && x.kmMaintenance > initKm && index === 0 ? initKm : x.kmMaintenance) - x.calculateKms);
                 real.series = [...real.series,
-                    this.getDataDashboard(`${x.kmAcumulateMaintenance}km`,
-                    (x.kmOperation === null ?
-                        (x.kmAcumulateMaintenance < kmEstimated ? 0 : kmEstimated % x.kmMaintenance) :
-                        (initKm !== 0 && x.kmMaintenance > initKm && index === 0 ? initKm : x.kmMaintenance) - x.calculateKms))];
+                    this.getDataDashboard(`${x.kmAcumulateMaintenance}km`, (realSerie < 0 ? 0 : realSerie))];
             });
             if (data.listWearReplacement[0].toKmMaintenance === null ||
                 data.listWearReplacement[data.listWearReplacement.length - 1].kmAcumulateMaintenance < kmEstimated) {
@@ -243,10 +245,11 @@ export class DashboardService {
             data.listWearReplacement.forEach(x => {
                 estimated.series = [...estimated.series,
                     this.getDataDashboard(`${x.kmAcumulateMaintenance}km`, x.timeAcumulateMaintenance)];
+                const realSerie: number = (x.kmOperation === null ?
+                    (x.kmMaintenance < kmEstimated ? 0 : this.calendarService.monthDiff(data.datePurchaseMoto, new Date())) :
+                    (x.timeAcumulateMaintenance - x.calculateMonths));
                 real.series = [...real.series,
-                this.getDataDashboard(`${x.kmAcumulateMaintenance}km`, (x.kmOperation === null ?
-                    (x.kmMaintenance < kmEstimated ? 0 : this.commonService.monthDiff(data.datePurchaseMoto, new Date())) :
-                    (x.timeAcumulateMaintenance - x.calculateMonths)))];
+                this.getDataDashboard(`${x.kmAcumulateMaintenance}km`, (realSerie < 0 ? 0 : realSerie))];
             });
             if (data.listWearReplacement.length === 0 ||
                 data.listWearReplacement[data.listWearReplacement.length - 1].kmAcumulateMaintenance < kmEstimated) {
@@ -257,7 +260,7 @@ export class DashboardService {
                 estimated.series = [...estimated.series, this.getDataDashboard(`${lastMaintenance}km`,
                     timeMaintenance + data.listWearReplacement[data.listWearReplacement.length - 1].timeAcumulateMaintenance)];
                 real.series = [...real.series,
-                    this.getDataDashboard(`${lastMaintenance}km`, this.commonService.monthDiff(data.datePurchaseMoto, new Date()))];
+                    this.getDataDashboard(`${lastMaintenance}km`, this.calendarService.monthDiff(data.datePurchaseMoto, new Date()))];
             }
             result = [estimated, real];
         }
@@ -383,9 +386,9 @@ export class DashboardService {
                     idMaintenanceElement: rep.id,
                     nameMaintenanceElement: rep.name,
                     codeMaintenanceFreq: main.maintenanceFreq.code,
-                    idOperation: 0,
+                    idOperation: -1,
                     descriptionOperation: '',
-                    kmOperation: 0,
+                    kmOperation: null,
                     dateOperation: null,
                     idMaintenance: main.id,
                     descriptionMaintenance: main.description,
@@ -425,9 +428,9 @@ export class DashboardService {
                     idMaintenanceElement: rep.id,
                     nameMaintenanceElement: rep.name,
                     codeMaintenanceFreq: main.maintenanceFreq.code,
-                    idOperation: 0,
+                    idOperation: -1,
                     descriptionOperation: '',
-                    kmOperation: 0,
+                    kmOperation: null,
                     dateOperation: null,
                     idMaintenance: main.id,
                     descriptionMaintenance: main.description,
@@ -531,7 +534,7 @@ export class DashboardService {
     }
 
     calculateMontMotoReplacement(time: number, date: Date): number {
-        return (time !== null ? time - this.commonService.monthDiff(new Date(date), new Date()) : 0);
+        return (time !== null ? time - this.calendarService.monthDiff(new Date(date), new Date()) : 0);
     }
 
     calculatePercent(total: number, value: number): number {
@@ -543,14 +546,7 @@ export class DashboardService {
     }
 
     calculateKmMotoEstimated(moto: MotoModel): number {
-        return moto.km + (Math.round((moto.kmsPerMonth / 30) * this.commonService.dayDiff(new Date(moto.dateKms), new Date())));
-    }
-
-    calculateDateMaintenanceKmMotoEstimated(moto: MotoModel, km: number): Date {
-        const diff: number = (km - moto.km) / moto.kmsPerMonth;
-        const date: Date = new Date(moto.dateKms);
-        date.setMonth(date.getMonth() + diff);
-        return date;
+        return moto.km + (Math.round((moto.kmsPerMonth / 30) * this.calendarService.dayDiff(new Date(moto.dateKms), new Date())));
     }
 
     getDateCalculateMonths(wear: WearReplacementProgressBarModel): string {
@@ -573,7 +569,7 @@ export class DashboardService {
             const moto: MotoModel = new MotoModel(null, null, 0, motoWear.kmMoto,
                 null, motoWear.kmsPerMonthMoto, motoWear.dateKmsMoto, motoWear.datePurchaseMoto);
             const kmMoto: number = this.calculateKmMotoEstimated(moto);
-            const diffDateToday: number = this.commonService.monthDiff(motoWear.datePurchaseMoto, new Date());
+            const diffDateToday: number = this.calendarService.monthDiff(motoWear.datePurchaseMoto, new Date());
             const listWear: WearReplacementProgressBarModel[] = this.commonService.orderBy(
                 motoWear.listWearReplacement, ConstantsColumns.COLUMN_MODEL_FROM_KM_MAINTENANCE);
             // INIT VARIABLES
@@ -608,7 +604,7 @@ export class DashboardService {
                         if (!!ops && ops.length > 0) {
                             opLast = this.getOperationsNearKmTime(moto, ops, calcKm, calcTime);
                             op = opLast;
-                            calcDiffTime = this.commonService.monthDiff(motoWear.datePurchaseMoto, new Date(op.date));
+                            calcDiffTime = this.calendarService.monthDiff(motoWear.datePurchaseMoto, new Date(op.date));
                             calculateKmEstimate = calcKm - op.km;
                             calculateTimeEstimate = calcTime - calcDiffTime;
                             percentKm = (calculateKmEstimate >= 0 ?
@@ -686,7 +682,7 @@ export class DashboardService {
         let result: number = time;
         if (wear.fromKmMaintenance !== 0 && time === 0) {
             const opCalc: OperationModel = this.getOperationsNearKmTime(moto, operations, wear.fromKmMaintenance, 0);
-            result = opCalc === null ? 0 : this.commonService.monthDiff(moto.datePurchase, new Date(opCalc.date));
+            result = opCalc === null ? 0 : this.calendarService.monthDiff(moto.datePurchase, new Date(opCalc.date));
         }
         return result;
     }
@@ -698,7 +694,7 @@ export class DashboardService {
                 !wearReplacement.some(y => y.idOperation === x.id) &&
                 ((x.km >= kmCalculate && x.km < calcCompKm) ||
                 ((opLast.id === null ? 0 : opLast.km) <= x.km && x.km < calcCompKm &&
-                this.commonService.monthDiff(datePurchaseMoto, new Date(x.date)) <= calcTime)));
+                this.calendarService.monthDiff(datePurchaseMoto, new Date(x.date)) <= calcTime)));
     }
 
     getOperationsNearKmTime(moto: MotoModel, operations: OperationModel[], km: number, time: number): OperationModel {
@@ -714,7 +710,7 @@ export class DashboardService {
                 const datePurchase: Date = new Date(moto.datePurchase);
                 datePurchase.setMonth(datePurchase.getMonth() + time);
                 if (new Date(x.date) < datePurchase) {
-                    const timeMaint: number = this.commonService.monthDiff(new Date(moto.datePurchase), new Date(x.date));
+                    const timeMaint: number = this.calendarService.monthDiff(new Date(moto.datePurchase), new Date(x.date));
                     const nearT: number = (time - timeMaint) * (time < timeMaint ? -1 : 1);
                     const percT: number = nearT / time;
                     if (percent > percT) {

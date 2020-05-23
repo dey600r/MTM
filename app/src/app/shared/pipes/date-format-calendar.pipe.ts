@@ -1,15 +1,15 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { CommonService } from '@services/index';
+import { CalendarService } from '@services/index';
 
 
 @Pipe({name: 'dateFormatCalendarPipe'})
 export class DateFormatCalendarPipe implements PipeTransform {
-    constructor(private commonService: CommonService) {
+    constructor(private calendarService: CalendarService) {
 
     }
 
     transform(date: Date = new Date()): string {
-    return this.commonService.getDateString(date);
+    return this.calendarService.getDateString(date);
     }
 }

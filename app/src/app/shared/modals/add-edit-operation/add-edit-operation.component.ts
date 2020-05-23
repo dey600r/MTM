@@ -11,7 +11,7 @@ import { Constants, ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/inde
 import {
   ModalInputModel, ModalOutputModel, MotoModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, OperationService, CommonService, ConfigurationService, ControlService } from '@services/index';
+import { DataBaseService, OperationService, CommonService, ConfigurationService, ControlService, CalendarService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-operation',
@@ -34,7 +34,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   motos: MotoModel[] = [];
   maintenanceElement: MaintenanceElementModel[] = [];
   maintenanceElementSelect: number[] = [];
-  formatDate = this.commonService.getFormatCalendar();
+  formatDate = this.calendarService.getFormatCalendar();
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
@@ -56,6 +56,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     private translator: TranslateService,
     private operationService: OperationService,
     private commonService: CommonService,
+    private calendarService: CalendarService,
     private controlService: ControlService,
     private configurationService: ConfigurationService
   ) {
@@ -74,7 +75,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     this.operation = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.operation.id = -1;
-      this.operation.date = this.commonService.getDateStringToDB(new Date());
+      this.operation.date = this.calendarService.getDateStringToDB(new Date());
       this.operation.operationType.id = null;
     }
 
@@ -229,19 +230,19 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
       msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
                 {
-                  dateIni: this.commonService.getDateString(minDate),
-                  dateFin: this.commonService.getDateString(maxDate)
+                  dateIni: this.calendarService.getDateString(minDate),
+                  dateFin: this.calendarService.getDateString(maxDate)
                 })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
     } else if (!!minDate && !(!!maxDate) && dateSelected < minDate) {
       msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
-                { dateIni: this.commonService.getDateString(minDate) })} ` +
+                { dateIni: this.calendarService.getDateString(minDate) })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
     } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
       msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
                 {
-                  dateIni: this.commonService.getDateString(moto.datePurchase),
-                  dateFin: this.commonService.getDateString(maxDate)
+                  dateIni: this.calendarService.getDateString(moto.datePurchase),
+                  dateFin: this.calendarService.getDateString(maxDate)
                 })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
     }
@@ -259,7 +260,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
         msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower', { kmFin: moto.km});
       } else if (new Date(moto.datePurchase) > new Date(this.operation.date)) {
         msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
-                { dateIni: this.commonService.getDateString(moto.datePurchase) })}`;
+                { dateIni: this.calendarService.getDateString(moto.datePurchase) })}`;
       }
     }
 

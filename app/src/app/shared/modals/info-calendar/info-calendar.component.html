@@ -1,0 +1,64 @@
+<ion-header>
+    <ion-toolbar>
+        <!-- Title -->
+        <ion-title class="align-center padding-left30">{{ 'COMMON.CALENDAR' | translate }}</ion-title>
+        <!-- Button Close -->
+        <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
+          <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content fullscreen>
+  <!-- CALENDAR -->
+  <ion-calendar [(ngModel)]="dateMulti" [options]="optionsMulti" [type]="type" (click)="onClick($event)"
+    [format]="formatCalendar" (onSelect)="onSelect($event)" (monthChange)="onMonthChange($event)">
+  </ion-calendar>
+
+  <ion-list *ngIf="listInfoCalendarSelected.length === 0">
+    <ion-list-header class="padding-list-header info-header-notification-empty">
+      <ion-icon class="font-size26" name="alarm"></ion-icon>
+      <h3 class="header-list info-text-notification-empty">{{ notificationEmpty }}</h3>
+    </ion-list-header>
+  </ion-list>
+  <ion-list *ngFor="let moto of listInfoCalendarSelected">
+    <ion-list-header class="padding-list-header">
+      <ion-icon class="icon-header" name="bicycle"></ion-icon>
+      <h3 class="header-list header font-size20">{{ moto.nameMoto }}</h3>
+    </ion-list-header>
+    <ion-item button *ngFor="let maint of moto.listInfoCalendarMaintenance">
+      <!-- Icons -->
+      <ion-avatar slot="start" class="max-width10 align-start">
+        <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(maint)"></ion-icon>
+      </ion-avatar>
+      <div class="main-item">
+        <div>
+          <!-- Label -->
+          <div class="table-row">
+            <ion-label class="row-label">{{ maint.descriptionMaintenance }}</ion-label>
+            <div class="icon-notification">
+              <ion-icon *ngIf="maint.fromKmMaintenance !== 0" name="walk"
+                color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+              <ion-icon *ngIf="maint.toKmMaintenance !== null" name="trail-sign"
+                color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+              <ion-icon *ngIf="maint.initMaintenance" name="navigate-circle"
+                color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+              <ion-icon *ngIf="!maint.initMaintenance && maint.wearMaintenance" name="notifications-circle"
+                color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+            </div>
+          </div>
+          <div class="table-row" *ngFor="let repl of maint.listInfoCalendarReplacement">
+            <div class="margin-right5 table-row auto-width">
+              <ion-icon [class]="getClassIcon(repl.warning, 'icon-row')" [color]="getClassIcon(repl.warning, '')" size="small"
+                [name]="getIconKms(repl.warning)"></ion-icon>
+              <p class="row-color font-size14">{{ repl.nameReplacement }}</p>
+              <p *ngIf="repl.time === 0" class="row-color icon-notification font-size13">{{ repl.km }} km</p>
+              <p *ngIf="repl.time !== 0"class="row-color icon-notification font-size13">{{ repl.dateFormat }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>

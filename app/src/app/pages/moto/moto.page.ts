@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -38,7 +38,8 @@ export class MotoPage implements OnInit {
               private motoService: MotoService,
               private commonService: CommonService,
               private controlService: ControlService,
-              private dashboardService: DashboardService) {
+              private dashboardService: DashboardService,
+              private detector: ChangeDetectorRef) {
       this.platform.ready().then(() => {
         let userLang = navigator.language.split('-')[0];
         userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -51,7 +52,8 @@ export class MotoPage implements OnInit {
   ngOnInit() {
     this.dbService.getMotos().subscribe(data => {
       if (!!data && data.length > 0) {
-        if (this.dashboardService.getSearchDashboard().searchMoto.brand === null) {
+        if (this.dashboardService.getSearchDashboard().searchMoto.brand === null ||
+          data.length === this.motos.length - 1) {
           this.dashboardService.setSearchOperation(data[0]);
         } else if (data.length === this.motos.length + 1) {
           // Insert new moto, change filter to easy
@@ -61,6 +63,7 @@ export class MotoPage implements OnInit {
         this.dashboardService.setSearchOperation();
       }
       this.motos = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MOTO_BRAND);
+      this.detector.detectChanges();
     });
 
     this.dbService.getOperations().subscribe(op => {

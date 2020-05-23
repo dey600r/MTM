@@ -252,7 +252,6 @@
 
 // NOTIFICATIONS
 
-
 .main-div {
     width: 100%;
     padding: 20px 0px 0px 0px;
@@ -272,6 +271,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    align-self: center;
 }
 
 .auto-width {
@@ -304,8 +304,18 @@
     margin: 4px 2px 8px 3px;
 }
 
+.index-top {
+    z-index: 3000;
+}
+
+// COLORS
+
 .icon-color-success {
     --ion-color-base: var(--ion-color-progressbar-success-buffer);
+}
+
+.icon-color-gray {
+    --ion-color-base: var(--ion-color-step-600, #666);
 }
 
 .icon-color-warning {

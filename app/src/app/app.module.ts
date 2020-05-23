@@ -14,6 +14,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { CalendarModule } from 'ion4-calendar';
 
 // LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
@@ -33,6 +34,7 @@ import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-ed
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
 import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
+import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { PipeModule } from '@pipes/pipes.module';
 
@@ -46,6 +48,7 @@ import { PipeModule } from '@pipes/pipes.module';
     AddEditMaintenanceElementComponent,
     DashboardComponent,
     InfoNotificationComponent,
+    InfoCalendarComponent,
     SearchDashboardPopOverComponent
   ],
   entryComponents: [
@@ -56,6 +59,7 @@ import { PipeModule } from '@pipes/pipes.module';
     AddEditMaintenanceElementComponent,
     DashboardComponent,
     InfoNotificationComponent,
+    InfoCalendarComponent,
     SearchDashboardPopOverComponent
   ],
   imports: [
@@ -74,7 +78,8 @@ import { PipeModule } from '@pipes/pipes.module';
     AppRoutingModule,
     CommonModule,
     FormsModule,
-    PipeModule
+    PipeModule,
+    CalendarModule
   ],
   exports: [
   ],

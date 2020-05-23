@@ -9,7 +9,9 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum } from '@utils/index';
 import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel, OperationModel } from '@models/index';
-import { DataBaseService, MotoService, CommonService, ControlService, DashboardService } from '@services/index';
+import {
+  DataBaseService, MotoService, CommonService, CalendarService, ControlService, DashboardService
+} from '@services/index';
 
 @Component({
   selector: 'app-add-edit-moto',
@@ -29,7 +31,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
   // DATA
   configurations: ConfigurationModel[] = [];
   operations: OperationModel[] = [];
-  formatDate = this.commonService.getFormatCalendar();
+  formatDate = this.calendarService.getFormatCalendar();
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
@@ -46,6 +48,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     private translator: TranslateService,
     private motoService: MotoService,
     private commonService: CommonService,
+    private calendarService: CalendarService,
     private controlService: ControlService,
     private dashboardService: DashboardService
   ) {
@@ -60,7 +63,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     this.moto = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.moto.id = -1;
-      this.moto.datePurchase = null;
+      this.moto.datePurchase = this.calendarService.getDateStringToDB(new Date());
     }
 
     this.configurationSubscription = this.dbService.getConfigurations().subscribe(data => {
@@ -112,7 +115,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
 
   isValidForm(f: any): boolean {
     return this.isValidBrand(f) && this.isValidModel(f) && this.isValidYearBetween(f) &&
-           this.isValidKmMin(f) && this.isValidConfiguration(f) && this.isValidKmsPerMonth(f);
+           this.isValidKmMin(f) && this.isValidConfiguration(f) && this.isValidKmsPerMonthMin(f);
   }
 
   isValidBrand(f: any): boolean {
@@ -141,7 +144,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
   }
 
   isValidKmMin(f: any): boolean {
-    return this.isValidKm(f) && f.motoKm.valueAsNumber >= 0;
+    return this.isValidKm(f) && f.motoKm.valueAsNumber > 0;
   }
 
   isValidConfiguration(f: any): boolean {
@@ -150,6 +153,10 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
 
   isValidKmsPerMonth(f: any): boolean {
     return f.motoKmsPerMonth !== undefined && f.motoKmsPerMonth.validity.valid;
+  }
+
+  isValidKmsPerMonthMin(f: any): boolean {
+    return this.isValidKmsPerMonth(f) && f.motoKmsPerMonth.valueAsNumber > 0;
   }
 
   validateDateAndKmToOperations(): string {
@@ -162,7 +169,8 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
         { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM)});
       } else if (this.operations.some(x => purchase > new Date(x.date))) {
         msg = this.translator.instant('PAGE_OPERATION.AddDateLower',
-        { dateFin: this.commonService.getDateString(this.commonService.min(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_DATE))});
+        { dateFin: this.calendarService.getDateString(
+            this.commonService.min(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_DATE))});
       }
     }
 
