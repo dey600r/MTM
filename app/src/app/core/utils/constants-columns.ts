@@ -1,15 +1,20 @@
 export class ConstantsColumns {
     static COLUMN_MTM_ID = 'id';
 
-    // MOTO
-    static COLUMN_MTM_MOTO_MODEL = 'model';
-    static COLUMN_MTM_MOTO_BRAND = 'brand';
-    static COLUMN_MTM_MOTO_YEAR = 'year';
-    static COLUMN_MTM_MOTO_KM = 'km';
-    static COLUMN_MTM_MOTO_CONFIGURATION = 'idConfiguration';
-    static COLUMN_MTM_MOTO_KMS_PER_MONTH = 'kmsPerMonth';
-    static COLUMN_MTM_MOTO_DATE_KMS = 'dateKms';
-    static COLUMN_MTM_MOTO_DATE_PURCHASE = 'datePurchase';
+    // VEHICLE
+    static COLUMN_MTM_VEHICLE_MODEL = 'model';
+    static COLUMN_MTM_VEHICLE_BRAND = 'brand';
+    static COLUMN_MTM_VEHICLE_YEAR = 'year';
+    static COLUMN_MTM_VEHICLE_KM = 'km';
+    static COLUMN_MTM_VEHICLE_CONFIGURATION = 'idConfiguration';
+    static COLUMN_MTM_VEHICLE_VEHICLE_TYPE = 'idVehicleType';
+    static COLUMN_MTM_VEHICLE_KMS_PER_MONTH = 'kmsPerMonth';
+    static COLUMN_MTM_VEHICLE_DATE_KMS = 'dateKms';
+    static COLUMN_MTM_VEHICLE_DATE_PURCHASE = 'datePurchase';
+
+    // VEHICLE TYPE
+    static COLUMN_MTM_VEHICLE_TYPE_CODE = 'code';
+    static COLUMN_MTM_VEHICLE_TYPE_DESCRIPTION = 'description';
 
     // CONFIGURATION
     static COLUMN_MTM_CONFIGURATION_NAME = 'name';
@@ -28,7 +33,7 @@ export class ConstantsColumns {
     static COLUMN_MTM_OPERATION_DESCRIPTION = 'description';
     static COLUMN_MTM_OPERATION_DETAILS = 'details';
     static COLUMN_MTM_OPERATION_OPERATION_TYPE = 'idOperationType';
-    static COLUMN_MTM_OPERATION_MOTO = 'idMoto';
+    static COLUMN_MTM_OPERATION_VEHICLE = 'idVehicle';
     static COLUMN_MTM_OPERATION_KM = 'km';
     static COLUMN_MTM_OPERATION_DATE = 'date';
     static COLUMN_MTM_OPERATION_LOCATION = 'location';
@@ -69,10 +74,14 @@ export class ConstantsColumns {
     static COLUMN_MTM_SEQUENCE_SEQ = 'seq';
 
     // WEAR REPLACEMENT RECORDS (MODEL)
-    static COLUMN_MODEL_DATE_PURCHASE_MOTO = 'datePurchaseMoto';
-    static COLUMN_MODEL_NAME_MOTO = 'nameMoto';
+    static COLUMN_MODEL_DATE_PURCHASE_VEHICLE = 'datePurchaseVehicle';
+    static COLUMN_MODEL_NAME_VEHICLE = 'nameVehicle';
     static COLUMN_MODEL_KM_MAINTENANCE = 'kmMaintenance';
     static COLUMN_MODEL_KM_ACUMULATE_MAINTENANCE = 'kmAcumulateMaintenance';
     static COLUMN_MODEL_FROM_KM_MAINTENANCE = 'fromKmMaintenance';
     static COLUMN_MODEL_CALCULATE_KMS = 'calculateKms';
+
+    // SYSTEM CONFIGURATION
+    static COLUMN_MTM_SYSTEM_CONFIGURATION_KEY = 'key';
+    static COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE = 'value';
 }

@@ -26,12 +26,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // MODEL FORM
     dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
-    dashboardMotoExpenses: DashboardModel = new DashboardModel([], []);
+    dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
     currentPopover = null;
 
     // DATA
     operations: OperationModel[] = [];
-    motoModel = '';
+    vehicleModel = '';
 
     // SUBSCRIPTION
     searchSubscription: Subscription = new Subscription();
@@ -51,27 +51,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
     this.operations = this.modalInputModel.dataList;
-    this.motoModel = (!!this.operations && this.operations.length > 0 ?
-        `${this.operations[0].moto.brand} ${this.operations[0].moto.model}` : '');
+    this.vehicleModel = (!!this.operations && this.operations.length > 0 ?
+        `${this.operations[0].vehicle.brand} ${this.operations[0].vehicle.model}` : '');
     this.searchSubscription = this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
       const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-      if (this.modalInputModel.parentPage === PageEnum.MOTO) { // MOTO TOTAL EXPENSES
-        this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoExpenses(windowsSize, this.operations, filter);
-      } else { // MOTO EXPENSES PER MONTH
-        this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoPerTime(windowsSize, this.operations, filter);
+      if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
+        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
+      } else { // VEHICLE EXPENSES PER MONTH
+        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize, this.operations, filter);
       }
-      // MOTO EXPENSES PER OPERATION TYPE
+      // VEHICLE EXPENSES PER OPERATION TYPE
       this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
     });
 
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
       let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
-      this.dashboardMotoExpenses.view = windowSize;
+      this.dashboardVehicleExpenses.view = windowSize;
       this.dashboardOpTypeExpenses.view = windowSize;
       setTimeout(() => {
         windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (windowSize[0] === windowSize[1]) {
-          this.dashboardMotoExpenses.view = windowSize;
+          this.dashboardVehicleExpenses.view = windowSize;
           this.dashboardOpTypeExpenses.view = windowSize;
           this.changeDetector.detectChanges();
         }
@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getParent(page: PageEnum): PageEnum {
-    return (page === PageEnum.MOTO ? PageEnum.MODAL_DASHBOARD_MOTO : PageEnum.MODAL_DASHBOARD_OPERATION);
+    return (page === PageEnum.VEHICLE ? PageEnum.MODAL_DASHBOARD_VEHICLE : PageEnum.MODAL_DASHBOARD_OPERATION);
   }
 
   showPopover(ev: any) {
@@ -99,8 +99,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getParent(this.modalInputModel.parentPage)));
   }
 
-  isParentPageMoto() {
-    return this.modalInputModel.parentPage === PageEnum.MOTO;
+  isParentPageVehicle() {
+    return this.modalInputModel.parentPage === PageEnum.VEHICLE;
   }
 
   isParentPageOperation() {

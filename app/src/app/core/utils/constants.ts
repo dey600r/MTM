@@ -7,6 +7,7 @@ export class Constants {
     static DATE_FORMAT_ES = 'DD/MM/YYYY';
     static DATE_FORMAT_EN = 'MM/DD/YYYY';
     static DATE_FORMAT_DB = 'YYYY-MM-DD';
+    static DATE_TIME_FORMAT_DB = 'YYYY-MM-DD HH:mm:ss';
 
     static CLASS_ION_ICON_OPERATION_TYPE = 'icon-color-';
 
@@ -27,11 +28,13 @@ export class Constants {
     static OWNER_ME = 'me';
 
     static STATE_INFO_OPERATION_EMPTY = 'operation_empty';
-    static STATE_INFO_MOTO_EMPTY = 'moto_empty';
+    static STATE_INFO_VEHICLE_EMPTY = 'vehicle_empty';
     static STATE_INFO_NOTIFICATION_EMPTY = 'notification_empty';
 
     static DATABASE_YES = 'Y';
     static DATABASE_NO = 'N';
 
     static IONIC_APP = 'app';
+
+    static KEY_LAST_UPDATE_DB = 'lastUpdate';
 }

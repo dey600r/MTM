@@ -7,8 +7,8 @@ import * as Moment from 'moment';
 // UTILS
 import { Constants, WarningWearEnum } from '@utils/index';
 import {
-    WearMotoProgressBarViewModel, InfoCalendarMotoViewModel, InfoCalendarMaintenanceViewModel,
-    InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, MotoModel
+    WearVehicleProgressBarViewModel, InfoCalendarVehicleViewModel, InfoCalendarMaintenanceViewModel,
+    InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, VehicleModel
 } from '../models';
 
 @Injectable({
@@ -27,6 +27,10 @@ export class CalendarService {
 
     getDateStringToDB(date: Date): any {
         return Moment(date).format(Constants.DATE_FORMAT_DB);
+    }
+
+    getDateTimeStringToDB(date: Date): any {
+        return Moment(date).format(Constants.DATE_TIME_FORMAT_DB);
     }
 
     getFormatCalendar() {
@@ -65,8 +69,8 @@ export class CalendarService {
 
     // INFO CALENDAR
 
-    getInfoCalendar(listWearsNotification: WearMotoProgressBarViewModel[]): InfoCalendarMotoViewModel[] {
-        let result: InfoCalendarMotoViewModel[] = [];
+    getInfoCalendar(listWearsNotification: WearVehicleProgressBarViewModel[]): InfoCalendarVehicleViewModel[] {
+        let result: InfoCalendarVehicleViewModel[] = [];
 
         if (!!listWearsNotification && listWearsNotification.length > 0) {
             listWearsNotification.forEach(wear => {
@@ -94,8 +98,8 @@ export class CalendarService {
                     }
                 });
                 result = [...result, {
-                    idMoto: wear.idMoto,
-                    nameMoto: wear.nameMoto,
+                    idVehicle: wear.idVehicle,
+                    nameVehicle: wear.nameVehicle,
                     listInfoCalendarMaintenance: replacements
                 }];
             });
@@ -104,32 +108,32 @@ export class CalendarService {
         return result;
     }
 
-    createInfoCalendarReplacement(wear: WearMotoProgressBarViewModel, replacement: WearReplacementProgressBarViewModel,
+    createInfoCalendarReplacement(wear: WearVehicleProgressBarViewModel, replacement: WearReplacementProgressBarViewModel,
                                   km: boolean): InfoCalendarReplacementViewModel {
         let dateResult: Date = new Date();
         let kms = 0;
         let times = 0;
         let warnings: WarningWearEnum = WarningWearEnum.DANGER;
         if (km) {
-            const kmMoto: number = wear.kmMoto + (Math.round((wear.kmsPerMonthMoto / 30) *
-                    this.dayDiff(new Date(wear.dateKmsMoto), new Date())));
-            kms = kmMoto + replacement.calculateKms;
+            const kmVehicle: number = wear.kmVehicle + (Math.round((wear.kmsPerMonthVehicle / 30) *
+                    this.dayDiff(new Date(wear.dateKmsVehicle), new Date())));
+            kms = kmVehicle + replacement.calculateKms;
             warnings = replacement.warningKms;
             if (replacement.calculateKms > 0) {
-                dateResult = this.calculateKmInfoNotification(new MotoModel(null, null, null, 0, null,
-                    wear.kmsPerMonthMoto, wear.dateKmsMoto), replacement.calculateKms);
+                dateResult = this.calculateKmInfoNotification(new VehicleModel(null, null, null, 0, null, null,
+                    wear.kmsPerMonthVehicle, wear.dateKmsVehicle), replacement.calculateKms);
             } else {
-                let diffMotoPurchase = 0;
+                let diffVehiclePurchase = 0;
                 let monthsEstimated = 0;
                 let dateCompare: Date = new Date();
                 if (replacement.kmOperation === null) {
-                    dateCompare = wear.datePurchaseMoto;
-                    diffMotoPurchase = this.monthDiff(dateCompare, new Date());
-                    monthsEstimated = (replacement.kmMaintenance * diffMotoPurchase) / kmMoto;
+                    dateCompare = wear.datePurchaseVehicle;
+                    diffVehiclePurchase = this.monthDiff(dateCompare, new Date());
+                    monthsEstimated = (replacement.kmMaintenance * diffVehiclePurchase) / kmVehicle;
                 } else {
                     dateCompare = new Date(replacement.dateOperation);
-                    diffMotoPurchase = this.monthDiff(dateCompare, new Date());
-                    monthsEstimated = ((kmMoto - replacement.kmOperation) * diffMotoPurchase) / replacement.kmMaintenance;
+                    diffVehiclePurchase = this.monthDiff(dateCompare, new Date());
+                    monthsEstimated = ((kmVehicle - replacement.kmOperation) * diffVehiclePurchase) / replacement.kmMaintenance;
                 }
                 dateResult = this.calculateTimeInfoCalendar(dateCompare, Math.floor(monthsEstimated));
             }
@@ -140,7 +144,7 @@ export class CalendarService {
                 dateResult = this.calculateTimeInfoCalendar(new Date(), replacement.calculateMonths);
             } else {
                 dateResult = (replacement.kmOperation === null ?
-                    this.calculateTimeInfoCalendar(wear.datePurchaseMoto, replacement.timeMaintenance) :
+                    this.calculateTimeInfoCalendar(wear.datePurchaseVehicle, replacement.timeMaintenance) :
                     this.calculateTimeInfoCalendar(new Date(replacement.dateOperation), replacement.timeMaintenance));
             }
         }
@@ -156,9 +160,9 @@ export class CalendarService {
         };
     }
 
-    calculateKmInfoNotification(moto: MotoModel, km: number): Date {
-        const diff: number = (km - moto.km) / moto.kmsPerMonth;
-        const date: Date = new Date(moto.dateKms);
+    calculateKmInfoNotification(vehicle: VehicleModel, km: number): Date {
+        const diff: number = (km - vehicle.km) / vehicle.kmsPerMonth;
+        const date: Date = new Date(vehicle.dateKms);
         date.setMonth(date.getMonth() + diff);
         return date;
     }
@@ -169,13 +173,13 @@ export class CalendarService {
         return date;
     }
 
-    getInfoCalendarReplacementDate(data: InfoCalendarMotoViewModel[], date: Date[]): InfoCalendarMotoViewModel[] {
-        let result: InfoCalendarMotoViewModel[] = [];
+    getInfoCalendarReplacementDate(data: InfoCalendarVehicleViewModel[], date: Date[]): InfoCalendarVehicleViewModel[] {
+        let result: InfoCalendarVehicleViewModel[] = [];
         if (!!data && data.length > 0) {
             data.forEach(x => {
                 if (x.listInfoCalendarMaintenance.some(m =>
                     m.listInfoCalendarReplacement.some(r => this.isDateEquals(r.date, date)))) {
-                    let rMoto: InfoCalendarMaintenanceViewModel[] = [];
+                    let rVehicle: InfoCalendarMaintenanceViewModel[] = [];
                     x.listInfoCalendarMaintenance.forEach(y => {
                         if (y.listInfoCalendarReplacement.some(r => this.isDateEquals(r.date, date))) {
                             let rMaint: InfoCalendarReplacementViewModel[] = [];
@@ -193,7 +197,7 @@ export class CalendarService {
                                     }];
                                 }
                             });
-                            rMoto = [...rMoto, {
+                            rVehicle = [...rVehicle, {
                                 idMaintenance: y.idMaintenance,
                                 descriptionMaintenance: y.descriptionMaintenance,
                                 codeMaintenanceFreq: y.codeMaintenanceFreq,
@@ -206,9 +210,9 @@ export class CalendarService {
                         }
                     });
                     result = [...result, {
-                        idMoto: x.idMoto,
-                        nameMoto: x.nameMoto,
-                        listInfoCalendarMaintenance: rMoto
+                        idVehicle: x.idVehicle,
+                        nameVehicle: x.nameVehicle,
+                        listInfoCalendarMaintenance: rVehicle
                     }];
                 }
             });
@@ -228,14 +232,14 @@ export class CalendarService {
             (dateFin !== null && dateCompare >= dateInit && dateCompare <= dateFin);
     }
 
-    getCircleColor(listInfoCalendarMoto: InfoCalendarMotoViewModel[], moto: InfoCalendarMotoViewModel,
+    getCircleColor(listInfoCalendarVehicle: InfoCalendarVehicleViewModel[], vehicle: InfoCalendarVehicleViewModel,
                    maintenance: InfoCalendarMaintenanceViewModel,
                    replacement: InfoCalendarReplacementViewModel): string {
-        if (listInfoCalendarMoto.some(x => x.listInfoCalendarMaintenance.some(y =>
+        if (listInfoCalendarVehicle.some(x => x.listInfoCalendarMaintenance.some(y =>
                 y.listInfoCalendarReplacement.some(z => this.isDateEquals(z.date, [replacement.date]) &&
-                    ((x.idMoto !== moto.idMoto) ||
-                    (x.idMoto === moto.idMoto && y.idMaintenance !== maintenance.idMaintenance) ||
-                    (x.idMoto === moto.idMoto && y.idMaintenance === maintenance.idMaintenance &&
+                    ((x.idVehicle !== vehicle.idVehicle) ||
+                    (x.idVehicle === vehicle.idVehicle && y.idMaintenance !== maintenance.idMaintenance) ||
+                    (x.idVehicle === vehicle.idVehicle && y.idMaintenance === maintenance.idMaintenance &&
                     z.idReplacement !== replacement.idReplacement)))))) {
             return 'day-circle-config-all';
         } else if (replacement.warning === WarningWearEnum.SKULL) {

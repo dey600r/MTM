@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { DataBaseService, CommonService, OperationService, ControlService, DashboardService } from '@services/index';
 import {
-  OperationModel, MotoModel, ModalInputModel, ModalOutputModel,
+  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
   OperationTypeModel, SearchDashboardModel
 } from '@models/index';
 import { ConstantsColumns, Constants, ActionDBEnum, PageEnum } from '@utils/index';
@@ -34,7 +34,7 @@ export class OperationPage implements OnInit {
   // DATA
   operations: OperationModel[] = [];
   allOperations: OperationModel[] = [];
-  nameFilterMoto = '';
+  nameFilterVehicle = '';
   loaded = false;
   iconNameHeaderLeft = 'bar-chart';
 
@@ -65,19 +65,19 @@ export class OperationPage implements OnInit {
     this.dbService.getOperations().subscribe(data => {
       this.allOperations = data;
       this.filterDashboard = this.dashboardService.getSearchDashboard();
-      this.dashboardService.setSearchOperation((this.filterDashboard.searchMoto.brand === null ?
-        (!!data && data.length > 0 ? data[0].moto : new MotoModel(null, null, null, null, null, null, null, null, 0)) :
-        this.filterDashboard.searchMoto));
+      this.dashboardService.setSearchOperation((this.filterDashboard.searchVehicle.brand === null ?
+        (!!data && data.length > 0 ? data[0].vehicle : new VehicleModel(null, null, null, null, null, null, null, null, null, 0)) :
+        this.filterDashboard.searchVehicle));
       this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
-        this.allOperations = data.filter(op => op.moto.id === filter.searchMoto.id);
+        this.allOperations = data.filter(op => op.vehicle.id === filter.searchVehicle.id);
         if (this.allOperations.length === 0) {
           this.iconNameHeaderLeft = 'information-circle';
         } else {
           this.iconNameHeaderLeft = 'bar-chart';
         }
         this.filterDashboard = filter;
-        if (this.filterDashboard.searchMoto.brand !== null) {
-          this.nameFilterMoto = `${filter.searchMoto.brand} ${filter.searchMoto.model}`;
+        if (this.filterDashboard.searchVehicle.brand !== null) {
+          this.nameFilterVehicle = `${filter.searchVehicle.brand} ${filter.searchVehicle.model}`;
         }
         const filteredText: string = filter.searchText.toLowerCase();
         this.operations = this.commonService.orderBy(
@@ -106,7 +106,7 @@ export class OperationPage implements OnInit {
 
   /** MODALS */
 
-  openOperationModal(row: OperationModel = new OperationModel(null, null, new OperationTypeModel(), this.filterDashboard.searchMoto),
+  openOperationModal(row: OperationModel = new OperationModel(null, null, new OperationTypeModel(), this.filterDashboard.searchVehicle),
                      create: boolean = true) {
     this.rowSelected = row;
     this.controlService.openModal(PageEnum.OPERATION,
@@ -127,7 +127,7 @@ export class OperationPage implements OnInit {
     this.showConfirmDelete();
   }
 
-  showModalInfoMoto() {
+  showModalInfoVehicle() {
     this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddMotoToAddOperation', Constants.DELAY_TOAST_NORMAL);
   }
 

@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- Title -->
+    <ion-title *ngIf="this.modalInputModel.isCreate" class="align-center padding-left30">{{ 'PAGE_MOTO.AddNewMoto' | translate }}</ion-title>
+    <ion-title *ngIf="!this.modalInputModel.isCreate" class="align-center padding-left30">{{ 'PAGE_MOTO.EditMoto' | translate }}</ion-title>
+    <!-- Button Close -->
+    <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
+      <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form #formAddVehicle name="formAddVehicle" (ngSubmit)="saveData(formAddVehicle)" novalidate>
+    <ion-list lines="full">
+      <!-- Input control -->
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.BRAND' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidBrand(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidBrand(formAddVehicle)" color="danger">{{ 'PAGE_MOTO.AddBrand' | translate }}</ion-text>
+        </ion-label>
+        <ion-input #vehicleBrand name="vehicleBrand" placeholder="Yamaha" autocapitalize required type="text" [(ngModel)]="vehicle.brand"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.MODEL' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidModel(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidModel(formAddVehicle)" color="danger">{{ 'PAGE_MOTO.AddModel' | translate }}</ion-text>
+        </ion-label>
+        <ion-input #vehicleModel name="vehicleModel" placeholder="R6" required autocapitalize type="text" [(ngModel)]="vehicle.model"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.YEAR' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && (!isValidYear(formAddVehicle) || !isValidYearBetween(formAddVehicle))" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidYear(formAddVehicle)" color="danger">{{ 'PAGE_MOTO.AddYear' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && isValidYear(formAddVehicle) && !isValidYearBetween(formAddVehicle)" color="danger">{{ translateYearBetween }}</ion-text>
+        </ion-label>
+        <ion-input #vehicleYear name="vehicleYear" required placeholder="2005" type="number" [(ngModel)]="vehicle.year"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.KM' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && (!isValidKm(formAddVehicle) || !isValidKmMin(formAddVehicle))" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidKm(formAddVehicle)" color="danger">{{ 'PAGE_MOTO.AddKm' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && isValidKm(formAddVehicle) && !isValidKmMin(formAddVehicle)" color="danger">{{ 'PAGE_MOTO.AddKmMinCero' | translate }}</ion-text>
+        </ion-label>
+        <ion-input #vehicleKm name="vehicleKm" required placeholder="50000 km" type="number" min="0" [(ngModel)]="vehicle.km"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.DATE_PURCHASE' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidDate(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidDate(formAddVehicle)" color="danger">{{ 'PAGE_OPERATION.AddDate' | translate }}</ion-text>
+        </ion-label>
+        <ion-datetime #vehicleDate name="vehicleDate" [displayFormat]="formatDate" required [placeholder]="translateSelect" [(ngModel)]="vehicle.datePurchase"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.CONFIGURATION' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && !isValidConfiguration(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidConfiguration(formAddVehicle)" color="danger">{{ 'PAGE_MOTO.AddConfiguration' | translate }}</ion-text>
+        </ion-label>
+        <ion-select #vehicleConfiguration name="vehicleConfiguration" interface="popover" [(ngModel)]="vehicle.configuration.id">
+          <ion-select-option [(value)]="c.id" *ngFor="let c of configurations">{{c.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.KM_PER_MONTH' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          <ion-icon *ngIf="this.submited && (!isValidKmsPerMonth(formAddVehicle) || !isValidKmsPerMonthMin(formAddVehicle))" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          <ion-text *ngIf="this.submited && !isValidKmsPerMonth(formAddVehicle)" color="danger">{{ 'PAGE_MOTO.AddKmsPerMonth' | translate }}</ion-text>
+          <ion-text *ngIf="this.submited && isValidKmsPerMonth(formAddVehicle) && !isValidKmsPerMonthMin(formAddVehicle)" color="danger">{{ 'PAGE_MOTO.AddKmMinCero' | translate }}</ion-text>
+        </ion-label>
+        <ion-input #vehicleKmsPerMonth name="vehicleKmsPerMonth" required placeholder="150" type="number" min="0" [(ngModel)]="vehicle.kmsPerMonth"></ion-input>
+      </ion-item>
+    </ion-list>
+    <!-- Button Save -->
+    <ion-button class="button-circle" type="submit">
+      <ion-icon name="save"></ion-icon>
+    </ion-button>
+  </form>
+</ion-content>

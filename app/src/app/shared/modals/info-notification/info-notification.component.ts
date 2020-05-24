@@ -8,10 +8,10 @@ import * as shape from 'd3-shape';
 
 // UTILS
 import {
-  ModalInputModel, ModalOutputModel, WearMotoProgressBarViewModel, WearReplacementProgressBarViewModel,
-  MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, MotoModel
+  ModalInputModel, ModalOutputModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
+  MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel
 } from '@models/index';
-import { DashboardService, ConfigurationService, ControlService, CalendarService } from '@services/index';
+import { DashboardService, ConfigurationService, ControlService, CalendarService, VehicleService } from '@services/index';
 import { WarningWearEnum, Constants, PageEnum } from '@utils/index';
 
 // COMPONENTS
@@ -30,8 +30,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
     // MODEL FORM
-    wear: WearMotoProgressBarViewModel = new WearMotoProgressBarViewModel();
-    dashboardMotoExpenses: DashboardModel = new DashboardModel([], []);
+    wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
+    dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
     dashboardRecordsMaintenance: DashboardModel = new DashboardModel([], []);
     currentPopover = null;
     hideGraph = true;
@@ -41,12 +41,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     linear: any = shape.curveMonotoneX; // shape.curveBasis;
 
     // DATA
-    dataMaintenance: WearMotoProgressBarViewModel = new WearMotoProgressBarViewModel();
-    motoKmEstimated = 0;
+    dataMaintenance: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
+    vehicleKmEstimated = 0;
     nameMaintenanceElement = '';
     nameMaintenance = '';
-    labelNameMoto = '';
-    labelMotoKm = '';
+    labelNameVehicle = '';
+    labelVehicleKm = '';
     labelReliability = '';
     labelPercent = 0;
     labelNextChange = '';
@@ -81,7 +81,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       this.searchSubscription = this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
         const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (!this.hideGraph) {
-          this.dashboardMotoExpenses = this.dashboardService.getDashboardModelMotoPerTime(windowsSize,
+          this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,
             this.modalInputModel.dataList.filter(x => this.wear.listWearReplacement.some(y => y.idOperation === x.id)), filter);
         }
         if (!this.hideRecords) {
@@ -92,12 +92,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
       this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
         let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
-        this.dashboardMotoExpenses.view = windowSize;
+        this.dashboardVehicleExpenses.view = windowSize;
         this.dashboardRecordsMaintenance.view = windowSize;
         setTimeout(() => {
           windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
           if (windowSize[0] === windowSize[1]) {
-            this.dashboardMotoExpenses.view = windowSize;
+            this.dashboardVehicleExpenses.view = windowSize;
             this.dashboardRecordsMaintenance.view = windowSize;
             this.changeDetector.detectChanges();
           }
@@ -121,42 +121,43 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   configureResume() {
     this.dataMaintenance = this.modalInputModel.data;
-    const moto: MotoModel = new MotoModel(null, null, 0, this.dataMaintenance.kmMoto,
-      null, this.dataMaintenance.kmsPerMonthMoto, this.dataMaintenance.dateKmsMoto, this.dataMaintenance.datePurchaseMoto);
-    this.motoKmEstimated = this.dashboardService.calculateKmMotoEstimated(moto);
+    const vehicle: VehicleModel = new VehicleModel(null, null, 0, this.dataMaintenance.kmVehicle,
+      null, null, this.dataMaintenance.kmsPerMonthVehicle, this.dataMaintenance.dateKmsVehicle, this.dataMaintenance.datePurchaseVehicle);
+    this.vehicleKmEstimated = this.dashboardService.calculateKmVehicleEstimated(vehicle);
     const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
-    this.labelNameMoto = this.dataMaintenance.nameMoto;
+    this.labelNameVehicle = this.dataMaintenance.nameVehicle;
     this.nameMaintenance = wear.descriptionMaintenance;
     this.nameMaintenanceElement = wear.nameMaintenanceElement;
-    this.labelMotoKm = this.translator.instant('PAGE_HOME.MotoKm', { km: this.dataMaintenance.kmMoto });
-    if (this.dataMaintenance.kmMoto !== this.motoKmEstimated) {
-      this.labelMotoKm += '\n' + this.translator.instant('PAGE_HOME.MotoEstimatedKm', { km: this.motoKmEstimated });
+    this.labelVehicleKm = this.translator.instant('PAGE_HOME.MotoKm', { km: this.dataMaintenance.kmVehicle });
+    if (this.dataMaintenance.kmVehicle !== this.vehicleKmEstimated) {
+      this.labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.MotoEstimatedKm', { km: this.vehicleKmEstimated });
     }
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
     let kmMaintenane = 0;
     if (wear.kmOperation === null) {
-      const mant: number = (wear.kmMaintenance < this.motoKmEstimated ? this.motoKmEstimated / wear.kmMaintenance : 1);
+      const mant: number = (wear.kmMaintenance < this.vehicleKmEstimated ? this.vehicleKmEstimated / wear.kmMaintenance : 1);
       kmMaintenane = wear.kmMaintenance * Math.floor(mant) + wear.kmMaintenance;
     } else {
       kmMaintenane = wear.kmOperation + wear.kmMaintenance;
-      kmMaintenane = (kmMaintenane < this.motoKmEstimated ? this.motoKmEstimated : kmMaintenane);
+      kmMaintenane = (kmMaintenane < this.vehicleKmEstimated ? this.vehicleKmEstimated : kmMaintenane);
     }
     let date: Date = new Date(4000, 1, 1);
-    const dateMaintenanceKmMotoEstimated: Date = this.calendarService.calculateKmInfoNotification(moto, kmMaintenane);
+    const dateMaintenanceKmVehicleEstimated: Date = this.calendarService.calculateKmInfoNotification(vehicle, kmMaintenane);
     if (wear.timeMaintenance !== 0) {
-      date = new Date(moto.datePurchase);
-      const monthMoto: number = this.calendarService.monthDiff(date, new Date());
+      date = new Date(vehicle.datePurchase);
+      const monthVehicle: number = this.calendarService.monthDiff(date, new Date());
       if (wear.kmOperation === null) {
-        const mantMonth: number = (wear.timeMaintenance < monthMoto ? monthMoto / wear.timeMaintenance : 1);
+        const mantMonth: number = (wear.timeMaintenance < monthVehicle ? monthVehicle / wear.timeMaintenance : 1);
         date.setMonth(date.getMonth() + wear.timeMaintenance * Math.floor(mantMonth) + wear.timeMaintenance);
       } else {
-        const mantMonth = this.calendarService.monthDiff(new Date(moto.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
-        date.setMonth(date.getMonth() + (mantMonth < monthMoto ? monthMoto : mantMonth));
+        const mantMonth = this.calendarService.monthDiff(
+          new Date(vehicle.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
+        date.setMonth(date.getMonth() + (mantMonth < monthVehicle ? monthVehicle : mantMonth));
       }
     }
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
       {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
-        date: this.calendarService.getDateString((date > dateMaintenanceKmMotoEstimated ? dateMaintenanceKmMotoEstimated : date))});
+        date: this.calendarService.getDateString((date > dateMaintenanceKmVehicleEstimated ? dateMaintenanceKmVehicleEstimated : date))});
   }
 
   refreshChart() {
@@ -211,7 +212,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getDateMaintenance(wear: WearReplacementProgressBarViewModel): Date {
-    const dateMaintenance: Date = new Date(this.wear.datePurchaseMoto);
+    const dateMaintenance: Date = new Date(this.wear.datePurchaseVehicle);
     dateMaintenance.setMonth(dateMaintenance.getMonth() + wear.timeAcumulateMaintenance);
     return dateMaintenance;
   }
@@ -262,9 +263,9 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
-  showInfoMoto() {
+  showInfoVehicle() {
     const msg = this.translator.instant('ALERT.LastUpdateMotoKm',
-      { date: this.calendarService.getDateString(new Date(this.dataMaintenance.dateKmsMoto)) });
+      { date: this.calendarService.getDateString(new Date(this.dataMaintenance.dateKmsVehicle)) });
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
@@ -317,8 +318,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getMaintenanceNow(wears: WearReplacementProgressBarViewModel[]): WearReplacementProgressBarViewModel {
-    let result: WearReplacementProgressBarViewModel = wears.find(x => x.fromKmMaintenance <= this.motoKmEstimated &&
-      (x.toKmMaintenance === null || x.toKmMaintenance >= this.motoKmEstimated));
+    let result: WearReplacementProgressBarViewModel = wears.find(x => x.fromKmMaintenance <= this.vehicleKmEstimated &&
+      (x.toKmMaintenance === null || x.toKmMaintenance >= this.vehicleKmEstimated));
     if (!!!result) {
       result = wears[wears.length - 1];
     }

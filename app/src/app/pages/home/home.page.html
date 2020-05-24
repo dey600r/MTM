@@ -15,22 +15,22 @@
 <ion-content [hidden]="!loaded">
   <!-- INFO -->
   <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
-  <!-- List Moto -->
+  <!-- List Vehicles -->
   <ion-list *ngFor="let m of wears; let i = index;">
-    <ion-list-header (click)="hideMotos[i] = !hideMotos[i]" class="padding-list-header">
+    <ion-list-header (click)="hideVehicles[i] = !hideVehicles[i]" class="padding-list-header">
       <ion-icon size="large" name="bicycle"></ion-icon>
-      <h3 class="header-list">{{ m.nameMoto }}</h3>
+      <h3 class="header-list">{{ m.nameVehicle }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideMotos[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideMotos[i]" size="small" color="primary" name="caret-up-circle"></ion-icon>
+        <ion-icon *ngIf="hideVehicles[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
+        <ion-icon *ngIf="!hideVehicles[i]" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <!-- Progress bar moto -->
-    <div *ngIf="hideMotos[i]" [class]="getClassProgressbar(m.warning, 'progress-bar')">
+    <!-- Progress bar vehicle -->
+    <div *ngIf="hideVehicles[i]" [class]="getClassProgressbar(m.warning, 'progress-bar')">
       <ion-progress-bar [value]="m.percent"></ion-progress-bar>
     </div>
     <!-- Items Maintenances -->
-    <ion-item button *ngFor="let w of m.listWearReplacement" [hidden]="hideMotos[i]" (click)="openInfoNotification(m, w)">
+    <ion-item button *ngFor="let w of m.listWearReplacement" [hidden]="hideVehicles[i]" (click)="openInfoNotification(m, w)">
       <!-- Ivatar -->
       <ion-avatar slot="start" class="max-width10 avatar-row">
         <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(w)"></ion-icon>

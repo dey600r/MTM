@@ -8,24 +8,24 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum } from '@utils/index';
-import { ModalInputModel, ModalOutputModel, MotoModel, ConfigurationModel, OperationModel } from '@models/index';
+import { ModalInputModel, ModalOutputModel, VehicleModel, ConfigurationModel, OperationModel } from '@models/index';
 import {
-  DataBaseService, MotoService, CommonService, CalendarService, ControlService, DashboardService
+  DataBaseService, VehicleService, CommonService, CalendarService, ControlService, DashboardService
 } from '@services/index';
 
 @Component({
-  selector: 'app-add-edit-moto',
-  templateUrl: 'add-edit-moto.component.html',
+  selector: 'app-add-edit-vehicle',
+  templateUrl: 'add-edit-vehicle.component.html',
   styleUrls: ['../../../app.component.scss']
 })
-export class AddEditMotoComponent implements OnInit, OnDestroy {
+export class AddEditVehicleComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
   modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // MODEL FORM
-  moto: MotoModel = new MotoModel();
+  vehicle: VehicleModel = new VehicleModel();
   submited = false;
 
   // DATA
@@ -46,7 +46,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     private navParams: NavParams,
     private dbService: DataBaseService,
     private translator: TranslateService,
-    private motoService: MotoService,
+    private vehicleService: VehicleService,
     private commonService: CommonService,
     private calendarService: CalendarService,
     private controlService: ControlService,
@@ -60,10 +60,10 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
 
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
-    this.moto = Object.assign({}, this.modalInputModel.data);
+    this.vehicle = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
-      this.moto.id = -1;
-      this.moto.datePurchase = this.calendarService.getDateStringToDB(new Date());
+      this.vehicle.id = -1;
+      this.vehicle.datePurchase = this.calendarService.getDateStringToDB(new Date());
     }
 
     this.configurationSubscription = this.dbService.getConfigurations().subscribe(data => {
@@ -72,7 +72,7 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
 
     this.operationSubscription = this.dbService.getOperations().subscribe(data => {
       // Filter to get less elemnts to better perfomance
-      this.operations = data.filter(x => x.moto.id === this.moto.id);
+      this.operations = data.filter(x => x.vehicle.id === this.vehicle.id);
     });
   }
 
@@ -86,23 +86,24 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
     if (this.isValidForm(f)) {
       const result = this.validateDateAndKmToOperations();
       if (result !== '') {
-        this.controlService.showToast(PageEnum.MODAL_MOTO, result, null, Constants.DELAY_TOAST_HIGHER);
+        this.controlService.showToast(PageEnum.MODAL_VEHICLE, result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
         // Save date to change km to calculate maintenance
-        if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.moto.km) {
-          this.moto.dateKms = new Date();
+        if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.vehicle.km) {
+          this.vehicle.dateKms = new Date();
         }
 
-        this.motoService.saveMoto(this.moto, (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+        this.vehicleService.saveVehicle(this.vehicle,
+          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
-          if (this.moto.id !== -1) { // Change filter operation to easy
-            this.dashboardService.setSearchOperation(this.moto);
+          if (this.vehicle.id !== -1) { // Change filter operation to easy
+            this.dashboardService.setSearchOperation(this.vehicle);
           }
-          this.controlService.showToast(PageEnum.MODAL_MOTO, (
+          this.controlService.showToast(PageEnum.MODAL_VEHICLE, (
             this.modalInputModel.isCreate ? 'PAGE_MOTO.AddSaveMoto' : 'PAGE_MOTO.EditSaveMoto'),
-            { moto: this.moto.model });
+            { moto: this.vehicle.model });
         }).catch(e => {
-          this.controlService.showToast(PageEnum.MODAL_MOTO, 'PAGE_MOTO.ErrorSaveMoto');
+          this.controlService.showToast(PageEnum.MODAL_VEHICLE, 'PAGE_MOTO.ErrorSaveMoto');
         });
       }
     }
@@ -119,52 +120,52 @@ export class AddEditMotoComponent implements OnInit, OnDestroy {
   }
 
   isValidBrand(f: any): boolean {
-    return f.motoBrand !== undefined && f.motoBrand.validity.valid;
+    return f.vehicleBrand !== undefined && f.vehicleBrand.validity.valid;
   }
 
   isValidModel(f: any): boolean {
-    return f.motoModel !== undefined && f.motoModel.validity.valid;
+    return f.vehicleModel !== undefined && f.vehicleModel.validity.valid;
   }
 
   isValidYear(f: any): boolean {
-    return f.motoYear !== undefined && f.motoYear.validity.valid;
+    return f.vehicleYear !== undefined && f.vehicleYear.validity.valid;
   }
 
   isValidYearBetween(f: any): boolean {
-    return this.isValidYear(f) && f.motoYear.valueAsNumber >= 1900 &&
-      f.motoYear.valueAsNumber <= new Date().getFullYear();
+    return this.isValidYear(f) && f.vehicleYear.valueAsNumber >= 1900 &&
+      f.vehicleYear.valueAsNumber <= new Date().getFullYear();
   }
 
   isValidKm(f: any): boolean {
-    return f.motoKm !== undefined && f.motoKm.validity.valid;
+    return f.vehicleKm !== undefined && f.vehicleKm.validity.valid;
   }
 
   isValidDate(f: any): boolean {
-    return f.motoDate !== undefined && f.motoDate.validity.valid;
+    return f.vehicleDate !== undefined && f.vehicleDate.validity.valid;
   }
 
   isValidKmMin(f: any): boolean {
-    return this.isValidKm(f) && f.motoKm.valueAsNumber > 0;
+    return this.isValidKm(f) && f.vehicleKm.valueAsNumber > 0;
   }
 
   isValidConfiguration(f: any): boolean {
-    return f.motoConfiguration !== undefined && f.motoConfiguration.validity.valid;
+    return f.vehicleConfiguration !== undefined && f.vehicleConfiguration.validity.valid;
   }
 
   isValidKmsPerMonth(f: any): boolean {
-    return f.motoKmsPerMonth !== undefined && f.motoKmsPerMonth.validity.valid;
+    return f.vehicleKmsPerMonth !== undefined && f.vehicleKmsPerMonth.validity.valid;
   }
 
   isValidKmsPerMonthMin(f: any): boolean {
-    return this.isValidKmsPerMonth(f) && f.motoKmsPerMonth.valueAsNumber > 0;
+    return this.isValidKmsPerMonth(f) && f.vehicleKmsPerMonth.valueAsNumber > 0;
   }
 
   validateDateAndKmToOperations(): string {
     let msg = '';
 
     if (!!this.operations && this.operations.length > 0) {
-      const purchase: Date = new Date(this.moto.datePurchase);
-      if (this.operations.some(x => this.moto.km < x.km)) {
+      const purchase: Date = new Date(this.vehicle.datePurchase);
+      if (this.operations.some(x => this.vehicle.km < x.km)) {
         msg = this.translator.instant('PAGE_MOTO.AddKmHigher',
         { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM)});
       } else if (this.operations.some(x => purchase > new Date(x.date))) {

@@ -5,7 +5,7 @@
             <ion-icon size="large" class="btn-color" name="filter"></ion-icon>
         </ion-button>
         <!-- Title -->
-        <ion-title class="align-center">{{ labelNameMoto }}</ion-title>
+        <ion-title class="align-center">{{ labelNameVehicle }}</ion-title>
         <!-- Button Close -->
         <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
           <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
@@ -25,8 +25,8 @@
         <ion-icon *ngIf="!hideSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <ion-item *ngIf="!hideSummary" button (click)="showInfoMoto()">
-      <p>{{ labelMotoKm }}</p>
+    <ion-item *ngIf="!hideSummary" button (click)="showInfoVehicle()">
+      <p>{{ labelVehicleKm }}</p>
     </ion-item>
     <ion-item *ngIf="!hideSummary" button (click)="showInfoReliability()">
       <p>{{ labelReliability }}</p>
@@ -52,20 +52,20 @@
     </ion-list-header>
     <div *ngIf="!hideGraph" class="justify-center">
       <ngx-charts-bar-vertical
-        [view]="dashboardMotoExpenses.view"
-        [scheme]="dashboardMotoExpenses.colorScheme"
-        [results]="dashboardMotoExpenses.data"
-        [gradient]="dashboardMotoExpenses.gradient"
-        [xAxis]="dashboardMotoExpenses.showXAxis"
-        [yAxis]="dashboardMotoExpenses.showYAxis"
-        [legend]="dashboardMotoExpenses.showLegend"
-        [legendTitle]="dashboardMotoExpenses.legendTitle"
-        [legendPosition]="dashboardMotoExpenses.legendPosition"
-        [showXAxisLabel]="dashboardMotoExpenses.showXAxisLabel"
-        [showYAxisLabel]="dashboardMotoExpenses.showYAxisLabel"
-        [showDataLabel]="dashboardMotoExpenses.showDataLabel"
-        [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
-        [yAxisLabel]="dashboardMotoExpenses.yAxisLabel">
+        [view]="dashboardVehicleExpenses.view"
+        [scheme]="dashboardVehicleExpenses.colorScheme"
+        [results]="dashboardVehicleExpenses.data"
+        [gradient]="dashboardVehicleExpenses.gradient"
+        [xAxis]="dashboardVehicleExpenses.showXAxis"
+        [yAxis]="dashboardVehicleExpenses.showYAxis"
+        [legend]="dashboardVehicleExpenses.showLegend"
+        [legendTitle]="dashboardVehicleExpenses.legendTitle"
+        [legendPosition]="dashboardVehicleExpenses.legendPosition"
+        [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
+        [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
+        [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
+        [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
       </ngx-charts-bar-vertical>
     </div>
   </ion-list>

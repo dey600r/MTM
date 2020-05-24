@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { SearchDashboardModel, OperationTypeModel, ModalInputModel, MotoModel, MaintenanceElementModel } from '@models/index';
+import { SearchDashboardModel, OperationTypeModel, ModalInputModel, VehicleModel, MaintenanceElementModel } from '@models/index';
 import { DashboardService, CommonService, DataBaseService } from '@services/index';
 import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
 
@@ -21,10 +21,10 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     modalInputModel: ModalInputModel = new ModalInputModel();
 
     // DATA
-    motos: MotoModel[] = [];
+    vehicles: VehicleModel[] = [];
     operationTypes: OperationTypeModel[] = [];
     maintenanceElements: MaintenanceElementModel[] = [];
-    filterMoto = 1;
+    filterVehicle = 1;
     filterOpType: number[] = [];
     filterMaintElement: number[] = [];
     filterMonth: FilterMonthsEnum = FilterMonthsEnum.MONTH;
@@ -43,7 +43,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }];
 
     // SUSCRIPTION
-    motoSubscription: Subscription = new Subscription();
+    vehicleSubscription: Subscription = new Subscription();
     operationTypeSubscription: Subscription = new Subscription();
     maintenanceElementSubscription: Subscription = new Subscription();
 
@@ -69,9 +69,9 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
         this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
             this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
-        this.motoSubscription = this.dbService.getMotos().subscribe(data => {
-            this.motos = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MOTO_BRAND);
-            this.filterMoto = this.searchDashboard.searchMoto.id;
+        this.vehicleSubscription = this.dbService.getVehicles().subscribe(data => {
+            this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
+            this.filterVehicle = this.searchDashboard.searchVehicle.id;
         });
 
         this.operationTypeSubscription = this.dbService.getOperationType().subscribe(data => {
@@ -88,20 +88,20 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }
 
     ngOnDestroy() {
-        this.motoSubscription.unsubscribe();
+        this.vehicleSubscription.unsubscribe();
         this.operationTypeSubscription.unsubscribe();
         this.maintenanceElementSubscription.unsubscribe();
     }
 
     onChangeFilterGrouper() {
-        this.searchDashboard.searchMoto = this.motos.find(x => this.filterMoto === x.id);
+        this.searchDashboard.searchVehicle = this.vehicles.find(x => this.filterVehicle === x.id);
         this.searchDashboard.searchOperationType = this.operationTypes.filter(x => this.filterOpType.some(y => x.id === y));
         this.searchDashboard.searchMaintenanceElement = this.maintenanceElements.filter(x => this.filterMaintElement.some(y => x.id === y));
         this.searchDashboard.showPerMont = this.filterMonth;
         this.dashboardService.setSearchDashboard(
             new SearchDashboardModel(this.searchDashboard.showPerMont,
                                     this.searchDashboard.searchText,
-                                    this.searchDashboard.searchMoto,
+                                    this.searchDashboard.searchVehicle,
                                     this.searchDashboard.searchOperationType,
                                     this.searchDashboard.searchMaintenanceElement,
                                     this.searchDashboard.showAxis,
@@ -118,7 +118,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }
 
     clearFilter() {
-        this.searchDashboard = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', this.motos.find(x => this.filterMoto === x.id));
+        this.searchDashboard = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', this.vehicles.find(x => this.filterVehicle === x.id));
         this.filterOpType = [];
         this.filterMaintElement = [];
         this.onChangeFilterGrouper();
@@ -128,8 +128,8 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
         return this.modalInputModel.parentPage === PageEnum.HOME;
     }
 
-    isParentPageDashboardMoto() {
-        return this.modalInputModel.parentPage === PageEnum.MODAL_DASHBOARD_MOTO;
+    isParentPageDashboardVehicle() {
+        return this.modalInputModel.parentPage === PageEnum.MODAL_DASHBOARD_VEHICLE;
     }
 
     isParentPageDashboardOperation() {

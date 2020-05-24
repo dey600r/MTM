@@ -14,14 +14,14 @@ import { environment } from '../../../environments/environment';
 import { PipeModule } from '@pipes/pipes.module';
 
 // COMPONENT
-import { MotoPage } from './moto.page';
+import { VehiclePage } from './vehicle.page';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    RouterModule.forChild([{ path: '', component: MotoPage }]),
+    RouterModule.forChild([{ path: '', component: VehiclePage }]),
     HttpClientModule,
     TranslateModule.forChild({
       loader: {
@@ -33,9 +33,9 @@ import { MotoPage } from './moto.page';
     PipeModule
   ],
   providers: [TranslateStore],
-  declarations: [MotoPage]
+  declarations: [VehiclePage]
 })
-export class MotoPageModule {}
+export class VehiclePageModule {}
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.pathTranslate, '.json');

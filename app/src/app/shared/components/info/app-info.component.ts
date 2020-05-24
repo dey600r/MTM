@@ -27,12 +27,12 @@ export class AppInfoComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  isMotoEmpty(): boolean {
-    return this.inputInfo.parentPage !== PageEnum.MOTO && this.isMotoPageEmpty();
+  isVehicleEmpty(): boolean {
+    return this.inputInfo.parentPage !== PageEnum.VEHICLE && this.isVehiclePageEmpty();
   }
 
-  isMotoPageEmpty(): boolean {
-    return this.inputInfo.action === Constants.STATE_INFO_MOTO_EMPTY;
+  isVehiclePageEmpty(): boolean {
+    return this.inputInfo.action === Constants.STATE_INFO_VEHICLE_EMPTY;
   }
 
   isOperationEmpty(): boolean {

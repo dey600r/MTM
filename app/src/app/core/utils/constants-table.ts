@@ -1,5 +1,6 @@
 export class ConstantsTable {
-    static TABLE_MTM_MOTO = 'mtmMoto';
+    static TABLE_MTM_VEHICLE = 'mtmVehicle';
+    static TABLE_MTM_VEHICLE_TYPE = 'mtmVehicleType';
     static TABLE_MTM_MAINTENANCE = 'mtmMaintenance';
     static TABLE_MTM_CONFIG_MAINT = 'mtmConfigMaintenance';
     static TABLE_MTM_OP_MAINT_ELEMENT = 'mtmOpMaintElem';
@@ -9,5 +10,6 @@ export class ConstantsTable {
     static TABLE_MTM_OPERATION = 'mtmOperation';
     static TABLE_MTM_MAINTENANCE_FREQ = 'mtmMaintenanceFreq';
     static TABLE_MTM_OPERATION_TYPE = 'mtmOperationType';
+    static TABLE_MTM_SYSTEM_CONFIGURATION = 'mtmSystemConfiguration';
     static SEQUENCES_MTM = 'sqlite_sequence';
 }

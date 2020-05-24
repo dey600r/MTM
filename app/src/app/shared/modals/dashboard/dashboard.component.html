@@ -17,24 +17,24 @@
 <ion-content>
     <ion-list-header class="padding-list-header">
         <ion-icon size="large" name="bicycle"></ion-icon>
-        <h3 *ngIf="isParentPageMoto()" class="header-list">{{ 'PAGE_MOTO.ExpensesPerMoto' | translate }}</h3>
-        <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }} {{ motoModel }}</h3>
+        <h3 *ngIf="isParentPageVehicle()" class="header-list">{{ 'PAGE_MOTO.ExpensesPerMoto' | translate }}</h3>
+        <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }} {{ vehicleModel }}</h3>
     </ion-list-header>
     <ngx-charts-bar-vertical class="justify-center"
-        [view]="dashboardMotoExpenses.view"
-        [scheme]="dashboardMotoExpenses.colorScheme"
-        [results]="dashboardMotoExpenses.data"
-        [gradient]="dashboardMotoExpenses.gradient"
-        [xAxis]="dashboardMotoExpenses.showXAxis"
-        [yAxis]="dashboardMotoExpenses.showYAxis"
-        [legend]="dashboardMotoExpenses.showLegend"
-        [legendTitle]="dashboardMotoExpenses.legendTitle"
-        [legendPosition]="dashboardMotoExpenses.legendPosition"
-        [showXAxisLabel]="dashboardMotoExpenses.showXAxisLabel"
-        [showYAxisLabel]="dashboardMotoExpenses.showYAxisLabel"
-        [showDataLabel]="dashboardMotoExpenses.showDataLabel"
-        [xAxisLabel]="dashboardMotoExpenses.xAxisLabel"
-        [yAxisLabel]="dashboardMotoExpenses.yAxisLabel">
+        [view]="dashboardVehicleExpenses.view"
+        [scheme]="dashboardVehicleExpenses.colorScheme"
+        [results]="dashboardVehicleExpenses.data"
+        [gradient]="dashboardVehicleExpenses.gradient"
+        [xAxis]="dashboardVehicleExpenses.showXAxis"
+        [yAxis]="dashboardVehicleExpenses.showYAxis"
+        [legend]="dashboardVehicleExpenses.showLegend"
+        [legendTitle]="dashboardVehicleExpenses.legendTitle"
+        [legendPosition]="dashboardVehicleExpenses.legendPosition"
+        [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
+        [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
+        [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
+        [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
     </ngx-charts-bar-vertical>
     <ion-list-header class="padding-list-header">
         <ion-icon size="large" name="construct"></ion-icon>

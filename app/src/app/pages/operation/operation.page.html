@@ -19,16 +19,16 @@
     <ion-list-header class="padding-list-header">
       <!-- Title -->
       <ion-icon size="large" name="construct"></ion-icon>
-      <h3 *ngIf="this.operations.length === 0 && this.filterDashboard.searchMoto.brand === null"
+      <h3 *ngIf="this.operations.length === 0 && this.filterDashboard.searchVehicle.brand === null"
         class="header-list">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h3>
-      <h3 *ngIf="this.filterDashboard.searchMoto.brand !== null" class="header-list">{{ 'COMMON.OPERATIONS_OF' | translate }} {{ nameFilterMoto }}</h3>
+      <h3 *ngIf="this.filterDashboard.searchVehicle.brand !== null" class="header-list">{{ 'COMMON.OPERATIONS_OF' | translate }} {{ nameFilterVehicle }}</h3>
       <!-- Button create -->
-      <ion-button class="btn-width-list" *ngIf="this.filterDashboard.searchMoto.brand !== null" fill="clear" (click)="openOperationModal()">
+      <ion-button class="btn-width-list" *ngIf="this.filterDashboard.searchVehicle.brand !== null" fill="clear" (click)="openOperationModal()">
         <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
       </ion-button>
       <!-- Button info -->
-      <ion-button class="btn-width-list" *ngIf="this.operations.length === 0 && this.filterDashboard.searchMoto.brand === null" 
-        fill="clear" (click)="showModalInfoMoto()">
+      <ion-button class="btn-width-list" *ngIf="this.operations.length === 0 && this.filterDashboard.searchVehicle.brand === null" 
+        fill="clear" (click)="showModalInfoVehicle()">
         <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
       </ion-button>
     </ion-list-header>

@@ -2,12 +2,12 @@
   <ion-toolbar>
     <!-- Button chart -->
     <ion-button class="btn-width-header position-fixed margin-top0 index-top"
-      *ngIf="this.motos.length > 0" slot="start" fill="clear" (click)="openDashboardMoto()">
+      *ngIf="this.vehicles.length > 0" slot="start" fill="clear" (click)="openDashboardVehicle()">
       <ion-icon size="large" name="bar-chart"></ion-icon>
     </ion-button>
     <!-- Button info -->
     <ion-button class="btn-width-header position-fixed margin-top-5 index-top"
-      *ngIf="this.motos.length === 0" fill="clear" (click)="showModalInfo()">
+      *ngIf="this.vehicles.length === 0" fill="clear" (click)="showModalInfo()">
       <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
     </ion-button>
     <!-- Tittle -->
@@ -21,11 +21,11 @@
       <ion-icon size="large" name="bicycle"></ion-icon>
       <h3 class="header-list">{{ 'PAGE_MOTO.YOURS_MOTORBIKES' | translate }}</h3>
       <!-- Button create -->
-      <ion-button class="btn-width-list" fill="clear" (click)="openMotoModal()">
+      <ion-button class="btn-width-list" fill="clear" (click)="openVehicleModal()">
         <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <div *ngIf="motos.length === 0" class="info-content">
+    <div *ngIf="vehicles.length === 0" class="info-content">
       <div class="info-main">
           <div>
               <ion-icon size="large" name="bicycle"></ion-icon>
@@ -33,14 +33,14 @@
           </div>
       </div>
     </div>
-    <ion-item button *ngFor="let m of motos">
+    <ion-item button *ngFor="let m of vehicles">
       <!-- Labels -->
-      <ion-label class="min-width40 label-event-force" (click)="openMotoModal(m, false)">
+      <ion-label class="min-width40 label-event-force" (click)="openVehicleModal(m, false)">
         <h2>{{ m.brand }}</h2>
         <h3>{{ m.model }}</h3>
         <p>{{ m.datePurchase | dateFormatCalendarPipe }}</p>
       </ion-label>
-      <ion-label class="padding-left10 label-event-force" (click)="openMotoModal(m, false)">
+      <ion-label class="padding-left10 label-event-force" (click)="openVehicleModal(m, false)">
         <h3>{{ m.km }} km</h3>
         <ion-label class="row-block flex-items-center">
           <ion-icon name="cog"></ion-icon>
@@ -56,7 +56,7 @@
           </ion-button>
         </ion-label>
         <ion-label>
-          <ion-button class="btn-width-row" fill="clear" (click)="deleteMoto(m)">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteVehicle(m)">
             <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
           </ion-button>
         </ion-label>

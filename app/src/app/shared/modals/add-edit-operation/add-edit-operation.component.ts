@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { Constants, ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/index';
 import {
-  ModalInputModel, ModalOutputModel, MotoModel, OperationModel, OperationTypeModel, MaintenanceElementModel
+  ModalInputModel, ModalOutputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
 import { DataBaseService, OperationService, CommonService, ConfigurationService, ControlService, CalendarService } from '@services/index';
 
@@ -31,7 +31,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   // DATA
   operations: OperationModel[] = [];
   operationType: OperationTypeModel[] = [];
-  motos: MotoModel[] = [];
+  vehicles: VehicleModel[] = [];
   maintenanceElement: MaintenanceElementModel[] = [];
   maintenanceElementSelect: number[] = [];
   formatDate = this.calendarService.getFormatCalendar();
@@ -39,7 +39,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
   operationTypeSubscription: Subscription = new Subscription();
-  motoSubscription: Subscription = new Subscription();
+  vehicleSubscription: Subscription = new Subscription();
   maintenanceElementSubscription: Subscription = new Subscription();
 
   // Translate
@@ -79,8 +79,8 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       this.operation.operationType.id = null;
     }
 
-    this.motoSubscription = this.dbService.getMotos().subscribe(data => {
-      this.motos = data;
+    this.vehicleSubscription = this.dbService.getVehicles().subscribe(data => {
+      this.vehicles = data;
     });
 
     this.operationTypeSubscription = this.dbService.getOperationType().subscribe(data => {
@@ -102,7 +102,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.operationSubscription.unsubscribe();
-    this.motoSubscription.unsubscribe();
+    this.vehicleSubscription.unsubscribe();
     this.operationTypeSubscription.unsubscribe();
     this.maintenanceElementSubscription.unsubscribe();
   }
@@ -173,7 +173,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   }
 
   isValidForm(f: any): boolean {
-    return this.isValidDescription(f) && this.isValidDetails(f) && this.isValidMoto(f) &&
+    return this.isValidDescription(f) && this.isValidDetails(f) && this.isValidVehicle(f) &&
       this.isValidOperationType(f) && this.isValidPrice(f) && this.isValidKm(f) &&
       this.isValidDate(f);
   }
@@ -190,8 +190,8 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     return f.opType !== undefined && f.opType.validity.valid && !!f.opType.value;
   }
 
-  isValidMoto(f: any): boolean {
-    return f.opMoto !== undefined && f.opMoto.validity.valid && !!f.opMoto.value;
+  isValidVehicle(f: any): boolean {
+    return f.opVehicle !== undefined && f.opVehicle.validity.valid && !!f.opVehicle.value;
   }
 
   isValidPrice(f: any): boolean {
@@ -224,7 +224,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     const maxDate = this.calculateMaxDate(this.operation);
     const minKm = this.calculateMinKm(this.operation);
     const maxKm = this.calculateMaxKm(this.operation);
-    const moto: MotoModel = this.motos.find(x => x.id === this.operation.moto.id);
+    const vehicle: VehicleModel = this.vehicles.find(x => x.id === this.operation.vehicle.id);
 
     // Validate min and max date operation
     if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
@@ -241,7 +241,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
       msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
                 {
-                  dateIni: this.calendarService.getDateString(moto.datePurchase),
+                  dateIni: this.calendarService.getDateString(vehicle.datePurchase),
                   dateFin: this.calendarService.getDateString(maxDate)
                 })} ` +
                 `${this.translator.instant('COMMON.OR')} `;
@@ -251,16 +251,16 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
       msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: maxKm});
     } else if (!(!!maxKm) && kmSelected < minKm) {
-      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: moto.km});
+      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: vehicle.km});
     }
 
-    // Validate max km moto
-    if (!!this.motos && this.motos.length > 0 && msgResult === '') {
-      if (moto.km < this.operation.km) {
-        msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower', { kmFin: moto.km});
-      } else if (new Date(moto.datePurchase) > new Date(this.operation.date)) {
+    // Validate max km vehicle
+    if (!!this.vehicles && this.vehicles.length > 0 && msgResult === '') {
+      if (vehicle.km < this.operation.km) {
+        msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower', { kmFin: vehicle.km});
+      } else if (new Date(vehicle.datePurchase) > new Date(this.operation.date)) {
         msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
-                { dateIni: this.calendarService.getDateString(moto.datePurchase) })}`;
+                { dateIni: this.calendarService.getDateString(vehicle.datePurchase) })}`;
       }
     }
 
@@ -271,7 +271,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     let resultKm = 0;
     const date = new Date(op.date);
     const operationsDateBefore: OperationModel[] = this.operations.filter(x =>
-      x.moto.id === op.moto.id && new Date(x.date) <= date &&
+      x.vehicle.id === op.vehicle.id && new Date(x.date) <= date &&
       x.id !== op.id);
 
     if (!!operationsDateBefore && operationsDateBefore.length > 0) {
@@ -285,7 +285,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     let resultKm: number = null;
     const date = new Date(op.date);
     const operationsDateAfter: OperationModel[] = this.operations.filter(x =>
-      x.moto.id === op.moto.id && new Date(x.date) > date &&
+      x.vehicle.id === op.vehicle.id && new Date(x.date) > date &&
       x.id !== op.id);
 
     if (!!operationsDateAfter && operationsDateAfter.length > 0) {
@@ -298,7 +298,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   calculateMinDate(op: OperationModel): Date {
     let resultDate: Date = null;
     const operationsKmBefore: OperationModel[] = this.operations.filter(x =>
-      x.moto.id === op.moto.id && x.km <= op.km &&
+      x.vehicle.id === op.vehicle.id && x.km <= op.km &&
       x.id !== op.id);
 
     if (!!operationsKmBefore && operationsKmBefore.length > 0) {
@@ -311,7 +311,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   calculateMaxDate(op: OperationModel): Date {
     let resultDate: Date = null;
     const operationsKmAfter: OperationModel[] = this.operations.filter(x =>
-      x.moto.id === op.moto.id && x.km > op.km &&
+      x.vehicle.id === op.vehicle.id && x.km > op.km &&
       x.id !== op.id);
 
     if (!!operationsKmAfter && operationsKmAfter.length > 0) {

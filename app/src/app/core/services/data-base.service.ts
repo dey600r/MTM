@@ -10,11 +10,14 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 
 // UTILS
 import {
-  MotoModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
+  VehicleModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
   MaintenanceFreqModel, MaintenanceModel
 } from '@models/index';
-import { ConstantsTable } from '@utils/index';
+import { ConstantsTable, Constants, ConstantsColumns } from '@utils/index';
 import { SqlService } from './sql.service';
+import { CalendarService } from './calendar.service';
+
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +26,8 @@ export class DataBaseService {
   private database: SQLiteObject;
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  motos = new BehaviorSubject([]);
-  motosData: MotoModel[] = [];
+  vehicles = new BehaviorSubject([]);
+  vehiclesData: VehicleModel[] = [];
   configuration = new BehaviorSubject([]);
   operation = new BehaviorSubject([]);
   operationType = new BehaviorSubject([]);
@@ -34,6 +37,7 @@ export class DataBaseService {
 
   constructor(private plt: Platform,
               private sqlitePorter: SQLitePorter,
+              private calendarService: CalendarService,
               private sqlite: SQLite,
               private http: HttpClient,
               private sqlService: SqlService) { }
@@ -59,22 +63,33 @@ export class DataBaseService {
   }
 
   seedDatabase() {
-    this.database.executeSql(`SELECT * FROM ${ConstantsTable.TABLE_MTM_MOTO}`, []).then(initDB => {
-      console.log(`NEXT DEPLOY DB`); // INIT DB
-      this.http.get('assets/db/nextDeployDB.sql', { responseType: 'text'}).subscribe(sql => {
-        this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
-          this.loadAllTables();
-          this.dbReady.next(true);
-        })
-        // tslint:disable-next-line: no-shadowed-variable
-        .catch(e => console.error(`Error launching next deploy data base: ${e}`));
-      });
+    this.database.executeSql(this.sqlService.getSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB), []).then(data => {
+      const dateLastUpdateApp: Date = new Date(environment.lastUpdate);
+      const dateLastUpdateDB: Date = new Date(data.rows.item(0)[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE]);
+      if (dateLastUpdateApp > dateLastUpdateDB) {
+        console.log(`NEXT DEPLOY DB`); // INIT DB
+        this.http.get('assets/db/nextDeployDB.sql', { responseType: 'text'}).subscribe(sql => {
+          this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
+            this.loadAllTables();
+            this.dbReady.next(true);
+            this.executeScriptDataBase(this.sqlService.updateSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB,
+              environment.lastUpdate), []);
+          })
+          // tslint:disable-next-line: no-shadowed-variable
+          .catch(e => console.error(`Error launching next deploy data base: ${e}`));
+        });
+      } else {
+        this.loadAllTables();
+        this.dbReady.next(true);
+      }
     }).catch(e => {
       console.log(`INIT DB`); // INIT DB
       this.http.get('assets/db/initTableDB.sql', { responseType: 'text'}).subscribe(sql => {
         this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
           this.loadAllTables();
           this.dbReady.next(true);
+          this.executeScriptDataBase(this.sqlService.updateSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB,
+            environment.lastUpdate), []);
         })
         // tslint:disable-next-line: no-shadowed-variable
         .catch(e => console.error(`Error launching initialize data base: ${e}`));
@@ -86,8 +101,8 @@ export class DataBaseService {
     return this.dbReady.asObservable();
   }
 
-  getMotos(): Observable<MotoModel[]> {
-    return this.motos.asObservable();
+  getVehicles(): Observable<VehicleModel[]> {
+    return this.vehicles.asObservable();
   }
 
   getConfigurations(): Observable<ConfigurationModel[]> {
@@ -116,7 +131,7 @@ export class DataBaseService {
 
   loadAllTables() {
     this.loadListTables([
-      ConstantsTable.TABLE_MTM_MOTO,
+      ConstantsTable.TABLE_MTM_VEHICLE,
       ConstantsTable.TABLE_MTM_CONFIGURATION,
       ConstantsTable.TABLE_MTM_OPERATION,
       ConstantsTable.TABLE_MTM_OPERATION_TYPE,
@@ -146,9 +161,9 @@ export class DataBaseService {
 
   loadDataOnObserver(table: string, data: any[]) {
     switch (table) {
-      case ConstantsTable.TABLE_MTM_MOTO:
-        this.motosData = this.sqlService.mapDataToObserver(table, data);
-        this.motos.next(this.motosData);
+      case ConstantsTable.TABLE_MTM_VEHICLE:
+        this.vehiclesData = this.sqlService.mapDataToObserver(table, data);
+        this.vehicles.next(this.vehiclesData);
         break;
       case ConstantsTable.TABLE_MTM_CONFIGURATION:
         this.configuration.next(this.sqlService.mapDataToObserver(table, data));

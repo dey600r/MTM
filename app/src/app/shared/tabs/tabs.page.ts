@@ -4,9 +4,6 @@ import { Platform } from '@ionic/angular';
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
-// UTILS
-import { ConfigurationService, MotoService, OperationService } from '@services/index';
-
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',

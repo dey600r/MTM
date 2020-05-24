@@ -1,7 +1,7 @@
 <ion-content>
     <div class="info-content">
         <div class="info-main">
-            <div *ngIf="isMotoEmpty()">
+            <div *ngIf="isVehicleEmpty()">
                 <ion-icon size="large" name="bicycle"></ion-icon>
                 <h2 class="margin-top5">{{ 'ALERT.MotoEmpty' | translate }}</h2>
             </div>
@@ -15,7 +15,7 @@
                 <div class="info-icon dissapear">
                     <ion-icon></ion-icon>
                 </div>
-                <div [ngClass]="{'info-icon': true, 'dissapear': !isMotoEmpty()}">
+                <div [ngClass]="{'info-icon': true, 'dissapear': !isVehicleEmpty()}">
                     <ion-icon size="large" name="arrow-down-circle"></ion-icon>
                 </div>
                 <div class="info-icon dissapear">

@@ -19,6 +19,12 @@
     align-self: flex-start;
 }
 
+.align-center {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
 .header {
     margin-bottom: 6px;
 }
@@ -99,3 +105,5 @@
     width: 100%;
     padding: 8px 0px 4px 0px;
 }
+
+

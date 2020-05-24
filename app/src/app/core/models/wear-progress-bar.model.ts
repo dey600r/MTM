@@ -1,12 +1,12 @@
 import { WarningWearEnum } from '@utils/index';
 
-export class WearMotoProgressBarViewModel {
-    idMoto = -1;
-    nameMoto = '';
-    kmMoto = 0;
-    datePurchaseMoto: Date = new Date();
-    kmsPerMonthMoto = 0;
-    dateKmsMoto: Date = new Date();
+export class WearVehicleProgressBarViewModel {
+    idVehicle = -1;
+    nameVehicle = '';
+    kmVehicle = 0;
+    datePurchaseVehicle: Date = new Date();
+    kmsPerMonthVehicle = 0;
+    dateKmsVehicle: Date = new Date();
     percent = 0;
     percentKm = 0;
     percentTime = 0;
@@ -16,12 +16,12 @@ export class WearMotoProgressBarViewModel {
                 kmsM: number = 0, dateK: Date = new Date(), per: number = 0, perKm: number = 0, perTime: number = 0,
                 war: WarningWearEnum = WarningWearEnum.SUCCESS,
                 list: WearReplacementProgressBarViewModel[] = []) {
-        this.idMoto = id;
-        this.nameMoto = name;
-        this.kmMoto = km;
-        this.datePurchaseMoto = dateP;
-        this.kmsPerMonthMoto = kmsM;
-        this.dateKmsMoto = dateK;
+        this.idVehicle = id;
+        this.nameVehicle = name;
+        this.kmVehicle = km;
+        this.datePurchaseVehicle = dateP;
+        this.kmsPerMonthVehicle = kmsM;
+        this.dateKmsVehicle = dateK;
         this.percent = per;
         this.percentKm = perKm;
         this.percentTime = perTime;

@@ -16,18 +16,21 @@
     [format]="formatCalendar" (onSelect)="onSelect($event)" (monthChange)="onMonthChange($event)">
   </ion-calendar>
 
-  <ion-list class="padding-list" *ngIf="listInfoCalendarSelected.length === 0">
+  <ion-list class="padding-list" *ngIf="!activeSpinner && listInfoCalendarSelected.length === 0">
     <ion-list-header class="padding-list-header info-header-notification-empty">
       <ion-icon class="font-size26" name="alarm"></ion-icon>
       <h3 class="header-list info-text-notification-empty">{{ notificationEmpty }}</h3>
     </ion-list-header>
   </ion-list>
-  <ion-list *ngFor="let moto of listInfoCalendarSelected">
+  <ion-label *ngIf="activeSpinner" class="align-center">
+    <ion-spinner name="lines" color="medium" slot="center"></ion-spinner>
+  </ion-label>
+  <ion-list *ngFor="let vehicle of listInfoCalendarSelected" [hidden]="activeSpinner">
     <ion-list-header class="padding-list-header">
       <ion-icon class="icon-header" name="bicycle"></ion-icon>
-      <h3 class="header-list header font-size20">{{ moto.nameMoto }}</h3>
+      <h3 class="header-list header font-size20">{{ vehicle.nameVehicle }}</h3>
     </ion-list-header>
-    <ion-item *ngFor="let maint of moto.listInfoCalendarMaintenance">
+    <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintenance">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10 align-start">
         <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(maint)"></ion-icon>

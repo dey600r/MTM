@@ -9,7 +9,7 @@ import { DataBaseService, CommonService, ConfigurationService, ControlService } 
 import { ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
-  MotoModel, OperationModel
+  VehicleModel, OperationModel
 } from '@models/index';
 
 // COMPONENTS
@@ -33,7 +33,7 @@ export class ConfigurationPage implements OnInit {
   rowReplSelected: MaintenanceElementModel = new MaintenanceElementModel();
 
   // DATA
-  motos: MotoModel[] = [];
+  vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
   configurations: ConfigurationModel[] = [];
   maintenances: MaintenanceModel[] = [];
@@ -66,12 +66,12 @@ export class ConfigurationPage implements OnInit {
   }
 
   initPage() {
-    this.dbService.getMotos().subscribe(data => {
+    this.dbService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
-        this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_MOTO_KM);
+        this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
       }
       // Filter to get less elemnts to better perfomance
-      this.motos = data.filter(x => x.configuration.id !== 1);
+      this.vehicles = data.filter(x => x.configuration.id !== 1);
     });
 
     this.dbService.getOperations().subscribe(data => {
@@ -119,26 +119,26 @@ export class ConfigurationPage implements OnInit {
   }
 
   showConfirmDeleteConfiguration() {
-    const motosDeleteConfig: MotoModel[] = this.motos.filter(x => x.configuration.id === this.rowConfSelected.id);
+    const vehiclesDeleteConfig: VehicleModel[] = this.vehicles.filter(x => x.configuration.id === this.rowConfSelected.id);
     let msg: string = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfiguration',
       {configuration: this.rowConfSelected.name});
-    if (!!motosDeleteConfig && motosDeleteConfig.length > 0) {
-      let motosName = '';
-      motosDeleteConfig.forEach((x, index) => {
-        motosName += x.model + ((index + 1) < motosDeleteConfig.length ? ',' : '');
+    if (!!vehiclesDeleteConfig && vehiclesDeleteConfig.length > 0) {
+      let vehiclesName = '';
+      vehiclesDeleteConfig.forEach((x, index) => {
+        vehiclesName += x.model + ((index + 1) < vehiclesDeleteConfig.length ? ',' : '');
       });
       msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfigurationMoveMoto',
-        {configuration: this.rowConfSelected.name, moto: motosName});
+        {configuration: this.rowConfSelected.name, moto: vehiclesName});
     }
 
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          motosDeleteConfig.forEach((x, index) => {
+          vehiclesDeleteConfig.forEach((x, index) => {
             x.configuration.id = 1;
           });
-          this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, motosDeleteConfig).then(x => {
+          this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, vehiclesDeleteConfig).then(x => {
             this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveConfiguration',
               { configuration: this.rowConfSelected.name });
           }).catch(e => {

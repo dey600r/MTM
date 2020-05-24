@@ -28,7 +28,7 @@ import { environment } from '../environments/environment';
 // COMPONENTS
 import { AppComponent } from './app.component';
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
-import { AddEditMotoComponent } from '@modals/add-edit-moto/add-edit-moto.component';
+import { AddEditVehicleComponent } from '@app/shared/modals/add-edit-vehicle/add-edit-vehicle.component';
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
@@ -42,7 +42,7 @@ import { PipeModule } from '@pipes/pipes.module';
   declarations: [
     AppComponent,
     AddEditConfigurationComponent,
-    AddEditMotoComponent,
+    AddEditVehicleComponent,
     AddEditOperationComponent,
     AddEditMaintenanceComponent,
     AddEditMaintenanceElementComponent,
@@ -53,7 +53,7 @@ import { PipeModule } from '@pipes/pipes.module';
   ],
   entryComponents: [
     AddEditConfigurationComponent,
-    AddEditMotoComponent,
+    AddEditVehicleComponent,
     AddEditOperationComponent,
     AddEditMaintenanceComponent,
     AddEditMaintenanceElementComponent,

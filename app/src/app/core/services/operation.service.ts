@@ -50,13 +50,13 @@ export class OperationService {
         return sqlDB;
     }
 
-    getSqlDeleteMotoOperation(operations: OperationModel[] = []): string {
+    getSqlDeleteVehicleOperation(operations: OperationModel[] = []): string {
         let sqlDB = '';
         if (!!operations && operations.length > 0) {
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
                 ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, operations.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION,
-                ConstantsColumns.COLUMN_MTM_OPERATION_MOTO, [operations[0].moto.id]); // DELETE OPERATION
+                ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE, [operations[0].vehicle.id]); // DELETE OPERATION
         }
         return sqlDB;
     }

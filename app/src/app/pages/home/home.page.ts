@@ -8,8 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { DataBaseService, DashboardService, ConfigurationService, ControlService } from '@services/index';
 import {
-  SearchDashboardModel, WearMotoProgressBarViewModel, WearReplacementProgressBarViewModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, MotoModel
+  SearchDashboardModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
+  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
 
@@ -30,15 +30,15 @@ export class HomePage implements OnInit {
   // DATA
   searchDashboard: SearchDashboardModel = this.dashboardService.getSearchDashboard();
   activateInfo = false;
-  wears: WearMotoProgressBarViewModel[] = [];
-  allWears: WearMotoProgressBarViewModel[] = [];
-  hideMotos: boolean[] = [];
+  wears: WearVehicleProgressBarViewModel[] = [];
+  allWears: WearVehicleProgressBarViewModel[] = [];
+  hideVehicles: boolean[] = [];
   operations: OperationModel[] = [];
   loaded = false;
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
-  motoSubscription: Subscription = new Subscription();
+  vehicleSubscription: Subscription = new Subscription();
   maintenanceSubscription: Subscription = new Subscription();
 
   constructor(private platform: Platform,
@@ -59,36 +59,36 @@ export class HomePage implements OnInit {
       this.maintenanceSubscription.unsubscribe();
       if (!!configurations && configurations.length > 0) {
         this.maintenanceSubscription = this.dbService.getMaintenance().subscribe(maintenances => {
-          this.motoSubscription.unsubscribe();
+          this.vehicleSubscription.unsubscribe();
           if (!!maintenances && maintenances.length > 0) {
-            this.motoSubscription = this.dbService.getMotos().subscribe(motos => {
+            this.vehicleSubscription = this.dbService.getVehicles().subscribe(vehicles => {
               this.operationSubscription.unsubscribe();
               this.operations = [];
-              if (!!motos && motos.length > 0) {
+              if (!!vehicles && vehicles.length > 0) {
                 this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
                   this.operations = operations;
                   this.wears = [];
-                  this.allWears = this.dashboardService.getWearReplacementToMoto(operations, motos, configurations, maintenances);
+                  this.allWears = this.dashboardService.getWearReplacementToVehicle(operations, vehicles, configurations, maintenances);
                   this.allWears.forEach((x, index) => {
                     this.wears = [...this.wears, Object.assign({}, x)];
-                    this.hideMotos[index] = (index !== 0);
+                    this.hideVehicles[index] = (index !== 0);
                     let listWears: WearReplacementProgressBarViewModel[] = [];
-                    const kmMoto: number = this.dashboardService.calculateKmMotoEstimated(new MotoModel(null, null, 0, x.kmMoto,
-                      null, x.kmsPerMonthMoto, x.dateKmsMoto, x.datePurchaseMoto));
+                    const kmVehicle: number = this.dashboardService.calculateKmVehicleEstimated(new VehicleModel(null, null, 0, x.kmVehicle,
+                      null, null, x.kmsPerMonthVehicle, x.dateKmsVehicle, x.datePurchaseVehicle));
                     x.listWearReplacement.forEach(z => {
                     if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
-                        z.fromKmMaintenance <= kmMoto && (z.toKmMaintenance === null || z.toKmMaintenance >= kmMoto)) {
+                        z.fromKmMaintenance <= kmVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= kmVehicle)) {
                         listWears = [...listWears, z];
                       }
                     });
-                    this.wears.find(y => x.idMoto === y.idMoto).listWearReplacement = listWears;
+                    this.wears.find(y => x.idVehicle === y.idVehicle).listWearReplacement = listWears;
                   });
-                  this.activateInfo = this.activateModeInfo(motos, operations, this.wears);
+                  this.activateInfo = this.activateModeInfo(vehicles, operations, this.wears);
                   this.timeOutLoader();
                 });
               } else {
                 this.timeOutLoader();
-                this.activateInfo = this.activateModeInfo(motos, [], []);
+                this.activateInfo = this.activateModeInfo(vehicles, [], []);
               }
             });
           }
@@ -101,7 +101,7 @@ export class HomePage implements OnInit {
     // RELOAD NOTIFICATIONS
     if (this.controlService.getDateLastUse().toDateString() !== new Date().toDateString()) {
       this.loaded = false;
-      this.dbService.motos.next(this.dbService.motosData);
+      this.dbService.vehicles.next(this.dbService.vehiclesData);
       this.controlService.setDateLastUse();
     }
     this.timeOutLoader();
@@ -117,10 +117,10 @@ export class HomePage implements OnInit {
     }
   }
 
-  activateModeInfo(m: MotoModel[], op: OperationModel[], w: WearMotoProgressBarViewModel[]): boolean {
+  activateModeInfo(m: VehicleModel[], op: OperationModel[], w: WearVehicleProgressBarViewModel[]): boolean {
     let result = true;
     if (m === null || m.length === 0) {
-      this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_MOTO_EMPTY);
+      this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_VEHICLE_EMPTY);
     } else if (w === null  || w.length === 0) {
       this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_NOTIFICATION_EMPTY);
     } else {
@@ -152,10 +152,10 @@ export class HomePage implements OnInit {
 
   // MODALS
 
-  openInfoNotification(m: WearMotoProgressBarViewModel, w: WearReplacementProgressBarViewModel) {
+  openInfoNotification(m: WearVehicleProgressBarViewModel, w: WearReplacementProgressBarViewModel) {
     let listGroupWear: WearReplacementProgressBarViewModel[] = [];
     if (w.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
-      listGroupWear = this.allWears.find(x => m.idMoto === x.idMoto).listWearReplacement.filter(x =>
+      listGroupWear = this.allWears.find(x => m.idVehicle === x.idVehicle).listWearReplacement.filter(x =>
         w.idMaintenanceElement === x.idMaintenanceElement && w.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
       const margenGrouper = 4000;
       listGroupWear = listGroupWear.filter(x => x.idMaintenance !== w.idMaintenance  && listGroupWear.some(y =>
@@ -167,10 +167,10 @@ export class HomePage implements OnInit {
     }
     listGroupWear = [...listGroupWear, w];
     // Change filter operation to easy
-    this.dashboardService.setSearchOperation(new MotoModel(m.nameMoto, '', null, null, null, null, null, null, m.idMoto));
+    this.dashboardService.setSearchOperation(new VehicleModel(m.nameVehicle, '', null, null, null, null, null, null, null, m.idVehicle));
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
-      new WearMotoProgressBarViewModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
-        m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.percentKm, m.percentTime, m.warning, listGroupWear),
+      new WearVehicleProgressBarViewModel(m.idVehicle, m.nameVehicle, m.kmVehicle, m.datePurchaseVehicle,
+        m.kmsPerMonthVehicle, m.dateKmsVehicle, m.percent, m.percentKm, m.percentTime, m.warning, listGroupWear),
         this.operations, PageEnum.HOME));
   }
 

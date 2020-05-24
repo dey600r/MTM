@@ -17,7 +17,7 @@ export class ControlService {
 
     private dateLastUse = new Date();
     private dataReturned = new ModalOutputModel();
-    private listPages: PageEnum[] = [PageEnum.HOME, PageEnum.MOTO, PageEnum.OPERATION, PageEnum.CONFIGURATION];
+    private listPages: PageEnum[] = [PageEnum.HOME, PageEnum.VEHICLE, PageEnum.OPERATION, PageEnum.CONFIGURATION];
 
     // SUBSCRIPTION
     private exitButtonSubscripion: Subscription = new Subscription();

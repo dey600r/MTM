@@ -1,4 +1,4 @@
-export * from './moto.model';
+export * from './vehicle.model';
 export * from './common.model';
 export * from './configuration.model';
 export * from './operation-type.model';
@@ -10,3 +10,4 @@ export * from './dashboard.model';
 export * from './search-dashboard.model';
 export * from './wear-progress-bar.model';
 export * from './info-calendar.model';
+export * from './vehicle-type.model';

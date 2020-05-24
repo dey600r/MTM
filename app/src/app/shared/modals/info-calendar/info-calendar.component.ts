@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import {
-  ModalInputModel, ModalOutputModel, InfoCalendarMaintenanceViewModel, InfoCalendarMotoViewModel,
+  ModalInputModel, ModalOutputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
   MaintenanceModel, MaintenanceFreqModel
 } from '@models/index';
 import { CalendarService, CommonService, DashboardService, ConfigurationService } from '@services/index';
@@ -25,8 +25,8 @@ export class InfoCalendarComponent implements OnInit {
   modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // DATA
-  listInfoCalendar: InfoCalendarMotoViewModel[] = [];
-  listInfoCalendarSelected: InfoCalendarMotoViewModel[] = [];
+  listInfoCalendar: InfoCalendarVehicleViewModel[] = [];
+  listInfoCalendarSelected: InfoCalendarVehicleViewModel[] = [];
   dateMulti: any[];
   type: 'string';
   optionsMulti: CalendarComponentOptions = {};
@@ -36,6 +36,7 @@ export class InfoCalendarComponent implements OnInit {
   yearActive = false;
   yearSelect = new Date().getFullYear();
   monthSelect = new Date().getMonth();
+  activeSpinner = false;
 
   // TRANSLATE
   notificationEmpty = '';
@@ -52,6 +53,7 @@ export class InfoCalendarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.activeSpinner = true;
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
         this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
@@ -68,7 +70,7 @@ export class InfoCalendarComponent implements OnInit {
     let days: DayConfig[] = [];
     let dateInit: Date = new Date();
     if (!!this.listInfoCalendar && this.listInfoCalendar.length) {
-      dateInit = this.commonService.min(this.modalInputModel.dataList, ConstantsColumns.COLUMN_MODEL_DATE_PURCHASE_MOTO);
+      dateInit = this.commonService.min(this.modalInputModel.dataList, ConstantsColumns.COLUMN_MODEL_DATE_PURCHASE_VEHICLE);
       this.listInfoCalendar.forEach(x => {
         x.listInfoCalendarMaintenance.forEach(y => {
           y.listInfoCalendarReplacement.forEach(z => {
@@ -120,16 +122,17 @@ export class InfoCalendarComponent implements OnInit {
 
   onClick($event: any) {
     if (!!$event) {
-      setTimeout(() => {
-        if (!this.select && !this.monthChange) {
-          let node: any = $event.target;
-          if (node.nodeName === 'SPAN') {
-            node = node.parentElement;
-          }
-          if (node.nodeName === 'BUTTON') {
-            node = node.parentElement;
-          }
-          if (node.nodeName === 'ION-BUTTON') {
+      let node: any = $event.target;
+      if (node.nodeName === 'SPAN') {
+        node = node.parentElement;
+      }
+      if (node.nodeName === 'BUTTON') {
+        node = node.parentElement;
+      }
+      if (node.nodeName === 'ION-BUTTON') {
+        this.activeSpinner = true;
+        setTimeout(() => {
+          if (!this.select && !this.monthChange) {
             if ($event.target.innerText.includes(this.yearSelect)) {
               this.yearSelect = Number($event.target.innerText.split(' ')[1]);
               this.yearActive = !this.yearActive;
@@ -148,10 +151,11 @@ export class InfoCalendarComponent implements OnInit {
               this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
             }
           }
-        }
-        this.select = false;
-        this.monthChange = false;
-       }, 50);
+          this.select = false;
+          this.monthChange = false;
+          this.activeSpinner = false;
+         }, 150);
+      }
     }
   }
 
@@ -168,6 +172,7 @@ export class InfoCalendarComponent implements OnInit {
         { dateIni: this.calendarService.getDateString(dateIni),
           dateFin: this.calendarService.getDateString((dateFin === null ? dateIni : dateFin))});
     }
+    this.activeSpinner = false;
   }
 
   // ICONS

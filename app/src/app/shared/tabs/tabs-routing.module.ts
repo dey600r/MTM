@@ -18,12 +18,12 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'motoTab',
+        path: 'vehicleTab',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../../pages/moto/moto.module').then(m => m.MotoPageModule)
+              import('../../pages/vehicle/vehicle.module').then(m => m.VehiclePageModule)
           }
         ]
       },

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 // UTILS
 import {
-    MaintenanceElementModel, ConfigurationModel, MotoModel, MaintenanceModel, OperationModel
+    MaintenanceElementModel, ConfigurationModel, VehicleModel, MaintenanceModel, OperationModel
 } from '@models/index';
 import { ConstantsColumns, ActionDBEnum, ConstantsTable, Constants } from '@utils/index';
 import { CommonService } from './common.service';
@@ -38,7 +38,7 @@ export class ConfigurationService {
     // SAVE
 
     /** CONFIGURATION */
-    saveConfiguration(configuration: ConfigurationModel, action: ActionDBEnum, motos: MotoModel[] = []) {
+    saveConfiguration(configuration: ConfigurationModel, action: ActionDBEnum, vehicles: VehicleModel[] = []) {
         let sqlDB = '';
         let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_CONFIGURATION];
         switch (action) {
@@ -53,22 +53,22 @@ export class ConfigurationService {
                 sqlDB += this.sqlService.insertSqlConfigurationMaintenance(configuration);
                 break;
             case ActionDBEnum.DELETE:
-                sqlDB = this.getSqlDeleteConfiguration(configuration, motos);
-                listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_MOTO];
+                sqlDB = this.getSqlDeleteConfiguration(configuration, vehicles);
+                listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_VEHICLE];
                 break;
         }
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
     }
 
-    getSqlDeleteConfiguration(configuration: ConfigurationModel, motos: MotoModel[]): string {
+    getSqlDeleteConfiguration(configuration: ConfigurationModel, vehicles: VehicleModel[]): string {
         let sqlDB = '';
         if (!!configuration.listMaintenance && configuration.listMaintenance.length > 0) {
             sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
                     ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION,
                     [configuration.id]); // DELETE CONFIGURATION_MAINTENANCE
         }
-        if (!!motos && motos.length > 0) {
-            sqlDB += this.sqlService.updateSqlMoto(motos); // UPDATE MOTO WITH OTHER CONFIGURATIONS
+        if (!!vehicles && vehicles.length > 0) {
+            sqlDB += this.sqlService.updateSqlVehicle(vehicles); // UPDATE VEHICLE WITH OTHER CONFIGURATIONS
         }
         sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIGURATION,
             ConstantsColumns.COLUMN_MTM_ID, [configuration.id]); // DELETE CONFIGURATION
