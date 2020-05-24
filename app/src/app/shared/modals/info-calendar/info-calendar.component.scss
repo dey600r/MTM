@@ -6,6 +6,15 @@
     font-size: 16px;
 }
 
+.padding-calendar {
+    padding: 15px 15px 3px 15px;
+}
+
+.padding-list {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
 .align-start {
     align-self: flex-start;
 }
@@ -27,11 +36,43 @@
     padding-bottom: 4px;
 }
 
+.row-overflow-hiden {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .row-color {
     color: var(--ion-color-step-600, #666);
-    margin-top: 4px;
-    margin-bottom: 8px;
-    margin-left: 2px;
+}
+
+.subrow-width {
+    width: 75%;
+}
+
+.subrow-color {
+    color: #8f8f8f;
+}
+
+.icon-pos {
+    margin: 0;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 2px;
+}
+
+.row-pos {
+    margin: 0;
+    padding-top: 4px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+}
+
+.subrow-pos {
+    margin: 0;
+    padding-top: 1px;
+    padding-bottom: 6px;
+    padding-left: 5px;
 }
 
 .font-size26 {
@@ -56,5 +97,5 @@
 
 .main-item {
     width: 100%;
-    padding: 8px 0px 0px 0px;
+    padding: 8px 0px 4px 0px;
 }

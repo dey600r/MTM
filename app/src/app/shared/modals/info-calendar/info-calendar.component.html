@@ -12,11 +12,11 @@
 
 <ion-content fullscreen>
   <!-- CALENDAR -->
-  <ion-calendar [(ngModel)]="dateMulti" [options]="optionsMulti" [type]="type" (click)="onClick($event)"
+  <ion-calendar class="padding-calendar" [(ngModel)]="dateMulti" [options]="optionsMulti" [type]="type" (click)="onClick($event)"
     [format]="formatCalendar" (onSelect)="onSelect($event)" (monthChange)="onMonthChange($event)">
   </ion-calendar>
 
-  <ion-list *ngIf="listInfoCalendarSelected.length === 0">
+  <ion-list class="padding-list" *ngIf="listInfoCalendarSelected.length === 0">
     <ion-list-header class="padding-list-header info-header-notification-empty">
       <ion-icon class="font-size26" name="alarm"></ion-icon>
       <h3 class="header-list info-text-notification-empty">{{ notificationEmpty }}</h3>
@@ -27,7 +27,7 @@
       <ion-icon class="icon-header" name="bicycle"></ion-icon>
       <h3 class="header-list header font-size20">{{ moto.nameMoto }}</h3>
     </ion-list-header>
-    <ion-item button *ngFor="let maint of moto.listInfoCalendarMaintenance">
+    <ion-item *ngFor="let maint of moto.listInfoCalendarMaintenance">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10 align-start">
         <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(maint)"></ion-icon>
@@ -48,13 +48,16 @@
                 color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
             </div>
           </div>
-          <div class="table-row" *ngFor="let repl of maint.listInfoCalendarReplacement">
-            <div class="margin-right5 table-row auto-width">
-              <ion-icon [class]="getClassIcon(repl.warning, 'icon-row')" [color]="getClassIcon(repl.warning, '')" size="small"
+          <div *ngFor="let repl of maint.listInfoCalendarReplacement">
+            <div class="table-row margin-right5 table-row auto-width">
+              <ion-icon [class]="getClassIcon(repl.warning, 'icon-pos')" [color]="getClassIcon(repl.warning, '')" size="small"
                 [name]="getIconKms(repl.warning)"></ion-icon>
-              <p class="row-color font-size14">{{ repl.nameReplacement }}</p>
-              <p *ngIf="repl.time === 0" class="row-color icon-notification font-size13">{{ repl.km }} km</p>
-              <p *ngIf="repl.time !== 0"class="row-color icon-notification font-size13">{{ repl.dateFormat }}</p>
+              <p class="row-color row-pos auto-width row-overflow-hiden font-size14">{{ repl.nameReplacement }}</p>
+              <p class="row-color row-pos align-right font-size14">{{ repl.dateFormat }}</p>
+            </div>
+            <div class="table-row margin-right5 table-row auto-width">
+              <p *ngIf="repl.time === 0" class="subrow-color subrow-pos align-right auto-width subrow-width font-size13">{{ repl.km }}km</p>
+              <p *ngIf="repl.price !== 0" class="subrow-color subrow-pos align-right auto-width font-size13">{{ repl.price }}€</p>
             </div>
           </div>
         </div>

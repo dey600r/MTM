@@ -20,6 +20,7 @@ export class InfoCalendarMaintenanceViewModel {
 export class InfoCalendarReplacementViewModel {
     idReplacement = -1;
     nameReplacement = '';
+    price = 0;
     km = 0;
     time = 0;
     warning = WarningWearEnum.SUCCESS;

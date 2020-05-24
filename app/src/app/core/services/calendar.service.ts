@@ -7,8 +7,8 @@ import * as Moment from 'moment';
 // UTILS
 import { Constants, WarningWearEnum } from '@utils/index';
 import {
-    WearMotoProgressBarModel, InfoCalendarMotoViewModel, InfoCalendarMaintenanceViewModel,
-    InfoCalendarReplacementViewModel, WearReplacementProgressBarModel, MotoModel
+    WearMotoProgressBarViewModel, InfoCalendarMotoViewModel, InfoCalendarMaintenanceViewModel,
+    InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, MotoModel
 } from '../models';
 
 @Injectable({
@@ -65,7 +65,7 @@ export class CalendarService {
 
     // INFO CALENDAR
 
-    getInfoCalendar(listWearsNotification: WearMotoProgressBarModel[]): InfoCalendarMotoViewModel[] {
+    getInfoCalendar(listWearsNotification: WearMotoProgressBarViewModel[]): InfoCalendarMotoViewModel[] {
         let result: InfoCalendarMotoViewModel[] = [];
 
         if (!!listWearsNotification && listWearsNotification.length > 0) {
@@ -104,7 +104,7 @@ export class CalendarService {
         return result;
     }
 
-    createInfoCalendarReplacement(wear: WearMotoProgressBarModel, replacement: WearReplacementProgressBarModel,
+    createInfoCalendarReplacement(wear: WearMotoProgressBarViewModel, replacement: WearReplacementProgressBarViewModel,
                                   km: boolean): InfoCalendarReplacementViewModel {
         let dateResult: Date = new Date();
         let kms = 0;
@@ -147,6 +147,7 @@ export class CalendarService {
         return {
             idReplacement: replacement.idMaintenanceElement,
             nameReplacement: replacement.nameMaintenanceElement,
+            price: (replacement.priceOperation === null ? 0 : replacement.priceOperation),
             km: kms,
             time: times,
             warning: warnings,
@@ -183,6 +184,7 @@ export class CalendarService {
                                     rMaint = [...rMaint, {
                                         idReplacement: z.idReplacement,
                                         nameReplacement: z.nameReplacement,
+                                        price: z.price,
                                         km: z.km,
                                         time: z.time,
                                         warning: z.warning,

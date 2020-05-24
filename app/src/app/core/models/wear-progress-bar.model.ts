@@ -1,6 +1,6 @@
 import { WarningWearEnum } from '@utils/index';
 
-export class WearMotoProgressBarModel {
+export class WearMotoProgressBarViewModel {
     idMoto = -1;
     nameMoto = '';
     kmMoto = 0;
@@ -11,11 +11,11 @@ export class WearMotoProgressBarModel {
     percentKm = 0;
     percentTime = 0;
     warning: WarningWearEnum = WarningWearEnum.SUCCESS;
-    listWearReplacement: WearReplacementProgressBarModel[] = [];
+    listWearReplacement: WearReplacementProgressBarViewModel[] = [];
     constructor(id: number = -1, name: string = '', km: number = 0, dateP: Date = new Date(),
                 kmsM: number = 0, dateK: Date = new Date(), per: number = 0, perKm: number = 0, perTime: number = 0,
                 war: WarningWearEnum = WarningWearEnum.SUCCESS,
-                list: WearReplacementProgressBarModel[] = []) {
+                list: WearReplacementProgressBarViewModel[] = []) {
         this.idMoto = id;
         this.nameMoto = name;
         this.kmMoto = km;
@@ -30,14 +30,15 @@ export class WearMotoProgressBarModel {
     }
 }
 
-export class WearReplacementProgressBarModel {
+export class WearReplacementProgressBarViewModel {
     idMaintenanceElement = -1;
     nameMaintenanceElement = '';
     codeMaintenanceFreq = '';
     idOperation = -1;
     descriptionOperation = '';
-    kmOperation = 0;
+    kmOperation = null;
     dateOperation: Date = null;
+    priceOperation = 0;
     idMaintenance = -1;
     descriptionMaintenance = '';
     kmMaintenance = 0;

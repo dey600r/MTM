@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { DataBaseService, DashboardService, ConfigurationService, ControlService } from '@services/index';
 import {
-  SearchDashboardModel, WearMotoProgressBarModel, WearReplacementProgressBarModel,
+  SearchDashboardModel, WearMotoProgressBarViewModel, WearReplacementProgressBarViewModel,
   MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, MotoModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
@@ -30,8 +30,8 @@ export class HomePage implements OnInit {
   // DATA
   searchDashboard: SearchDashboardModel = this.dashboardService.getSearchDashboard();
   activateInfo = false;
-  wears: WearMotoProgressBarModel[] = [];
-  allWears: WearMotoProgressBarModel[] = [];
+  wears: WearMotoProgressBarViewModel[] = [];
+  allWears: WearMotoProgressBarViewModel[] = [];
   hideMotos: boolean[] = [];
   operations: OperationModel[] = [];
   loaded = false;
@@ -72,7 +72,7 @@ export class HomePage implements OnInit {
                   this.allWears.forEach((x, index) => {
                     this.wears = [...this.wears, Object.assign({}, x)];
                     this.hideMotos[index] = (index !== 0);
-                    let listWears: WearReplacementProgressBarModel[] = [];
+                    let listWears: WearReplacementProgressBarViewModel[] = [];
                     const kmMoto: number = this.dashboardService.calculateKmMotoEstimated(new MotoModel(null, null, 0, x.kmMoto,
                       null, x.kmsPerMonthMoto, x.dateKmsMoto, x.datePurchaseMoto));
                     x.listWearReplacement.forEach(z => {
@@ -117,7 +117,7 @@ export class HomePage implements OnInit {
     }
   }
 
-  activateModeInfo(m: MotoModel[], op: OperationModel[], w: WearMotoProgressBarModel[]): boolean {
+  activateModeInfo(m: MotoModel[], op: OperationModel[], w: WearMotoProgressBarViewModel[]): boolean {
     let result = true;
     if (m === null || m.length === 0) {
       this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_MOTO_EMPTY);
@@ -141,19 +141,19 @@ export class HomePage implements OnInit {
     return this.dashboardService.getIconKms(warning);
   }
 
-  getIconMaintenance(wear: WearReplacementProgressBarModel): string {
+  getIconMaintenance(wear: WearReplacementProgressBarViewModel): string {
     return this.configurationService.getIconMaintenance(
       new MaintenanceModel(null, null, new MaintenanceFreqModel(wear.codeMaintenanceFreq)));
   }
 
-  getDateCalculateMonths(wear: WearReplacementProgressBarModel): string {
+  getDateCalculateMonths(wear: WearReplacementProgressBarViewModel): string {
     return this.dashboardService.getDateCalculateMonths(wear);
   }
 
   // MODALS
 
-  openInfoNotification(m: WearMotoProgressBarModel, w: WearReplacementProgressBarModel) {
-    let listGroupWear: WearReplacementProgressBarModel[] = [];
+  openInfoNotification(m: WearMotoProgressBarViewModel, w: WearReplacementProgressBarViewModel) {
+    let listGroupWear: WearReplacementProgressBarViewModel[] = [];
     if (w.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
       listGroupWear = this.allWears.find(x => m.idMoto === x.idMoto).listWearReplacement.filter(x =>
         w.idMaintenanceElement === x.idMaintenanceElement && w.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
@@ -169,7 +169,7 @@ export class HomePage implements OnInit {
     // Change filter operation to easy
     this.dashboardService.setSearchOperation(new MotoModel(m.nameMoto, '', null, null, null, null, null, null, m.idMoto));
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
-      new WearMotoProgressBarModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
+      new WearMotoProgressBarViewModel(m.idMoto, m.nameMoto, m.kmMoto, m.datePurchaseMoto,
         m.kmsPerMonthMoto, m.dateKmsMoto, m.percent, m.percentKm, m.percentTime, m.warning, listGroupWear),
         this.operations, PageEnum.HOME));
   }

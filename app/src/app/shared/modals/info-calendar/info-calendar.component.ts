@@ -134,7 +134,7 @@ export class InfoCalendarComponent implements OnInit {
               this.yearSelect = Number($event.target.innerText.split(' ')[1]);
               this.yearActive = !this.yearActive;
               if (this.yearActive) { // TURN ON YEARS
-                this.showNotificationBetweenDates(new Date(this.yearSelect, 1, 1), new Date(this.yearSelect, 12, 31));
+                this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
               } else { // TURN OFF YEARS
                 this.showNotificationBetweenDates(
                   new Date(this.yearSelect, this.monthSelect, 1), new Date(this.yearSelect, this.monthSelect + 1, 0));
@@ -145,7 +145,7 @@ export class InfoCalendarComponent implements OnInit {
               } else if (node.classList.contains('forward')) { // FORWARD YEAR
                 this.yearSelect += 1;
               }
-              this.showNotificationBetweenDates(new Date(this.yearSelect, 1, 1), new Date(this.yearSelect, 12, 31));
+              this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
             }
           }
         }
