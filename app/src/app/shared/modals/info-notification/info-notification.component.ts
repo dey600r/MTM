@@ -50,6 +50,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     labelReliability = '';
     labelPercent = 0;
     labelNextChange = '';
+    labelLifeReplacement = '';
     labelNotRecord = '';
 
     // SUBSCRIPTION
@@ -128,18 +129,22 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.labelNameVehicle = this.dataMaintenance.nameVehicle;
     this.nameMaintenance = wear.descriptionMaintenance;
     this.nameMaintenanceElement = wear.nameMaintenanceElement;
-    this.labelVehicleKm = this.translator.instant('PAGE_HOME.MotoKm', { km: this.dataMaintenance.kmVehicle });
+    this.labelVehicleKm = this.translator.instant('PAGE_HOME.VehicleKm', { km: this.dataMaintenance.kmVehicle });
     if (this.dataMaintenance.kmVehicle !== this.vehicleKmEstimated) {
-      this.labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.MotoEstimatedKm', { km: this.vehicleKmEstimated });
+      this.labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.VehicleEstimatedKm', { km: this.vehicleKmEstimated });
     }
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
     let kmMaintenane = 0;
+    let kmLife = 0;
+    let timeLife = 0;
     if (wear.kmOperation === null) {
       const mant: number = (wear.kmMaintenance < this.vehicleKmEstimated ? this.vehicleKmEstimated / wear.kmMaintenance : 1);
       kmMaintenane = wear.kmMaintenance * Math.floor(mant) + wear.kmMaintenance;
+      kmLife = this.vehicleKmEstimated;
     } else {
       kmMaintenane = wear.kmOperation + wear.kmMaintenance;
       kmMaintenane = (kmMaintenane < this.vehicleKmEstimated ? this.vehicleKmEstimated : kmMaintenane);
+      kmLife = this.vehicleKmEstimated - wear.kmOperation;
     }
     let date: Date = new Date(4000, 1, 1);
     const dateMaintenanceKmVehicleEstimated: Date = this.calendarService.calculateKmInfoNotification(vehicle, kmMaintenane);
@@ -149,11 +154,18 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       if (wear.kmOperation === null) {
         const mantMonth: number = (wear.timeMaintenance < monthVehicle ? monthVehicle / wear.timeMaintenance : 1);
         date.setMonth(date.getMonth() + wear.timeMaintenance * Math.floor(mantMonth) + wear.timeMaintenance);
+        timeLife = this.calendarService.monthDiff(new Date(vehicle.datePurchase), new Date());
       } else {
         const mantMonth = this.calendarService.monthDiff(
           new Date(vehicle.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
         date.setMonth(date.getMonth() + (mantMonth < monthVehicle ? monthVehicle : mantMonth));
+        timeLife = this.calendarService.monthDiff(new Date(wear.dateOperation), new Date());
       }
+      this.labelLifeReplacement = this.translator.instant('ALERT.InfoLifeReplacementTime',
+        { replacement: this.nameMaintenanceElement, km: kmLife, time: timeLife});
+    } else {
+      this.labelLifeReplacement = this.translator.instant('ALERT.InfoLifeReplacementKm',
+        { replacement: this.nameMaintenanceElement, km: kmLife});
     }
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
       {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
@@ -264,7 +276,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   showInfoVehicle() {
-    const msg = this.translator.instant('ALERT.LastUpdateMotoKm',
+    const msg = this.translator.instant('ALERT.LastUpdateVehicleKm',
       { date: this.calendarService.getDateString(new Date(this.dataMaintenance.dateKmsVehicle)) });
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
@@ -315,6 +327,17 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         { maintenance: wear.descriptionMaintenance, between: msgFromTo });
     }
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+  }
+
+  showInfoLifeReplacement() {
+    const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
+    let msg = '';
+    if (wear.calculateKms >= 0 && wear.calculateMonths >= 0) {
+      msg = this.translator.instant('ALERT.InfoOk');
+    } else {
+      msg = this.translator.instant('ALERT.InfoNotOk');
+    }
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST);
   }
 
   getMaintenanceNow(wears: WearReplacementProgressBarViewModel[]): WearReplacementProgressBarViewModel {

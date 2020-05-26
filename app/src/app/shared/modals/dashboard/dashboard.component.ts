@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 // UTILS
-import { DashboardService, ControlService } from '@services/index';
+import { DashboardService, ControlService, VehicleService } from '@services/index';
 import { DashboardModel, OperationModel, ModalInputModel, ModalOutputModel } from '@models/index';
 import { PageEnum } from '@utils/index';
 
@@ -43,7 +43,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 private changeDetector: ChangeDetectorRef,
                 private dashboardService: DashboardService,
                 private modalController: ModalController,
-                private controlService: ControlService) {
+                private controlService: ControlService,
+                private vehicleService: VehicleService) {
   }
 
   ngOnInit() {
@@ -62,6 +63,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       // VEHICLE EXPENSES PER OPERATION TYPE
       this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
+      this.changeDetector.detectChanges();
     });
 
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
@@ -105,5 +107,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   isParentPageOperation() {
     return this.modalInputModel.parentPage === PageEnum.OPERATION;
+  }
+
+  getIconVehicle(): string {
+    return this.vehicleService.getIconVehicle(this.operations[0].vehicle);
   }
 }

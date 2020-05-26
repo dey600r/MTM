@@ -36,6 +36,9 @@
     <ion-item *ngIf="!hideSummary" button (click)="showInfoMaintenance()">
       <p>{{ labelNextChange }}</p>
     </ion-item>
+    <ion-item *ngIf="!hideSummary" button (click)="showInfoLifeReplacement()">
+      <p>{{ labelLifeReplacement }}</p>
+    </ion-item>
     <ion-item *ngIf="labelNotRecord !== ''">
       <p>{{ labelNotRecord }}</p>
     </ion-item>

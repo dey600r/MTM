@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="mtm.ionic.dey125r" version="2.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="mtm.ionic.dey125r" version="2.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM</name>
-    <description>Moto Track Manager</description>
+    <description>Motor Track Manager</description>
     <author email="dey125r@gmail.com" href="http://ionicframework.com/">DeyHome</author>
     <content src="index.html" />
     <access origin="*" />

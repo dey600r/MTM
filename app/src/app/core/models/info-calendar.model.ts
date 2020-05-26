@@ -3,6 +3,7 @@ import { WarningWearEnum } from '@utils/index';
 export class InfoCalendarVehicleViewModel {
     idVehicle = -1;
     nameVehicle = '';
+    typeVehicle = '';
     listInfoCalendarMaintenance: InfoCalendarMaintenanceViewModel[] = [];
 }
 

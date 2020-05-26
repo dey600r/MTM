@@ -16,18 +16,18 @@
     [format]="formatCalendar" (onSelect)="onSelect($event)" (monthChange)="onMonthChange($event)">
   </ion-calendar>
 
-  <ion-list class="padding-list" *ngIf="!activeSpinner && listInfoCalendarSelected.length === 0">
-    <ion-list-header class="padding-list-header info-header-notification-empty">
+  <div class="info-main padding-info" *ngIf="!activeSpinner && listInfoCalendarSelected.length === 0">
+    <div class="table-row p-color">
       <ion-icon class="font-size26" name="alarm"></ion-icon>
-      <h3 class="header-list info-text-notification-empty">{{ notificationEmpty }}</h3>
-    </ion-list-header>
-  </ion-list>
+      <h3 class="info-text-notification-empty padding-info-title">{{ notificationEmpty }}</h3>
+    </div>
+  </div>
   <ion-label *ngIf="activeSpinner" class="align-center">
     <ion-spinner name="lines" color="medium" slot="center"></ion-spinner>
   </ion-label>
   <ion-list *ngFor="let vehicle of listInfoCalendarSelected" [hidden]="activeSpinner">
     <ion-list-header class="padding-list-header">
-      <ion-icon class="icon-header" name="bicycle"></ion-icon>
+      <ion-icon class="icon-header" [name]="getIconVehicle(vehicle)"></ion-icon>
       <h3 class="header-list header font-size20">{{ vehicle.nameVehicle }}</h3>
     </ion-list-header>
     <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintenance">
@@ -55,8 +55,8 @@
             <div class="table-row margin-right5 table-row auto-width">
               <ion-icon [class]="getClassIcon(repl.warning, 'icon-pos')" [color]="getClassIcon(repl.warning, '')" size="small"
                 [name]="getIconKms(repl.warning)"></ion-icon>
-              <p class="row-color row-pos auto-width row-overflow-hiden font-size14">{{ repl.nameReplacement }}</p>
-              <p class="row-color row-pos align-right font-size14">{{ repl.dateFormat }}</p>
+              <p class="p-color row-pos auto-width row-overflow-hiden font-size14">{{ repl.nameReplacement }}</p>
+              <p class="p-color row-pos align-right font-size14">{{ repl.dateFormat }}</p>
             </div>
             <div class="table-row margin-right5 table-row auto-width">
               <p *ngIf="repl.time === 0" class="subrow-color subrow-pos align-right auto-width subrow-width font-size13">{{ repl.km }}km</p>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { VehicleModel, OperationModel } from '@models/index';
 import { SqlService } from './sql.service';
 import { DataBaseService } from './data-base.service';
-import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
+import { ConstantsTable, ConstantsColumns, ActionDBEnum, Constants } from '@utils/index';
 import { OperationService } from './operation.service';
 
 @Injectable({
@@ -24,6 +24,7 @@ export class VehicleService {
                 break;
             case ActionDBEnum.UPDATE:
                 sqlDB = this.sqlService.updateSqlVehicle([vehicle]);
+                listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_OPERATION];
                 break;
             case ActionDBEnum.DELETE:
                 if (!!operations && operations.length > 0) { // DELETE OPERATION ASSOCIATED
@@ -35,5 +36,18 @@ export class VehicleService {
                 break;
         }
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+    }
+
+    // ICONS
+
+    getIconVehicle(vehicle: VehicleModel): string {
+        switch (vehicle.vehicleType.code) {
+            case Constants.VEHICLE_TYPE_CODE_MOTO:
+                return 'bicycle';
+            case Constants.VEHICLE_TYPE_CODE_CAR:
+                return 'car-sport';
+            default:
+                return 'car';
+        }
     }
 }

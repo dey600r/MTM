@@ -6,10 +6,10 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, DashboardService, ConfigurationService, ControlService } from '@services/index';
+import { DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel
+  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
 
@@ -46,7 +46,8 @@ export class HomePage implements OnInit {
               private translator: TranslateService,
               private dashboardService: DashboardService,
               private configurationService: ConfigurationService,
-              private controlService: ControlService) {
+              private controlService: ControlService,
+              private vehicleService: VehicleService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -177,6 +178,11 @@ export class HomePage implements OnInit {
   openInfoCalendar() {
     this.controlService.openModal(PageEnum.HOME,
       InfoCalendarComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
+  }
+
+  getIconVehicle(wear: WearVehicleProgressBarViewModel): string {
+    return this.vehicleService.getIconVehicle(new VehicleModel(null, null, null, null, null,
+      new VehicleTypeModel(wear.typeVehicle)));
   }
 
 }

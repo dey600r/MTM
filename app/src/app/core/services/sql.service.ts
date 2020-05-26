@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   VehicleModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
-  MaintenanceFreqModel, MaintenanceModel
+  MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel
 } from '@models/index';
 import { ConstantsTable, ConstantsColumns, Constants } from '@utils/index';
 import { CalendarService } from './calendar.service';
@@ -44,18 +44,23 @@ export class SqlService {
   }
 
   getSqlVehicle(): string {
-      return `SELECT m.${ConstantsColumns.COLUMN_MTM_ID}, ` +
-      `m.${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL}, m.${ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND}, ` +
-      `m.${ConstantsColumns.COLUMN_MTM_VEHICLE_YEAR}, m.${ConstantsColumns.COLUMN_MTM_VEHICLE_KM}, ` +
-      `m.${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}, ` +
-      `m.${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}, ` +
-      `m.${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}, ` +
+      return `SELECT v.${ConstantsColumns.COLUMN_MTM_ID}, ` +
+      `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL}, v.${ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND}, ` +
+      `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_YEAR}, v.${ConstantsColumns.COLUMN_MTM_VEHICLE_KM}, ` +
+      `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}, ` +
+      `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}, ` +
+      `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}, ` +
       `c.${ConstantsColumns.COLUMN_MTM_ID} as idConfiguration, ` +
       `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME} as nameConfiguration, ` +
-      `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} as descriptionConfiguration ` +
-      `FROM ${ConstantsTable.TABLE_MTM_VEHICLE} AS m ` +
+      `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} as descriptionConfiguration, ` +
+      `vt.${ConstantsColumns.COLUMN_MTM_ID} as idVehicleType, ` +
+      `vt.${ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE} as codeVehicleType, ` +
+      `vt.${ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_DESCRIPTION} as descriptionVehicleType ` +
+      `FROM ${ConstantsTable.TABLE_MTM_VEHICLE} AS v ` +
       `JOIN ${ConstantsTable.TABLE_MTM_CONFIGURATION} AS c ON ` +
-      `c.${ConstantsColumns.COLUMN_MTM_ID} = m.${ConstantsColumns.COLUMN_MTM_VEHICLE_CONFIGURATION}`;
+      `c.${ConstantsColumns.COLUMN_MTM_ID} = v.${ConstantsColumns.COLUMN_MTM_VEHICLE_CONFIGURATION} ` +
+      `JOIN ${ConstantsTable.TABLE_MTM_VEHICLE_TYPE} AS vt ON ` +
+      `vt.${ConstantsColumns.COLUMN_MTM_ID} = v.${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE}`;
   }
 
   getSqlConfiguration(): string {
@@ -83,8 +88,9 @@ export class SqlService {
   getSqlOperation(): string {
     return `SELECT op.${ConstantsColumns.COLUMN_MTM_ID}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}, ` +
-    `m.${ConstantsColumns.COLUMN_MTM_ID} as idVehicle, m.${ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND} as brandVehicle, ` +
-    `m.${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL} as modelVehicle, op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
+    `v.${ConstantsColumns.COLUMN_MTM_ID} as idVehicle, v.${ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND} as brandVehicle, ` +
+    `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL} as modelVehicle, op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
+    `vt.${ConstantsColumns.COLUMN_MTM_ID} as idVehicleType, vt.${ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE} as codeVehicleType, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT}, opt.${ConstantsColumns.COLUMN_MTM_ID} as idOperationType, ` +
@@ -97,8 +103,10 @@ export class SqlService {
     `FROM ${ConstantsTable.TABLE_MTM_OPERATION} AS op ` +
     `JOIN ${ConstantsTable.TABLE_MTM_OPERATION_TYPE} AS opt ON ` +
     `opt.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE} ` +
-    `JOIN ${ConstantsTable.TABLE_MTM_VEHICLE} AS m ON ` +
-    `m.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE} ` +
+    `JOIN ${ConstantsTable.TABLE_MTM_VEHICLE} AS v ON ` +
+    `v.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE} ` +
+    `JOIN ${ConstantsTable.TABLE_MTM_VEHICLE_TYPE} AS vt ON ` +
+    `vt.${ConstantsColumns.COLUMN_MTM_ID} = v.${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE} ` +
     `LEFT JOIN ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} AS ome ON ` +
     `ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION} = op.${ConstantsColumns.COLUMN_MTM_ID} ` +
     `LEFT JOIN ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT} AS me ON ` +
@@ -147,6 +155,9 @@ export class SqlService {
       case ConstantsTable.TABLE_MTM_VEHICLE:
         result = this.mapVehicle(data);
         break;
+      case ConstantsTable.TABLE_MTM_VEHICLE_TYPE:
+        result = this.mapVehicleType(data);
+        break;
       case ConstantsTable.TABLE_MTM_CONFIGURATION:
         result = this.mapConfiguration(data);
         break;
@@ -182,7 +193,7 @@ export class SqlService {
           year: Number(row[ConstantsColumns.COLUMN_MTM_VEHICLE_YEAR]),
           km: Number(row[ConstantsColumns.COLUMN_MTM_VEHICLE_KM]),
           configuration: this.getMapConfiguration(row, true),
-          vehicleType: row[ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE],
+          vehicleType: this.getMapVehicleType(row, true),
           kmsPerMonth: row[ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH],
           dateKms: new Date(row[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS]),
           datePurchase: row[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE]
@@ -190,6 +201,28 @@ export class SqlService {
       }
     }
     return vehiclesDB;
+  }
+
+  mapVehicleType(data: any): any {
+    let vehicleTypeDB: VehicleTypeModel[] = [];
+    if (data.rows.length > 0) {
+      for (let i = 0; i < data.rows.length; i++) {
+        vehicleTypeDB = [...vehicleTypeDB, this.getMapVehicleType(data.rows.item(i), false)];
+      }
+    }
+    return vehicleTypeDB;
+  }
+
+  getMapVehicleType(data: any, vehicle: boolean): VehicleTypeModel {
+    return (vehicle ? {
+      id: Number(data.idVehicleType),
+      code: data.codeVehicleType,
+      description: this.translator.instant(`DB.${data.descriptionVehicleType}`)
+    } : {
+      id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
+      code: data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE],
+      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_DESCRIPTION]}`)
+    });
   }
 
   mapConfiguration(data: any): any {
@@ -250,8 +283,8 @@ export class SqlService {
             description: row[ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION],
             details: row[ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS],
             operationType: this.getMapOperationType(row, true),
-            vehicle: new VehicleModel(row.modelVehicle, row.brandVehicle, null, null, null, null, null, null, null,
-              row[ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE]),
+            vehicle: new VehicleModel(row.modelVehicle, row.brandVehicle, null, null, null,
+              this.getMapVehicleType(row, true), null, null, null, row[ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE]),
             km: Number(row[ConstantsColumns.COLUMN_MTM_OPERATION_KM]),
             date: row[ConstantsColumns.COLUMN_MTM_OPERATION_DATE],
             location: row[ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION],
@@ -408,11 +441,12 @@ export class SqlService {
         `(${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_YEAR}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_KM}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}, ` +
-        `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}) `;
+        `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}, ` +
+        `${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE}) `;
       vehicles.forEach((x, index) => {
         sql += `SELECT '${x.model}', '${x.brand}', ${x.year}, ${x.km}, ${x.configuration.id}, ` +
           `${x.kmsPerMonth}, '${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
-          `'${this.calendarService.getDateStringToDB(x.datePurchase)}' `;
+          `'${this.calendarService.getDateStringToDB(x.datePurchase)}', ${x.vehicleType.id} `;
         if ((index + 1) < vehicles.length) {
           sql += ' UNION ';
         }
@@ -564,6 +598,7 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND}='${x.brand}', ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_YEAR}=${x.year}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_KM}=${x.km}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_CONFIGURATION}=${x.configuration.id}, ` +
+        `${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE}=${x.vehicleType.id}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}=${x.kmsPerMonth}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}='${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}='${this.calendarService.getDateStringToDB(x.datePurchase)}' ` +

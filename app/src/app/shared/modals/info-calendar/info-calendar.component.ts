@@ -8,9 +8,9 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   ModalInputModel, ModalOutputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
-  MaintenanceModel, MaintenanceFreqModel
+  MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel
 } from '@models/index';
-import { CalendarService, CommonService, DashboardService, ConfigurationService } from '@services/index';
+import { CalendarService, CommonService, DashboardService, ConfigurationService, VehicleService } from '@services/index';
 import { ConstantsColumns, WarningWearEnum } from '@app/core/utils';
 
 @Component({
@@ -47,7 +47,8 @@ export class InfoCalendarComponent implements OnInit {
               private commonService: CommonService,
               private dashboardService: DashboardService,
               private configurationService: ConfigurationService,
-              private translator: TranslateService) {
+              private translator: TranslateService,
+              private vehicleService: VehicleService) {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }
@@ -168,7 +169,7 @@ export class InfoCalendarComponent implements OnInit {
     }
     this.listInfoCalendarSelected = this.calendarService.getInfoCalendarReplacementDate(this.listInfoCalendar, rangeDate);
     if (!this.listInfoCalendarSelected || this.listInfoCalendarSelected.length === 0) {
-      this.notificationEmpty = this.translator.instant('ALERT.NotificationEmpty',
+      this.notificationEmpty = this.translator.instant('ALERT.NotificationEmptyBetween',
         { dateIni: this.calendarService.getDateString(dateIni),
           dateFin: this.calendarService.getDateString((dateFin === null ? dateIni : dateFin))});
     }
@@ -188,5 +189,10 @@ export class InfoCalendarComponent implements OnInit {
   getIconMaintenance(maint: InfoCalendarMaintenanceViewModel): string {
     return this.configurationService.getIconMaintenance(
       new MaintenanceModel(null, null, new MaintenanceFreqModel(maint.codeMaintenanceFreq)));
+  }
+
+  getIconVehicle(infoVehicle: InfoCalendarVehicleViewModel): string {
+    return this.vehicleService.getIconVehicle(new VehicleModel(null, null, null, null, null,
+      new VehicleTypeModel(infoVehicle.typeVehicle)));
   }
 }

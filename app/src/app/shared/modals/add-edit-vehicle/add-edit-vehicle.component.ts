@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum } from '@utils/index';
-import { ModalInputModel, ModalOutputModel, VehicleModel, ConfigurationModel, OperationModel } from '@models/index';
+import { ModalInputModel, ModalOutputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel } from '@models/index';
 import {
   DataBaseService, VehicleService, CommonService, CalendarService, ControlService, DashboardService
 } from '@services/index';
@@ -31,11 +31,13 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
   // DATA
   configurations: ConfigurationModel[] = [];
   operations: OperationModel[] = [];
+  vehicleTypes: VehicleTypeModel[] = [];
   formatDate = this.calendarService.getFormatCalendar();
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
   configurationSubscription: Subscription = new Subscription();
+  vehicleTypeSubscription: Subscription = new Subscription();
 
   // TRANSLATE
   translateYearBetween = '';
@@ -52,7 +54,7 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     private controlService: ControlService,
     private dashboardService: DashboardService
   ) {
-    this.translateYearBetween = this.translator.instant('PAGE_MOTO.AddYearBetween', { year: new Date().getFullYear()});
+    this.translateYearBetween = this.translator.instant('PAGE_VEHICLE.AddYearBetween', { year: new Date().getFullYear()});
     this.translateSelect = this.translator.instant('COMMON.SELECT');
   }
 
@@ -70,6 +72,13 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
     });
 
+    this.vehicleTypeSubscription = this.dbService.getVehicleType().subscribe(data => {
+      if (!!data && data.length > 0 && this.modalInputModel.isCreate) {
+        this.vehicle.vehicleType = new VehicleTypeModel(data[0].code, data[0].description, data[0].id);
+      }
+      this.vehicleTypes = data;
+    });
+
     this.operationSubscription = this.dbService.getOperations().subscribe(data => {
       // Filter to get less elemnts to better perfomance
       this.operations = data.filter(x => x.vehicle.id === this.vehicle.id);
@@ -79,6 +88,7 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.configurationSubscription.unsubscribe();
     this.operationSubscription.unsubscribe();
+    this.vehicleTypeSubscription.unsubscribe();
   }
 
   saveData(f: Form) {
@@ -100,10 +110,10 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
             this.dashboardService.setSearchOperation(this.vehicle);
           }
           this.controlService.showToast(PageEnum.MODAL_VEHICLE, (
-            this.modalInputModel.isCreate ? 'PAGE_MOTO.AddSaveMoto' : 'PAGE_MOTO.EditSaveMoto'),
-            { moto: this.vehicle.model });
+            this.modalInputModel.isCreate ? 'PAGE_VEHICLE.AddSaveVehicle' : 'PAGE_VEHICLE.EditSaveVehicle'),
+            { vehicle: this.vehicle.model });
         }).catch(e => {
-          this.controlService.showToast(PageEnum.MODAL_VEHICLE, 'PAGE_MOTO.ErrorSaveMoto');
+          this.controlService.showToast(PageEnum.MODAL_VEHICLE, 'PAGE_VEHICLE.ErrorSaveVehicle');
         });
       }
     }
@@ -116,7 +126,8 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
 
   isValidForm(f: any): boolean {
     return this.isValidBrand(f) && this.isValidModel(f) && this.isValidYearBetween(f) &&
-           this.isValidKmMin(f) && this.isValidConfiguration(f) && this.isValidKmsPerMonthMin(f);
+           this.isValidKmMin(f) && this.isValidConfiguration(f) && this.isValidVehicleType(f) &&
+           this.isValidKmsPerMonthMin(f);
   }
 
   isValidBrand(f: any): boolean {
@@ -152,6 +163,10 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     return f.vehicleConfiguration !== undefined && f.vehicleConfiguration.validity.valid;
   }
 
+  isValidVehicleType(f: any): boolean {
+    return f.vehicleType !== undefined && f.vehicleType.validity.valid;
+  }
+
   isValidKmsPerMonth(f: any): boolean {
     return f.vehicleKmsPerMonth !== undefined && f.vehicleKmsPerMonth.validity.valid;
   }
@@ -166,7 +181,7 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     if (!!this.operations && this.operations.length > 0) {
       const purchase: Date = new Date(this.vehicle.datePurchase);
       if (this.operations.some(x => this.vehicle.km < x.km)) {
-        msg = this.translator.instant('PAGE_MOTO.AddKmHigher',
+        msg = this.translator.instant('PAGE_VEHICLE.AddKmHigher',
         { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM)});
       } else if (this.operations.some(x => purchase > new Date(x.date))) {
         msg = this.translator.instant('PAGE_OPERATION.AddDateLower',

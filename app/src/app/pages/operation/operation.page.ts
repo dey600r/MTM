@@ -128,7 +128,7 @@ export class OperationPage implements OnInit {
   }
 
   showModalInfoVehicle() {
-    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddMotoToAddOperation', Constants.DELAY_TOAST_NORMAL);
+    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddVehicleToAddOperation', Constants.DELAY_TOAST_NORMAL);
   }
 
   showModalInfoOperation() {

@@ -21,6 +21,7 @@ export class VehicleModel extends BaseModel {
         this.year = y;
         this.km = k;
         this.configuration = c;
+        this.vehicleType = vt;
         this.kmsPerMonth = kpm;
         this.dateKms = dk;
         this.datePurchase = dP;

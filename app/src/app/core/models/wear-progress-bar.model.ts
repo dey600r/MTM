@@ -7,6 +7,7 @@ export class WearVehicleProgressBarViewModel {
     datePurchaseVehicle: Date = new Date();
     kmsPerMonthVehicle = 0;
     dateKmsVehicle: Date = new Date();
+    typeVehicle = '';
     percent = 0;
     percentKm = 0;
     percentTime = 0;

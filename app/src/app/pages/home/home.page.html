@@ -18,7 +18,7 @@
   <!-- List Vehicles -->
   <ion-list *ngFor="let m of wears; let i = index;">
     <ion-list-header (click)="hideVehicles[i] = !hideVehicles[i]" class="padding-list-header">
-      <ion-icon size="large" name="bicycle"></ion-icon>
+      <ion-icon size="large" [name]="getIconVehicle(m)"></ion-icon>
       <h3 class="header-list">{{ m.nameVehicle }}</h3>
       <ion-button fill="clear">
         <ion-icon *ngIf="hideVehicles[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>

@@ -35,7 +35,7 @@
         </ion-select>
     </ion-item>
     <ion-item *ngIf="isParentPageOperation()">
-        <ion-label>{{ 'COMMON.MOTORBIKES' | translate }}</ion-label>
+        <ion-label>{{ 'COMMON.VEHICLES' | translate }}</ion-label>
         <ion-select [placeholder]="this.translateSelect" interface="popover"
             [(ngModel)]="this.filterVehicle" (ionChange)="onChangeFilterGrouper()">
             <ion-select-option [(value)]="m.id" *ngFor="let m of vehicles">{{ m.brand + ' ' + m.model }}</ion-select-option>

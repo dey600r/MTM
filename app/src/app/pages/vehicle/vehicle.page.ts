@@ -101,7 +101,7 @@ export class VehiclePage implements OnInit {
   }
 
   showModalInfo() {
-    this.controlService.showToast(PageEnum.VEHICLE, 'ALERT.AddMotorbikeToExpenses', Constants.DELAY_TOAST_NORMAL);
+    this.controlService.showToast(PageEnum.VEHICLE, 'ALERT.AddMustVehiclerbikeToExpenses', Constants.DELAY_TOAST_NORMAL);
   }
 
   changeFilterOperation(idVehicle: number) {
@@ -114,22 +114,26 @@ export class VehiclePage implements OnInit {
       ops = this.operations.filter(x => x.vehicle.id === this.rowSelected.id);
     }
     const message: string = (!!ops && ops.length > 0 ?
-      'PAGE_MOTO.ConfirmDeleteMotoOperation' : 'PAGE_MOTO.ConfirmDeleteMoto');
+      'PAGE_VEHICLE.ConfirmDeleteVehicleOperation' : 'PAGE_VEHICLE.ConfirmDeleteVehicle');
 
-    this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.MOTORBIKE'),
-      this.translator.instant(message, {moto: `${this.rowSelected.brand} ${this.rowSelected.model}`}),
+    this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.VEHICLES'),
+      this.translator.instant(message, {vehicle: `${this.rowSelected.brand} ${this.rowSelected.model}`}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
           this.vehicleService.saveVehicle(this.rowSelected, ActionDBEnum.DELETE, ops).then(x => {
-            this.controlService.showToast(PageEnum.VEHICLE, 'PAGE_MOTO.DeleteSaveMoto',
-              { moto: `${this.rowSelected.brand} ${this.rowSelected.model}` });
+            this.controlService.showToast(PageEnum.VEHICLE, 'PAGE_VEHICLE.DeleteSaveVehicle',
+              { vehicle: `${this.rowSelected.brand} ${this.rowSelected.model}` });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, 'PAGE_MOTO.ErrorSaveMoto');
+            this.controlService.showToast(PageEnum.VEHICLE, 'PAGE_VEHICLE.ErrorSaveVehicle');
           });
         }
       }
     );
+  }
+
+  getIconVehicle(vehicle: VehicleModel): string {
+    return this.vehicleService.getIconVehicle(vehicle);
   }
 
 }

@@ -127,8 +127,8 @@ export class ConfigurationPage implements OnInit {
       vehiclesDeleteConfig.forEach((x, index) => {
         vehiclesName += x.model + ((index + 1) < vehiclesDeleteConfig.length ? ',' : '');
       });
-      msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfigurationMoveMoto',
-        {configuration: this.rowConfSelected.name, moto: vehiclesName});
+      msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfigurationMoveVehicle',
+        { configuration: this.rowConfSelected.name, vehicle: vehiclesName });
     }
 
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,

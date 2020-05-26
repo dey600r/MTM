@@ -39,8 +39,8 @@ export class DashboardService {
     // VEHICLE OP TYPE EXPENSES
     getDashboardModelVehicleExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
         return new DashboardModel(view, this.mapOperationToDashboardVehicleExpenses(data, filter), null,
-            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.MOTORBIKE'),
-            filter.showAxisLabel, this.translator.instant('COMMON.MOTORBIKE'),
+            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.VEHICLES'),
+            filter.showAxisLabel, this.translator.instant('COMMON.VEHICLES'),
             filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
@@ -111,8 +111,8 @@ export class DashboardService {
     // VEHICLE OP TYPE EXPENSES
     getDashboardModelVehicleOpTypeExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
         return new DashboardModel(view, this.mapOperationToDashboardVehicleOpTypeExpenses(data, filter), null,
-        filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.MOTORBIKE'),
-        filter.showAxisLabel, this.translator.instant('COMMON.MOTORBIKE'),
+        filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.VEHICLES'),
+        filter.showAxisLabel, this.translator.instant('COMMON.VEHICLES'),
         filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
@@ -174,6 +174,9 @@ export class DashboardService {
             operationPreFilter = data.filter(x => x.owner !== null && x.owner.toLowerCase() !== Constants.OWNER_ME &&
                 x.owner.toLowerCase() !== Constants.OWNER_YO);
         }
+        operationPreFilter = operationPreFilter.filter(z => data.some(x => z.operationType.id === x.operationType.id &&
+            (filter.searchOperationType.length === 0 ||
+            filter.searchOperationType.some(f => f.id === z.operationType.id))));
         return operationPreFilter;
     }
 
@@ -313,6 +316,7 @@ export class DashboardService {
                         datePurchaseVehicle: new Date(vehicle.datePurchase),
                         kmsPerMonthVehicle: vehicle.kmsPerMonth,
                         dateKmsVehicle: vehicle.dateKms,
+                        typeVehicle: vehicle.vehicleType.code,
                         percent: sumSuccess,
                         percentKm: 0,
                         percentTime: 0,
@@ -668,6 +672,7 @@ export class DashboardService {
                     datePurchaseVehicle: vehicleWear.datePurchaseVehicle,
                     kmsPerMonthVehicle: vehicleWear.kmsPerMonthVehicle,
                     dateKmsVehicle: vehicleWear.dateKmsVehicle,
+                    typeVehicle: vehicleWear.typeVehicle,
                     percent: Math.round((perKm + perTime) / 2),
                     percentKm: Math.floor(perKm),
                     percentTime: Math.floor(perTime),

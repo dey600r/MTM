@@ -1,6 +1,6 @@
 {
   "name": "MtM",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "author": "David Jimenez Galiana",
   "homepage": "dey125r@gmail.com",
   "main": "./src/electron-started.js",
@@ -19,7 +19,7 @@
     "build:demo-windows": "C:/Proyectos/MTM/Utils/Versions/deploy-demo-windows.bat",
     "build:demo-android": "C:/Proyectos/MTM/Utils/Versions/deploy-demo-android.bat",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
-    "deploy:apk": "adb -d install -r C:/Proyectos/MTM/Utils/Versions/Android/MtM_David_v2.0.4.apk",
+    "deploy:apk": "adb -d install -r C:/Proyectos/MTM/Utils/Versions/Android/MtM_David_v2.1.0.apk",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug",
     "deploy:debug-windows": "ionic cordova run windows --debug -- --arch=x64 --appx=uap --platform=x64",

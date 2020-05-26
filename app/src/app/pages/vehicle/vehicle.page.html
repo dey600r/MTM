@@ -11,15 +11,15 @@
       <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
     </ion-button>
     <!-- Tittle -->
-    <ion-title class="align-center">{{ 'COMMON.MOTORBIKE' | translate }}</ion-title>
+    <ion-title class="align-center">{{ 'COMMON.GARAGE' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content [hidden]="!loaded">
   <ion-list>
     <ion-list-header class="padding-list-header">
       <!-- Title -->
-      <ion-icon size="large" name="bicycle"></ion-icon>
-      <h3 class="header-list">{{ 'PAGE_MOTO.YOURS_MOTORBIKES' | translate }}</h3>
+      <ion-icon size="large" name="home"></ion-icon>
+      <h3 class="header-list">{{ 'PAGE_VEHICLE.YOURS_VEHICLES' | translate }}</h3>
       <!-- Button create -->
       <ion-button class="btn-width-list" fill="clear" (click)="openVehicleModal()">
         <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
@@ -28,12 +28,16 @@
     <div *ngIf="vehicles.length === 0" class="info-content">
       <div class="info-main">
           <div>
-              <ion-icon size="large" name="bicycle"></ion-icon>
-              <h2 class="margin-top5">{{ 'ALERT.MotoEmpty' | translate }}</h2>
+              <ion-icon size="large" name="home"></ion-icon>
+              <h2 class="margin-top5">{{ 'ALERT.VehicleEmpty' | translate }}</h2>
           </div>
       </div>
     </div>
     <ion-item button *ngFor="let m of vehicles">
+      <!-- Icons -->
+      <ion-avatar slot="start" class="max-width10" (click)="openVehicleModal(m, false)">
+        <ion-icon size="large" class="icon-color" [name]="getIconVehicle(m)"></ion-icon>
+      </ion-avatar>
       <!-- Labels -->
       <ion-label class="min-width40 label-event-force" (click)="openVehicleModal(m, false)">
         <h2>{{ m.brand }}</h2>
@@ -84,6 +88,7 @@
       </ion-label>
     </ion-list-header>
     <ion-item *ngFor="let i of [1, 2]">
+      <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
       <ion-label>
         <h3><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></h3>
         <h2><ion-skeleton-text animated style="width: 30%"></ion-skeleton-text></h2>

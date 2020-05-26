@@ -100,6 +100,7 @@ export class CalendarService {
                 result = [...result, {
                     idVehicle: wear.idVehicle,
                     nameVehicle: wear.nameVehicle,
+                    typeVehicle: wear.typeVehicle,
                     listInfoCalendarMaintenance: replacements
                 }];
             });
@@ -212,6 +213,7 @@ export class CalendarService {
                     result = [...result, {
                         idVehicle: x.idVehicle,
                         nameVehicle: x.nameVehicle,
+                        typeVehicle: x.typeVehicle,
                         listInfoCalendarMaintenance: rVehicle
                     }];
                 }

@@ -11,7 +11,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 // UTILS
 import {
   VehicleModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
-  MaintenanceFreqModel, MaintenanceModel
+  MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel
 } from '@models/index';
 import { ConstantsTable, Constants, ConstantsColumns } from '@utils/index';
 import { SqlService } from './sql.service';
@@ -28,6 +28,7 @@ export class DataBaseService {
 
   vehicles = new BehaviorSubject([]);
   vehiclesData: VehicleModel[] = [];
+  vehicleType = new BehaviorSubject([]);
   configuration = new BehaviorSubject([]);
   operation = new BehaviorSubject([]);
   operationType = new BehaviorSubject([]);
@@ -105,6 +106,10 @@ export class DataBaseService {
     return this.vehicles.asObservable();
   }
 
+  getVehicleType(): Observable<VehicleTypeModel[]> {
+    return this.vehicleType.asObservable();
+  }
+
   getConfigurations(): Observable<ConfigurationModel[]> {
     return this.configuration.asObservable();
   }
@@ -132,6 +137,7 @@ export class DataBaseService {
   loadAllTables() {
     this.loadListTables([
       ConstantsTable.TABLE_MTM_VEHICLE,
+      ConstantsTable.TABLE_MTM_VEHICLE_TYPE,
       ConstantsTable.TABLE_MTM_CONFIGURATION,
       ConstantsTable.TABLE_MTM_OPERATION,
       ConstantsTable.TABLE_MTM_OPERATION_TYPE,
@@ -164,6 +170,9 @@ export class DataBaseService {
       case ConstantsTable.TABLE_MTM_VEHICLE:
         this.vehiclesData = this.sqlService.mapDataToObserver(table, data);
         this.vehicles.next(this.vehiclesData);
+        break;
+      case ConstantsTable.TABLE_MTM_VEHICLE_TYPE:
+        this.vehicleType.next(this.sqlService.mapDataToObserver(table, data));
         break;
       case ConstantsTable.TABLE_MTM_CONFIGURATION:
         this.configuration.next(this.sqlService.mapDataToObserver(table, data));

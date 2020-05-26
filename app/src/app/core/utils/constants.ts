@@ -37,4 +37,7 @@ export class Constants {
     static IONIC_APP = 'app';
 
     static KEY_LAST_UPDATE_DB = 'lastUpdate';
+
+    static VEHICLE_TYPE_CODE_MOTO = 'M';
+    static VEHICLE_TYPE_CODE_CAR = 'C';
 }
