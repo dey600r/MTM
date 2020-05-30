@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -58,7 +58,8 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private calendarService: CalendarService,
     private controlService: ControlService,
-    private configurationService: ConfigurationService
+    private configurationService: ConfigurationService,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
     this.translateMe = this.translator.instant('COMMON.ME');
@@ -155,7 +156,6 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       const data: string = this.operation.details;
       textarea.value = 'p';
       textarea.value = null;
-      // textarea.setSelectionRange(textarea.value.length, textarea.value.length);
       textarea.value = data;
     }
   }
@@ -206,10 +206,6 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     return f.opDate !== undefined && f.opDate.validity.valid;
   }
 
-  isOperationTypeMaintenanceReplacement(f: any): boolean {
-    return this.isValidOperationType(f) && this.isOperationTypeWithReplacement();
-  }
-
   isOperationTypeWithReplacement(): boolean {
     return this.operationType.some(x => x.id === this.operation.operationType.id &&
       (Constants.OPERATION_TYPE_FAILURE_HOME === x.code || Constants.OPERATION_TYPE_FAILURE_WORKSHOP === x.code ||
@@ -226,32 +222,37 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     const maxKm = this.calculateMaxKm(this.operation);
     const vehicle: VehicleModel = this.vehicles.find(x => x.id === this.operation.vehicle.id);
 
-    // Validate min and max date operation
-    if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
-      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
-                {
-                  dateIni: this.calendarService.getDateString(minDate),
-                  dateFin: this.calendarService.getDateString(maxDate)
-                })} ` +
-                `${this.translator.instant('COMMON.OR')} `;
-    } else if (!!minDate && !(!!maxDate) && dateSelected < minDate) {
-      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
-                { dateIni: this.calendarService.getDateString(minDate) })} ` +
-                `${this.translator.instant('COMMON.OR')} `;
-    } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
-      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
-                {
-                  dateIni: this.calendarService.getDateString(vehicle.datePurchase),
-                  dateFin: this.calendarService.getDateString(maxDate)
-                })} ` +
-                `${this.translator.instant('COMMON.OR')} `;
-    }
+    // Validate not future
+    if (new Date(this.operation.date) > new Date()) {
+      msgResult = this.translator.instant('PAGE_OPERATION.AddDateNotFuture');
+    } else {
+      // Validate min and max date operation
+      if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
+        msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
+                  {
+                    dateIni: this.calendarService.getDateString(minDate),
+                    dateFin: this.calendarService.getDateString(maxDate)
+                  })} ` +
+                  `${this.translator.instant('COMMON.OR')} `;
+      } else if (!!minDate && !(!!maxDate) && dateSelected < minDate) {
+        msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
+                  { dateIni: this.calendarService.getDateString(minDate) })} ` +
+                  `${this.translator.instant('COMMON.OR')} `;
+      } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
+        msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
+                  {
+                    dateIni: this.calendarService.getDateString(vehicle.datePurchase),
+                    dateFin: this.calendarService.getDateString(maxDate)
+                  })} ` +
+                  `${this.translator.instant('COMMON.OR')} `;
+      }
 
-    // Validate min and max km operation
-    if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
-      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: maxKm});
-    } else if (!(!!maxKm) && kmSelected < minKm) {
-      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: vehicle.km});
+      // Validate min and max km operation
+      if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
+        msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: maxKm});
+      } else if (!(!!maxKm) && kmSelected < minKm) {
+        msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: vehicle.km});
+      }
     }
 
     // Validate max km vehicle

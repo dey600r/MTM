@@ -62,7 +62,9 @@
         "EXIT": "Salir",
         "KM_RANGE": "Rango de kilómetros",
         "CALENDAR": "Calendario",
-        "TYPE": "Tipo"
+        "TYPE": "Tipo",
+        "DISTANCE": "Distance",
+        "LAST_PRICE": "Último precio"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -107,11 +109,12 @@
         "AddOperationType": "Añada el tipo",
         "AddDate": "Añada la fecha",
         "AddPrice": "Añada el precio",
+        "AddDateNotFuture": "La fecha no puede ser a futuro",
         "AddDateBetween": "Fecha entre {{dateIni}} y {{dateFin}}",
         "AddDateLower": "Fecha menor que {{dateFin}}",
         "AddDateHigher": "Fecha mayor que {{dateIni}}",
         "AddKmBetween": "Km entre {{kmIni}} y {{kmFin}}",
-        "AddKmLower": "Km menor {{kmFin}} con respecto a la vehículo",
+        "AddKmLower": "Km menor {{kmFin}} con respecto al vehículo",
         "AddSaveOperation": "La operación {{operation}} ha sido añadida correctamente",
         "EditSaveOperation": "La operación {{operation}} ha sido modificada correctamente",
         "DeleteSaveOperation": "La operación {{operation}} ha sido borrada correctamente",
@@ -154,11 +157,12 @@
     },
     "ALERT" : {
         "INFO": "Info",
+        "NotificationEmptyBetween": "No se encuentran notificaciones entre {{dateIni}} y {{dateFin}}",
         "NotificationEmpty": "No se encuentran notificaciones entre {{dateIni}} y {{dateFin}}",
         "AddVehicleToAddOperation": "Añada sus vehículos antes de incluir las operaciones",
         "VehicleEmpty": "No se encuentran vehículos",
         "AddMustVehicle": "Añada vehículos",
-        "AddVehiclerbikeToExpenses": "Añada vehículos para ver los gastos",
+        "AddVehicleToExpenses": "Añada vehículos para ver los gastos",
         "OperationEmpty": "No se encuentran operaciones",
         "AddOperation": "Añada operaciones",
         "AddOperationToExpenses": "Añada operaciones para ver los gastos",

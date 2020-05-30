@@ -17,7 +17,7 @@
   </ion-calendar>
 
   <div class="info-main padding-info" *ngIf="!activeSpinner && listInfoCalendarSelected.length === 0">
-    <div class="table-row p-color">
+    <div class="p-color">
       <ion-icon class="font-size26" name="alarm"></ion-icon>
       <h3 class="info-text-notification-empty padding-info-title">{{ notificationEmpty }}</h3>
     </div>
@@ -59,8 +59,8 @@
               <p class="p-color row-pos align-right font-size14">{{ repl.dateFormat }}</p>
             </div>
             <div class="table-row margin-right5 table-row auto-width">
-              <p *ngIf="repl.time === 0" class="subrow-color subrow-pos align-right auto-width subrow-width font-size13">{{ repl.km }}km</p>
-              <p *ngIf="repl.price !== 0" class="subrow-color subrow-pos align-right auto-width font-size13">{{ repl.price }}€</p>
+              <p *ngIf="repl.time === 0" class="subrow-color subrow-pos align-right auto-width subrow-width font-size13 font-italic">{{ 'COMMON.DISTANCE' | translate }}: {{ repl.km }} km</p>
+              <p *ngIf="repl.price !== 0" class="subrow-color subrow-pos align-right auto-width font-size13 font-italic">{{ 'COMMON.LAST_PRICE' | translate }}: {{ repl.price }}€</p>
             </div>
           </div>
         </div>

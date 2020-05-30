@@ -445,7 +445,7 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE}) `;
       vehicles.forEach((x, index) => {
         sql += `SELECT '${x.model}', '${x.brand}', ${x.year}, ${x.km}, ${x.configuration.id}, ` +
-          `${x.kmsPerMonth}, '${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
+          `${(!x.kmsPerMonth ? null : x.kmsPerMonth)}, '${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
           `'${this.calendarService.getDateStringToDB(x.datePurchase)}', ${x.vehicleType.id} `;
         if ((index + 1) < vehicles.length) {
           sql += ' UNION ';
@@ -599,7 +599,7 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_YEAR}=${x.year}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_KM}=${x.km}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_CONFIGURATION}=${x.configuration.id}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE}=${x.vehicleType.id}, ` +
-        `${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}=${x.kmsPerMonth}, ` +
+        `${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}=${(!x.kmsPerMonth ? null : x.kmsPerMonth)}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}='${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}='${this.calendarService.getDateStringToDB(x.datePurchase)}' ` +
         `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
@@ -674,9 +674,10 @@ export class SqlService {
     return sql;
   }
 
-  updateSqlSystemConfiguration(key: string, value: string): string {
+  updateSqlSystemConfiguration(key: string, value: string, update: string): string {
     return `UPDATE ${ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION} ` +
-    `SET ${ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE} = '${value}' ` +
+    `SET ${ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE} = '${value}', ` +
+    `${ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_UPDATED} = '${update}' ` +
     `WHERE ${ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_KEY} = '${key}'; `;
   }
 

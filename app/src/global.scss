@@ -80,8 +80,8 @@ $colors: (
   z-index: 100000;
   width:100%;
   background-color: #ffffff;
-  animation: pulse 5100ms linear forwards;
-  animation-delay: 300ms;
+  animation: pulse 5200ms linear forwards;
+  animation-delay: 400ms;
 }
 
 .flb {
@@ -117,35 +117,35 @@ $colors: (
 }
 
 .custom-overlay-img-animation {
-  animation: animation 5100ms linear infinite both;
-  animation-delay: 200ms;
-}
-
-.custom-overlay-img-size {
-  width: 162px;
-  height: 162px;
-}
-
-.custom-overlay-title-animation {
-  animation: animation-title 5100ms linear infinite both;
+  animation: animation 5200ms linear infinite both;
   animation-delay: 300ms;
 }
 
+.custom-overlay-img-size {
+  width: 165px;
+  height: 165px;
+}
+
+.custom-overlay-title-animation {
+  animation: animation-title 5200ms linear infinite both;
+  animation-delay: 400ms;
+}
+
 .custom-overlay-title-size {
-  width: 162px;
-  height: 39px;
+  width: 175px;
+  height: 40px;
 }
 
 @media (min-width: 768px) and (min-height: 550px) {
 
   .custom-overlay-img-size {
-    width: 200px;
-    height: 200px;
+    width: 210px;
+    height: 210px;
   }
 
   .custom-overlay-title-size {
-    width: 200px;
-    height: 44px;
+    width: 213px;
+    height: 45px;
   }
 }
 
@@ -160,6 +160,8 @@ $colors: (
     opacity:0;
   }
 }
+
+/* Generated with Bounce.js.*/
 
 .animation-target {
   -webkit-animation: animation 4900ms linear infinite both;
@@ -395,4 +397,3 @@ $colors: (
   90.19% { -webkit-transform: matrix3d(1, 0, 0, 0, 0.839, 1, 0, 0, 0, 0, 1, 0, -999.972, 0, 0, 1); transform: matrix3d(1, 0, 0, 0, 0.839, 1, 0, 0, 0, 0, 1, 0, -999.972, 0, 0, 1); }
   100% { -webkit-transform: matrix3d(1, 0, 0, 0, 0.839, 1, 0, 0, 0, 0, 1, 0, -1000, 0, 0, 1); transform: matrix3d(1, 0, 0, 0, 0.839, 1, 0, 0, 0, 0, 1, 0, -1000, 0, 0, 1); } 
 }
-  

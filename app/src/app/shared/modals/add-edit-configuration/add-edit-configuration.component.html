@@ -34,7 +34,7 @@
             <ion-icon *ngIf="this.submited && !isValidDescription(formAddConfiguration)" class="padding-left20" 
                 color="danger" size="small" name="alert"></ion-icon>
             <ion-text *ngIf="this.submited && !isValidDescription(formAddConfiguration)" 
-                color="danger">{{ 'AddDescription' | translate }}</ion-text>
+                color="danger">{{ 'PAGE_OPERATION.AddDescription' | translate }}</ion-text>
           </ion-label>
           <ion-input #configurationDescription name="configurationDescription" autocapitalize placeholder="--" required type="text" 
             [(ngModel)]="configuration.description"></ion-input>

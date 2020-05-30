@@ -84,4 +84,5 @@ export class ConstantsColumns {
     // SYSTEM CONFIGURATION
     static COLUMN_MTM_SYSTEM_CONFIGURATION_KEY = 'key';
     static COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE = 'value';
+    static COLUMN_MTM_SYSTEM_CONFIGURATION_UPDATED = 'updated';
 }

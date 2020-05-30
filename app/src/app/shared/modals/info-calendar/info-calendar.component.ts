@@ -123,16 +123,16 @@ export class InfoCalendarComponent implements OnInit {
 
   onClick($event: any) {
     if (!!$event) {
-      let node: any = $event.target;
-      if (node.nodeName === 'SPAN') {
-        node = node.parentElement;
-      }
-      if (node.nodeName === 'BUTTON') {
-        node = node.parentElement;
-      }
-      if (node.nodeName === 'ION-BUTTON') {
-        this.activeSpinner = true;
-        setTimeout(() => {
+      this.activeSpinner = true;
+      setTimeout(() => {
+        let node: any = $event.target;
+        if (node.nodeName === 'SPAN') {
+          node = node.parentElement;
+        }
+        if (node.nodeName === 'BUTTON') {
+          node = node.parentElement;
+        }
+        if (node.nodeName === 'ION-BUTTON') {
           if (!this.select && !this.monthChange) {
             if ($event.target.innerText.includes(this.yearSelect)) {
               this.yearSelect = Number($event.target.innerText.split(' ')[1]);
@@ -152,11 +152,11 @@ export class InfoCalendarComponent implements OnInit {
               this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
             }
           }
-          this.select = false;
-          this.monthChange = false;
-          this.activeSpinner = false;
-         }, 150);
-      }
+        }
+        this.select = false;
+        this.monthChange = false;
+        this.activeSpinner = false;
+      }, 150);
     }
   }
 

@@ -62,7 +62,9 @@
         "EXIT": "Exit",
         "KM_RANGE": "Kilometers range",
         "CALENDAR": "Calendar",
-        "TYPE": "Type"
+        "TYPE": "Type",
+        "DISTANCE": "Distance",
+        "LAST_PRICE": "Last price"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -98,7 +100,7 @@
         "ExpensesPerOperationType": "Expenses per operation type"
     },
     "PAGE_OPERATION": {
-        "YOURS_OPERATIONS": "Vehivles's Operations",
+        "YOURS_OPERATIONS": "Vehicles's Operations",
         "AddNewOperation": "Add operation",
         "EditOperation": "Edit operation",
         "AddDescription": "Add description",
@@ -107,6 +109,7 @@
         "AddOperationType": "Add operation type",
         "AddDate": "Add date",
         "AddPrice": "Add price",
+        "AddDateNotFuture": "Date can't be in the future",
         "AddDateBetween": "Date between {{dateIni}} and {{dateFin}}",
         "AddDateLower": "Date lower {{dateFin}}",
         "AddDateHigher": "Date higher {{dateIni}}",
@@ -159,6 +162,7 @@
         "AddVehicleToAddOperation": "Add vehicle before add operations",
         "VehicleEmpty": "There isn't vehicle",
         "AddMustVehicle": "You must add vehicle",
+        "AddVehicleToExpenses": "You must add motorbikes to see the expenses",
         "OperationEmpty": "There isn't operation",
         "AddOperation": "You must add operation",
         "AddOperationToExpenses": "You must add operations to see the expenses",

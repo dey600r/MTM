@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService } from '@services/index';
+import { DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService, CalendarService } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
   MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel
@@ -45,6 +45,7 @@ export class HomePage implements OnInit {
               private dbService: DataBaseService,
               private translator: TranslateService,
               private dashboardService: DashboardService,
+              private calendarService: CalendarService,
               private configurationService: ConfigurationService,
               private controlService: ControlService,
               private vehicleService: VehicleService) {
@@ -74,8 +75,7 @@ export class HomePage implements OnInit {
                     this.wears = [...this.wears, Object.assign({}, x)];
                     this.hideVehicles[index] = (index !== 0);
                     let listWears: WearReplacementProgressBarViewModel[] = [];
-                    const kmVehicle: number = this.dashboardService.calculateKmVehicleEstimated(new VehicleModel(null, null, 0, x.kmVehicle,
-                      null, null, x.kmsPerMonthVehicle, x.dateKmsVehicle, x.datePurchaseVehicle));
+                    const kmVehicle: number = this.calendarService.calculateWearKmVehicleEstimated(x);
                     x.listWearReplacement.forEach(z => {
                     if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
                         z.fromKmMaintenance <= kmVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= kmVehicle)) {

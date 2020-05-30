@@ -124,7 +124,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.dataMaintenance = this.modalInputModel.data;
     const vehicle: VehicleModel = new VehicleModel(null, null, 0, this.dataMaintenance.kmVehicle,
       null, null, this.dataMaintenance.kmsPerMonthVehicle, this.dataMaintenance.dateKmsVehicle, this.dataMaintenance.datePurchaseVehicle);
-    this.vehicleKmEstimated = this.dashboardService.calculateKmVehicleEstimated(vehicle);
+    this.vehicleKmEstimated = this.calendarService.calculateKmVehicleEstimated(vehicle);
     const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
     this.labelNameVehicle = this.dataMaintenance.nameVehicle;
     this.nameMaintenance = wear.descriptionMaintenance;

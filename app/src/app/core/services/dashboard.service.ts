@@ -54,7 +54,7 @@ export class DashboardService {
                         (filter.searchOperationType.length === 0 ||
                         filter.searchOperationType.some(f => f.id === z.operationType.id))),
                     ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
-                result = [...result, this.getDataDashboard(x.vehicle.model, sumPrice, x.vehicle.id)];
+                result = [...result, this.getDataDashboard(`${x.vehicle.brand}-${x.vehicle.model}`, sumPrice, x.vehicle.id)];
             }
         });
         return result;
@@ -207,8 +207,7 @@ export class DashboardService {
                 real.series = [...estimated.series, this.getDataDashboard('0km', 0 )];
                 initKm = 0;
             }
-            const kmEstimated: number = this.calculateKmVehicleEstimated(new VehicleModel(null, null, 0, data.kmVehicle,
-                null, null, data.kmsPerMonthVehicle, data.dateKmsVehicle, data.datePurchaseVehicle));
+            const kmEstimated: number = this.calendarService.calculateWearKmVehicleEstimated(data);
             data.listWearReplacement.forEach((x, index) => {
                 estimated.series = [...estimated.series, this.getDataDashboard(`${x.kmAcumulateMaintenance}km`,
                     (initKm !== 0 && x.kmMaintenance > initKm && index === 0 ? initKm : x.kmMaintenance))];
@@ -243,8 +242,7 @@ export class DashboardService {
                 real.series = [...estimated.series, this.getDataDashboard('0km', 0 )];
                 initKm = 0;
             }
-            const kmEstimated: number = this.calculateKmVehicleEstimated(new VehicleModel(null, null, 0, data.kmVehicle,
-                null, null, data.kmsPerMonthVehicle, data.dateKmsVehicle, data.datePurchaseVehicle));
+            const kmEstimated: number = this.calendarService.calculateWearKmVehicleEstimated(data);
             data.listWearReplacement.forEach(x => {
                 estimated.series = [...estimated.series,
                     this.getDataDashboard(`${x.kmAcumulateMaintenance}km`, x.timeAcumulateMaintenance)];
@@ -293,7 +291,7 @@ export class DashboardService {
                     let wearReplacement: WearReplacementProgressBarViewModel[] = [];
                     const maintenancesVehicle: MaintenanceModel[] =
                         maintenances.filter(x => config.listMaintenance.some(y => y.id === x.id));
-                    const kmVehicleEstimated: number = this.calculateKmVehicleEstimated(vehicle);
+                    const kmVehicleEstimated: number = this.calendarService.calculateKmVehicleEstimated(vehicle);
                     maintenancesVehicle.forEach(main => { // Maintenaces of vehicle
                         const listMaintenanceWear: WearReplacementProgressBarViewModel[] =
                             this.calculateMaintenace(vehicle, operations, main);
@@ -384,7 +382,7 @@ export class DashboardService {
             const ops: OperationModel[] = operations.filter(x => x.vehicle.id === vehicle.id &&
                 x.listMaintenanceElement.some(y => y.id === rep.id));
             if (ops.length === 0) {
-                const calKms = (main.km - this.calculateKmVehicleEstimated(vehicle));
+                const calKms = (main.km - this.calendarService.calculateKmVehicleEstimated(vehicle));
                 const calMonths = this.calculateMontVehicleReplacement(main.time, vehicle.datePurchase);
                 const percentKm: number = this.calculatePercent(main.km, calKms);
                 const percentMonth: number = this.calculatePercent(main.time, calMonths);
@@ -427,7 +425,7 @@ export class DashboardService {
                 x.listMaintenanceElement.some(y => y.id === rep.id) &&
                 x.km >= (main.km - 2000));
             if (ops.length === 0) {
-                const calKms = (main.km - this.calculateKmVehicleEstimated(vehicle));
+                const calKms = (main.km - this.calendarService.calculateKmVehicleEstimated(vehicle));
                 const calMonths = this.calculateMontVehicleReplacement(main.time, vehicle.datePurchase);
                 const percentKm: number = this.calculatePercent(main.km, calKms);
                 const percentMonth: number = this.calculatePercent(main.time, calMonths);
@@ -486,7 +484,7 @@ export class DashboardService {
                 calKms = this.calculateKmVehicleReplacement(vehicle, op, main);
                 calMonths = this.calculateMontVehicleReplacement(main.time, op.date);
             } else {
-                calKms = (main.km - this.calculateKmVehicleEstimated(vehicle));
+                calKms = (main.km - this.calendarService.calculateKmVehicleEstimated(vehicle));
                 calMonths = this.calculateMontVehicleReplacement(main.time, vehicle.datePurchase);
             }
             const percentKm: number = this.calculatePercent(main.km, calKms);
@@ -539,7 +537,7 @@ export class DashboardService {
     }
 
     calculateKmVehicleReplacement(vehicle: VehicleModel, op: OperationModel, main: MaintenanceModel): number {
-        return (op.km + main.km) - this.calculateKmVehicleEstimated(vehicle);
+        return (op.km + main.km) - this.calendarService.calculateKmVehicleEstimated(vehicle);
     }
 
     calculateMontVehicleReplacement(time: number, date: Date): number {
@@ -552,10 +550,6 @@ export class DashboardService {
 
     calculatePercentNegative(total: number, value: number): number {
         return (total === 0 ? 0 : (value >= 0 ? value / total : 1));
-    }
-
-    calculateKmVehicleEstimated(vehicle: VehicleModel): number {
-        return vehicle.km + (Math.round((vehicle.kmsPerMonth / 30) * this.calendarService.dayDiff(new Date(vehicle.dateKms), new Date())));
     }
 
     getDateCalculateMonths(wear: WearReplacementProgressBarViewModel): string {
@@ -577,7 +571,7 @@ export class DashboardService {
             // Km vehicle estimated
             const vehicle: VehicleModel = new VehicleModel(null, null, 0, vehicleWear.kmVehicle,
                 null, null, vehicleWear.kmsPerMonthVehicle, vehicleWear.dateKmsVehicle, vehicleWear.datePurchaseVehicle);
-            const kmVehicle: number = this.calculateKmVehicleEstimated(vehicle);
+            const kmVehicle: number = this.calendarService.calculateKmVehicleEstimated(vehicle);
             const diffDateToday: number = this.calendarService.monthDiff(vehicleWear.datePurchaseVehicle, new Date());
             const listWear: WearReplacementProgressBarViewModel[] = this.commonService.orderBy(
                 vehicleWear.listWearReplacement, ConstantsColumns.COLUMN_MODEL_FROM_KM_MAINTENANCE);

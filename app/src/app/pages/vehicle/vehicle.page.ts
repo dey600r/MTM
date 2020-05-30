@@ -101,7 +101,7 @@ export class VehiclePage implements OnInit {
   }
 
   showModalInfo() {
-    this.controlService.showToast(PageEnum.VEHICLE, 'ALERT.AddMustVehiclerbikeToExpenses', Constants.DELAY_TOAST_NORMAL);
+    this.controlService.showToast(PageEnum.VEHICLE, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
   }
 
   changeFilterOperation(idVehicle: number) {

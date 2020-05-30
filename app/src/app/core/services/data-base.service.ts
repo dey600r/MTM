@@ -1,7 +1,7 @@
 import { Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
 // import { browserDBInstance } from 'cordova-browser';
 
 // LIBRARIES IONIC
@@ -15,7 +15,6 @@ import {
 } from '@models/index';
 import { ConstantsTable, Constants, ConstantsColumns } from '@utils/index';
 import { SqlService } from './sql.service';
-import { CalendarService } from './calendar.service';
 
 import { environment } from '../../../environments/environment';
 
@@ -38,7 +37,6 @@ export class DataBaseService {
 
   constructor(private plt: Platform,
               private sqlitePorter: SQLitePorter,
-              private calendarService: CalendarService,
               private sqlite: SQLite,
               private http: HttpClient,
               private sqlService: SqlService) { }
@@ -49,6 +47,7 @@ export class DataBaseService {
       //   const db = browser.openDatabase('dev-mtm.db', '1.0', 'DEV', 5 * 1024 * 1024);
       //   this.database = browserDBInstance(db);
       // } else {
+          // LOAD DATA BASE
           this.sqlite.create({
             name: 'mtm.db',
             location: 'default'
@@ -65,37 +64,70 @@ export class DataBaseService {
 
   seedDatabase() {
     this.database.executeSql(this.sqlService.getSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB), []).then(data => {
-      const dateLastUpdateApp: Date = new Date(environment.lastUpdate);
-      const dateLastUpdateDB: Date = new Date(data.rows.item(0)[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE]);
-      if (dateLastUpdateApp > dateLastUpdateDB) {
-        console.log(`NEXT DEPLOY DB`); // INIT DB
-        this.http.get('assets/db/nextDeployDB.sql', { responseType: 'text'}).subscribe(sql => {
-          this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
-            this.loadAllTables();
-            this.dbReady.next(true);
-            this.executeScriptDataBase(this.sqlService.updateSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB,
-              environment.lastUpdate), []);
-          })
-          // tslint:disable-next-line: no-shadowed-variable
-          .catch(e => console.error(`Error launching next deploy data base: ${e}`));
-        });
-      } else {
-        this.loadAllTables();
-        this.dbReady.next(true);
-      }
+      console.log(`NEXT DB`); // INIT DB
+      this.getNextDeployDB(data);
     }).catch(e => {
       console.log(`INIT DB`); // INIT DB
-      this.http.get('assets/db/initTableDB.sql', { responseType: 'text'}).subscribe(sql => {
-        this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
-          this.loadAllTables();
-          this.dbReady.next(true);
-          this.executeScriptDataBase(this.sqlService.updateSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB,
-            environment.lastUpdate), []);
-        })
-        // tslint:disable-next-line: no-shadowed-variable
-        .catch(e => console.error(`Error launching initialize data base: ${e}`));
+      this.http.get(`${Constants.PATH_FILE_DB}${Constants.FILE_NAME_INIT_DB}.sql`, { responseType: 'text'}).subscribe(sql => {
+        this.importSqlToDB(sql);
       });
     });
+  }
+
+  getNextDeployDB(data: any) {
+    const dateLastUpdateApp: Date = new Date(environment.lastUpdate);
+    const dateLastUpdateDB: Date = new Date(data.rows.item(0)[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_UPDATED]);
+    if (dateLastUpdateApp > dateLastUpdateDB) { // NEW VERSION - DB VERSION SHORTER THAN APP VERSION
+      this.http.get(`${Constants.PATH_FILE_DB}${Constants.FILE_NAME_NEXT_DEPLOY_DB}.sql`, { responseType: 'text'}).subscribe(sql => {
+        const sqlVersions: string[] = sql.split('**->');
+        const numericVersionApp: number = this.getVersion(environment.lastVersion);
+        const numericVersionDB: number = this.getVersion(data.rows.item(0)[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE]);
+        let sqlNextDeploy = '';
+        sqlVersions.forEach(x => {
+          if (!!x) {
+            const subSqlNextDeploy: string[] = x.split('**>');
+            if (!!subSqlNextDeploy && subSqlNextDeploy.length > 1 && !!subSqlNextDeploy[1]) {
+              const numVesion: number = this.getVersion(subSqlNextDeploy[0].substr(13));
+              if (numericVersionDB < numVesion && numericVersionApp >= numVesion) {
+                sqlNextDeploy += subSqlNextDeploy[1].replace('\n', '');
+              }
+            }
+          }
+        });
+        if (sqlNextDeploy !== '') {
+          this.importSqlToDB(sqlNextDeploy);
+        } else {
+          this.inidLoadData(true);
+        }
+      });
+    } else {
+      this.inidLoadData(false);
+    }
+  }
+
+  getVersion(version: string): number {
+    const nums: string[] = version.split('.');
+    const v1: number = (Number)(nums[0].substr(1, 1)) * 1000;
+    const v2: number = (Number)(nums[1]) * 10;
+    const v3: number = (Number)(nums[2]);
+    return v1 + v2 + v3;
+  }
+
+  importSqlToDB(sql: string) {
+    this.sqlitePorter.importSqlToDb(this.database, sql).then(result => {
+      this.inidLoadData(true);
+    })
+    // tslint:disable-next-line: no-shadowed-variable
+    .catch(e => console.error(`Error launching initialize data base: ${e}`));
+  }
+
+  inidLoadData(updateVersion: boolean) {
+    this.loadAllTables();
+    this.dbReady.next(true);
+    if (updateVersion) {
+      this.executeScriptDataBase(this.sqlService.updateSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB,
+        environment.lastVersion, environment.lastUpdate), []);
+    }
   }
 
   getDatabaseState() {

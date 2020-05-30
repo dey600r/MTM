@@ -40,4 +40,8 @@ export class Constants {
 
     static VEHICLE_TYPE_CODE_MOTO = 'M';
     static VEHICLE_TYPE_CODE_CAR = 'C';
+
+    static PATH_FILE_DB = 'assets/db/';
+    static FILE_NAME_INIT_DB = 'initTableDB';
+    static FILE_NAME_NEXT_DEPLOY_DB = 'nextDeployDB';
 }

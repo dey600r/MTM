@@ -67,6 +67,21 @@ export class CalendarService {
         return days <= 0 ? 0 : days;
     }
 
+    // CALCULATE VEHICLE
+
+    calculateWearKmVehicleEstimated(wear: WearVehicleProgressBarViewModel): number {
+        return this.calculateKmVehicleEstimated(new VehicleModel(null, null, 0, wear.kmVehicle,
+            null, null, wear.kmsPerMonthVehicle, wear.dateKmsVehicle, wear.datePurchaseVehicle));
+    }
+
+    calculateKmVehicleEstimated(vehicle: VehicleModel): number {
+        let kmPerM: number = vehicle.kmsPerMonth;
+        if (!kmPerM || kmPerM === 0) {
+            kmPerM = Math.round(vehicle.km / this.monthDiff(new Date(vehicle.datePurchase), new Date()));
+        }
+        return vehicle.km + (Math.round((kmPerM / 30) * this.dayDiff(new Date(vehicle.dateKms), new Date())));
+    }
+
     // INFO CALENDAR
 
     getInfoCalendar(listWearsNotification: WearVehicleProgressBarViewModel[]): InfoCalendarVehicleViewModel[] {

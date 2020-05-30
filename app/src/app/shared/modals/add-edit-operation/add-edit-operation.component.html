@@ -63,7 +63,7 @@
           <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
         </ion-label>
         <ion-select #opReplacement name="opReplacement" multiple="true" [placeholder]="this.translateSelect"
-        [disabled]="!isOperationTypeMaintenanceReplacement(formAddOperation)" [cancelText]="this.translateCancel"
+        [disabled]="!isOperationTypeWithReplacement()" [cancelText]="this.translateCancel"
         [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect">
           <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElement">{{ me.name }}</ion-select-option>
         </ion-select>

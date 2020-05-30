@@ -102,7 +102,6 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
         if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.vehicle.km) {
           this.vehicle.dateKms = new Date();
         }
-
         this.vehicleService.saveVehicle(this.vehicle,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
@@ -126,8 +125,7 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
 
   isValidForm(f: any): boolean {
     return this.isValidBrand(f) && this.isValidModel(f) && this.isValidYearBetween(f) &&
-           this.isValidKmMin(f) && this.isValidConfiguration(f) && this.isValidVehicleType(f) &&
-           this.isValidKmsPerMonthMin(f);
+           this.isValidKmMin(f) && this.isValidConfiguration(f) && this.isValidVehicleType(f);
   }
 
   isValidBrand(f: any): boolean {
@@ -165,14 +163,6 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
 
   isValidVehicleType(f: any): boolean {
     return f.vehicleType !== undefined && f.vehicleType.validity.valid;
-  }
-
-  isValidKmsPerMonth(f: any): boolean {
-    return f.vehicleKmsPerMonth !== undefined && f.vehicleKmsPerMonth.validity.valid;
-  }
-
-  isValidKmsPerMonthMin(f: any): boolean {
-    return this.isValidKmsPerMonth(f) && f.vehicleKmsPerMonth.valueAsNumber > 0;
   }
 
   validateDateAndKmToOperations(): string {

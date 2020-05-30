@@ -1,4 +1,24 @@
 BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "mtmSystemConfiguration" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"key"	TEXT NOT NULL,
+	"value"	TEXT NOT NULL,
+	"updated"	TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "mtmVehicle" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"model"	TEXT NOT NULL,
+	"brand"	TEXT NOT NULL,
+	"year"	INTEGER NOT NULL,
+	"km"	INTEGER NOT NULL,
+	"idConfiguration"	INTEGER NOT NULL,
+	"idVehicleType"	INTEGER NOT NULL,
+	"kmsPerMonth"	INTEGER,
+	"dateKms"	TEXT NOT NULL,
+	"datePurchase"	TEXT NOT NULL,
+	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id"),
+	FOREIGN KEY("idVehicleType") REFERENCES "mtmVehicleType"("id")
+);
 CREATE TABLE IF NOT EXISTS "mtmOperation" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"description"	TEXT NOT NULL,
@@ -14,29 +34,10 @@ CREATE TABLE IF NOT EXISTS "mtmOperation" (
 	FOREIGN KEY("idOperationType") REFERENCES "mtmOperationType"("id"),
 	FOREIGN KEY("idVehicle") REFERENCES "mtmVehicle"("id")
 );
-CREATE TABLE IF NOT EXISTS "mtmVehicle" (
-	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	"model"	TEXT NOT NULL,
-	"brand"	TEXT NOT NULL,
-	"year"	INTEGER NOT NULL,
-	"km"	INTEGER NOT NULL,
-	"idConfiguration"	INTEGER NOT NULL,
-	"idVehicleType"	INTEGER NOT NULL,
-	"kmsPerMonth"	INTEGER NOT NULL,
-	"dateKms"	TEXT NOT NULL,
-	"datePurchase"	TEXT NOT NULL,
-	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id"),
-	FOREIGN KEY("idVehicleType") REFERENCES "mtmVehicleType"("id")
-);
 CREATE TABLE IF NOT EXISTS "mtmVehicleType" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"code"	TEXT NOT NULL,
 	"description"	TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS "mtmSystemConfiguration" (
-	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	"key"	TEXT NOT NULL,
-	"value"	TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -94,6 +95,9 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
 );
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v1.2.3','2006-09-12 12:32:00');
+INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,87650,2,1,650,'2020-04-10','2006-09-19');
+INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,75600,3,1,50,'2020-04-10','2006-09-12');
 INSERT OR IGNORE INTO "mtmOperation" VALUES (1,'Compra moto','Compra hyosung GT125r 2006',6,2,0.0,'2006-09-12','Motos real (Ciudad Real)','Yo',3500.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (2,'Revision','Aceite motor, filtro aceite, pastillas de freno',1,2,4000.0,'2006-11-15','Motos real (Ciudad Real)','Yo',102.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (3,'Revision','Aceite motor, filtro aceite, sincronizar carburadores',1,2,8000.0,'2007-02-06','Motos real (Ciudad Real)','Yo',73.0,NULL);
@@ -218,12 +222,9 @@ INSERT OR IGNORE INTO "mtmOperation" VALUES (121,'Revision','Cambio liquido de f
 INSERT OR IGNORE INTO "mtmOperation" VALUES (122,'Cambio rueda trasera','Pilot road 2 trasera y valvula del pedido de ventaneumaticos. Equilibrado en michelin',7,1,85240.0,'2020-01-03','Garaje casa (Ciudad Real)','Yo',15.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (123,'ITV','ITV - NO CUMPLE. Cambio de rueda',6,1,86890.0,'2020-02-28','Alcobendas - ITV ATISAE','Yo',25.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (124,'Cambio rueda delantera','Pilot road 2 delantera	Cambio de rueda y valvula del pedido de ventaneumaticos',7,1,87090.0,'2020-02-28','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,87650,2,1,650,'2020-04-10','2006-09-19');
-INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,75600,3,1,50,'2020-04-10','2006-09-12');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (1,'M','MOTORBIKE');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (2,'C','CAR');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (3,'O','OTHER');
-INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (1,'FIRST_REVIEW','1',1000,6,'Y','N',0,NULL,'Y');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (2,'BASIC_REVIEW','2',8000,12,'N','N',0,NULL,'Y');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (3,'CHANGE_AIR_FILTER','2',16000,24,'N','N',0,NULL,'Y');

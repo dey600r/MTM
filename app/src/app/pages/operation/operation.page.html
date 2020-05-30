@@ -51,8 +51,8 @@
         <h3>{{ op.km }} km</h3>
       </ion-label>
       <ion-label class="padding-left10 label-event-force" (click)="openOperationModal(op, false)">
-        <p>{{ op.date | dateFormatCalendarPipe }}</p>
-        <p>{{ op.price }} €</p>
+        <p class="p-style">{{ op.date | dateFormatCalendarPipe }}</p>
+        <p class="p-style">{{ op.price }} €</p>
       </ion-label>
       <!-- Buttons delete -->
       <ion-label class="align-right fix-width69">
@@ -85,7 +85,7 @@
         <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
       </ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let i of [1, 2, 3, 4, 5]">
+    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6]">
       <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
       <ion-label>
         <h3><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></h3>
