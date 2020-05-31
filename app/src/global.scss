@@ -80,8 +80,8 @@ $colors: (
   z-index: 100000;
   width:100%;
   background-color: #ffffff;
-  animation: pulse 5200ms linear forwards;
-  animation-delay: 400ms;
+  animation: pulse 5400ms linear forwards;
+  animation-delay: 600ms;
 }
 
 .flb {
@@ -117,8 +117,8 @@ $colors: (
 }
 
 .custom-overlay-img-animation {
-  animation: animation 5200ms linear infinite both;
-  animation-delay: 300ms;
+  animation: animation 5400ms linear infinite both;
+  animation-delay: 500ms;
 }
 
 .custom-overlay-img-size {
@@ -127,8 +127,8 @@ $colors: (
 }
 
 .custom-overlay-title-animation {
-  animation: animation-title 5200ms linear infinite both;
-  animation-delay: 400ms;
+  animation: animation-title 5400ms linear infinite both;
+  animation-delay: 600ms;
 }
 
 .custom-overlay-title-size {

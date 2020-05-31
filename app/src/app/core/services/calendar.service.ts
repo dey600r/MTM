@@ -76,10 +76,12 @@ export class CalendarService {
 
     calculateKmVehicleEstimated(vehicle: VehicleModel): number {
         let kmPerM: number = vehicle.kmsPerMonth;
+        const dateKm: Date = new Date(vehicle.dateKms);
         if (!kmPerM || kmPerM === 0) {
-            kmPerM = Math.round(vehicle.km / this.monthDiff(new Date(vehicle.datePurchase), new Date()));
+            const diffMonts: number = this.monthDiff(new Date(vehicle.datePurchase), dateKm);
+            kmPerM = Math.round(vehicle.km / (diffMonts === 0 ? 1 : diffMonts));
         }
-        return vehicle.km + (Math.round((kmPerM / 30) * this.dayDiff(new Date(vehicle.dateKms), new Date())));
+        return vehicle.km + (Math.round((kmPerM / 30) * this.dayDiff(dateKm, new Date())));
     }
 
     // INFO CALENDAR

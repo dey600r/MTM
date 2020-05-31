@@ -34,5 +34,8 @@ package-lock.json
 /app/resources
 /app/build.json
 /app/build-demo.json
-/Utils/Versions
-/Utils/Install-Ionic-Proyect.txt
+/Utils
+App/.gradle/
+App/gradle/
+App/gradlew
+App/gradlew.bat

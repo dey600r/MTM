@@ -167,9 +167,12 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
 
   validateDateAndKmToOperations(): string {
     let msg = '';
+    const purchase: Date = new Date(this.vehicle.datePurchase);
+    const today: Date = new Date();
 
-    if (!!this.operations && this.operations.length > 0) {
-      const purchase: Date = new Date(this.vehicle.datePurchase);
+    if (purchase > today) {
+      msg = this.translator.instant('PAGE_OPERATION.AddDateLower', { dateFin: this.calendarService.getDateString(today)});
+    } else if (!!this.operations && this.operations.length > 0) {
       if (this.operations.some(x => this.vehicle.km < x.km)) {
         msg = this.translator.instant('PAGE_VEHICLE.AddKmHigher',
         { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM)});

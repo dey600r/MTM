@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (1,'M','MOTORBIKE');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (2,'C','CAR');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (3,'O','OTHER');
-INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v1.2.3','2006-09-12 12:32:00');
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v2.1.1','2020-05-31 12:00:00');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (1,'FIRST_REVIEW','1',1000,6,'Y','N',0,NULL,'Y');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (2,'BASIC_REVIEW','2',8000,12,'N','N',0,NULL,'Y');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (3,'CHANGE_AIR_FILTER','2',16000,24,'N','N',0,NULL,'Y');

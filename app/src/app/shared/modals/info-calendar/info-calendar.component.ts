@@ -37,6 +37,7 @@ export class InfoCalendarComponent implements OnInit {
   yearSelect = new Date().getFullYear();
   monthSelect = new Date().getMonth();
   activeSpinner = false;
+  hideVehicles: boolean[] = [];
 
   // TRANSLATE
   notificationEmpty = '';
@@ -72,7 +73,8 @@ export class InfoCalendarComponent implements OnInit {
     let dateInit: Date = new Date();
     if (!!this.listInfoCalendar && this.listInfoCalendar.length) {
       dateInit = this.commonService.min(this.modalInputModel.dataList, ConstantsColumns.COLUMN_MODEL_DATE_PURCHASE_VEHICLE);
-      this.listInfoCalendar.forEach(x => {
+      this.listInfoCalendar.forEach((x, index) => {
+        this.hideVehicles[index] = (index !== 0);
         x.listInfoCalendarMaintenance.forEach(y => {
           y.listInfoCalendarReplacement.forEach(z => {
             if (!days.some(d => d.date === z.date)) {
@@ -167,11 +169,14 @@ export class InfoCalendarComponent implements OnInit {
     if (dateFin !== null) {
       rangeDate = [...rangeDate, dateFin];
     }
+    this.hideVehicles = [];
     this.listInfoCalendarSelected = this.calendarService.getInfoCalendarReplacementDate(this.listInfoCalendar, rangeDate);
     if (!this.listInfoCalendarSelected || this.listInfoCalendarSelected.length === 0) {
       this.notificationEmpty = this.translator.instant('ALERT.NotificationEmptyBetween',
         { dateIni: this.calendarService.getDateString(dateIni),
           dateFin: this.calendarService.getDateString((dateFin === null ? dateIni : dateFin))});
+    } else {
+      this.listInfoCalendarSelected.forEach((x, index) => this.hideVehicles[index] = (index !== 0));
     }
     this.activeSpinner = false;
   }

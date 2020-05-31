@@ -2,7 +2,6 @@ import { Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
-// import { browserDBInstance } from 'cordova-browser';
 
 // LIBRARIES IONIC
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
@@ -43,31 +42,24 @@ export class DataBaseService {
 
   initDB() {
     this.plt.ready().then(() => {
-      // if (!this.plt.is('cordova')) {
-      //   const db = browser.openDatabase('dev-mtm.db', '1.0', 'DEV', 5 * 1024 * 1024);
-      //   this.database = browserDBInstance(db);
-      // } else {
-          // LOAD DATA BASE
-          this.sqlite.create({
-            name: 'mtm.db',
-            location: 'default'
-          })
-          .then((db: SQLiteObject) => {
-              this.database = db;
-              this.seedDatabase();
-          }).catch(e => {
-            console.log('ERROR ' + e);
-          });
-      // }
+        // LOAD DATA BASE
+        this.sqlite.create({
+          name: 'mtm.db',
+          location: 'default'
+        })
+        .then((db: SQLiteObject) => {
+            this.database = db;
+            this.seedDatabase();
+        }).catch(e => {
+          console.log('ERROR ' + e);
+        });
     });
   }
 
   seedDatabase() {
     this.database.executeSql(this.sqlService.getSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB), []).then(data => {
-      console.log(`NEXT DB`); // INIT DB
       this.getNextDeployDB(data);
     }).catch(e => {
-      console.log(`INIT DB`); // INIT DB
       this.http.get(`${Constants.PATH_FILE_DB}${Constants.FILE_NAME_INIT_DB}.sql`, { responseType: 'text'}).subscribe(sql => {
         this.importSqlToDB(sql);
       });

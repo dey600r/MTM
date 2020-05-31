@@ -120,51 +120,6 @@
                 }
               ]
             },
-            "windows-prod": {
-              "fileReplacements": [
-                {
-                  "replace": "src/index.html",
-                  "with": "src/index.windows.html"
-                },
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
-            },
-            "windows-dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/index.html",
-                  "with": "src/index.windows.html"
-                }
-              ],
-              "optimization": false,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false
-            },
             "ci": {
               "progress": false
             }
