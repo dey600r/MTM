@@ -94,9 +94,20 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }
 
     onChangeFilterGrouper() {
+        this.onChangeFilterOperationGrouper();
+        this.onChangeFilterDashboardGrouper();
+    }
+
+    onChangeFilterOperationGrouper() {
         this.searchDashboard.searchVehicle = this.vehicles.find(x => this.filterVehicle === x.id);
         this.searchDashboard.searchOperationType = this.operationTypes.filter(x => this.filterOpType.some(y => x.id === y));
         this.searchDashboard.searchMaintenanceElement = this.maintenanceElements.filter(x => this.filterMaintElement.some(y => x.id === y));
+        this.dashboardService.setSearchOperation(this.searchDashboard.searchVehicle,
+            this.searchDashboard.searchOperationType,
+            this.searchDashboard.searchMaintenanceElement);
+    }
+
+    onChangeFilterDashboardGrouper() {
         this.searchDashboard.showPerMont = this.filterMonth;
         this.dashboardService.setSearchDashboard(
             new SearchDashboardModel(this.searchDashboard.showPerMont,
@@ -121,7 +132,6 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
         this.searchDashboard = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', this.vehicles.find(x => this.filterVehicle === x.id));
         this.filterOpType = [];
         this.filterMaintElement = [];
-        this.onChangeFilterGrouper();
     }
 
     isParentPageHome() {

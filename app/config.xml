@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="211" id="mtm.ionic.dey125r" version="2.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="211" id="mtm.ionic.dey125r.debug" version="2.1.1" windows-packageVersion="2.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM</name>
     <description>Motor Track Manager</description>
     <author email="dey125r@gmail.com" href="http://ionicframework.com/">DeyHome</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://localhost:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -14,6 +14,11 @@
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="19" />
     <preference name="android-targetSdkVersion" value="28" />
+    <preference name="WindowsStoreIdentityName" value="52193DeyHome.MotortrackManager" />
+    <preference name="WindowsStorePublisherName" value="DeyHome" />
+    <preference name="WindowsStoreDisplayName" value="Motor Track Manager" />
+    <preference name="windows-target-version" value="10.0" />
+    <preference name="windows-phone-target-version" value="10.0" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreenDelay" value="0" />
     <preference name="ShowSplashScreen" value="false" />

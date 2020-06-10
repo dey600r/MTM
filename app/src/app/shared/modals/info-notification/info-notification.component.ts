@@ -79,7 +79,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
     if (this.wear.listWearReplacement.length > 0) {
       this.labelPercent = this.wear.percent;
-      this.searchSubscription = this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
+      this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
         const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (!this.hideGraph) {
           this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,

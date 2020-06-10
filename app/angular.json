@@ -120,6 +120,35 @@
                 }
               ]
             },
+            "windows-prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
             "ci": {
               "progress": false
             }
@@ -133,6 +162,9 @@
           "configurations": {
             "production": {
               "browserTarget": "app:build:production"
+            },
+            "windows-prod": {
+              "browserTarget": "app:build:windows-prod"
             },
             "ci": {
               "progress": false
@@ -195,6 +227,9 @@
             "production": {
               "devServerTarget": "app:serve:production"
             },
+            "windows-prod": {
+              "devServerTarget": "app:serve:windows-prod"
+            },
             "ci": {
               "devServerTarget": "app:serve:ci"
             }
@@ -208,6 +243,9 @@
           "configurations": {
             "production": {
               "browserTarget": "app:build:production"
+            },
+            "windows-prod": {
+              "browserTarget": "app:build:windows-prod"
             }
           }
         },
@@ -221,6 +259,10 @@
             "production": {
               "cordovaBuildTarget": "app:ionic-cordova-build:production",
               "devServerTarget": "app:serve:production"
+            },
+            "windows-prod": {
+              "cordovaBuildTarget": "app:ionic-cordova-build:windows-prod",
+              "devServerTarget": "app:serve:windows-prod"
             }
           }
         }

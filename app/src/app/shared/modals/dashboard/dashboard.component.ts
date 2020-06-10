@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.operations = this.modalInputModel.dataList;
     this.vehicleModel = (!!this.operations && this.operations.length > 0 ?
         `${this.operations[0].vehicle.brand} ${this.operations[0].vehicle.model}` : '');
-    this.searchSubscription = this.dashboardService.getObserverSearchODashboard().subscribe(filter => {
+    this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
       const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
       if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
         this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);

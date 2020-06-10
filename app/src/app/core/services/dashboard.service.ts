@@ -20,6 +20,8 @@ import { ConstantsColumns, WarningWearEnum, FilterMonthsEnum, Constants, FilterK
 export class DashboardService {
 
     private searchDashboard: SearchDashboardModel = new SearchDashboardModel();
+    public behaviourSearchOperation: BehaviorSubject<SearchDashboardModel>
+        = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
     public behaviourSearchDashboard: BehaviorSubject<SearchDashboardModel>
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
 
@@ -799,8 +801,12 @@ export class DashboardService {
 
     // SEARCHER DASHBOARD
 
-    getObserverSearchODashboard(): Observable<SearchDashboardModel> {
+    getObserverSearchDashboard(): Observable<SearchDashboardModel> {
         return this.behaviourSearchDashboard.asObservable();
+    }
+
+    getObserverSearchOperation(): Observable<SearchDashboardModel> {
+        return this.behaviourSearchOperation.asObservable();
     }
 
     getSearchDashboard(): SearchDashboardModel {
@@ -812,7 +818,7 @@ export class DashboardService {
         this.searchDashboard.searchVehicle = sm;
         this.searchDashboard.searchOperationType = sot;
         this.searchDashboard.searchMaintenanceElement = sme;
-        this.setSearchDashboard(this.searchDashboard);
+        this.behaviourSearchOperation.next(this.searchDashboard);
     }
 
     setSearchDashboard(filter: SearchDashboardModel) {
