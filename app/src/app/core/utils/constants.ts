@@ -1,5 +1,6 @@
 export class Constants {
     static DELAY_TOAST = 1300;
+    static DELAY_TOAST_IS_FREE = 2500;
     static DELAY_TOAST_NORMAL = 3500;
     static DELAY_TOAST_HIGH = 5000;
     static DELAY_TOAST_HIGHER = 7000;
@@ -44,4 +45,8 @@ export class Constants {
     static PATH_FILE_DB = 'assets/db/';
     static FILE_NAME_INIT_DB = 'initTableDB';
     static FILE_NAME_NEXT_DEPLOY_DB = 'nextDeployDB';
+
+    static TOAST_POSITION_TOP = 'top';
+    static TOAST_POSITION_MIDDLE = 'middle';
+    static TOAST_POSITION_BOTTOM = 'bottom';
 }

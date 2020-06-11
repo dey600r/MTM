@@ -3,6 +3,7 @@
         "SAVE": "Save",
         "ACCEPT": "Accept",
         "CANCEL": "Cancel",
+        "DONE": "Done",
         "SELECT": "Select...",
         "NAME": "Name",
         "OR": "or",
@@ -22,6 +23,7 @@
         "YEARS": "Years",
         "KM": "Kilometers",
         "CONFIGURATION": "Configuration",
+        "CONFIGURATIONS": "Configurations",
         "MAINTENANCE": "Maintenance",
         "KM_PER_MONTH": "Kms per month",
         "DESCRIPTION": "Description",
@@ -184,7 +186,8 @@
         "InfoLifeReplacementTime": "The life of replacement {{replacement}} is {{km}} km and {{time}} months",
         "InfoOk": "You're doing well",
         "InfoNotOk": "It needs to be changed",
-        "NoDataFound": "No data found"
+        "NoDataFound": "No data found",
+        "PayForMTM": "To use this functionality you can buy the MtM application"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",
@@ -266,6 +269,8 @@
         "ONCE": "Once",
         "CALENDAR": "Calendar",
         "MOTORBIKE": "Motorbike",
-        "CAR": "Car"
+        "CAR": "Car",
+        "PRODUCTION": "Production",
+        "PRODUCTION_SETUP": "Production's settings"
     }
 }

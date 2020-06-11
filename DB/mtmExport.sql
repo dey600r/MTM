@@ -132,7 +132,7 @@ INSERT OR IGNORE INTO "mtmMaintenanceElementRel" VALUES (18,11,2);
 INSERT OR IGNORE INTO "mtmMaintenanceElementRel" VALUES (19,11,29);
 INSERT OR IGNORE INTO "mtmMaintenanceElementRel" VALUES (20,12,10);
 INSERT OR IGNORE INTO "mtmMaintenanceElementRel" VALUES (21,13,24);
-INSERT OR IGNORE INTO "mtmConfiguration" VALUES (1,'Fabrica','Configuración de fábrica','Y');
+INSERT OR IGNORE INTO "mtmConfiguration" VALUES (1,'PRODUCTION','PRODUCTION_SETUP','Y');
 INSERT OR IGNORE INTO "mtmMaintenanceElement" VALUES (1,'FRONT_WHEEL','CHANGE_FRONT_WHEEL','Y');
 INSERT OR IGNORE INTO "mtmMaintenanceElement" VALUES (2,'BACK_WHEEL','CHANGE_BACK_WHEEL','Y');
 INSERT OR IGNORE INTO "mtmMaintenanceElement" VALUES (3,'ENGINE_OIL','CHANGE_ENGINE_OIL','Y');

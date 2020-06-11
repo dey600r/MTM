@@ -13,6 +13,7 @@ import {
 } from '@models/index';
 import { DashboardService, ConfigurationService, ControlService, CalendarService, VehicleService } from '@services/index';
 import { WarningWearEnum, Constants, PageEnum } from '@utils/index';
+import { environment } from '@environment/environment';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
@@ -112,6 +113,13 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
         this.labelNotRecord = this.translator.instant('PAGE_HOME.NotExistRecords', {maintenance: this.nameMaintenanceElement });
       }
+    }
+
+    if (environment.isFree) {
+      this.controlService.showToast(PageEnum.MODAL_INFO, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
+      setTimeout(() => {
+        this.closeModal();
+      }, Constants.DELAY_TOAST_IS_FREE);
     }
   }
 

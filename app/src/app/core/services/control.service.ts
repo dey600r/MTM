@@ -125,15 +125,18 @@ export class ControlService {
 
     // TOAST
 
-    showToast(parent: PageEnum, msg: string, data: any = null, delay: number = Constants.DELAY_TOAST) {
-        this.showMsgToast(parent, this.translator.instant(msg, data), delay);
+    showToast(parent: PageEnum, msg: string, data: any = null, delay: number = Constants.DELAY_TOAST,
+              pos: string = Constants.TOAST_POSITION_BOTTOM) {
+        this.showMsgToast(parent, this.translator.instant(msg, data), delay, pos);
     }
 
-    async showMsgToast(parent: PageEnum, msg: string, delay: number = Constants.DELAY_TOAST) {
+    async showMsgToast(parent: PageEnum, msg: string, delay: number = Constants.DELAY_TOAST,
+                       pos: any = Constants.TOAST_POSITION_BOTTOM) {
         this.desactivateButtonExist();
         const toast = await this.toastController.create({
             message: msg,
-            duration: delay
+            duration: delay,
+            position: pos
         });
         toast.onDidDismiss().then((dataReturned) => {
             this.activateButtonExist(parent);

@@ -21,6 +21,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     modalInputModel: ModalInputModel = new ModalInputModel();
 
     // DATA
+    refresh = true;
     vehicles: VehicleModel[] = [];
     operationTypes: OperationTypeModel[] = [];
     maintenanceElements: MaintenanceElementModel[] = [];
@@ -99,29 +100,35 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }
 
     onChangeFilterOperationGrouper() {
-        this.searchDashboard.searchVehicle = this.vehicles.find(x => this.filterVehicle === x.id);
-        this.searchDashboard.searchOperationType = this.operationTypes.filter(x => this.filterOpType.some(y => x.id === y));
-        this.searchDashboard.searchMaintenanceElement = this.maintenanceElements.filter(x => this.filterMaintElement.some(y => x.id === y));
-        this.dashboardService.setSearchOperation(this.searchDashboard.searchVehicle,
-            this.searchDashboard.searchOperationType,
-            this.searchDashboard.searchMaintenanceElement);
+        if (this.refresh) {
+            this.searchDashboard.searchVehicle = this.vehicles.find(x => this.filterVehicle === x.id);
+            this.searchDashboard.searchOperationType = this.operationTypes.filter(x => this.filterOpType.some(y => x.id === y));
+            this.searchDashboard.searchMaintenanceElement = this.maintenanceElements.filter(x =>
+                this.filterMaintElement.some(y => x.id === y));
+            this.dashboardService.setSearchOperation(this.searchDashboard.searchVehicle,
+                                                    this.searchDashboard.searchOperationType,
+                                                    this.searchDashboard.searchMaintenanceElement,
+                                                    this.searchDashboard.searchText);
+        }
     }
 
     onChangeFilterDashboardGrouper() {
-        this.searchDashboard.showPerMont = this.filterMonth;
-        this.dashboardService.setSearchDashboard(
-            new SearchDashboardModel(this.searchDashboard.showPerMont,
-                                    this.searchDashboard.searchText,
-                                    this.searchDashboard.searchVehicle,
-                                    this.searchDashboard.searchOperationType,
-                                    this.searchDashboard.searchMaintenanceElement,
-                                    this.searchDashboard.showAxis,
-                                    this.searchDashboard.showLegend,
-                                    this.searchDashboard.showAxisLabel,
-                                    this.searchDashboard.showDataLabel,
-                                    this.searchDashboard.doghnut,
-                                    this.searchDashboard.showMyData,
-                                    this.searchDashboard.filterKmTime));
+        if (this.refresh) {
+            this.searchDashboard.showPerMont = this.filterMonth;
+            this.dashboardService.setSearchDashboard(
+                new SearchDashboardModel(this.searchDashboard.showPerMont,
+                                        this.searchDashboard.searchText,
+                                        this.searchDashboard.searchVehicle,
+                                        this.searchDashboard.searchOperationType,
+                                        this.searchDashboard.searchMaintenanceElement,
+                                        this.searchDashboard.showAxis,
+                                        this.searchDashboard.showLegend,
+                                        this.searchDashboard.showAxisLabel,
+                                        this.searchDashboard.showDataLabel,
+                                        this.searchDashboard.doghnut,
+                                        this.searchDashboard.showMyData,
+                                        this.searchDashboard.filterKmTime));
+        }
     }
 
     closePopover() {
@@ -129,9 +136,15 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }
 
     clearFilter() {
+        this.refresh = false;
         this.searchDashboard = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', this.vehicles.find(x => this.filterVehicle === x.id));
         this.filterOpType = [];
         this.filterMaintElement = [];
+        this.filterMonth = FilterMonthsEnum.MONTH;
+        setTimeout(() => {
+            this.refresh = true;
+            this.onChangeFilterGrouper();
+        }, 250);
     }
 
     isParentPageHome() {

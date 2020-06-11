@@ -23,7 +23,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
 import { DataBaseService, CommonService } from '@services/index';
-import { environment } from '../environments/environment';
+import { environment } from '@environment/environment';
 
 // COMPONENTS
 import { AppComponent } from './app.component';

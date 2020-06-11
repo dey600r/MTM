@@ -286,7 +286,7 @@ INSERT OR IGNORE INTO "mtmMaintenanceElementRel" VALUES (38,21,3);
 INSERT OR IGNORE INTO "mtmMaintenanceElementRel" VALUES (39,21,5);
 INSERT OR IGNORE INTO "mtmMaintenanceElementRel" VALUES (40,21,17);
 INSERT OR IGNORE INTO "mtmMaintenanceElementRel" VALUES (41,21,4);
-INSERT OR IGNORE INTO "mtmConfiguration" VALUES (1,'Fabrica','Configuración de fábrica','Y');
+INSERT OR IGNORE INTO "mtmConfiguration" VALUES (1,'PRODUCTION','PRODUCTION_SETUP','Y');
 INSERT OR IGNORE INTO "mtmConfiguration" VALUES (2,'Yamaha','Configuración de Yamaha','N');
 INSERT OR IGNORE INTO "mtmConfiguration" VALUES (3,'Hyosung','Configuración Hyosung gt125r','N');
 INSERT OR IGNORE INTO "mtmMaintenanceElement" VALUES (1,'FRONT_WHEEL','CHANGE_FRONT_WHEEL','Y');

@@ -59,7 +59,8 @@
           <ion-icon *ngIf="this.submited && !isValidDate(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidDate(formAddVehicle)" color="danger">{{ 'PAGE_OPERATION.AddDate' | translate }}</ion-text>
         </ion-label>
-        <ion-datetime #vehicleDate name="vehicleDate" [displayFormat]="formatDate" required [placeholder]="translateSelect" [(ngModel)]="vehicle.datePurchase"></ion-datetime>
+        <ion-datetime #vehicleDate name="vehicleDate" doneText="{{ 'COMMON.DONE' | translate }}" cancelText="{{ 'COMMON.CANCEL' | translate }}"
+          [displayFormat]="formatDate" required [placeholder]="translateSelect" [(ngModel)]="vehicle.datePurchase"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">

@@ -53,6 +53,7 @@ export class SqlService {
       `c.${ConstantsColumns.COLUMN_MTM_ID} as idConfiguration, ` +
       `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME} as nameConfiguration, ` +
       `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} as descriptionConfiguration, ` +
+      `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER} as masterConfiguration, ` +
       `vt.${ConstantsColumns.COLUMN_MTM_ID} as idVehicleType, ` +
       `vt.${ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE} as codeVehicleType, ` +
       `vt.${ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_DESCRIPTION} as descriptionVehicleType ` +
@@ -217,7 +218,7 @@ export class SqlService {
     return (vehicle ? {
       id: Number(data.idVehicleType),
       code: data.codeVehicleType,
-      description: this.translator.instant(`DB.${data.descriptionVehicleType}`)
+      description: (!!data.descriptionVehicleType ? this.translator.instant(`DB.${data.descriptionVehicleType}`) : '')
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE],
@@ -246,19 +247,23 @@ export class SqlService {
   getMapConfiguration(data: any, vehicle: boolean): ConfigurationModel {
     let result: ConfigurationModel = new ConfigurationModel();
     if (vehicle) {
+      const masterConf: boolean = (data.masterConfiguration === Constants.DATABASE_YES);
       result = {
         id: Number(data.idConfiguration),
-        name: data.nameConfiguration,
-        description: data.descriptionConfiguration,
-        master: (data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER] === Constants.DATABASE_YES),
+        name: (masterConf ? this.translator.instant(`DB.${data.nameConfiguration}`) : data.nameConfiguration),
+        description: (masterConf ? this.translator.instant(`DB.${data.descriptionConfiguration}`) : data.descriptionConfiguration),
+        master: masterConf,
         listMaintenance: []
       };
     } else {
       const maintenance: MaintenanceModel = this.getMapMaintenance(data, true);
+      const masterConf: boolean = (data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER] === Constants.DATABASE_YES);
       result = {
         id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
-        name: data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME],
-        description: data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION],
+        name: (masterConf ? this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME]}`) :
+          data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME]),
+        description: (masterConf ? this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION]}`) :
+          data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION]),
         master: (data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER] === Constants.DATABASE_YES),
         listMaintenance: (!!maintenance && maintenance.description !== null ? [maintenance] : [])
       };

@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  lastVersion: 'v2.1.1',
-  lastUpdate: '2020-05-31 12:00:00',
+  lastVersion: 'v2.1.2',
+  lastUpdate: '2020-06-10 20:00:00',
+  isFree: true,
   pathTranslate: './assets/i18n/'
 };
 

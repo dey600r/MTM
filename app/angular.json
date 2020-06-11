@@ -100,7 +100,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment-free.prod.ts"
                 }
               ],
               "optimization": true,
@@ -120,7 +120,7 @@
                 }
               ]
             },
-            "windows-prod": {
+            "production-free": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -163,8 +163,8 @@
             "production": {
               "browserTarget": "app:build:production"
             },
-            "windows-prod": {
-              "browserTarget": "app:build:windows-prod"
+            "production-free": {
+              "browserTarget": "app:build:production-free"
             },
             "ci": {
               "progress": false
@@ -227,8 +227,8 @@
             "production": {
               "devServerTarget": "app:serve:production"
             },
-            "windows-prod": {
-              "devServerTarget": "app:serve:windows-prod"
+            "production-free": {
+              "devServerTarget": "app:serve:production-free"
             },
             "ci": {
               "devServerTarget": "app:serve:ci"
@@ -244,8 +244,8 @@
             "production": {
               "browserTarget": "app:build:production"
             },
-            "windows-prod": {
-              "browserTarget": "app:build:windows-prod"
+            "production-free": {
+              "browserTarget": "app:build:production-free"
             }
           }
         },
@@ -260,9 +260,9 @@
               "cordovaBuildTarget": "app:ionic-cordova-build:production",
               "devServerTarget": "app:serve:production"
             },
-            "windows-prod": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:windows-prod",
-              "devServerTarget": "app:serve:windows-prod"
+            "production-free": {
+              "cordovaBuildTarget": "app:ionic-cordova-build:production-free",
+              "devServerTarget": "app:serve:production-free"
             }
           }
         }

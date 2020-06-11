@@ -10,7 +10,7 @@ import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // UTILS
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment/environment';
 import { PipeModule } from '@pipes/pipes.module';
 
 // COMPONENTS

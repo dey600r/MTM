@@ -11,7 +11,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment/environment';
 
 @NgModule({
   imports: [

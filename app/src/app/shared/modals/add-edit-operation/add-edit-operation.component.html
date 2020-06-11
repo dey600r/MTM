@@ -84,7 +84,8 @@
           <ion-icon *ngIf="this.submited && !isValidDate(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidDate(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddDate' | translate }}</ion-text>
         </ion-label>
-        <ion-datetime #opDate name="opDate" [displayFormat]="formatDate" required [placeholder]="translateSelect" [(ngModel)]="operation.date"></ion-datetime>
+        <ion-datetime #opDate name="opDate" doneText="{{ 'COMMON.DONE' | translate }}" cancelText="{{ 'COMMON.CANCEL' | translate }}" 
+          [displayFormat]="formatDate" required [placeholder]="translateSelect" [(ngModel)]="operation.date"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">

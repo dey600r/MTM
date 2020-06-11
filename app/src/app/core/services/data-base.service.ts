@@ -15,7 +15,7 @@ import {
 import { ConstantsTable, Constants, ConstantsColumns } from '@utils/index';
 import { SqlService } from './sql.service';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@environment/environment';
 
 @Injectable({
   providedIn: 'root'

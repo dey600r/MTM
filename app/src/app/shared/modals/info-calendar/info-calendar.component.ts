@@ -10,8 +10,9 @@ import {
   ModalInputModel, ModalOutputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
   MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel
 } from '@models/index';
-import { CalendarService, CommonService, DashboardService, ConfigurationService, VehicleService } from '@services/index';
-import { ConstantsColumns, WarningWearEnum } from '@app/core/utils';
+import { CalendarService, CommonService, DashboardService, ConfigurationService, VehicleService, ControlService } from '@services/index';
+import { Constants, ConstantsColumns, WarningWearEnum, PageEnum } from '@app/core/utils';
+import { environment } from '@environment/environment';
 
 @Component({
   selector: 'info-calendar',
@@ -49,7 +50,8 @@ export class InfoCalendarComponent implements OnInit {
               private dashboardService: DashboardService,
               private configurationService: ConfigurationService,
               private translator: TranslateService,
-              private vehicleService: VehicleService) {
+              private vehicleService: VehicleService,
+              private controlService: ControlService) {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }
@@ -60,6 +62,13 @@ export class InfoCalendarComponent implements OnInit {
         this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
     this.initCalendar();
+
+    if (environment.isFree) {
+      this.controlService.showToast(PageEnum.MODAL_INFO, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
+      setTimeout(() => {
+        this.closeModal();
+      }, Constants.DELAY_TOAST_IS_FREE);
+    }
   }
 
   async closeModal() {
