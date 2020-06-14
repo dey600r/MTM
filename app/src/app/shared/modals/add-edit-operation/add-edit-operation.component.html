@@ -70,12 +70,12 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.KM' | translate }}</ion-text>
+          <ion-text>{{ measure.valueLarge }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidKm(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidKm(formAddOperation)" color="danger">{{ 'PAGE_VEHICLE.AddKm' | translate }}</ion-text>
         </ion-label>
-        <ion-input #opKm name="opKm" placeholder="10000 km" required type="number" min="0" [(ngModel)]="operation.km"></ion-input>
+        <ion-input #opKm name="opKm" placeholder="10000 {{measure.value}}" required type="number" min="0" [(ngModel)]="operation.km"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
@@ -94,7 +94,7 @@
           <ion-icon *ngIf="this.submited && !isValidPrice(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidPrice(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddPrice' | translate }}</ion-text>
         </ion-label>
-        <ion-input #opPrice name="opPrice" placeholder="10 €" required inputmode="decimal" min="0" [(ngModel)]="operation.price"></ion-input>
+        <ion-input #opPrice name="opPrice" placeholder="10 {{coin.value}}" required inputmode="decimal" min="0" [(ngModel)]="operation.price"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">

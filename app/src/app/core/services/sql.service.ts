@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   VehicleModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
-  MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel
+  MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel, SystemConfigurationModel
 } from '@models/index';
 import { ConstantsTable, ConstantsColumns, Constants } from '@utils/index';
 import { CalendarService } from './calendar.service';
@@ -150,35 +150,21 @@ export class SqlService {
 
   /* MAPPERS */
 
-  mapDataToObserver(table: string, data: any): any {
-    let result: any;
-    switch (table) {
-      case ConstantsTable.TABLE_MTM_VEHICLE:
-        result = this.mapVehicle(data);
-        break;
-      case ConstantsTable.TABLE_MTM_VEHICLE_TYPE:
-        result = this.mapVehicleType(data);
-        break;
-      case ConstantsTable.TABLE_MTM_CONFIGURATION:
-        result = this.mapConfiguration(data);
-        break;
-      case ConstantsTable.TABLE_MTM_OPERATION:
-        result = this.mapOperation(data);
-        break;
-      case ConstantsTable.TABLE_MTM_OPERATION_TYPE:
-        result = this.mapOperationType(data);
-        break;
-      case ConstantsTable.TABLE_MTM_MAINTENANCE:
-        result = this.mapMaintenance(data);
-        break;
-      case ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT:
-        result = this.mapMaintenanceElement(data);
-        break;
-      case ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ:
-        result = this.mapMaintenanceFreq(data);
-        break;
+  mapSystemConfiguration(data: any): any {
+    let systemConfDB: SystemConfigurationModel[] = [];
+    if (data.rows.length > 0) {
+      let row: any = null;
+      for (let i = 0; i < data.rows.length; i++) {
+        row = data.rows.item(i);
+        systemConfDB = [...systemConfDB, {
+          id: Number(row[ConstantsColumns.COLUMN_MTM_ID]),
+          key: row[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_KEY],
+          value: row[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE],
+          updated: new Date(row[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_UPDATED])
+        }];
+      }
     }
-    return result;
+    return systemConfDB;
   }
 
   mapVehicle(data: any): any {

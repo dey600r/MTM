@@ -1,0 +1,37 @@
+<ion-header>
+    <ion-toolbar>
+        <!-- Title -->
+        <ion-title class="align-center">{{ 'COMMON.SETTINGS' | translate }}</ion-title>
+        <!-- Button Close -->
+        <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
+          <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content fullscreen>
+  <!-- SETTINGS -->
+  <ion-list>
+    <ion-list-header class="padding-list-header">
+      <ion-icon size="large" name="settings"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.CUSTOM_SETTINGS' | translate }}</h3>
+    </ion-list-header>
+    <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.MEASURING' | translate }}</ion-text>
+        </ion-label>
+        <ion-select interface="popover" [(ngModel)]="distanceSelected.code" (ionChange)="changeDistance()">
+          <ion-select-option [(value)]="d.code" *ngFor="let d of listDistances">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.COIN' | translate }}</ion-text>
+        </ion-label>
+        <ion-select interface="popover" [(ngModel)]="moneySelected.code" (ionChange)="changeMoney()">
+            <ion-select-option [(value)]="m.code" *ngFor="let m of listMoney" >{{m.valueLarge + ' - ' + m.value}}</ion-select-option>
+          </ion-select>
+      </ion-item>
+  </ion-list>
+</ion-content>

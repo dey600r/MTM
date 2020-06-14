@@ -44,13 +44,13 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.KM' | translate }}</ion-text>
+          <ion-text>{{ measure.valueLarge }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && (!isValidKm(formAddVehicle) || !isValidKmMin(formAddVehicle))" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidKm(formAddVehicle)" color="danger">{{ 'PAGE_VEHICLE.AddKm' | translate }}</ion-text>
           <ion-text *ngIf="this.submited && isValidKm(formAddVehicle) && !isValidKmMin(formAddVehicle)" color="danger">{{ 'PAGE_VEHICLE.AddKmMinCero' | translate }}</ion-text>
         </ion-label>
-        <ion-input #vehicleKm name="vehicleKm" required placeholder="50000 km" type="number" min="0" [(ngModel)]="vehicle.km"></ion-input>
+        <ion-input #vehicleKm name="vehicleKm" required placeholder="50000 {{measure.value}}" type="number" min="0" [(ngModel)]="vehicle.km"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
@@ -88,7 +88,7 @@
         <ion-label position="stacked">
           <ion-text>{{ 'COMMON.KM_PER_MONTH' | translate }}</ion-text>
        </ion-label>
-        <ion-input #vehicleKmsPerMonth name="vehicleKmsPerMonth" placeholder="150" type="number" min="0" [(ngModel)]="vehicle.kmsPerMonth"></ion-input>
+        <ion-input #vehicleKmsPerMonth name="vehicleKmsPerMonth" placeholder="150 {{measure.value}}" type="number" min="0" [(ngModel)]="vehicle.kmsPerMonth"></ion-input>
       </ion-item>
     </ion-list>
     <!-- Button Save -->

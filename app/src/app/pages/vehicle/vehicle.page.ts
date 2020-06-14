@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum, Constants } from '@utils/index';
-import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService } from '@services/index';
+import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService } from '@services/index';
 import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
 // COMPONENTS
@@ -31,6 +31,7 @@ export class VehiclePage implements OnInit {
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
   loaded = false;
+  measure: any = {};
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -39,6 +40,7 @@ export class VehiclePage implements OnInit {
               private commonService: CommonService,
               private controlService: ControlService,
               private dashboardService: DashboardService,
+              private settingsService: SettingsService,
               private detector: ChangeDetectorRef) {
       this.platform.ready().then(() => {
         let userLang = navigator.language.split('-')[0];
@@ -50,6 +52,12 @@ export class VehiclePage implements OnInit {
   /** INIT */
 
   ngOnInit() {
+    this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+      }
+    });
+
     this.dbService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         if (this.dashboardService.getSearchDashboard().searchVehicle.brand === null ||

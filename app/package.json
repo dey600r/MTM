@@ -11,13 +11,16 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "install-app-deps",
     "build:release": "npm run build:release-windows && npm run build:release-android && npm run build:release-android-bundle",
     "build:release-windows": "C:/Proyectos/MTM/Utils/Versions/deploy-release-windows.bat",
     "build:release-android": "C:/Proyectos/MTM/Utils/Versions/deploy-release-android.bat",
     "build:release-android-bundle": "C:/Proyectos/MTM/Utils/Versions/deploy-release-android-bundle.bat",
+    "build:release-free": "npm run build:release-free-windows && npm run build:release-free-android && npm run build:release-free-android-bundle",
+    "build:release-free-windows": "C:/Proyectos/MTM/Utils/Versions/deploy-release-free-windows.bat",
+    "build:release-free-android": "C:/Proyectos/MTM/Utils/Versions/deploy-release-free-android.bat",
+    "build:release-free-android-bundle": "C:/Proyectos/MTM/Utils/Versions/deploy-release-free-android-bundle.bat",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
-    "deploy:apk": "adb -d install -r C:/Proyectos/MTM/Utils/Versions/Android/MtM_David_v2.1.1/MtM_David_v2.1.1.apk",
+    "deploy:apk": "adb -d install -r C:/Proyectos/MTM/Utils/Versions/Android/MtM_David_v2.1.2/MtM_David_v2.1.2.apk",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug",
     "deploy:debug-windows": "ionic cordova run windows --debug -- --arch=x64 --appx=uap --platform=x64",
@@ -46,8 +49,6 @@
     "@swimlane/ngx-charts": "^13.0.4",
     "caniuse-lite": "^1.0.30001016",
     "cordova-android": "^8.1.0",
-    "cordova-browser": "^6.0.0",
-    "cordova-electron": "^1.1.1",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "cordova-sqlite-storage": "^4.0.0",
     "cordova-windows": "^7.0.1",
@@ -86,9 +87,6 @@
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "^2.4.2",
     "cordova-plugin-whitelist": "^1.3.3",
-    "electron": "^8.2.3",
-    "electron-builder": "^22.6.0",
-    "electron-packager": "^14.2.1",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -118,9 +116,7 @@
     },
     "platforms": [
       "android",
-      "windows",
-      "electron",
-      "browser"
+      "windows"
     ]
   }
 }

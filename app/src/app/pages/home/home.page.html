@@ -1,14 +1,17 @@
 <ion-header [hidden]="!loaded">
   <ion-toolbar>
     <!-- Button Calendar -->
-    <ion-button class="btn-width-header position-fixed margin-top0 index-top"
-      *ngIf="this.allWears.length > 0" slot="start" fill="clear" (click)="openInfoCalendar()">
+    <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openInfoCalendar()">
       <ion-icon size="large" name="calendar"></ion-icon>
     </ion-button>
     <!-- Tittle -->
     <ion-title>
       <ion-title class="align-center">{{ 'PAGE_HOME.HOME' | translate }}</ion-title>
     </ion-title>
+    <!-- Button filter -->
+    <ion-button slot="end" fill="clear" (click)="openSettings()" class="btn-width-header">
+      <ion-icon size="large" name="settings"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -49,7 +52,7 @@
             <div class="margin-right5 table-row">
               <ion-icon [class]="getClassIcon(w.warningKms, 'icon-row')" [color]="getClassIcon(w.warningKms, '')" size="small"
               [name]="getIconKms(w.warningKms)"></ion-icon>
-              <p class="p-row">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} km</p>
+              <p class="p-row">{{ w.calculateKms * (w.calculateKms < 0 ? -1 : 1) }} {{measure.value}}</p>
             </div>
             <!-- MONTHS -->
             <div class="margin-right5 table-row">

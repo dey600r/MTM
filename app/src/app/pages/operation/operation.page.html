@@ -48,11 +48,11 @@
       <!-- Labels -->
       <ion-label class="min-width40 label-event-force" (click)="openOperationModal(op, false)">
         <h2 class="text-overflow">{{ op.description }}</h2>
-        <h3>{{ op.km }} km</h3>
+        <h3>{{ op.km }} {{measure.value}}</h3>
       </ion-label>
       <ion-label class="padding-left10 label-event-force" (click)="openOperationModal(op, false)">
         <p class="p-style">{{ op.date | dateFormatCalendarPipe }}</p>
-        <p class="p-style">{{ op.price }} €</p>
+        <p class="p-style">{{ op.price }} {{coin.value}}</p>
       </ion-label>
       <!-- Buttons delete -->
       <ion-label class="align-right fix-width69">

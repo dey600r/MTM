@@ -12,7 +12,7 @@ import {
   ModalInputModel, ModalOutputModel, MaintenanceModel,
   MaintenanceFreqModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, ConfigurationService, ControlService } from '@services/index';
+import { DataBaseService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-maintenance',
@@ -36,10 +36,12 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   valueRange: any = { lower: 0 , upper: 100000 };
   showRange = '';
   maintenanceElementSelect: number[] = [];
+  measure: any = {};
 
   // SUBSCRIPTION
   maintenanceElmentSubscription: Subscription = new Subscription();
   maintenanceFreqSubscription: Subscription = new Subscription();
+  settingsSubscription: Subscription = new Subscription();
 
   // TRANSLATE
   translateSelect = '';
@@ -55,7 +57,8 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
     private dbService: DataBaseService,
     private configurationService: ConfigurationService,
     private translator: TranslateService,
-    private controlService: ControlService
+    private controlService: ControlService,
+    private settingsService: SettingsService
   ) {
     this.translateSelect = this.translator.instant('COMMON.SELECT');
     this.translateAccept = this.translator.instant('COMMON.ACCEPT');
@@ -63,6 +66,12 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+      }
+    });
 
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
@@ -92,6 +101,7 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.maintenanceElmentSubscription.unsubscribe();
     this.maintenanceFreqSubscription.unsubscribe();
+    this.settingsSubscription.unsubscribe();
   }
 
   saveData(f: Form) {
@@ -124,7 +134,8 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   }
 
   showInfoWear() {
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, this.translator.instant('ALERT.InfoMaintenanceWear'), Constants.DELAY_TOAST_HIGH);
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, this.translator.instant('ALERT.InfoMaintenanceWear',
+      { measurelarge: this.measure.valueLarge }), Constants.DELAY_TOAST_HIGH);
   }
 
   isInitDisabled(): boolean {
@@ -160,7 +171,8 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   }
 
   changeRange() {
-    this.showRange = (this.valueRange.upper === this.maxKm && this.valueRange.lower === 0 ?
-      '' : `[ ${this.valueRange.lower}km - ${(this.valueRange.upper === this.maxKm ? '∞' : `${this.valueRange.upper}km`)} ]`);
+    this.showRange = (this.valueRange.upper === this.maxKm && this.valueRange.lower === 0 ? '' :
+      `[ ${this.valueRange.lower}${this.measure.value} - ${(this.valueRange.upper === this.maxKm ? '∞' :
+      `${this.valueRange.upper}${this.measure.value}`)} ]`);
   }
 }

@@ -5,7 +5,7 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, CommonService, OperationService, ControlService, DashboardService } from '@services/index';
+import { DataBaseService, CommonService, OperationService, ControlService, DashboardService, SettingsService } from '@services/index';
 import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
   OperationTypeModel, SearchDashboardModel
@@ -39,6 +39,8 @@ export class OperationPage implements OnInit {
   nameFilterVehicle = '';
   loaded = false;
   iconNameHeaderLeft = 'bar-chart';
+  measure: any = {};
+  coin: any = {};
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -47,6 +49,7 @@ export class OperationPage implements OnInit {
               private controlService: ControlService,
               private operationService: OperationService,
               private dashboardService: DashboardService,
+              private settingsService: SettingsService,
               private detector: ChangeDetectorRef) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
@@ -64,6 +67,13 @@ export class OperationPage implements OnInit {
   }
 
   initPage() {
+    this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+        this.coin = this.settingsService.getMoneySelected(settings);
+      }
+    });
+
     this.dbService.getOperations().subscribe(data => {
       this.allOperations = data;
       this.filterDashboard = this.dashboardService.getSearchDashboard();

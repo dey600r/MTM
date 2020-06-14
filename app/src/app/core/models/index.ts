@@ -11,3 +11,4 @@ export * from './search-dashboard.model';
 export * from './wear-progress-bar.model';
 export * from './info-calendar.model';
 export * from './vehicle-type.model';
+export * from './system-configuration.model';

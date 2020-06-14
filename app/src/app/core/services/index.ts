@@ -7,3 +7,4 @@ export * from './dashboard.service';
 export * from './configuration.service';
 export * from './control.service';
 export * from './calendar.service';
+export * from './settings.service';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 
 // LIBRARIES
@@ -8,18 +8,22 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   ModalInputModel, ModalOutputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
-  MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel
+  MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel, InfoCalendarReplacementViewModel
 } from '@models/index';
-import { CalendarService, CommonService, DashboardService, ConfigurationService, VehicleService, ControlService } from '@services/index';
+import {
+  CalendarService, CommonService, DashboardService, ConfigurationService, VehicleService,
+  ControlService, SettingsService, DataBaseService
+} from '@services/index';
 import { Constants, ConstantsColumns, WarningWearEnum, PageEnum } from '@app/core/utils';
 import { environment } from '@environment/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'info-calendar',
   templateUrl: 'info-calendar.component.html',
   styleUrls: ['info-calendar.component.scss', '../../../app.component.scss']
 })
-export class InfoCalendarComponent implements OnInit {
+export class InfoCalendarComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
@@ -39,6 +43,11 @@ export class InfoCalendarComponent implements OnInit {
   monthSelect = new Date().getMonth();
   activeSpinner = false;
   hideVehicles: boolean[] = [];
+  measure: any = {};
+  coin: any = {};
+
+  // SUBSCRIPTION
+  settingsSubscription: Subscription = new Subscription();
 
   // TRANSLATE
   notificationEmpty = '';
@@ -51,7 +60,9 @@ export class InfoCalendarComponent implements OnInit {
               private configurationService: ConfigurationService,
               private translator: TranslateService,
               private vehicleService: VehicleService,
-              private controlService: ControlService) {
+              private controlService: ControlService,
+              private settingsService: SettingsService,
+              private dbService: DataBaseService) {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }
@@ -61,6 +72,13 @@ export class InfoCalendarComponent implements OnInit {
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
         this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
+    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+        this.coin = this.settingsService.getMoneySelected(settings);
+      }
+    });
+
     this.initCalendar();
 
     if (environment.isFree) {
@@ -69,6 +87,10 @@ export class InfoCalendarComponent implements OnInit {
         this.closeModal();
       }, Constants.DELAY_TOAST_IS_FREE);
     }
+  }
+
+  ngOnDestroy() {
+    this.settingsSubscription.unsubscribe();
   }
 
   async closeModal() {
@@ -188,6 +210,17 @@ export class InfoCalendarComponent implements OnInit {
       this.listInfoCalendarSelected.forEach((x, index) => this.hideVehicles[index] = (index !== 0));
     }
     this.activeSpinner = false;
+  }
+
+  showInfo(repl: InfoCalendarReplacementViewModel) {
+    let msg = '';
+    if (repl.time === 0 && repl.km !== 0) {
+      msg = this.translator.instant('ALERT.InfoCalendarKm',
+        {replacement: repl.nameReplacement, km: repl.km, measure: this.measure.value, date: repl.dateFormat});
+    } else {
+      msg = this.translator.instant('ALERT.InfoCalendarTime', {replacement: repl.nameReplacement, date: repl.dateFormat});
+    }
+    this.controlService.showMsgToast(PageEnum.MODAL_CALENDAR, msg, Constants.DELAY_TOAST_HIGH);
   }
 
   // ICONS

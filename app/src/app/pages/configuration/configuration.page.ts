@@ -5,7 +5,7 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, CommonService, ConfigurationService, ControlService } from '@services/index';
+import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 import { ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
@@ -39,6 +39,7 @@ export class ConfigurationPage implements OnInit {
   maintenances: MaintenanceModel[] = [];
   maintenanceElements: MaintenanceElementModel[] = [];
   maxKm = 0;
+  measure: any = {};
 
   hideConfiguration = false;
   hideMaintenance = true;
@@ -52,6 +53,7 @@ export class ConfigurationPage implements OnInit {
               private commonService: CommonService,
               private controlService: ControlService,
               private configurationService: ConfigurationService,
+              private settingsService: SettingsService,
               private detector: ChangeDetectorRef) {
       this.platform.ready().then(() => {
         let userLang = navigator.language.split('-')[0];
@@ -66,6 +68,12 @@ export class ConfigurationPage implements OnInit {
   }
 
   initPage() {
+    this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+      }
+    });
+
     this.dbService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);

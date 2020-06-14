@@ -37,6 +37,8 @@ export class Constants {
 
     static IONIC_APP = 'app';
 
+    static KEY_CONFIG_DISTANCE = 'configDistance';
+    static KEY_CONFIG_MONEY = 'configMoney';
     static KEY_LAST_UPDATE_DB = 'lastUpdate';
 
     static VEHICLE_TYPE_CODE_MOTO = 'M';
@@ -49,4 +51,10 @@ export class Constants {
     static TOAST_POSITION_TOP = 'top';
     static TOAST_POSITION_MIDDLE = 'middle';
     static TOAST_POSITION_BOTTOM = 'bottom';
+
+    static SETTING_DISTANCE_KM = 'KM';
+    static SETTING_DISTANCE_MILES = 'MILES';
+    static SETTING_MONEY_EURO = 'EURO';
+    static SETTING_MONEY_DOLLAR = 'DOLLAR';
+    static SETTING_MONEY_POUND = 'POUND';
 }

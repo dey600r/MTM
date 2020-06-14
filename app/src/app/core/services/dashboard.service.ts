@@ -183,49 +183,50 @@ export class DashboardService {
     }
 
     // RECORDS MAINTENANCES
-    getDashboardRecordMaintenances(view: any[], data: WearVehicleProgressBarViewModel, filter: SearchDashboardModel): DashboardModel {
+    getDashboardRecordMaintenances(view: any[], data: WearVehicleProgressBarViewModel, filter: SearchDashboardModel,
+                                   measure: any): DashboardModel {
         let dataDashboard: any[] = [];
-        let translateY = 'COMMON.KM';
+        let translateY = measure.valueLarge;
         if (filter.filterKmTime === FilterKmTimeEnum.KM) {
-            dataDashboard = this.mapWearToDashboardKmRecordMaintenances(data);
+            dataDashboard = this.mapWearToDashboardKmRecordMaintenances(data, measure);
         } else {
-            dataDashboard = this.mapWearToDashboardTimeRecordMaintenances(data);
-            translateY = 'COMMON.MONTHS';
+            dataDashboard = this.mapWearToDashboardTimeRecordMaintenances(data, measure);
+            translateY = this.translator.instant('COMMON.MONTHS');
         }
         return new DashboardModel(view, dataDashboard, { domain: ['#D91CF6', '#1CEAF6', '#5FF61C']},
             filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OPERATIONS'),
             filter.showAxisLabel, this.translator.instant('PAGE_CONFIGURATION.MAINTENANCES'),
-            filter.showAxisLabel, this.translator.instant(translateY), true, filter.doghnut, 'below', filter.showDataLabel);
+            filter.showAxisLabel, translateY, true, filter.doghnut, 'below', filter.showDataLabel);
     }
 
-    mapWearToDashboardKmRecordMaintenances(data: WearVehicleProgressBarViewModel): any[] {
+    mapWearToDashboardKmRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): any[] {
         let result: any[] = [];
         if (!!data && data.listWearReplacement.length > 0) {
             let initKm: number = data.listWearReplacement[0].fromKmMaintenance;
             const estimated: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'), []);
             const real: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'), []);
             if (initKm === 0) {
-                estimated.series = [...estimated.series, this.getDataDashboard('0km', 0 )];
-                real.series = [...estimated.series, this.getDataDashboard('0km', 0 )];
+                estimated.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
+                real.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
                 initKm = 0;
             }
             const kmEstimated: number = this.calendarService.calculateWearKmVehicleEstimated(data);
             data.listWearReplacement.forEach((x, index) => {
-                estimated.series = [...estimated.series, this.getDataDashboard(`${x.kmAcumulateMaintenance}km`,
+                estimated.series = [...estimated.series, this.getDataDashboard(`${x.kmAcumulateMaintenance}${measure.value}`,
                     (initKm !== 0 && x.kmMaintenance > initKm && index === 0 ? initKm : x.kmMaintenance))];
                 const realSerie: number = (x.kmOperation === null ?
                     (x.kmAcumulateMaintenance < kmEstimated ? 0 : kmEstimated % x.kmMaintenance) :
                     (initKm !== 0 && x.kmMaintenance > initKm && index === 0 ? initKm : x.kmMaintenance) - x.calculateKms);
                 real.series = [...real.series,
-                    this.getDataDashboard(`${x.kmAcumulateMaintenance}km`, (realSerie < 0 ? 0 : realSerie))];
+                    this.getDataDashboard(`${x.kmAcumulateMaintenance}${measure.value}`, (realSerie < 0 ? 0 : realSerie))];
             });
             if (data.listWearReplacement[0].toKmMaintenance === null ||
                 data.listWearReplacement[data.listWearReplacement.length - 1].kmAcumulateMaintenance < kmEstimated) {
                 const kmMaintenance: number = data.listWearReplacement[data.listWearReplacement.length - 1].kmMaintenance;
                 const kmAcumMaintenance: number = data.listWearReplacement[data.listWearReplacement.length - 1].kmAcumulateMaintenance;
                 const lastMaintenance: number = kmAcumMaintenance + kmMaintenance;
-                estimated.series = [...estimated.series, this.getDataDashboard(`${lastMaintenance}km`, kmMaintenance)];
-                real.series = [...real.series, this.getDataDashboard(`${lastMaintenance}km`,
+                estimated.series = [...estimated.series, this.getDataDashboard(`${lastMaintenance}${measure.value}`, kmMaintenance)];
+                real.series = [...real.series, this.getDataDashboard(`${lastMaintenance}${measure.value}`,
                     (kmAcumMaintenance > kmEstimated ? 0 : kmEstimated % kmMaintenance))];
             }
             result = [estimated, real];
@@ -233,26 +234,26 @@ export class DashboardService {
         return result;
     }
 
-    mapWearToDashboardTimeRecordMaintenances(data: WearVehicleProgressBarViewModel): any[] {
+    mapWearToDashboardTimeRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): any[] {
         let result: any[] = [];
         if (!!data && data.listWearReplacement.length > 0) {
             let initKm: number = data.listWearReplacement[0].fromKmMaintenance;
             const estimated: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'), []);
             const real: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'), []);
             if (initKm === 0) {
-                estimated.series = [...estimated.series, this.getDataDashboard('0km', 0 )];
-                real.series = [...estimated.series, this.getDataDashboard('0km', 0 )];
+                estimated.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
+                real.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
                 initKm = 0;
             }
             const kmEstimated: number = this.calendarService.calculateWearKmVehicleEstimated(data);
             data.listWearReplacement.forEach(x => {
                 estimated.series = [...estimated.series,
-                    this.getDataDashboard(`${x.kmAcumulateMaintenance}km`, x.timeAcumulateMaintenance)];
+                    this.getDataDashboard(`${x.kmAcumulateMaintenance}${measure.value}`, x.timeAcumulateMaintenance)];
                 const realSerie: number = (x.kmOperation === null ?
                     (x.kmMaintenance < kmEstimated ? 0 : this.calendarService.monthDiff(data.datePurchaseVehicle, new Date())) :
                     (x.timeAcumulateMaintenance - x.calculateMonths));
                 real.series = [...real.series,
-                this.getDataDashboard(`${x.kmAcumulateMaintenance}km`, (realSerie < 0 ? 0 : realSerie))];
+                this.getDataDashboard(`${x.kmAcumulateMaintenance}${measure.value}`, (realSerie < 0 ? 0 : realSerie))];
             });
             if (data.listWearReplacement.length === 0 ||
                 data.listWearReplacement[data.listWearReplacement.length - 1].kmAcumulateMaintenance < kmEstimated) {
@@ -260,10 +261,11 @@ export class DashboardService {
                 const timeMaintenance: number = data.listWearReplacement[data.listWearReplacement.length - 1].timeMaintenance;
                 const lastMaintenance: number =
                     data.listWearReplacement[data.listWearReplacement.length - 1].kmAcumulateMaintenance + kmMaintenance;
-                estimated.series = [...estimated.series, this.getDataDashboard(`${lastMaintenance}km`,
+                estimated.series = [...estimated.series, this.getDataDashboard(`${lastMaintenance}${measure.value}`,
                     timeMaintenance + data.listWearReplacement[data.listWearReplacement.length - 1].timeAcumulateMaintenance)];
                 real.series = [...real.series,
-                    this.getDataDashboard(`${lastMaintenance}km`, this.calendarService.monthDiff(data.datePurchaseVehicle, new Date()))];
+                    this.getDataDashboard(`${lastMaintenance}${measure.value}`,
+                    this.calendarService.monthDiff(data.datePurchaseVehicle, new Date()))];
             }
             result = [estimated, real];
         }
@@ -523,7 +525,7 @@ export class DashboardService {
 
     getWarningWearNormal(wear: boolean, percent: number, calc: number, opKm: number, main: number): WarningWearEnum {
         return (wear ? this.getWarningWear(percent) : this.getWarningMaintenance(percent,
-            opKm == null || calc < (main * -1)));
+            (opKm == null && calc < 0) || calc < (main * -1)));
     }
 
     getWarningMaintenance(percent: number, opNotFound: boolean): WarningWearEnum {

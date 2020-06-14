@@ -133,8 +133,7 @@ export class CalendarService {
         let times = 0;
         let warnings: WarningWearEnum = WarningWearEnum.DANGER;
         if (km) {
-            const kmVehicle: number = wear.kmVehicle + (Math.round((wear.kmsPerMonthVehicle / 30) *
-                    this.dayDiff(new Date(wear.dateKmsVehicle), new Date())));
+            const kmVehicle: number = this.calculateWearKmVehicleEstimated(wear);
             kms = kmVehicle + replacement.calculateKms;
             warnings = replacement.warningKms;
             if (replacement.calculateKms > 0) {

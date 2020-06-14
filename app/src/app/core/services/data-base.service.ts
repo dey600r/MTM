@@ -10,7 +10,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 // UTILS
 import {
   VehicleModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
-  MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel
+  MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel, SystemConfigurationModel
 } from '@models/index';
 import { ConstantsTable, Constants, ConstantsColumns } from '@utils/index';
 import { SqlService } from './sql.service';
@@ -33,6 +33,7 @@ export class DataBaseService {
   maintenance = new BehaviorSubject([]);
   maintenanceElement = new BehaviorSubject([]);
   maintenanceFreq = new BehaviorSubject([]);
+  systemConfiguration = new BehaviorSubject([]);
 
   constructor(private plt: Platform,
               private sqlitePorter: SQLitePorter,
@@ -58,7 +59,7 @@ export class DataBaseService {
 
   seedDatabase() {
     this.database.executeSql(this.sqlService.getSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB), []).then(data => {
-      this.getNextDeployDB(data);
+      this.getNextDeployDB(this.sqlService.mapSystemConfiguration(data)[0]);
     }).catch(e => {
       this.http.get(`${Constants.PATH_FILE_DB}${Constants.FILE_NAME_INIT_DB}.sql`, { responseType: 'text'}).subscribe(sql => {
         this.importSqlToDB(sql);
@@ -66,14 +67,13 @@ export class DataBaseService {
     });
   }
 
-  getNextDeployDB(data: any) {
+  getNextDeployDB(data: SystemConfigurationModel) {
     const dateLastUpdateApp: Date = new Date(environment.lastUpdate);
-    const dateLastUpdateDB: Date = new Date(data.rows.item(0)[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_UPDATED]);
-    if (dateLastUpdateApp > dateLastUpdateDB) { // NEW VERSION - DB VERSION SHORTER THAN APP VERSION
+    if (dateLastUpdateApp > data.updated) { // NEW VERSION - DB VERSION SHORTER THAN APP VERSION
       this.http.get(`${Constants.PATH_FILE_DB}${Constants.FILE_NAME_NEXT_DEPLOY_DB}.sql`, { responseType: 'text'}).subscribe(sql => {
         const sqlVersions: string[] = sql.split('**->');
         const numericVersionApp: number = this.getVersion(environment.lastVersion);
-        const numericVersionDB: number = this.getVersion(data.rows.item(0)[ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE]);
+        const numericVersionDB: number = this.getVersion(data.value);
         let sqlNextDeploy = '';
         sqlVersions.forEach(x => {
           if (!!x) {
@@ -158,8 +158,13 @@ export class DataBaseService {
     return this.maintenanceFreq.asObservable();
   }
 
+  getSystemConfiguration(): Observable<SystemConfigurationModel[]> {
+    return this.systemConfiguration.asObservable();
+  }
+
   loadAllTables() {
     this.loadListTables([
+      ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
       ConstantsTable.TABLE_MTM_VEHICLE,
       ConstantsTable.TABLE_MTM_VEHICLE_TYPE,
       ConstantsTable.TABLE_MTM_CONFIGURATION,
@@ -192,29 +197,32 @@ export class DataBaseService {
   loadDataOnObserver(table: string, data: any[]) {
     switch (table) {
       case ConstantsTable.TABLE_MTM_VEHICLE:
-        this.vehiclesData = this.sqlService.mapDataToObserver(table, data);
+        this.vehiclesData = this.sqlService.mapVehicle(data);
         this.vehicles.next(this.vehiclesData);
         break;
       case ConstantsTable.TABLE_MTM_VEHICLE_TYPE:
-        this.vehicleType.next(this.sqlService.mapDataToObserver(table, data));
+        this.vehicleType.next(this.sqlService.mapVehicleType(data));
         break;
       case ConstantsTable.TABLE_MTM_CONFIGURATION:
-        this.configuration.next(this.sqlService.mapDataToObserver(table, data));
+        this.configuration.next(this.sqlService.mapConfiguration(data));
         break;
       case ConstantsTable.TABLE_MTM_OPERATION:
-        this.operation.next(this.sqlService.mapDataToObserver(table, data));
+        this.operation.next(this.sqlService.mapOperation(data));
         break;
       case ConstantsTable.TABLE_MTM_OPERATION_TYPE:
-        this.operationType.next(this.sqlService.mapDataToObserver(table, data));
+        this.operationType.next(this.sqlService.mapOperationType(data));
         break;
       case ConstantsTable.TABLE_MTM_MAINTENANCE:
-        this.maintenance.next(this.sqlService.mapDataToObserver(table, data));
+        this.maintenance.next(this.sqlService.mapMaintenance(data));
         break;
       case ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT:
-        this.maintenanceElement.next(this.sqlService.mapDataToObserver(table, data));
+        this.maintenanceElement.next(this.sqlService.mapMaintenanceElement(data));
         break;
       case ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ:
-        this.maintenanceFreq.next(this.sqlService.mapDataToObserver(table, data));
+        this.maintenanceFreq.next(this.sqlService.mapMaintenanceFreq(data));
+        break;
+      case ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION:
+        this.systemConfiguration.next(this.sqlService.mapSystemConfiguration(data));
         break;
     }
   }

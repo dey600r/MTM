@@ -11,7 +11,10 @@ import {
   ModalInputModel, ModalOutputModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
   MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel
 } from '@models/index';
-import { DashboardService, ConfigurationService, ControlService, CalendarService, VehicleService } from '@services/index';
+import {
+  DashboardService, ConfigurationService, ControlService, CalendarService,
+  SettingsService, DataBaseService
+} from '@services/index';
 import { WarningWearEnum, Constants, PageEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
@@ -53,10 +56,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     labelNextChange = '';
     labelLifeReplacement = '';
     labelNotRecord = '';
+    measure: any = {};
 
     // SUBSCRIPTION
     searchSubscription: Subscription = new Subscription();
     screenSubscription: Subscription = new Subscription();
+    settingsSubscription: Subscription = new Subscription();
 
     constructor(private platform: Platform,
                 private navParams: NavParams,
@@ -67,12 +72,20 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
                 private controlService: ControlService,
                 private screenOrientation: ScreenOrientation,
                 private changeDetector: ChangeDetectorRef,
-                private translator: TranslateService) {
+                private translator: TranslateService,
+                private settingsService: SettingsService,
+                private dbService: DataBaseService) {
   }
 
   ngOnInit() {
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
         this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+
+    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+      }
+    });
 
     this.configureResume();
 
@@ -88,7 +101,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         }
         if (!this.hideRecords) {
           this.dashboardRecordsMaintenance =
-            this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter);
+            this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter, this.measure);
         }
       });
 
@@ -126,6 +139,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.searchSubscription.unsubscribe();
     this.screenSubscription.unsubscribe();
+    this.settingsSubscription.unsubscribe();
   }
 
   configureResume() {
@@ -137,9 +151,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.labelNameVehicle = this.dataMaintenance.nameVehicle;
     this.nameMaintenance = wear.descriptionMaintenance;
     this.nameMaintenanceElement = wear.nameMaintenanceElement;
-    this.labelVehicleKm = this.translator.instant('PAGE_HOME.VehicleKm', { km: this.dataMaintenance.kmVehicle });
+    this.labelVehicleKm = this.translator.instant('PAGE_HOME.VehicleKm',
+      { km: this.dataMaintenance.kmVehicle, measure: this.measure.value });
     if (this.dataMaintenance.kmVehicle !== this.vehicleKmEstimated) {
-      this.labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.VehicleEstimatedKm', { km: this.vehicleKmEstimated });
+      this.labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.VehicleEstimatedKm',
+        { km: this.vehicleKmEstimated, measure: this.measure.value  });
     }
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
     let kmMaintenane = 0;
@@ -170,14 +186,15 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         timeLife = this.calendarService.monthDiff(new Date(wear.dateOperation), new Date());
       }
       this.labelLifeReplacement = this.translator.instant('ALERT.InfoLifeReplacementTime',
-        { replacement: this.nameMaintenanceElement, km: kmLife, time: timeLife});
+        { replacement: this.nameMaintenanceElement, km: kmLife, time: timeLife, measure: this.measure.value });
     } else {
       this.labelLifeReplacement = this.translator.instant('ALERT.InfoLifeReplacementKm',
-        { replacement: this.nameMaintenanceElement, km: kmLife});
+        { replacement: this.nameMaintenanceElement, km: kmLife, measure: this.measure.value });
     }
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
       {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
-        date: this.calendarService.getDateString((date > dateMaintenanceKmVehicleEstimated ? dateMaintenanceKmVehicleEstimated : date))});
+        date: this.calendarService.getDateString((date > dateMaintenanceKmVehicleEstimated ? dateMaintenanceKmVehicleEstimated : date)),
+      measure: this.measure.value});
   }
 
   refreshChart() {
@@ -264,15 +281,16 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     let msg = '';
     if (wear.kmOperation === null) {
       if (wear.timeMaintenance === 0) {
-        msg = this.translator.instant('ALERT.InfoNotOperationKm', { km: wear.kmAcumulateMaintenance });
+        msg = this.translator.instant('ALERT.InfoNotOperationKm',
+          { km: wear.kmAcumulateMaintenance, measure: this.measure.value });
       } else {
         const dateMaintenance: Date = this.getDateMaintenance(wear);
         msg = this.translator.instant('ALERT.InfoNotOperationKmTime',
-          { km: wear.kmAcumulateMaintenance, time: this.calendarService.getDateString(dateMaintenance) });
+          { km: wear.kmAcumulateMaintenance, time: this.calendarService.getDateString(dateMaintenance), measure: this.measure.value });
       }
     } else {
       msg = this.translator.instant('ALERT.InfoOperationKm',
-        { kmop: wear.kmAcumulateMaintenance - wear.calculateKms, km: wear.kmAcumulateMaintenance });
+        { kmop: wear.kmAcumulateMaintenance - wear.calculateKms, km: wear.kmAcumulateMaintenance, measure: this.measure.value });
       if (wear.timeMaintenance !== 0) {
         const dateMaintenance: Date = this.getDateMaintenance(wear);
         const dateOperation: Date = this.getDateOperation(wear, dateMaintenance);
@@ -285,7 +303,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   showInfoVehicle() {
     const msg = this.translator.instant('ALERT.LastUpdateVehicleKm',
-      { date: this.calendarService.getDateString(new Date(this.dataMaintenance.dateKmsVehicle)) });
+      { date: this.calendarService.getDateString(new Date(this.dataMaintenance.dateKmsVehicle)), measurelarge: this.measure.valueLarge });
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
@@ -295,17 +313,19 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.wear.listWearReplacement);
       msg = (wear.timeMaintenance === 0 ?
         this.translator.instant('ALERT.InfoReliabilityPercentKm',
-          { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm }) :
+          { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm, measurelarge: this.measure.valueLarge }) :
         this.translator.instant('ALERT.InfoReliabilityPercentTime',
-          { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm, percentTime: this.wear.percentTime }));
+          { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm, percentTime: this.wear.percentTime,
+            measurelarge: this.measure.valueLarge }));
     } else {
       const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
       msg = (wear.timeMaintenance === 0 ?
         this.translator.instant('ALERT.InfoReliabilityPercentKm',
-          { maintenance: wear.descriptionMaintenance, percentKm: Math.floor((1 - wear.percentKms) * 100) }) :
+          { maintenance: wear.descriptionMaintenance, percentKm: Math.floor((1 - wear.percentKms) * 100),
+            measurelarge: this.measure.valueLarge }) :
         this.translator.instant('ALERT.InfoReliabilityPercentTime',
           { maintenance: wear.descriptionMaintenance, percentKm: Math.floor((1 - wear.percentKms) * 100),
-            percentTime: Math.floor((1 - wear.percentMonths) * 100) }));
+            percentTime: Math.floor((1 - wear.percentMonths) * 100), measurelarge: this.measure.valueLarge}));
     }
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
@@ -319,10 +339,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     const translateOr: string = this.translator.instant('COMMON.OR');
     const translateMonths: string = this.translator.instant('COMMON.MONTHS');
     this.dataMaintenance.listWearReplacement.forEach((x, index) => {
-      msgFromTo += `${x.kmMaintenance} km`;
+      msgFromTo += `${x.kmMaintenance} ${this.measure.value}`;
       if (x.fromKmMaintenance !== 0 || x.toKmMaintenance !== null) {
-        msgFromTo += ` ${translateBetween} ${x.fromKmMaintenance} km ${translateAnd} ` +
-        `${(x.toKmMaintenance === null ? '∞' : x.toKmMaintenance)} km`;
+        msgFromTo += ` ${translateBetween} ${x.fromKmMaintenance} ${this.measure.value} ${translateAnd} ` +
+        `${(x.toKmMaintenance === null ? '∞' : x.toKmMaintenance)} ${this.measure.value}`;
       }
       msgFromTo += (x.timeMaintenance === 0 ? '' : ` ${translateOr} ${x.timeMaintenance} ${translateMonths}`);
       msgFromTo += index + 1 === this.dataMaintenance.listWearReplacement.length ? ' ' : ` ${translateAnd} `;

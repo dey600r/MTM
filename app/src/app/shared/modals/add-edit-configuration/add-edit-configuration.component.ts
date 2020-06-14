@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel } from '@models/index';
-import { DataBaseService, CommonService, ConfigurationService, ControlService } from '@services/index';
+import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-configuration',
@@ -26,9 +26,11 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
   // DATA
   maintenances: MaintenanceModel[] = [];
   toggleMaintenaces: boolean[] = [];
+  measure: any = {};
 
   // SUBSCRIPTION
   maintenanceSubscription: Subscription = new Subscription();
+  settingsSubscription: Subscription = new Subscription();
 
   constructor(
     private modalController: ModalController,
@@ -36,11 +38,18 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
     private dbService: DataBaseService,
     private commonService: CommonService,
     private controlService: ControlService,
+    private settingsService: SettingsService,
     private configurationService: ConfigurationService
   ) {
   }
 
   ngOnInit() {
+
+    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+      }
+    });
 
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
@@ -63,6 +72,7 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.maintenanceSubscription.unsubscribe();
+    this.settingsSubscription.unsubscribe();
   }
 
   saveData(f: Form) {

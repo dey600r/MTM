@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,10 @@ import { Constants, ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/inde
 import {
   ModalInputModel, ModalOutputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, OperationService, CommonService, ConfigurationService, ControlService, CalendarService } from '@services/index';
+import {
+  DataBaseService, OperationService, CommonService, ConfigurationService, ControlService,
+  CalendarService, SettingsService
+} from '@services/index';
 
 @Component({
   selector: 'app-add-edit-operation',
@@ -35,12 +38,15 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   maintenanceElement: MaintenanceElementModel[] = [];
   maintenanceElementSelect: number[] = [];
   formatDate = this.calendarService.getFormatCalendar();
+  measure: any = {};
+  coin: any = {};
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
   operationTypeSubscription: Subscription = new Subscription();
   vehicleSubscription: Subscription = new Subscription();
   maintenanceElementSubscription: Subscription = new Subscription();
+  settingsSubscription: Subscription = new Subscription();
 
   // Translate
   translateWorkshop = '';
@@ -59,7 +65,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     private calendarService: CalendarService,
     private controlService: ControlService,
     private configurationService: ConfigurationService,
-    private changeDetector: ChangeDetectorRef
+    private settingsService: SettingsService
   ) {
     this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
     this.translateMe = this.translator.instant('COMMON.ME');
@@ -79,6 +85,13 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       this.operation.date = this.calendarService.getDateStringToDB(new Date());
       this.operation.operationType.id = null;
     }
+
+    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+        this.coin = this.settingsService.getMoneySelected(settings);
+      }
+    });
 
     this.vehicleSubscription = this.dbService.getVehicles().subscribe(data => {
       this.vehicles = data;
@@ -106,6 +119,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     this.vehicleSubscription.unsubscribe();
     this.operationTypeSubscription.unsubscribe();
     this.maintenanceElementSubscription.unsubscribe();
+    this.settingsSubscription.unsubscribe();
   }
 
   saveData(f: Form) {
@@ -249,16 +263,18 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
 
       // Validate min and max km operation
       if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
-        msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: maxKm});
+        msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween',
+          {measure: this.measure.valueLarge, kmIni: minKm, kmFin: maxKm});
       } else if (!(!!maxKm) && kmSelected < minKm) {
-        msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween', {kmIni: minKm, kmFin: vehicle.km});
+        msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween',
+        {measure: this.measure.valueLarge, kmIni: minKm, kmFin: vehicle.km});
       }
     }
 
     // Validate max km vehicle
     if (!!this.vehicles && this.vehicles.length > 0 && msgResult === '') {
       if (vehicle.km < this.operation.km) {
-        msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower', { kmFin: vehicle.km});
+        msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower', {measure: this.measure.valueLarge, kmFin: vehicle.km});
       } else if (new Date(vehicle.datePurchase) > new Date(this.operation.date)) {
         msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
                 { dateIni: this.calendarService.getDateString(vehicle.datePurchase) })}`;

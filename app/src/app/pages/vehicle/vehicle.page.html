@@ -45,7 +45,7 @@
         <p>{{ m.datePurchase | dateFormatCalendarPipe }}</p>
       </ion-label>
       <ion-label class="padding-left10 label-event-force" (click)="openVehicleModal(m, false)">
-        <h3>{{ m.km }} km</h3>
+        <h3>{{ m.km }} {{measure.value}}</h3>
         <ion-label class="row-block flex-items-center">
           <ion-icon name="cog"></ion-icon>
           <p class="icon-label">{{ m.configuration.name }}</p>

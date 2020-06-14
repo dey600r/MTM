@@ -6,7 +6,10 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService, CalendarService } from '@services/index';
+import {
+  DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService,
+  CalendarService, SettingsService
+} from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
   MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel
@@ -16,6 +19,7 @@ import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
 import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
+import { SettingsComponent } from '@modals/settings/settings.component';
 
 @Component({
   selector: 'app-home',
@@ -35,6 +39,7 @@ export class HomePage implements OnInit {
   hideVehicles: boolean[] = [];
   operations: OperationModel[] = [];
   loaded = false;
+  measure: any = {};
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
@@ -48,7 +53,8 @@ export class HomePage implements OnInit {
               private calendarService: CalendarService,
               private configurationService: ConfigurationService,
               private controlService: ControlService,
-              private vehicleService: VehicleService) {
+              private vehicleService: VehicleService,
+              private settingsService: SettingsService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -57,6 +63,12 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
+    this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+      }
+    });
+
     this.dbService.getConfigurations().subscribe(configurations => {
       this.maintenanceSubscription.unsubscribe();
       if (!!configurations && configurations.length > 0) {
@@ -66,6 +78,8 @@ export class HomePage implements OnInit {
             this.vehicleSubscription = this.dbService.getVehicles().subscribe(vehicles => {
               this.operationSubscription.unsubscribe();
               this.operations = [];
+              this.wears = [];
+              this.allWears = [];
               if (!!vehicles && vehicles.length > 0) {
                 this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
                   this.operations = operations;
@@ -176,8 +190,18 @@ export class HomePage implements OnInit {
   }
 
   openInfoCalendar() {
+    if (!!this.wears && this.wears.length > 0) {
+      this.controlService.openModal(PageEnum.HOME,
+        InfoCalendarComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
+    } else {
+      const msg = `${this.translator.instant('ALERT.NotificationEmpty')} ${this.translator.instant('ALERT.AddMustVehicle')}`;
+      this.controlService.showMsgToast(PageEnum.HOME, msg);
+    }
+  }
+
+  openSettings() {
     this.controlService.openModal(PageEnum.HOME,
-      InfoCalendarComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
+      SettingsComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
   }
 
   getIconVehicle(wear: WearVehicleProgressBarViewModel): string {

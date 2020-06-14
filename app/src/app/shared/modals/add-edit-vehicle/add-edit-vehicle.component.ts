@@ -10,7 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum } from '@utils/index';
 import { ModalInputModel, ModalOutputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel } from '@models/index';
 import {
-  DataBaseService, VehicleService, CommonService, CalendarService, ControlService, DashboardService
+  DataBaseService, VehicleService, CommonService, CalendarService, ControlService, DashboardService, SettingsService
 } from '@services/index';
 
 @Component({
@@ -33,11 +33,13 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
   operations: OperationModel[] = [];
   vehicleTypes: VehicleTypeModel[] = [];
   formatDate = this.calendarService.getFormatCalendar();
+  measure: any = {};
 
   // SUBSCRIPTION
   operationSubscription: Subscription = new Subscription();
   configurationSubscription: Subscription = new Subscription();
   vehicleTypeSubscription: Subscription = new Subscription();
+  settingsSubscription: Subscription = new Subscription();
 
   // TRANSLATE
   translateYearBetween = '';
@@ -52,7 +54,8 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private calendarService: CalendarService,
     private controlService: ControlService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private settingsService: SettingsService
   ) {
     this.translateYearBetween = this.translator.instant('PAGE_VEHICLE.AddYearBetween', { year: new Date().getFullYear()});
     this.translateSelect = this.translator.instant('COMMON.SELECT');
@@ -67,6 +70,12 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
       this.vehicle.id = -1;
       this.vehicle.datePurchase = this.calendarService.getDateStringToDB(new Date());
     }
+
+    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+      }
+    });
 
     this.configurationSubscription = this.dbService.getConfigurations().subscribe(data => {
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
@@ -89,6 +98,7 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     this.configurationSubscription.unsubscribe();
     this.operationSubscription.unsubscribe();
     this.vehicleTypeSubscription.unsubscribe();
+    this.settingsSubscription.unsubscribe();
   }
 
   saveData(f: Form) {
@@ -175,12 +185,17 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     } else if (!!this.operations && this.operations.length > 0) {
       if (this.operations.some(x => this.vehicle.km < x.km)) {
         msg = this.translator.instant('PAGE_VEHICLE.AddKmHigher',
-        { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM)});
+        { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM), measure: this.measure.value});
       } else if (this.operations.some(x => purchase > new Date(x.date))) {
         msg = this.translator.instant('PAGE_OPERATION.AddDateLower',
         { dateFin: this.calendarService.getDateString(
             this.commonService.min(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_DATE))});
       }
+    }
+
+    const maxKM = 999999;
+    if (msg === '' && this.vehicle.km > maxKM) {
+      msg = this.translator.instant('PAGE_VEHICLE.AddKmLowerMax', { km: maxKM, measure: this.measure.value});
     }
 
     return msg;
