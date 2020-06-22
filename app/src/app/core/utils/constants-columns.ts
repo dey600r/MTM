@@ -11,6 +11,7 @@ export class ConstantsColumns {
     static COLUMN_MTM_VEHICLE_KMS_PER_MONTH = 'kmsPerMonth';
     static COLUMN_MTM_VEHICLE_DATE_KMS = 'dateKms';
     static COLUMN_MTM_VEHICLE_DATE_PURCHASE = 'datePurchase';
+    static COLUMN_MTM_VEHICLE_ACTIVE = 'active';
 
     // VEHICLE TYPE
     static COLUMN_MTM_VEHICLE_TYPE_CODE = 'code';

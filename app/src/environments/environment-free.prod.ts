@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  lastVersion: 'v2.1.2',
-  lastUpdate: '2020-06-12 18:30:03',
+  lastVersion: 'v2.1.3',
+  lastUpdate: '2020-06-25 12:00:00',
   isFree: true,
   pathTranslate: './assets/i18n/'
 };

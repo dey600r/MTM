@@ -33,22 +33,22 @@
           </div>
       </div>
     </div>
-    <ion-item button *ngFor="let m of vehicles">
+    <ion-item button *ngFor="let m of vehicles" [ngClass]="{ 'disable-item-color': !m.active }">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10" (click)="openVehicleModal(m, false)">
-        <ion-icon size="large" class="icon-color" [name]="getIconVehicle(m)"></ion-icon>
+        <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }" [name]="getIconVehicle(m)"></ion-icon>
       </ion-avatar>
       <!-- Labels -->
       <ion-label class="min-width40 label-event-force" (click)="openVehicleModal(m, false)">
         <h2>{{ m.brand }}</h2>
         <h3>{{ m.model }}</h3>
-        <p>{{ m.datePurchase | dateFormatCalendarPipe }}</p>
+        <p [ngClass]="{ 'disable-item-color': !m.active }">{{ m.datePurchase | dateFormatCalendarPipe }}</p>
       </ion-label>
       <ion-label class="padding-left10 label-event-force" (click)="openVehicleModal(m, false)">
         <h3>{{ m.km }} {{measure.value}}</h3>
         <ion-label class="row-block flex-items-center">
           <ion-icon name="cog"></ion-icon>
-          <p class="icon-label">{{ m.configuration.name }}</p>
+          <p [ngClass]="{ 'icon-label disable-item-color': !m.active, 'icon-label': m.active }">{{ m.configuration.name }}</p>
         </ion-label>
       </ion-label>
       <!-- Buttons edit / delete -->

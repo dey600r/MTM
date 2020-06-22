@@ -78,7 +78,7 @@ export class OperationPage implements OnInit {
       this.allOperations = data;
       this.filterDashboard = this.dashboardService.getSearchDashboard();
       this.dashboardService.setSearchOperation((this.filterDashboard.searchVehicle.brand === null ?
-        (!!data && data.length > 0 ? data[0].vehicle : new VehicleModel(null, null, null, null, null, null, null, null, null, 0)) :
+        (!!data && data.length > 0 ? data[0].vehicle : new VehicleModel(null, null, null, null, null, null, null, null, null, true, 0)) :
         this.filterDashboard.searchVehicle));
     });
 

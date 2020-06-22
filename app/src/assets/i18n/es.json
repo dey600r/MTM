@@ -76,7 +76,8 @@
         "MEASURING": "Medida de longitud",
         "EURO": "Euro",
         "DOLLAR": "Dolar",
-        "POUND": "Libra"
+        "POUND": "Libra",
+        "NOTIFY_MAINTENANCE": "Notificar mantenimientos"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -183,7 +184,7 @@
         "AddConfiguration": "Añada mantenimientos a la configuración",
         "InfoNotOperationKmTime": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} {{measure}} o {{time}}",
         "InfoNotOperationKm": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} {{measure}}",
-        "InfoOperationKm": "Has pasadola revisión a los {{kmop}} {{measure}} para el mantenimiento de los {{km}} {{measure}}",
+        "InfoOperationKm": "Has pasado la revisión a los {{kmop}} {{measure}} para el mantenimiento de los {{km}} {{measure}}",
         "InfoOperationTime": " y con fecha {{timeop}} antes de la fecha requerida {{time}}",
         "ExitApp": "La aplicación se va a cerrar. ¿Desea continuar?",
         "InfoMaintenanceCalendarTime": "{{maintenance}} está configurado cada {{between}}",
@@ -196,7 +197,9 @@
         "InfoLifeReplacementKm": "{{replacement}} tiene de vida {{km}} {{measure}}",
         "InfoLifeReplacementTime": "{{replacement}} tiene de vida {{km}} {{measure}} y {{time}} meses",
         "InfoOk": "Lo estas haciendo bien",
-        "InfoNotOk": "Se necesita cambiarlo",
+        "InfoNotOk": "Se necesita cambiarlo. ",
+        "InfoKmNotOk": "Has gastado los {{measure}} del recambio",
+        "InfoTimeNotOk": "Has gastado el tiempo del recambio",
         "NoDataFound": "No se encuentran datos",
         "PayForMTM": "Para usar esta funcionalidad debes pagar la aplicación MtM completa",
         "InfoCalendarKm": "Deberías revisar {{replacement}} a los {{km}}{{measure}} en la fecha estimada {{date}}",

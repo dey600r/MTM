@@ -1,12 +1,16 @@
 <ion-header>
     <ion-toolbar>
-        <!-- Title -->
-        <ion-title class="align-center padding-left30">{{ 'COMMON.CALENDAR' | translate }}</ion-title>
-        <!-- Button Close -->
-        <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
-          <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
-        </ion-button>
-    </ion-toolbar>
+      <!-- Button Refresh -->
+      <ion-button slot="start" fill="clear" (click)="reload()" class="btn-width-header">
+        <ion-icon size="large" class="btn-color" name="reload-circle"></ion-icon>
+      </ion-button>
+      <!-- Title -->
+      <ion-title class="align-center">{{ 'COMMON.CALENDAR' | translate }}</ion-title>
+      <!-- Button Close -->
+      <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
+        <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
+      </ion-button>
+  </ion-toolbar>
 </ion-header>
 
 

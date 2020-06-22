@@ -180,7 +180,8 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     const purchase: Date = new Date(this.vehicle.datePurchase);
     const today: Date = new Date();
 
-    if (purchase > today) {
+    if (new Date(purchase.getFullYear(), purchase.getMonth(), purchase.getDate()) >
+        new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
       msg = this.translator.instant('PAGE_OPERATION.AddDateLower', { dateFin: this.calendarService.getDateString(today)});
     } else if (!!this.operations && this.operations.length > 0) {
       if (this.operations.some(x => this.vehicle.km < x.km)) {

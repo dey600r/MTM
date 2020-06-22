@@ -76,7 +76,8 @@
         "MEASURING": "Measuring length",
         "EURO": "Euro",
         "DOLLAR": "Dollar",
-        "POUND": "Pound"
+        "POUND": "Pound",
+        "NOTIFY_MAINTENANCE": "Notify maintenances"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -196,7 +197,9 @@
         "InfoLifeReplacementKm": "The life of replacement {{replacement}} is {{km}} {{measure}}",
         "InfoLifeReplacementTime": "The life of replacement {{replacement}} is {{km}} {{measure}} and {{time}} months",
         "InfoOk": "You're doing well",
-        "InfoNotOk": "It needs to be changed",
+        "InfoNotOk": "It needs to be changed. ",
+        "InfoKmNotOk": "You have spent the {{measure}} of the spare part",
+        "InfoTimeNotOk": "You have spent the time of the spare part",
         "NoDataFound": "No data found",
         "PayForMTM": "To use this functionality you can buy the MtM application",
         "InfoCalendarKm": "You should check the {{replacement}} at {{km}}{{measure}} on the estimated date {{date}}",

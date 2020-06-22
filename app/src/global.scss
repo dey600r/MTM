@@ -42,6 +42,16 @@ $colors: (
   p { color: white !important; }
 }
 
+button.days-btn.today p {
+  font-weight: bold;
+}
+
+.month-packer-item.this-month button {
+  font-weight: bold;
+  color: #5b5a5a;
+}
+
+
 .day-circle-config-all {
   background-color: var(--ion-color-medium-tint) !important;
 }
@@ -60,6 +70,31 @@ $colors: (
 
 .day-circle-config-success {
   background-color: var(--ion-color-progressbar-success-buffer) !important;
+}
+
+.month-packer-item.month-circle-config-all button {
+  background-color: var(--ion-color-medium-tint);
+  color: white;
+}
+
+.month-packer-item.month-circle-config-skull button {
+  background-color: var(--ion-color-progressbar-danger-progress);
+  color: white;
+}
+
+.month-packer-item.month-circle-config-danger button {
+  background-color: var(--ion-color-progressbar-danger-buffer);
+  color: white;
+}
+
+.month-packer-item.month-circle-config-warning button {
+  background-color: var(--ion-color-progressbar-warning-buffer);
+  color: white;
+}
+
+.month-packer-item.month-circle-config-success button {
+  background-color: var(--ion-color-progressbar-success-buffer);
+  color: white;
 }
 
 // BUG Calendar windows: Dont show icons

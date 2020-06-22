@@ -113,7 +113,7 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
                 date: z.date,
                 title: '',
                 subTitle: ``,
-                cssClass: `day-text-config ${this.calendarService.getCircleColor(this.listInfoCalendar, x, y, z)}`
+                cssClass: `day-text-config ${this.calendarService.getCircleColor(this.listInfoCalendar, z)}`
                 }];
             }
           });
@@ -193,6 +193,21 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
     }
   }
 
+  reload() {
+    this.activeSpinner = true;
+    this.dateMulti = [];
+    const dateNew: Date = new Date();
+    this.monthSelect = dateNew.getMonth();
+    this.yearSelect = dateNew.getFullYear();
+    if (this.yearActive) {
+      this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
+    } else {
+      this.showNotificationBetweenDates(
+        new Date(this.yearSelect, this.monthSelect, 1), new Date(this.yearSelect, this.monthSelect + 1, 0));
+    }
+    this.activeSpinner = false;
+  }
+
   // METHODS
 
   showNotificationBetweenDates(dateIni: Date, dateFin: Date = null) {
@@ -209,7 +224,35 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
     } else {
       this.listInfoCalendarSelected.forEach((x, index) => this.hideVehicles[index] = (index !== 0));
     }
+    this.paintMonthsNotifications(this.listInfoCalendarSelected);
     this.activeSpinner = false;
+  }
+
+  paintMonthsNotifications(notifications: InfoCalendarVehicleViewModel[]) {
+    const htmlMonths: NodeListOf<Element> = document.querySelectorAll('.month-packer-item');
+    if (!!htmlMonths && htmlMonths.length > 0) {
+      htmlMonths.forEach(x => {
+        x.classList.remove('month-circle-config-all');
+        x.classList.remove('month-circle-config-skull');
+        x.classList.remove('month-circle-config-danger');
+        x.classList.remove('month-circle-config-warning');
+        x.classList.remove('month-circle-config-success');
+      });
+      if (this.yearActive && !!notifications && notifications.length > 0) {
+        let monthsUsed: number[] = [];
+        notifications.forEach(x => {
+          x.listInfoCalendarMaintenance.forEach(y => {
+            y.listInfoCalendarReplacement.forEach(z => {
+              if (!monthsUsed.some(m => m === z.date.getMonth())) {
+                const color: string = this.calendarService.getCircleColor(this.listInfoCalendar, z);
+                monthsUsed = [...monthsUsed, z.date.getMonth()];
+                htmlMonths[z.date.getMonth()].classList.add(color.replace('day', 'month'));
+              }
+            });
+          });
+        });
+      }
+    }
   }
 
   showInfo(repl: InfoCalendarReplacementViewModel) {

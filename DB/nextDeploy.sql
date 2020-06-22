@@ -122,8 +122,8 @@ INSERT OR IGNORE INTO "mtmOperation" VALUES (121,'Revision','Cambio liquido de f
 INSERT OR IGNORE INTO "mtmOperation" VALUES (122,'Cambio rueda trasera','Pilot road 2 trasera y valvula del pedido de ventaneumaticos. Equilibrado en michelin',7,1,85240.0,'2020-01-03','Garaje casa (Ciudad Real)','Yo',15.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (123,'ITV','ITV - NO CUMPLE. Cambio de rueda',6,1,86890.0,'2020-02-28','Alcobendas - ITV ATISAE','Yo',25.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (124,'Cambio rueda delantera','Pilot road 2 delantera	Cambio de rueda y valvula del pedido de ventaneumaticos',7,1,87090.0,'2020-02-28','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,87650,2,1,650,'2020-04-10','2006-09-19');
-INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,75600,3,1,50,'2020-04-10','2006-09-12');
+INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,87650,2,1,650,'2020-04-10','2006-09-19','Y');
+INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,75600,3,1,50,'2020-04-10','2006-09-12','Y');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (14,'Revisón básica',2,6000,18,'N','N',50000,NULL,'N');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (15,'Cambio filtro de aire',2,12000,18,'N','N',50000,NULL,'N');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (16,'Revisón básica',2,6000,12,'N','N',1000,50000,'N');

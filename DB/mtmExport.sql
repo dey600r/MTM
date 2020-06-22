@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS "mtmVehicle" (
 	"kmsPerMonth"	INTEGER,
 	"dateKms"	TEXT NOT NULL,
 	"datePurchase"	TEXT NOT NULL,
+	"active"	TEXT NOT NULL DEFAULT 'Y',
 	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id"),
 	FOREIGN KEY("idVehicleType") REFERENCES "mtmVehicleType"("id")
 );

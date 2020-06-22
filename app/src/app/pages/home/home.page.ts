@@ -81,26 +81,33 @@ export class HomePage implements OnInit {
               this.wears = [];
               this.allWears = [];
               if (!!vehicles && vehicles.length > 0) {
-                this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
-                  this.operations = operations;
-                  this.wears = [];
-                  this.allWears = this.dashboardService.getWearReplacementToVehicle(operations, vehicles, configurations, maintenances);
-                  this.allWears.forEach((x, index) => {
-                    this.wears = [...this.wears, Object.assign({}, x)];
-                    this.hideVehicles[index] = (index !== 0);
-                    let listWears: WearReplacementProgressBarViewModel[] = [];
-                    const kmVehicle: number = this.calendarService.calculateWearKmVehicleEstimated(x);
-                    x.listWearReplacement.forEach(z => {
-                    if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
-                        z.fromKmMaintenance <= kmVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= kmVehicle)) {
-                        listWears = [...listWears, z];
-                      }
+                const vehiclesActives: VehicleModel[] = vehicles.filter(x => x.active);
+                if (!!vehiclesActives && vehiclesActives.length > 0) {
+                  this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
+                    this.operations = operations.filter(x => x.vehicle.active);
+                    this.wears = [];
+                    this.allWears = this.dashboardService.getWearReplacementToVehicle(
+                      this.operations, vehiclesActives, configurations, maintenances);
+                    this.allWears.forEach((x, index) => {
+                      this.wears = [...this.wears, Object.assign({}, x)];
+                      this.hideVehicles[index] = (index !== 0);
+                      let listWears: WearReplacementProgressBarViewModel[] = [];
+                      const kmVehicle: number = this.calendarService.calculateWearKmVehicleEstimated(x);
+                      x.listWearReplacement.forEach(z => {
+                      if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
+                          z.fromKmMaintenance <= kmVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= kmVehicle)) {
+                          listWears = [...listWears, z];
+                        }
+                      });
+                      this.wears.find(y => x.idVehicle === y.idVehicle).listWearReplacement = listWears;
                     });
-                    this.wears.find(y => x.idVehicle === y.idVehicle).listWearReplacement = listWears;
+                    this.activateInfo = this.activateModeInfo(vehiclesActives, this.operations, this.wears);
+                    this.timeOutLoader();
                   });
-                  this.activateInfo = this.activateModeInfo(vehicles, operations, this.wears);
+                } else {
                   this.timeOutLoader();
-                });
+                  this.activateInfo = this.activateModeInfo(vehiclesActives, [], []);
+                }
               } else {
                 this.timeOutLoader();
                 this.activateInfo = this.activateModeInfo(vehicles, [], []);
@@ -182,7 +189,8 @@ export class HomePage implements OnInit {
     }
     listGroupWear = [...listGroupWear, w];
     // Change filter operation to easy
-    this.dashboardService.setSearchOperation(new VehicleModel(m.nameVehicle, '', null, null, null, null, null, null, null, m.idVehicle));
+    this.dashboardService.setSearchOperation(new VehicleModel(m.nameVehicle, '',
+      null, null, null, null, null, null, null, true, m.idVehicle));
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
       new WearVehicleProgressBarViewModel(m.idVehicle, m.nameVehicle, m.kmVehicle, m.datePurchaseVehicle,
         m.kmsPerMonthVehicle, m.dateKmsVehicle, m.percent, m.percentKm, m.percentTime, m.warning, listGroupWear),

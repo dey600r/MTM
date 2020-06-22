@@ -72,7 +72,6 @@
               { "glob": "**/*calendar.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*stats-chart.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*navigate.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
-              { "glob": "**/*hourglass.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*analytics.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*arrow-down-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*arrow-back-sharp.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
@@ -83,6 +82,7 @@
               { "glob": "**/*home.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*car-sport.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*car.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*reload-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*.svg", "input": "src/assets/icon", "output": "./svg" }
             ],
             "styles": [

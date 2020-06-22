@@ -10,6 +10,7 @@ import {
     WearVehicleProgressBarViewModel, InfoCalendarVehicleViewModel, InfoCalendarMaintenanceViewModel,
     InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, VehicleModel
 } from '../models';
+import { zip } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -75,13 +76,19 @@ export class CalendarService {
     }
 
     calculateKmVehicleEstimated(vehicle: VehicleModel): number {
+        const kmPerM: number = this.calculateKmsPerMonth(vehicle);
+        const dateKm: Date = new Date(vehicle.dateKms);
+        return vehicle.km + (Math.round((kmPerM / 30) * this.dayDiff(dateKm, new Date())));
+    }
+
+    calculateKmsPerMonth(vehicle: VehicleModel): number {
         let kmPerM: number = vehicle.kmsPerMonth;
         const dateKm: Date = new Date(vehicle.dateKms);
         if (!kmPerM || kmPerM === 0) {
             const diffMonts: number = this.monthDiff(new Date(vehicle.datePurchase), dateKm);
             kmPerM = Math.round(vehicle.km / (diffMonts === 0 ? 1 : diffMonts));
         }
-        return vehicle.km + (Math.round((kmPerM / 30) * this.dayDiff(dateKm, new Date())));
+        return (kmPerM === 0 ? 1 : kmPerM);
     }
 
     // INFO CALENDAR
@@ -137,8 +144,8 @@ export class CalendarService {
             kms = kmVehicle + replacement.calculateKms;
             warnings = replacement.warningKms;
             if (replacement.calculateKms > 0) {
-                dateResult = this.calculateKmInfoNotification(new VehicleModel(null, null, null, 0, null, null,
-                    wear.kmsPerMonthVehicle, wear.dateKmsVehicle), replacement.calculateKms);
+                dateResult = this.calculateKmInfoNotification(new VehicleModel(null, null, null, wear.kmVehicle, null, null,
+                    wear.kmsPerMonthVehicle, wear.dateKmsVehicle, wear.datePurchaseVehicle), 0, replacement.calculateKms);
             } else {
                 let diffVehiclePurchase = 0;
                 let monthsEstimated = 0;
@@ -150,7 +157,7 @@ export class CalendarService {
                 } else {
                     dateCompare = new Date(replacement.dateOperation);
                     diffVehiclePurchase = this.monthDiff(dateCompare, new Date());
-                    monthsEstimated = ((kmVehicle - replacement.kmOperation) * diffVehiclePurchase) / replacement.kmMaintenance;
+                    monthsEstimated = (replacement.kmMaintenance * diffVehiclePurchase) / (kmVehicle - replacement.kmOperation);
                 }
                 dateResult = this.calculateTimeInfoCalendar(dateCompare, Math.floor(monthsEstimated));
             }
@@ -177,8 +184,9 @@ export class CalendarService {
         };
     }
 
-    calculateKmInfoNotification(vehicle: VehicleModel, km: number): Date {
-        const diff: number = (km - vehicle.km) / vehicle.kmsPerMonth;
+    calculateKmInfoNotification(vehicle: VehicleModel, kmInit: number, km: number): Date {
+        const kmPerM: number = this.calculateKmsPerMonth(vehicle);
+        const diff: number = Math.round((km - kmInit) / kmPerM);
         const date: Date = new Date(vehicle.dateKms);
         date.setMonth(date.getMonth() + diff);
         return date;
@@ -250,21 +258,24 @@ export class CalendarService {
             (dateFin !== null && dateCompare >= dateInit && dateCompare <= dateFin);
     }
 
-    getCircleColor(listInfoCalendarVehicle: InfoCalendarVehicleViewModel[], vehicle: InfoCalendarVehicleViewModel,
-                   maintenance: InfoCalendarMaintenanceViewModel,
-                   replacement: InfoCalendarReplacementViewModel): string {
-        if (listInfoCalendarVehicle.some(x => x.listInfoCalendarMaintenance.some(y =>
-                y.listInfoCalendarReplacement.some(z => this.isDateEquals(z.date, [replacement.date]) &&
-                    ((x.idVehicle !== vehicle.idVehicle) ||
-                    (x.idVehicle === vehicle.idVehicle && y.idMaintenance !== maintenance.idMaintenance) ||
-                    (x.idVehicle === vehicle.idVehicle && y.idMaintenance === maintenance.idMaintenance &&
-                    z.idReplacement !== replacement.idReplacement)))))) {
+    getCircleColor(listInfoCalendarVehicle: InfoCalendarVehicleViewModel[], replacement: InfoCalendarReplacementViewModel): string {
+        let listWarning: WarningWearEnum[] = [];
+        listInfoCalendarVehicle.forEach(x => {
+            x.listInfoCalendarMaintenance.forEach(y => {
+                y.listInfoCalendarReplacement.forEach(z => {
+                    if (!listWarning.some(w => w === z.warning) && this.isDateEquals(z.date, [replacement.date])) {
+                        listWarning = [...listWarning, z.warning];
+                    }
+                });
+            });
+        });
+        if (listWarning.length > 1 || listWarning.length === 0) {
             return 'day-circle-config-all';
-        } else if (replacement.warning === WarningWearEnum.SKULL) {
+        } else if (listWarning[0] === WarningWearEnum.SKULL) {
             return 'day-circle-config-skull';
-        } else if (replacement.warning === WarningWearEnum.DANGER) {
+        } else if (listWarning[0] === WarningWearEnum.DANGER) {
             return 'day-circle-config-danger';
-        } else if (replacement.warning === WarningWearEnum.WARNING) {
+        } else if (listWarning[0] === WarningWearEnum.WARNING) {
             return 'day-circle-config-warning';
         } else {
             return 'day-circle-config-success';

@@ -50,6 +50,7 @@ export class SqlService {
       `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}, ` +
       `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}, ` +
       `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}, ` +
+      `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE}, ` +
       `c.${ConstantsColumns.COLUMN_MTM_ID} as idConfiguration, ` +
       `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME} as nameConfiguration, ` +
       `c.${ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION} as descriptionConfiguration, ` +
@@ -90,7 +91,8 @@ export class SqlService {
     return `SELECT op.${ConstantsColumns.COLUMN_MTM_ID}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}, ` +
     `v.${ConstantsColumns.COLUMN_MTM_ID} as idVehicle, v.${ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND} as brandVehicle, ` +
-    `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL} as modelVehicle, op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
+    `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL} as modelVehicle, v.${ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE} as activeVehicle,` +
+    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
     `vt.${ConstantsColumns.COLUMN_MTM_ID} as idVehicleType, vt.${ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE} as codeVehicleType, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
@@ -183,7 +185,8 @@ export class SqlService {
           vehicleType: this.getMapVehicleType(row, true),
           kmsPerMonth: row[ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH],
           dateKms: new Date(row[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS]),
-          datePurchase: row[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE]
+          datePurchase: row[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE],
+          active: row[ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE] === Constants.DATABASE_YES
         }];
       }
     }
@@ -275,7 +278,8 @@ export class SqlService {
             details: row[ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS],
             operationType: this.getMapOperationType(row, true),
             vehicle: new VehicleModel(row.modelVehicle, row.brandVehicle, null, null, null,
-              this.getMapVehicleType(row, true), null, null, null, row[ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE]),
+              this.getMapVehicleType(row, true), null, null, null,
+              (row.activeVehicle === Constants.DATABASE_YES), row[ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE]),
             km: Number(row[ConstantsColumns.COLUMN_MTM_OPERATION_KM]),
             date: row[ConstantsColumns.COLUMN_MTM_OPERATION_DATE],
             location: row[ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION],
@@ -433,11 +437,12 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_YEAR}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_KM}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_CONFIGURATION}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}, ` +
-        `${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE}) `;
+        `${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE}, ${ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE}) `;
       vehicles.forEach((x, index) => {
         sql += `SELECT '${x.model}', '${x.brand}', ${x.year}, ${x.km}, ${x.configuration.id}, ` +
           `${(!x.kmsPerMonth ? null : x.kmsPerMonth)}, '${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
-          `'${this.calendarService.getDateStringToDB(x.datePurchase)}', ${x.vehicleType.id} `;
+          `'${this.calendarService.getDateStringToDB(x.datePurchase)}', ${x.vehicleType.id}, ` +
+          `'${(x.active ? Constants.DATABASE_YES : Constants.DATABASE_NO)}' `;
         if ((index + 1) < vehicles.length) {
           sql += ' UNION ';
         }
@@ -592,7 +597,8 @@ export class SqlService {
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_VEHICLE_TYPE}=${x.vehicleType.id}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH}=${(!x.kmsPerMonth ? null : x.kmsPerMonth)}, ` +
         `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS}='${this.calendarService.getDateStringToDB(x.dateKms)}', ` +
-        `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}='${this.calendarService.getDateStringToDB(x.datePurchase)}' ` +
+        `${ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE}='${this.calendarService.getDateStringToDB(x.datePurchase)}', ` +
+        `${ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE}='${(x.active ? Constants.DATABASE_YES : Constants.DATABASE_NO)}' ` +
         `WHERE ${ConstantsColumns.COLUMN_MTM_ID}=${x.id}; `;
       });
     }

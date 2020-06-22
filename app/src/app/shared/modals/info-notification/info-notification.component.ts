@@ -9,7 +9,7 @@ import * as shape from 'd3-shape';
 // UTILS
 import {
   ModalInputModel, ModalOutputModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
-  MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel
+  MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel, InfoCalendarReplacementViewModel
 } from '@models/index';
 import {
   DashboardService, ConfigurationService, ControlService, CalendarService,
@@ -158,32 +158,17 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         { km: this.vehicleKmEstimated, measure: this.measure.value  });
     }
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
-    let kmMaintenane = 0;
-    let kmLife = 0;
-    let timeLife = 0;
-    if (wear.kmOperation === null) {
-      const mant: number = (wear.kmMaintenance < this.vehicleKmEstimated ? this.vehicleKmEstimated / wear.kmMaintenance : 1);
-      kmMaintenane = wear.kmMaintenance * Math.floor(mant) + wear.kmMaintenance;
-      kmLife = this.vehicleKmEstimated;
-    } else {
-      kmMaintenane = wear.kmOperation + wear.kmMaintenance;
-      kmMaintenane = (kmMaintenane < this.vehicleKmEstimated ? this.vehicleKmEstimated : kmMaintenane);
-      kmLife = this.vehicleKmEstimated - wear.kmOperation;
+    let kmLife = this.vehicleKmEstimated;
+    const today: Date = new Date();
+    if (wear.kmOperation !== null) {
+      kmLife -= wear.kmOperation;
     }
-    let date: Date = new Date(4000, 1, 1);
-    const dateMaintenanceKmVehicleEstimated: Date = this.calendarService.calculateKmInfoNotification(vehicle, kmMaintenane);
     if (wear.timeMaintenance !== 0) {
-      date = new Date(vehicle.datePurchase);
-      const monthVehicle: number = this.calendarService.monthDiff(date, new Date());
+      let timeLife = 0;
       if (wear.kmOperation === null) {
-        const mantMonth: number = (wear.timeMaintenance < monthVehicle ? monthVehicle / wear.timeMaintenance : 1);
-        date.setMonth(date.getMonth() + wear.timeMaintenance * Math.floor(mantMonth) + wear.timeMaintenance);
-        timeLife = this.calendarService.monthDiff(new Date(vehicle.datePurchase), new Date());
+        timeLife = this.calendarService.monthDiff(new Date(vehicle.datePurchase), today);
       } else {
-        const mantMonth = this.calendarService.monthDiff(
-          new Date(vehicle.datePurchase), new Date(wear.dateOperation)) + wear.timeMaintenance;
-        date.setMonth(date.getMonth() + (mantMonth < monthVehicle ? monthVehicle : mantMonth));
-        timeLife = this.calendarService.monthDiff(new Date(wear.dateOperation), new Date());
+        timeLife = this.calendarService.monthDiff(new Date(wear.dateOperation), today);
       }
       this.labelLifeReplacement = this.translator.instant('ALERT.InfoLifeReplacementTime',
         { replacement: this.nameMaintenanceElement, km: kmLife, time: timeLife, measure: this.measure.value });
@@ -191,10 +176,15 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       this.labelLifeReplacement = this.translator.instant('ALERT.InfoLifeReplacementKm',
         { replacement: this.nameMaintenanceElement, km: kmLife, measure: this.measure.value });
     }
+    const calendarKm: InfoCalendarReplacementViewModel =
+      this.calendarService.createInfoCalendarReplacement(this.dataMaintenance, wear, true);
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
-      {maintenance: this.nameMaintenanceElement, km: kmMaintenane,
-        date: this.calendarService.getDateString((date > dateMaintenanceKmVehicleEstimated ? dateMaintenanceKmVehicleEstimated : date)),
-      measure: this.measure.value});
+      {
+        maintenance: this.nameMaintenanceElement,
+        km: (calendarKm.km > this.vehicleKmEstimated ? calendarKm.km : this.vehicleKmEstimated),
+        date: (calendarKm.km > this.vehicleKmEstimated ? calendarKm.dateFormat : this.calendarService.getDateString(today)),
+        measure: this.measure.value
+      });
   }
 
   refreshChart() {
@@ -364,6 +354,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       msg = this.translator.instant('ALERT.InfoOk');
     } else {
       msg = this.translator.instant('ALERT.InfoNotOk');
+      if (wear.calculateKms < 0 && wear.calculateMonths >= 0) {
+        msg += this.translator.instant('ALERT.InfoKmNotOk', { measure: this.measure.valueLarge });
+      } else if (wear.calculateKms >= 0 && wear.calculateMonths < 0) {
+        msg += this.translator.instant('ALERT.InfoTimeNotOk');
+      }
     }
     this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST);
   }

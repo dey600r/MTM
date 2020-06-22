@@ -12,9 +12,10 @@ export class VehicleModel extends BaseModel {
     kmsPerMonth: number;
     dateKms: Date;
     datePurchase: Date;
+    active: boolean;
     constructor(m: string = null, b: string = null, y: number = null, k: number = null,
                 c: ConfigurationModel = new ConfigurationModel(), vt: VehicleTypeModel = new VehicleTypeModel(),
-                kpm: number = null, dk: Date = new Date(), dP: Date = new Date(), id: number = 1) {
+                kpm: number = null, dk: Date = new Date(), dP: Date = new Date(), act: boolean = true, id: number = 1) {
         super(id);
         this.model = m;
         this.brand = b;
@@ -25,5 +26,6 @@ export class VehicleModel extends BaseModel {
         this.kmsPerMonth = kpm;
         this.dateKms = dk;
         this.datePurchase = dP;
+        this.active = act;
     }
 }

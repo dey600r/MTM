@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS "mtmVehicle" (
 	"kmsPerMonth"	INTEGER,
 	"dateKms"	TEXT NOT NULL,
 	"datePurchase"	TEXT NOT NULL,
+	"active"	TEXT NOT NULL DEFAULT 'Y',
 	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id"),
 	FOREIGN KEY("idVehicleType") REFERENCES "mtmVehicleType"("id")
 );
@@ -98,8 +99,8 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v2.1.2','2020-06-12 18:30:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (2,'configDistance','KM','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (3,'configMoney','EURO','2006-09-12 12:32:00');
-INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,87650,2,1,650,'2020-04-10','2006-09-19');
-INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,75600,3,1,50,'2020-04-10','2006-09-12');
+INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,87650,2,1,650,'2020-04-10','2006-09-19','Y');
+INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,75600,3,1,50,'2020-04-10','2006-09-12','Y');
 INSERT OR IGNORE INTO "mtmOperation" VALUES (1,'Compra moto','Compra hyosung GT125r 2006',6,2,0.0,'2006-09-12','Motos real (Ciudad Real)','Yo',3500.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (2,'Revision','Aceite motor, filtro aceite, pastillas de freno',1,2,4000.0,'2006-11-15','Motos real (Ciudad Real)','Yo',102.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (3,'Revision','Aceite motor, filtro aceite, sincronizar carburadores',1,2,8000.0,'2007-02-06','Motos real (Ciudad Real)','Yo',73.0,NULL);

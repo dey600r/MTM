@@ -12,7 +12,7 @@
 
 <ion-content>
   <form #formAddVehicle name="formAddVehicle" (ngSubmit)="saveData(formAddVehicle)" novalidate>
-    <ion-list lines="full">
+    <ion-list lines="full" class="margin-bottom55">
       <!-- Input control -->
       <ion-item>
         <ion-label position="stacked">
@@ -89,6 +89,13 @@
           <ion-text>{{ 'COMMON.KM_PER_MONTH' | translate }}</ion-text>
        </ion-label>
         <ion-input #vehicleKmsPerMonth name="vehicleKmsPerMonth" placeholder="150 {{measure.value}}" type="number" min="0" [(ngModel)]="vehicle.kmsPerMonth"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon class="ion-icon-margin" slot="start" size="small" name="stats-chart"></ion-icon>
+        <ion-label>
+          <h2>{{ 'COMMON.NOTIFY_MAINTENANCE' | translate }}</h2>
+        </ion-label>
+        <ion-toggle #vehicleActive name="vehicleActive" color="primary" [(ngModel)]="vehicle.active"></ion-toggle>
       </ion-item>
     </ion-list>
     <!-- Button Save -->
