@@ -68,6 +68,12 @@ export class CalendarService {
         return days <= 0 ? 0 : days;
     }
 
+    sumTimeToDate(date: Date, time: number): Date {
+        const dateResult: Date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        dateResult.setMonth(dateResult.getMonth() + time);
+        return dateResult;
+    }
+
     // CALCULATE VEHICLE
 
     calculateWearKmVehicleEstimated(wear: WearVehicleProgressBarViewModel): number {

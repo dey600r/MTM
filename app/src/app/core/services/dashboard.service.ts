@@ -56,7 +56,8 @@ export class DashboardService {
                         (filter.searchOperationType.length === 0 ||
                         filter.searchOperationType.some(f => f.id === z.operationType.id))),
                     ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
-                result = [...result, this.getDataDashboard(`${x.vehicle.brand}-${x.vehicle.model}`, sumPrice, x.vehicle.id)];
+                const resultPrice: number = (filter.expensePerKm ? Math.round((sumPrice / x.vehicle.km) * 100) / 100 : sumPrice);
+                result = [...result, this.getDataDashboard(`${x.vehicle.brand}-${x.vehicle.model}`, resultPrice, x.vehicle.id)];
             }
         });
         return result;
@@ -110,39 +111,6 @@ export class DashboardService {
         return range;
     }
 
-    // VEHICLE OP TYPE EXPENSES
-    getDashboardModelVehicleOpTypeExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardVehicleOpTypeExpenses(data, filter), null,
-        filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.VEHICLES'),
-        filter.showAxisLabel, this.translator.instant('COMMON.VEHICLES'),
-        filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
-    }
-
-    mapOperationToDashboardVehicleOpTypeExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
-        let result: any[] = [];
-        const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
-        operationPreFilter.forEach(x => {
-            let dash: any = result.find(y => y.name === x.vehicle.model);
-            const sumPrice: number = this.commonService.sum(
-                operationPreFilter.filter(z => z.vehicle.id === x.vehicle.id && z.operationType.id === x.operationType.id &&
-                    (filter.searchOperationType.length === 0 ||
-                    filter.searchOperationType.some(f => f.id === z.operationType.id))),
-                ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
-            if (sumPrice > 0) {
-                if (!!dash) {
-                    if (!dash.series.some((z: any) => z.id === x.operationType.id)) {
-                        dash.series = [...dash.series, this.getDataDashboard(x.operationType.description, sumPrice, x.operationType.id)];
-                    }
-                } else {
-                    dash = this.getDataSeriesDashboard(x.vehicle.model,
-                        [this.getDataDashboard(x.operationType.description, sumPrice, x.operationType.id)]);
-                    result = [...result, dash];
-                }
-            }
-        });
-        return result;
-    }
-
     // OPERATION TYPE EXPENSES
     getDashboardModelOpTypeExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
         return new DashboardModel(view, this.mapOperationToDashboardOpTypeExpenses(data, filter), null,
@@ -156,12 +124,22 @@ export class DashboardService {
         const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
         operationPreFilter.forEach(x => {
             if (!result.some((z: any) => z.id === x.operationType.id)) {
-                const sumPrice: number = this.commonService.sum(
-                    operationPreFilter.filter(z => z.operationType.id === x.operationType.id &&
-                        (filter.searchOperationType.length === 0 ||
-                        filter.searchOperationType.some(f => f.id === z.operationType.id))),
-                    ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
-                result = [...result, this.getDataDashboard(x.operationType.description, sumPrice, x.operationType.id)];
+                const listOperationsSum: OperationModel[] = operationPreFilter.filter(z => z.operationType.id === x.operationType.id &&
+                    (filter.searchOperationType.length === 0 ||
+                    filter.searchOperationType.some(f => f.id === z.operationType.id)));
+                const sumPrice: number = this.commonService.sum(listOperationsSum, ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
+                let resultPrice: number = sumPrice;
+                if (filter.expensePerKm) {
+                    let vehiclesSum: VehicleModel[] = [];
+                    listOperationsSum.forEach(op => {
+                        if (!vehiclesSum.some((v: VehicleModel) => v.id === op.vehicle.id)) {
+                            vehiclesSum = [...vehiclesSum, op.vehicle];
+                        }
+                    });
+                    const sumKm: number = this.commonService.sum(vehiclesSum, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
+                    resultPrice = Math.round((sumPrice / sumKm) * 100) / 100;
+                }
+                result = [...result, this.getDataDashboard(x.operationType.description, resultPrice, x.operationType.id)];
             }
         });
         return result;
@@ -556,9 +534,9 @@ export class DashboardService {
         return (total === 0 ? 0 : (value >= 0 ? value / total : 1));
     }
 
-    getDateCalculateMonths(wear: WearReplacementProgressBarViewModel): string {
+    getDateCalculateMonths(time: number): string {
         let date = '';
-        const months: number = wear.calculateMonths * (wear.calculateMonths < 0 ? -1 : 1);
+        const months: number = time * (time < 0 ? -1 : 1);
         if (months >= 12) {
           const years: number = Math.round(months / 12);
           date = `${years} ${this.translator.instant(years > 1 ? 'COMMON.YEARS' : 'COMMON.YEAR')}`;
@@ -566,7 +544,7 @@ export class DashboardService {
           date = `${months} ${this.translator.instant(months > 1 ? 'COMMON.MONTHS' : 'COMMON.MONTH')}`;
         }
         return date;
-      }
+    }
 
     getWearReplacement(vehicleWear: WearVehicleProgressBarViewModel, operations: OperationModel[]): WearVehicleProgressBarViewModel {
         let result: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();

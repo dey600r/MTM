@@ -57,6 +57,10 @@
             <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
           </ion-select>
     </ion-item>
+    <ion-item *ngIf="isParentPageDashboardVehicle() || isParentPageDashboardOperation()">
+        <ion-label>{{ this.translateExpensePerKM }}</ion-label>
+        <ion-toggle color="primary" [(ngModel)]="searchDashboard.expensePerKm" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>
+    </ion-item>
     <ion-item *ngIf="!isParentPageOperation()">
         <ion-label>{{ 'COMMON.SHOW_AXIS' | translate }}</ion-label>
         <ion-toggle color="primary" [(ngModel)]="searchDashboard.showAxis" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>

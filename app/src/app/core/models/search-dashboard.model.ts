@@ -16,10 +16,12 @@ export class SearchDashboardModel {
     showMyData: boolean;
     filterKmTime: FilterKmTimeEnum;
     searchText: string;
+    expensePerKm: boolean;
     constructor(month: FilterMonthsEnum = FilterMonthsEnum.MONTH, st: string = '', sv: VehicleModel = new VehicleModel(),
                 sot: OperationTypeModel[] = [], sme: MaintenanceElementModel[] = [], axis: boolean = true,
                 legend: boolean = false, axisLabel: boolean = false, dataLabel: boolean = false,
-                dog: boolean = false, myData: boolean = true, kmTime: FilterKmTimeEnum = FilterKmTimeEnum.KM) {
+                dog: boolean = false, myData: boolean = true, kmTime: FilterKmTimeEnum = FilterKmTimeEnum.KM,
+                epk: boolean = false) {
         this.showPerMont = month;
         this.searchText = st;
         this.searchVehicle = sv;
@@ -32,5 +34,6 @@ export class SearchDashboardModel {
         this.doghnut = dog;
         this.showMyData = myData;
         this.filterKmTime = kmTime;
+        this.expensePerKm = epk;
     }
 }

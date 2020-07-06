@@ -232,22 +232,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getTimePercent(wear: WearReplacementProgressBarViewModel): string {
-    const dateMaintenance: Date = this.getDateMaintenance(wear);
-    const dateOperation: Date = this.getDateOperation(wear, dateMaintenance);
+    const dateMaintenance: Date = this.calendarService.sumTimeToDate(this.wear.datePurchaseVehicle, wear.timeAcumulateMaintenance);
+    const dateOperation: Date = this.calendarService.sumTimeToDate(dateMaintenance, -wear.calculateMonths);
     return `${(wear.kmOperation === null ? '--' : this.calendarService.getDateString(dateOperation))} /` +
       ` ${this.calendarService.getDateString(dateMaintenance)}`;
-  }
-
-  getDateMaintenance(wear: WearReplacementProgressBarViewModel): Date {
-    const dateMaintenance: Date = new Date(this.wear.datePurchaseVehicle);
-    dateMaintenance.setMonth(dateMaintenance.getMonth() + wear.timeAcumulateMaintenance);
-    return dateMaintenance;
-  }
-
-  getDateOperation(wear: WearReplacementProgressBarViewModel, dateMaintenance: Date): Date {
-    const dateOperation: Date = new Date(dateMaintenance);
-    dateOperation.setMonth(dateOperation.getMonth() - wear.calculateMonths);
-    return dateOperation;
   }
 
   getIconPercent(type: string): string {
@@ -274,7 +262,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         msg = this.translator.instant('ALERT.InfoNotOperationKm',
           { km: wear.kmAcumulateMaintenance, measure: this.measure.value });
       } else {
-        const dateMaintenance: Date = this.getDateMaintenance(wear);
+        const dateMaintenance: Date = this.calendarService.sumTimeToDate(this.wear.datePurchaseVehicle, wear.timeAcumulateMaintenance);
         msg = this.translator.instant('ALERT.InfoNotOperationKmTime',
           { km: wear.kmAcumulateMaintenance, time: this.calendarService.getDateString(dateMaintenance), measure: this.measure.value });
       }
@@ -282,8 +270,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       msg = this.translator.instant('ALERT.InfoOperationKm',
         { kmop: wear.kmAcumulateMaintenance - wear.calculateKms, km: wear.kmAcumulateMaintenance, measure: this.measure.value });
       if (wear.timeMaintenance !== 0) {
-        const dateMaintenance: Date = this.getDateMaintenance(wear);
-        const dateOperation: Date = this.getDateOperation(wear, dateMaintenance);
+        const dateMaintenance: Date = this.calendarService.sumTimeToDate(this.wear.datePurchaseVehicle, wear.timeAcumulateMaintenance);
+        const dateOperation: Date = this.calendarService.sumTimeToDate(dateMaintenance, -wear.calculateMonths);
         msg += this.translator.instant('ALERT.InfoOperationTime',
           { timeop: this.calendarService.getDateString(dateOperation), time: this.calendarService.getDateString(dateMaintenance) });
       }

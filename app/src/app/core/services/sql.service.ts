@@ -91,8 +91,8 @@ export class SqlService {
     return `SELECT op.${ConstantsColumns.COLUMN_MTM_ID}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS}, ` +
     `v.${ConstantsColumns.COLUMN_MTM_ID} as idVehicle, v.${ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND} as brandVehicle, ` +
-    `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL} as modelVehicle, v.${ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE} as activeVehicle,` +
-    `op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
+    `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL} as modelVehicle, v.${ConstantsColumns.COLUMN_MTM_VEHICLE_KM} as kmVehicle,` +
+    `v.${ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE} as activeVehicle, op.${ConstantsColumns.COLUMN_MTM_OPERATION_KM}, ` +
     `vt.${ConstantsColumns.COLUMN_MTM_ID} as idVehicleType, vt.${ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE} as codeVehicleType, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_DATE}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_LOCATION}, ` +
     `op.${ConstantsColumns.COLUMN_MTM_OPERATION_OWNER}, op.${ConstantsColumns.COLUMN_MTM_OPERATION_PRICE}, ` +
@@ -277,7 +277,7 @@ export class SqlService {
             description: row[ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION],
             details: row[ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS],
             operationType: this.getMapOperationType(row, true),
-            vehicle: new VehicleModel(row.modelVehicle, row.brandVehicle, null, null, null,
+            vehicle: new VehicleModel(row.modelVehicle, row.brandVehicle, null, row.kmVehicle, null,
               this.getMapVehicleType(row, true), null, null, null,
               (row.activeVehicle === Constants.DATABASE_YES), row[ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE]),
             km: Number(row[ConstantsColumns.COLUMN_MTM_OPERATION_KM]),

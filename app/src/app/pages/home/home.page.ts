@@ -169,7 +169,7 @@ export class HomePage implements OnInit {
   }
 
   getDateCalculateMonths(wear: WearReplacementProgressBarViewModel): string {
-    return this.dashboardService.getDateCalculateMonths(wear);
+    return this.dashboardService.getDateCalculateMonths(wear.calculateMonths);
   }
 
   // MODALS
@@ -215,6 +215,15 @@ export class HomePage implements OnInit {
   getIconVehicle(wear: WearVehicleProgressBarViewModel): string {
     return this.vehicleService.getIconVehicle(new VehicleModel(null, null, null, null, null,
       new VehicleTypeModel(wear.typeVehicle)));
+  }
+
+  getKmPercent(wear: WearReplacementProgressBarViewModel): string {
+    return `${wear.kmMaintenance - wear.calculateKms } / ${wear.kmMaintenance}`;
+  }
+
+  getTimePercent(wear: WearReplacementProgressBarViewModel): string {
+    return `${this.dashboardService.getDateCalculateMonths(wear.timeMaintenance - wear.calculateMonths)} /` +
+      ` ${this.dashboardService.getDateCalculateMonths(wear.timeMaintenance)}`;
   }
 
 }

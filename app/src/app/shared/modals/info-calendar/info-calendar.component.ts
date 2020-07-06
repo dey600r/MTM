@@ -239,18 +239,21 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
         x.classList.remove('month-circle-config-success');
       });
       if (this.yearActive && !!notifications && notifications.length > 0) {
-        let monthsUsed: number[] = [];
+        let monthsUsed: any[] = [];
         notifications.forEach(x => {
           x.listInfoCalendarMaintenance.forEach(y => {
             y.listInfoCalendarReplacement.forEach(z => {
-              if (!monthsUsed.some(m => m === z.date.getMonth())) {
-                const color: string = this.calendarService.getCircleColor(this.listInfoCalendar, z);
-                monthsUsed = [...monthsUsed, z.date.getMonth()];
-                htmlMonths[z.date.getMonth()].classList.add(color.replace('day', 'month'));
+              const colorMonth: string = this.calendarService.getCircleColor(this.listInfoCalendar, z);
+              const monthFind: any = monthsUsed.find(m => m.month === z.date.getMonth());
+              if (!monthFind) {
+                monthsUsed = [...monthsUsed, { month: z.date.getMonth(), color: colorMonth }];
+              } else if (monthFind.color !== colorMonth ) {
+                monthFind.color = this.calendarService.getCircleColor([], z);
               }
             });
           });
         });
+        monthsUsed.forEach(x => htmlMonths[x.month].classList.add(x.color.replace('day', 'month')));
       }
     }
   }

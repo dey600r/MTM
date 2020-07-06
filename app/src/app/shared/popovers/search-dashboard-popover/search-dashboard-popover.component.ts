@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { SearchDashboardModel, OperationTypeModel, ModalInputModel, VehicleModel, MaintenanceElementModel } from '@models/index';
-import { DashboardService, CommonService, DataBaseService } from '@services/index';
+import { DashboardService, CommonService, DataBaseService, SettingsService } from '@services/index';
 import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
 
 @Component({
@@ -21,6 +21,8 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     modalInputModel: ModalInputModel = new ModalInputModel();
 
     // DATA
+    measure: any = {};
+    coin: any = {};
     refresh = true;
     vehicles: VehicleModel[] = [];
     operationTypes: OperationTypeModel[] = [];
@@ -47,18 +49,21 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     vehicleSubscription: Subscription = new Subscription();
     operationTypeSubscription: Subscription = new Subscription();
     maintenanceElementSubscription: Subscription = new Subscription();
+    settingsSubscription: Subscription = new Subscription();
 
     // TRANSLATE
     translateAccept = '';
     translateCancel = '';
     translateSelect = '';
+    translateExpensePerKM = '';
 
     constructor(private popoverController: PopoverController,
                 private navParams: NavParams,
                 private dbService: DataBaseService,
                 private dashboardService: DashboardService,
                 private commonService: CommonService,
-                private translator: TranslateService) {
+                private translator: TranslateService,
+                private settingsService: SettingsService) {
         this.searchDashboard = this.dashboardService.getSearchDashboard();
         this.filterMonth = this.searchDashboard.showPerMont;
         this.translateAccept = this.translator.instant('COMMON.ACCEPT');
@@ -86,6 +91,14 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
             this.maintenanceElements = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
             this.searchDashboard.searchMaintenanceElement.forEach(x => this.filterMaintElement = [...this.filterMaintElement, x.id]);
         });
+
+        this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
+            if (!!settings && settings.length > 0) {
+                this.measure = this.settingsService.getDistanceSelected(settings);
+                this.coin = this.settingsService.getMoneySelected(settings);
+                this.translateExpensePerKM = `${this.coin.value}/${this.measure.value}`;
+            }
+          });
     }
 
     ngOnDestroy() {
@@ -127,7 +140,8 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
                                         this.searchDashboard.showDataLabel,
                                         this.searchDashboard.doghnut,
                                         this.searchDashboard.showMyData,
-                                        this.searchDashboard.filterKmTime));
+                                        this.searchDashboard.filterKmTime,
+                                        this.searchDashboard.expensePerKm));
         }
     }
 
