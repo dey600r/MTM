@@ -102,7 +102,8 @@ export class SqlService {
     `me.${ConstantsColumns.COLUMN_MTM_ID} as idMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME} as nameMaintenanceElement, ` +
     `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION} as descriptionMaintenanceElement, ` +
-    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER} as masterMaintenanceElement ` +
+    `me.${ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER} as masterMaintenanceElement, ` +
+    `ome.${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE} as priceOpMaintenanceElement ` +
     `FROM ${ConstantsTable.TABLE_MTM_OPERATION} AS op ` +
     `JOIN ${ConstantsTable.TABLE_MTM_OPERATION_TYPE} AS opt ON ` +
     `opt.${ConstantsColumns.COLUMN_MTM_ID} = op.${ConstantsColumns.COLUMN_MTM_OPERATION_OPERATION_TYPE} ` +
@@ -392,7 +393,8 @@ export class SqlService {
       description: (data.masterMaintenanceElement === Constants.DATABASE_YES ?
         this.translator.instant(`DB.${data.descriptionMaintenanceElement}`) :
         data.descriptionMaintenanceElement),
-      master: (data.masterMaintenanceElement === Constants.DATABASE_YES)
+      master: (data.masterMaintenanceElement === Constants.DATABASE_YES),
+      price: (!!data.priceOpMaintenanceElement ? data.priceOpMaintenanceElement : 0)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       name: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES ?
@@ -401,7 +403,8 @@ export class SqlService {
       description: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES ?
         this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION]}`) :
         data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION]),
-      master: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES)
+      master: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES),
+      price: 0
     });
   }
 
@@ -477,12 +480,13 @@ export class SqlService {
     if (op !== null  && !!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
       sql = `INSERT INTO ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT} ` +
       `(${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION}, ` +
-      `${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT}) `;
+      `${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT}, ` +
+      `${ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE}) `;
 
       // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < op.listMaintenanceElement.length; i++) {
         sql += `SELECT (${(op.id > 0 ? op.id : this.getSqlSequence(ConstantsTable.TABLE_MTM_OPERATION, 0))}), ` +
-        `${op.listMaintenanceElement[i].id}`;
+        `${op.listMaintenanceElement[i].id}, ${op.listMaintenanceElement[i].price}`;
         if ((i + 1) < op.listMaintenanceElement.length) {
           sql += ' UNION ';
         }

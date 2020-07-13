@@ -64,7 +64,7 @@
         </ion-label>
         <ion-select #opReplacement name="opReplacement" multiple="true" [placeholder]="this.translateSelect"
         [disabled]="!isOperationTypeWithReplacement()" [cancelText]="this.translateCancel"
-        [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect">
+        [okText]="this.translateAccept" [(ngModel)]="this.idMaintenanceElementSelect" (ionChange)="changeReplacement()">
           <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElement">{{ me.name }}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -89,12 +89,22 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.PRICE' | translate }}</ion-text>
+          <ion-text>{{ 'COMMON.OPERATION_PRICE' | translate }}</ion-text>
           <ion-text color="danger">*</ion-text>
           <ion-icon *ngIf="this.submited && !isValidPrice(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidPrice(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddPrice' | translate }}</ion-text>
         </ion-label>
         <ion-input #opPrice name="opPrice" placeholder="10 {{coin.value}}" required inputmode="decimal" min="0" [(ngModel)]="operation.price"></ion-input>
+      </ion-item>
+      <ion-item *ngFor="let me of this.maintenanceElementSelect; let i = index">
+        <ion-avatar slot="start" class="max-width10">
+          <ion-icon size="large" class="icon-color" [name]="this.getIconReplacement(me)"></ion-icon>
+        </ion-avatar>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.PRICE' | translate }} {{ me.name }}</ion-text>
+        </ion-label>
+        <ion-input [name]="'opMaintElemPrice' + i" placeholder="10 {{coin.value}}" required [disabled]="!isOperationTypeWithReplacement()"
+          inputmode="decimal" min="0" [(ngModel)]="me.price"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">

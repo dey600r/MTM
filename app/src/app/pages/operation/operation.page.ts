@@ -174,6 +174,16 @@ export class OperationPage implements OnInit {
     this.controlService.closePopover();
   }
 
+  /** METHODS */
+
+  calculatePriceOperation(op: OperationModel): number {
+    let totalPrice: number = op.price;
+    if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+      totalPrice += this.commonService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+    }
+    return Math.round(totalPrice * 100) / 100;
+  }
+
   /** ICONS */
 
   getIconInfoDashboard(): string {

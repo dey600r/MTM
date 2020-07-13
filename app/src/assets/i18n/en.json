@@ -33,6 +33,7 @@
         "LOCATION": "Location",
         "OWNER": "Owner",
         "PRICE": "Price",
+        "OPERATION_PRICE": "Operation Price",
         "DOCUMENT": "Document",
         "OPERATION_TYPE": "Operation type",
         "OPERATIONS_OF": "Op. of",
@@ -111,7 +112,8 @@
         "ConfirmDeleteVehicle": "The vehicle {{vehicle}} will be deleted. Do you wish continue?",
         "ConfirmDeleteVehicleOperation": "The vehicle {{vehicle}} and operations will be deleted. Do you wish continue?",
         "ExpensesPerVehicle": "Expenses per vehicle",
-        "ExpensesPerOperationType": "Expenses per operation type"
+        "ExpensesPerOperationType": "Expenses per operation type",
+        "ExpensesPerReplacement": "Expenses per replacement"
     },
     "PAGE_OPERATION": {
         "YOURS_OPERATIONS": "Vehicles's Operations",

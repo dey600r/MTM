@@ -49,11 +49,11 @@
             <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationTypes">{{ ot.description }}</ion-select-option>
         </ion-select>
     </ion-item>
-    <ion-item *ngIf="isParentPageOperation()">
+    <ion-item *ngIf="!isParentPageHome()">
         <ion-label>{{ 'COMMON.REPLACEMENT' | translate }}</ion-label>
         <ion-select [placeholder]="this.translateSelect" multiple="true" 
             [cancelText]="this.translateCancel" [okText]="this.translateAccept"
-            [(ngModel)]="this.filterMaintElement" (ionChange)="onChangeFilterOperationGrouper()">
+            [(ngModel)]="this.filterMaintElement" (ionChange)="onChangeFilterGrouper()">
             <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
           </ion-select>
     </ion-item>

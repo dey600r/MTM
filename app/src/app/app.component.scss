@@ -342,7 +342,7 @@
 // COLORS
 
 .icon-color-success {
-    --ion-color-base: var(--ion-color-progressbar-success-buffer);
+    --ion-color-base: var(--ion-color-progressbar-success-progress);
 }
 
 .icon-color-gray {
@@ -350,11 +350,11 @@
 }
 
 .icon-color-warning {
-    --ion-color-base: var(--ion-color-progressbar-warning-buffer);
+    --ion-color-base: var(--ion-color-progressbar-warning-progress);
 }
 
 .icon-color-danger {
-    --ion-color-base: var(--ion-color-progressbar-danger-buffer);
+    --ion-color-base: var(--ion-color-progressbar-danger-progress);
 }
 
 .icon-color-skull {

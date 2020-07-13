@@ -220,7 +220,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getIconReplacement(): string {
     return (!!this.wear && this.wear.listWearReplacement.length > 0 ? this.configurationService.getIconReplacement(
-      new MaintenanceElementModel(null, null, null, this.getMaintenanceNow(this.wear.listWearReplacement).idMaintenanceElement)) : '');
+      new MaintenanceElementModel(null, null, null, 0, this.getMaintenanceNow(this.wear.listWearReplacement).idMaintenanceElement)) : '');
   }
 
   getKmPercent(wear: WearReplacementProgressBarViewModel): string {

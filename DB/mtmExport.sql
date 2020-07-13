@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS "mtmOpMaintElem" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"idOperation"	INTEGER NOT NULL,
 	"idMaintenanceElement"	INTEGER NOT NULL,
+	"price"	REAL NOT NULL DEFAULT 0,
 	FOREIGN KEY("idMaintenanceElement") REFERENCES "mtmMaintenanceElement"("id"),
 	FOREIGN KEY("idOperation") REFERENCES "mtmOperation"("id")
 );

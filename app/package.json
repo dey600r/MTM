@@ -1,6 +1,6 @@
 {
   "name": "MtM",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "author": "David Jimenez Galiana",
   "homepage": "deyhome.mtm@gmail.com",
   "main": "./src/electron-started.js",

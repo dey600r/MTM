@@ -45,6 +45,7 @@ export class ConstantsColumns {
     // OPERATION MAINTENANCE ELEMENT
     static COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION = 'idOperation';
     static COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT = 'idMaintenanceElement';
+    static COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE = 'price';
 
     // MAINTENANCE
     static COLUMN_MTM_MAINTENANCE_DESCRIPTION = 'description';

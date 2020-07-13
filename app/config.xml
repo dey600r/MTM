@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="214" id="mtm.ionic.dey125r.debug" version="2.1.4" windows-packageVersion="2.1.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="220" id="mtm.ionic.dey125r.debug" version="2.2.0" windows-packageVersion="2.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM</name>
     <description>Motor Track Manager</description>
     <author email="deyhome.mtm@gmail.com" href="http://ionicframework.com/">DeyHome</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://localhost:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

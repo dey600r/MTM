@@ -51,11 +51,18 @@ export class DashboardService {
         const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
         operationPreFilter.forEach(x => {
             if (!result.some((z: any) => z.id === x.vehicle.id)) {
-                const sumPrice: number = this.commonService.sum(
-                    operationPreFilter.filter(z => z.vehicle.id === x.vehicle.id &&
-                        (filter.searchOperationType.length === 0 ||
-                        filter.searchOperationType.some(f => f.id === z.operationType.id))),
-                    ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
+                const operationSum: OperationModel[] = operationPreFilter.filter(z => z.vehicle.id === x.vehicle.id &&
+                    this.getFilterOperationType(z, filter));
+                let sumPrice = 0;
+                operationSum.forEach(os => {
+                    sumPrice += os.price;
+                    if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
+                        const sumPriceRepl: MaintenanceElementModel[] = this.getFilterReplacement(os.listMaintenanceElement, filter);
+                        if (!!sumPriceRepl && sumPriceRepl.length > 0) {
+                            sumPrice += this.commonService.sum(sumPriceRepl, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                        }
+                    }
+                });
                 const resultPrice: number = (filter.expensePerKm ? Math.round((sumPrice / x.vehicle.km) * 100) / 100 : sumPrice);
                 result = [...result, this.getDataDashboard(`${x.vehicle.brand}-${x.vehicle.model}`, resultPrice, x.vehicle.id)];
             }
@@ -86,10 +93,20 @@ export class DashboardService {
                         const ops: OperationModel[] = operationPreFilter.filter(x =>
                             new Date(x.date).getMonth() >= j && new Date(x.date).getMonth() < (j + iterator) &&
                             new Date(x.date).getFullYear() === i &&
-                            (filter.searchOperationType.length === 0 ||
-                            filter.searchOperationType.some(f => f.id === x.operationType.id)));
+                            this.getFilterOperationType(x, filter));
                         if (!!ops && ops.length > 0) {
-                            const sumPrice: number = this.commonService.sum(ops, ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
+                            let sumPrice = 0;
+                            ops.forEach(os => {
+                                sumPrice += os.price;
+                                if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
+                                    const sumPriceRepl: MaintenanceElementModel[] =
+                                        this.getFilterReplacement(os.listMaintenanceElement, filter);
+                                    if (!!sumPriceRepl && sumPriceRepl.length > 0) {
+                                        sumPrice += this.commonService.sum(sumPriceRepl,
+                                            ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                                    }
+                                }
+                            });
                             result = [...result, this.getDataDashboard(this.getRangeDates(i, j, iterator), sumPrice)];
                         }
                     }
@@ -125,9 +142,17 @@ export class DashboardService {
         operationPreFilter.forEach(x => {
             if (!result.some((z: any) => z.id === x.operationType.id)) {
                 const listOperationsSum: OperationModel[] = operationPreFilter.filter(z => z.operationType.id === x.operationType.id &&
-                    (filter.searchOperationType.length === 0 ||
-                    filter.searchOperationType.some(f => f.id === z.operationType.id)));
-                const sumPrice: number = this.commonService.sum(listOperationsSum, ConstantsColumns.COLUMN_MTM_OPERATION_PRICE);
+                    this.getFilterOperationType(z, filter));
+                let sumPrice = 0;
+                listOperationsSum.forEach(os => {
+                    sumPrice += os.price;
+                    if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
+                        const sumPriceRepl: MaintenanceElementModel[] = this.getFilterReplacement(os.listMaintenanceElement, filter);
+                        if (!!sumPriceRepl && sumPriceRepl.length > 0) {
+                            sumPrice += this.commonService.sum(sumPriceRepl, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                        }
+                    }
+                });
                 let resultPrice: number = sumPrice;
                 if (filter.expensePerKm) {
                     let vehiclesSum: VehicleModel[] = [];
@@ -145,6 +170,44 @@ export class DashboardService {
         return result;
     }
 
+    // REPLACEMENTS EXPENSES
+    getDashboardModelReplacementExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
+        return new DashboardModel(view, this.mapOperationToDashboardReplacementExpenses(data, filter), null,
+            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OPERATION_TYPE'),
+            filter.showAxisLabel, this.translator.instant('COMMON.OPERATION_TYPE'),
+            filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
+    }
+
+    mapOperationToDashboardReplacementExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
+        let result: any[] = [];
+        const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
+        operationPreFilter.forEach(op => {
+            if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+                this.getFilterReplacement(op.listMaintenanceElement, filter).forEach(m => {
+                    const replacementFind: any = result.find((z: any) => z.id === m.id);
+                    if (!!replacementFind) {
+                        replacementFind.value += m.price;
+                    } else {
+                        result = [...result, this.getDataDashboard(m.name, m.price, m.id)];
+                    }
+                });
+            }
+        });
+        if (filter.expensePerKm) {
+            let vehiclesSum: VehicleModel[] = [];
+            operationPreFilter.forEach(op => {
+                if (!vehiclesSum.some((v: VehicleModel) => v.id === op.vehicle.id)) {
+                    vehiclesSum = [...vehiclesSum, op.vehicle];
+                }
+            });
+            const sumKm: number = this.commonService.sum(vehiclesSum, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
+            result.forEach(expenses => {
+                expenses.value = Math.round((expenses.value / sumKm) * 100) / 100;
+            });
+        }
+        return result;
+    }
+
     getPrefilterOperation(data: OperationModel[], filter: SearchDashboardModel): OperationModel[] {
         let operationPreFilter: OperationModel[] = [];
         if (filter.showMyData) {
@@ -155,9 +218,23 @@ export class DashboardService {
                 x.owner.toLowerCase() !== Constants.OWNER_YO);
         }
         operationPreFilter = operationPreFilter.filter(z => data.some(x => z.operationType.id === x.operationType.id &&
-            (filter.searchOperationType.length === 0 ||
-            filter.searchOperationType.some(f => f.id === z.operationType.id))));
+            this.getFilterOperationType(z, filter) && this.getFilterOpReplacement(z, filter)));
         return operationPreFilter;
+    }
+
+    getFilterOperationType(op: OperationModel, filter: SearchDashboardModel): boolean {
+        return (filter.searchOperationType.length === 0 ||
+            filter.searchOperationType.some(f => f.id === op.operationType.id));
+    }
+
+    getFilterOpReplacement(op: OperationModel, filter: SearchDashboardModel): boolean {
+        return (filter.searchMaintenanceElement.length === 0 ||
+            filter.searchMaintenanceElement.some(f => op.listMaintenanceElement.some(y => y.id === f.id)));
+    }
+
+    getFilterReplacement(rep: MaintenanceElementModel[], filter: SearchDashboardModel): MaintenanceElementModel[] {
+        return rep.filter(x => (filter.searchMaintenanceElement.length === 0 ||
+            filter.searchMaintenanceElement.some(f => x.id === f.id)));
     }
 
     // RECORDS MAINTENANCES
@@ -471,6 +548,10 @@ export class DashboardService {
             }
             const percentKm: number = this.calculatePercent(main.km, calKms);
             const percentMonth: number = this.calculatePercent(main.time, calMonths);
+            let priceSum: number = op.price;
+            if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+                priceSum += this.commonService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+            }
             result = [... result, {
                 idMaintenanceElement: rep.id,
                 nameMaintenanceElement: rep.name,
@@ -479,7 +560,7 @@ export class DashboardService {
                 descriptionOperation: op.description,
                 kmOperation: op.km,
                 dateOperation: op.date,
-                priceOperation: op.price,
+                priceOperation: priceSum,
                 idMaintenance: main.id,
                 descriptionMaintenance: main.description,
                 kmMaintenance: main.km,

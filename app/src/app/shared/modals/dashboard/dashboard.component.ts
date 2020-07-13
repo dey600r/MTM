@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // MODEL FORM
     dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
+    dashboardReplacementExpenses: DashboardModel = new DashboardModel([], []);
     dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
     currentPopover = null;
 
@@ -64,6 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       // VEHICLE EXPENSES PER OPERATION TYPE
       this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
+      this.dashboardReplacementExpenses = this.dashboardService.getDashboardModelReplacementExpenses(windowsSize, this.operations, filter);
       this.changeDetector.detectChanges();
     });
 
@@ -71,11 +73,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardVehicleExpenses.view = windowSize;
       this.dashboardOpTypeExpenses.view = windowSize;
+      this.dashboardReplacementExpenses.view = windowSize;
       setTimeout(() => {
         windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (windowSize[0] === windowSize[1]) {
           this.dashboardVehicleExpenses.view = windowSize;
           this.dashboardOpTypeExpenses.view = windowSize;
+          this.dashboardReplacementExpenses.view = windowSize;
           this.changeDetector.detectChanges();
         }
       }, 200);

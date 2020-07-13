@@ -52,7 +52,7 @@
       </ion-label>
       <ion-label class="padding-left10 label-event-force" (click)="openOperationModal(op, false)">
         <p class="p-style">{{ op.date | dateFormatCalendarPipe }}</p>
-        <p class="p-style">{{ op.price }} {{coin.value}}</p>
+        <p class="p-style">{{ this.calculatePriceOperation(op) }} {{coin.value}}</p>
       </ion-label>
       <!-- Buttons delete -->
       <ion-label class="align-right fix-width69">

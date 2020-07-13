@@ -1,3 +1,26 @@
+CREATE TABLE IF NOT EXISTS "mtmOpMaintElem" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"idOperation"	INTEGER NOT NULL,
+	"idMaintenanceElement"	INTEGER NOT NULL,
+	"price"	REAL NOT NULL DEFAULT 0,
+	FOREIGN KEY("idMaintenanceElement") REFERENCES "mtmMaintenanceElement"("id"),
+	FOREIGN KEY("idOperation") REFERENCES "mtmOperation"("id")
+);
+CREATE TABLE IF NOT EXISTS "mtmOperation" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"description"	TEXT NOT NULL,
+	"details"	TEXT NOT NULL,
+	"idOperationType"	INTEGER NOT NULL,
+	"idVehicle"	INTEGER NOT NULL,
+	"km"	REAL NOT NULL,
+	"date"	TEXT NOT NULL,
+	"location"	TEXT,
+	"owner"	TEXT,
+	"price"	REAL NOT NULL,
+	"document"	BLOB,
+	FOREIGN KEY("idOperationType") REFERENCES "mtmOperationType"("id"),
+	FOREIGN KEY("idVehicle") REFERENCES "mtmVehicle"("id")
+);
 CREATE TABLE IF NOT EXISTS "mtmSystemConfiguration" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"key"	TEXT NOT NULL,
@@ -18,21 +41,6 @@ CREATE TABLE IF NOT EXISTS "mtmVehicle" (
 	"active"	TEXT NOT NULL DEFAULT 'Y',
 	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id"),
 	FOREIGN KEY("idVehicleType") REFERENCES "mtmVehicleType"("id")
-);
-CREATE TABLE IF NOT EXISTS "mtmOperation" (
-	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	"description"	TEXT NOT NULL,
-	"details"	TEXT NOT NULL,
-	"idOperationType"	INTEGER NOT NULL,
-	"idVehicle"	INTEGER NOT NULL,
-	"km"	REAL NOT NULL,
-	"date"	TEXT NOT NULL,
-	"location"	TEXT,
-	"owner"	TEXT,
-	"price"	REAL NOT NULL,
-	"document"	BLOB,
-	FOREIGN KEY("idOperationType") REFERENCES "mtmOperationType"("id"),
-	FOREIGN KEY("idVehicle") REFERENCES "mtmVehicle"("id")
 );
 CREATE TABLE IF NOT EXISTS "mtmVehicleType" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
@@ -78,13 +86,6 @@ CREATE TABLE IF NOT EXISTS "mtmConfigMaintenance" (
 	FOREIGN KEY("idConfiguration") REFERENCES "mtmConfiguration"("id"),
 	FOREIGN KEY("idMaintenance") REFERENCES "mtmMaintenance"("id")
 );
-CREATE TABLE IF NOT EXISTS "mtmOpMaintElem" (
-	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-	"idOperation"	INTEGER NOT NULL,
-	"idMaintenanceElement"	INTEGER NOT NULL,
-	FOREIGN KEY("idMaintenanceElement") REFERENCES "mtmMaintenanceElement"("id"),
-	FOREIGN KEY("idOperation") REFERENCES "mtmOperation"("id")
-);
 CREATE TABLE IF NOT EXISTS "mtmMaintenanceFreq" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"code"	TEXT NOT NULL UNIQUE,
@@ -95,11 +96,153 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 	"code"	TEXT NOT NULL UNIQUE,
 	"description"	TEXT NOT NULL
 );
-INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v2.1.2','2020-06-12 18:30:00');
-INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (2,'configDistance','KM','2006-09-12 12:32:00');
-INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (3,'configMoney','EURO','2006-09-12 12:32:00');
-INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,87650,2,1,650,'2020-04-10','2006-09-19','Y');
-INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,75600,3,1,50,'2020-04-10','2006-09-12','Y');
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (1,2,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (2,2,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (3,2,11,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (4,2,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (5,3,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (6,3,4,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (7,3,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (8,3,18,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (9,4,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (10,4,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (11,4,11,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (12,4,13,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (13,4,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (14,5,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (15,5,4,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (16,5,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (17,5,6,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (18,5,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (19,5,18,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (20,6,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (21,6,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (22,6,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (23,6,18,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (24,7,10,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (25,8,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (26,8,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (27,8,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (28,8,18,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (29,9,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (30,9,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (31,9,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (32,9,25,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (33,11,18,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (34,13,7,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (35,13,12,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (36,14,1,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (37,16,11,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (38,16,22,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (39,17,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (40,17,4,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (41,17,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (42,17,6,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (43,17,16,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (44,17,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (45,18,2,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (46,20,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (47,20,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (48,22,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (49,22,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (50,25,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (51,25,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (52,26,6,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (53,27,20,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (54,27,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (56,28,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (57,28,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (59,28,32,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (60,29,7,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (61,29,12,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (62,30,31,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (63,31,7,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (64,31,12,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (65,33,1,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (66,37,4,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (67,37,16,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (68,37,18,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (69,42,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (70,42,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (71,42,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (72,44,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (73,44,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (74,44,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (75,45,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (76,45,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (77,45,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (78,46,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (79,46,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (80,46,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (81,47,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (82,47,4,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (83,47,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (84,47,6,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (85,47,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (86,47,8,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (87,50,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (88,50,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (89,50,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (90,50,19,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (91,52,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (92,52,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (93,52,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (94,52,7,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (95,52,12,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (96,57,2,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (97,62,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (98,62,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (99,62,10,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (100,62,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (101,62,7,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (102,62,12,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (103,63,1,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (104,65,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (105,65,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (106,65,6,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (107,65,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (108,75,3,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (109,75,5,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (110,75,6,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (111,75,7,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (112,75,12,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (113,75,17,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (114,75,8,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (115,75,16,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (116,75,24,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (117,77,2,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (118,84,1,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (119,85,3,28.7);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (120,85,4,72.62);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (121,85,5,7.82);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (122,85,17,0.5);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (123,90,19,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (124,93,15,27.99);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (125,95,3,28.7);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (126,95,5,7.82);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (127,95,7,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (128,95,12,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (129,95,17,0.5);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (130,99,8,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (131,99,9,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (132,100,6,34.4);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (133,101,8,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (134,103,3,28.7);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (135,103,4,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (136,103,5,7.82);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (137,103,17,0.5);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (138,105,3,28.7);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (139,105,4,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (140,105,5,7.82);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (141,105,17,0.5);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (142,110,7,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (143,110,10,180.75);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (144,110,12,0.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (145,111,2,92.2);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (146,111,29,1.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (147,113,1,72.2);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (148,113,28,1.0);
+INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (149,114,24,53.0);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (1,'Compra moto','Compra hyosung GT125r 2006',6,2,0.0,'2006-09-12','Motos real (Ciudad Real)','Yo',3500.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (2,'Revision','Aceite motor, filtro aceite, pastillas de freno',1,2,4000.0,'2006-11-15','Motos real (Ciudad Real)','Yo',102.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (3,'Revision','Aceite motor, filtro aceite, sincronizar carburadores',1,2,8000.0,'2007-02-06','Motos real (Ciudad Real)','Yo',73.0,NULL);
@@ -156,7 +299,7 @@ INSERT OR IGNORE INTO "mtmOperation" VALUES (53,'ITV','ITV',6,1,24283.0,'2014-03
 INSERT OR IGNORE INTO "mtmOperation" VALUES (54,'Compra Moto','Yamaha R6 2005',6,1,24467.0,'2014-08-14','Madrid','Yo',3000.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (55,'Averia','Rotura guardabarros delantero',8,1,24723.0,'2014-09-06','Ciudad Real (Piso Ana-Carlota)','Yo',0.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (56,'Compra alforjas','3 alforjas en Louis',3,1,24856.0,'2014-09-08','Ciudad Real(Louis)','Yo',99.95,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (57,'Compra rueda trasera','Pilot road 3 trasera',9,1,25891.0,'2014-09-30','Ciudad Real (Michelin)','Yo',160.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (57,'Cambiar rueda trasera','Pilot road 3 trasera',1,1,25891.0,'2014-09-30','Ciudad Real (Michelin)','Yo',160.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (58,'Compra protección','Espaldera pecho Zandona',3,1,26981.0,'2014-12-29','Dainesse (Madrid)','Yo',125.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (59,'Compra puños','Puños calefactables Oxford',5,1,27402.0,'2015-01-16','Madrid','Yo',50.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (60,'Compra mono','Mono Alpinestar',3,1,29654.0,'2015-04-17','Madrid (Autoservicio)','Yo',630.0,NULL);
@@ -180,50 +323,45 @@ INSERT OR IGNORE INTO "mtmOperation" VALUES (77,'Cambio rueda trasera','Pilot ro
 INSERT OR IGNORE INTO "mtmOperation" VALUES (78,'Compra casco','Shoei GT-AIR',3,1,56000.0,'2017-07-17','Motocard (Madrid)','Yo',444.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (79,'Compra intercomunicador','Intercomunicador para casco',5,1,58500.0,'2017-08-06','Gearbest','Yo',26.0,NULL);
 INSERT OR IGNORE INTO "mtmOperation" VALUES (80,'Compra caballete trasero','Caballete ITR trasero universal fabricado en hierro para diabolo y basculante Negro',4,1,59000.0,'2017-08-26','Nilmotos','Yo',57.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (81,'Compra aceite','Aceite Castrol Power 1 Racing 4T 10W40 4L',9,1,59369.0,'2017-08-26','Megataller','Yo',28.7,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (82,'Compra liquido frenos','Líquido de frenos Castrol Brake Fluid DOT 4 500ML (x2)',9,1,59369.0,'2017-08-26','Megataller','Yo',12.9,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (83,'Compra grasa cadena','Aceite Castrol Chain Lube Racing 400ML',9,1,59369.0,'2017-08-26','Megataller','Yo',10.95,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (84,'Compra limpiador','Limpiador de Cadena WD-40 400ML',9,1,59369.0,'2017-08-26','Megataller','Yo',10.27,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (85,'Compra filtro aceite','Filtro de aceite Racing HIFLOFILTRO - Ref. HF303RC',9,1,59369.0,'2017-08-26','Megataller','Yo',7.82,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (86,'Compra filtro aire','Filtro de aire K&N - Ref. YA-6001',9,1,59369.0,'2017-08-26','Megataller','Yo',72.62,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (87,'Cambio rueda delantera','Pilot road 2 delantera',1,1,59360.0,'2017-08-30','Madrid (Noroauto)','Yo',141.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (88,'Revisión','Cambio de aceite 10w40 castro, filtro de aceite, filtro de aire k&n y limpieza kit de arrastre',7,1,59657.0,'2017-09-02','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (89,'Compra aceite','Aceite Castrol Power 1 Racing 4T 10W40 4L',9,1,63800.0,'2018-03-08','Megataller','Yo',28.7,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (90,'Compra filtro aceite','Filtro de aceite Racing HIFLOFILTRO - Ref. HF303RC',9,1,63800.0,'2018-03-08','Megataller','Yo',7.82,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (91,'Compra bujias','Bujias CR10EK (x4)',9,1,63800.0,'2018-03-08','Megataller','Yo',34.4,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (92,'Compra kit limpieza filtro','Kit de cuidado para filtros de aire K&N',9,1,63800.0,'2018-03-08','Megataller','Yo',15.96,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (93,'ITV','ITV',6,1,64154.0,'2018-03-15','Alcobendas - ITV ATISAE','Yo',38.84,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (94,'Compra refrigerante','Refrigerante 30% verde 5L ULTRAX',9,1,64500.0,'2018-03-26','Frenos Ciudad Real','Yo',6.32,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (95,'Compra juntas','Juntas cobre',9,1,64500.0,'2018-03-27','Repuestos Valencia','Yo',1.45,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (96,'Revision','Recalibrar inyección y arreglo fusible ventiladores',2,1,64582.0,'2018-03-27','Motos Real','Yo',120.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (97,'Compra caballete delantero','Caballete universal ConStand delantero Tija',4,1,64800.0,'2018-03-28','Motea','Yo',69.54,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (98,'Compra refrigerante','Refrigerante',9,1,64900.0,'2018-04-06','Hipercor (Madrid)','Yo',8.95,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (99,'Compra tapon radiador','Perdida de liquido refrigerante	Tapon radiador',9,1,64900.0,'2018-04-07','Madrid (Motos Cortes)','Yo',27.99,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (100,'Averia','Cambio de tapon de radiador. Tapon radiador averiado',8,1,64900.0,'2018-04-07','Garaje piso (Madrid)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (101,'Compra chaqueta verano','Chaqueta Alpinestar AST AIR L',3,1,65200.0,'2018-04-21','Motocard (Madrid)','Yo',143.96,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (102,'Revision','Cambio de aceite 10w40 castrol, filtro de aceite, cambio líquido de frenos delante y atrás y limpieza de kit de arrastre (cadena y plato). Apretar tornillos herrajes y engrase de partes móviles',7,1,67670.0,'2018-06-17','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (103,'Compra herramientas','Destalonador rueda Tacos, barra y escuadras',4,1,68700.0,'2018-07-22','Leroy Merlin','Yo',22.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (104,'Compra herramientas','Desmontadores rueda. Palanca de acero',4,1,68730.0,'2018-07-24','Amazon','Yo',24.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (105,'Siniestro','Golpe en la cochera del vecino aparcando',2,1,70859.0,'2018-10-10','Madrid (Motos Cortes)','Yo',2216.42,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (106,'Averia','Perdida de liquido refrigerante. Liquido refrigerante YAMALUBE y termostato',2,1,72206.0,'2018-11-27','Madrid (Motos Capital)','Yo',207.32,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (107,'Revisión','Cambio bujias - CR10EK (x4)',7,1,72576.0,'2018-12-04','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (108,'Averia','Perdida de liquido refrigerante. Aditivo en el sistema de refrigeracion para tapar fugas en la culata',2,1,73512.0,'2019-01-10','Madrid (Motos Capital)','Yo',27.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (109,'Pedido Megataller','Aceite castrol 10w40, filtro aceite, limpiador total, cera wd40, limpiador cadena wd40, limpiador casco interior motul, grasa cadena',9,1,75660.0,'2019-03-23','Megataller','Yo',90.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (110,'Revisión','Cambio aceite castro 10w40, filtro aceite, limpiar filtro aire K&N, limpiar cadena (plato, piñon y cadena) y engrasar, repasar tornillos carenado y herrajes, repasar pipas. Limpiar moto y encerar. Engrasar partes moviles',7,1,75660.0,'2019-03-23','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (111,'Compra juntas','Juntas cobre',9,1,82067.0,'2019-09-21','Repuestos Valencia','Yo',0.8,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (112,'Compra megataller','Aceite Castrol Power 1 Racing 4T 10W40 4L',9,1,82750.0,'2019-10-07','Megataller','Yo',28.7,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (113,'Compra megataller','Filtro de aceite Racing HIFLOFILTRO - Ref. HF303RC',9,1,82750.0,'2019-10-07','Megataller','Yo',7.82,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (114,'Revision','Cambio aceite castro 10w40, filtro aceite, limpiar filtro aire K&N, limpiar cadena (plato, piñon y cadena) y engrasar, repasar tornillos carenado y herrajes. Limpiar moto y encerar. Engrasar partes moviles. Rellenar vaso expansion refrigerante. Cambio tubo de sobrante de gasolina. Ajustar los amortiguadores, 1 click endurecer (derecha) precarga delante, 1 click endurecer compresion delaten, 1 click endurecer precarga detras y 2 clicks endurecer compresion',7,1,83170.0,'2019-10-19','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (115,'Compra rueda delantera y trasera','Michelin Pilot Road 2 120/70 ZR 17 58W Y 180/55 ZR 17 73W. Valvula',9,1,84200.0,'2019-12-09','https://www.ventaneumaticos.com/','Yo',164.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (116,'Pedido Amazon','Kit reparacion de valvulas',9,1,84200.0,'2019-12-09','Amazon','Yo',10.99,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (117,'Pedido Amazon','25 Contrapesos Negro 12x5g Pesos Adhesivos Peso',9,1,84200.0,'2019-12-09','Amazon','Yo',14.99,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (118,'Pedido Amazon','Equilibrador ruedas',9,1,84200.0,'2019-12-09','Amazon','Yo',47.62,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (119,'Pedido Amazon','Remachadora cadena',9,1,84200.0,'2019-12-09','Amazon','Yo',28.99,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (120,'Pedido Unobike','Kit de transmisión DID con cadena x-ring super reforzada para Yamaha R6 03-05 y Yamaha R6 S 06-10 (Piñón de 16 dientes, Corona en acero de 48 dientes, Cadena con retenes DID ZVMX530 oro, 116 eslabones cierre de remache)',9,1,84200.0,'2019-12-09','Unobike','Yo',180.75,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (121,'Revision','Cambio liquido de frenos adelante y detrás. Cambio de kit de arrastre',7,1,85240.0,'2020-01-03','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (122,'Cambio rueda trasera','Pilot road 2 trasera y valvula del pedido de ventaneumaticos. Equilibrado en michelin',7,1,85240.0,'2020-01-03','Garaje casa (Ciudad Real)','Yo',15.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (123,'ITV','ITV - NO CUMPLE. Cambio de rueda',6,1,86890.0,'2020-02-28','Alcobendas - ITV ATISAE','Yo',25.0,NULL);
-INSERT OR IGNORE INTO "mtmOperation" VALUES (124,'Cambio rueda delantera','Pilot road 2 delantera	Cambio de rueda y valvula del pedido de ventaneumaticos',7,1,87090.0,'2020-02-28','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (81,'Compra liquido frenos','Líquido de frenos Castrol Brake Fluid DOT 4 500ML (x2)',9,1,59369.0,'2017-08-26','Megataller','Yo',12.9,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (82,'Compra grasa cadena','Aceite Castrol Chain Lube Racing 400ML',9,1,59369.0,'2017-08-26','Megataller','Yo',10.95,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (83,'Compra limpiador','Limpiador de Cadena WD-40 400ML',9,1,59369.0,'2017-08-26','Megataller','Yo',10.27,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (84,'Cambio rueda delantera','Pilot road 2 delantera',1,1,59360.0,'2017-08-30','Madrid (Noroauto)','Yo',141.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (85,'Revisión','Cambio de Aceite Castrol Power 1 Racing 4T 10W40 4L, Filtro de aceite Racing HIFLOFILTRO - Ref. HF303RC, Filtro de aire K&N - Ref. YA-6001 y limpieza kit de arrastre',7,1,59657.0,'2017-09-02','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (86,'Compra kit limpieza filtro','Kit de cuidado para filtros de aire K&N',9,1,63800.0,'2018-03-08','Megataller','Yo',15.96,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (87,'ITV','ITV',6,1,64154.0,'2018-03-15','Alcobendas - ITV ATISAE','Yo',38.84,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (88,'Compra refrigerante','Refrigerante 30% verde 5L ULTRAX',9,1,64500.0,'2018-03-26','Frenos Ciudad Real','Yo',6.32,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (89,'Compra juntas','Juntas cobre',9,1,64500.0,'2018-03-27','Repuestos Valencia','Yo',1.45,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (90,'Revision','Recalibrar inyección y arreglo fusible ventiladores',2,1,64582.0,'2018-03-27','Motos Real','Yo',120.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (91,'Compra caballete delantero','Caballete universal ConStand delantero Tija',4,1,64800.0,'2018-03-28','Motea','Yo',69.54,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (92,'Compra refrigerante','Refrigerante',9,1,64900.0,'2018-04-06','Hipercor (Madrid)','Yo',8.95,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (93,'Averia','Cambio de tapon de radiador. Tapon radiador averiado',8,1,64900.0,'2018-04-07','Garaje piso (Madrid)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (94,'Compra chaqueta verano','Chaqueta Alpinestar AST AIR L',3,1,65200.0,'2018-04-21','Motocard (Madrid)','Yo',143.96,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (95,'Revision','Cambio de Aceite Castrol Power 1 Racing 4T 10W40 4L, Filtro de aceite Racing HIFLOFILTRO - Ref. HF303RC, cambio líquido de frenos delante y atrás y limpieza de kit de arrastre (cadena y plato). Apretar tornillos herrajes y engrase de partes móviles',7,1,67670.0,'2018-06-17','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (96,'Compra herramientas','Destalonador rueda Tacos, barra y escuadras',4,1,68700.0,'2018-07-22','Leroy Merlin','Yo',22.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (97,'Compra herramientas','Desmontadores rueda. Palanca de acero',4,1,68730.0,'2018-07-24','Amazon','Yo',24.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (98,'Siniestro','Golpe en la cochera del vecino aparcando',2,1,70859.0,'2018-10-10','Madrid (Motos Cortes)','Yo',2216.42,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (99,'Averia','Perdida de liquido refrigerante. Liquido refrigerante YAMALUBE y termostato',2,1,72206.0,'2018-11-27','Madrid (Motos Capital)','Yo',207.32,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (100,'Revisión','Cambio bujias - CR10EK (x4)',7,1,72576.0,'2018-12-04','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (101,'Averia','Perdida de liquido refrigerante. Aditivo en el sistema de refrigeracion para tapar fugas en la culata',2,1,73512.0,'2019-01-10','Madrid (Motos Capital)','Yo',27.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (102,'Pedido Megataller','Limpiador total, cera wd40, limpiador cadena wd40, limpiador casco interior motul, grasa cadena',9,1,75660.0,'2019-03-23','Megataller','Yo',65.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (103,'Revisión','Cambio aceite castro 10w40, filtro aceite, limpiar filtro aire K&N, limpiar cadena (plato, piñon y cadena) y engrasar, repasar tornillos carenado y herrajes, repasar pipas. Limpiar moto y encerar. Engrasar partes moviles',7,1,75660.0,'2019-03-23','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (104,'Compra juntas','Juntas cobre',9,1,82067.0,'2019-09-21','Repuestos Valencia','Yo',0.8,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (105,'Revision','Cambio Aceite Castrol Power 1 Racing 4T 10W40 4L, Filtro de aceite Racing HIFLOFILTRO - Ref. HF303RC, limpiar filtro aire K&N, limpiar cadena (plato, piñon y cadena) y engrasar, repasar tornillos carenado y herrajes. Limpiar moto y encerar. Engrasar partes moviles. Rellenar vaso expansion refrigerante. Cambio tubo de sobrante de gasolina. Ajustar los amortiguadores, 1 click endurecer (derecha) precarga delante, 1 click endurecer compresion delaten, 1 click endurecer precarga detras y 2 clicks endurecer compresion',7,1,83170.0,'2019-10-19','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (106,'Pedido Amazon','Kit reparacion de valvulas',9,1,84200.0,'2019-12-09','Amazon','Yo',10.99,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (107,'Pedido Amazon','25 Contrapesos Negro 12x5g Pesos Adhesivos Peso',9,1,84200.0,'2019-12-09','Amazon','Yo',14.99,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (108,'Pedido Amazon','Equilibrador ruedas',9,1,84200.0,'2019-12-09','Amazon','Yo',47.62,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (109,'Pedido Amazon','Remachadora cadena',9,1,84200.0,'2019-12-09','Amazon','Yo',28.99,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (110,'Revision','Cambio liquido de frenos adelante y detrás. Cambio de Kit de transmisión DID con cadena x-ring super reforzada para Yamaha R6 03-05 y Yamaha R6 S 06-10 (Unobike - Piñón de 16 dientes, Corona en acero de 48 dientes, Cadena con retenes DID ZVMX530 oro, 116 eslabones cierre de remache)',7,1,85240.0,'2020-01-03','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (111,'Cambio rueda trasera','Michelin Pilot Road 2 180/55 ZR 17 73W trasera y valvula del pedido de https://www.ventaneumaticos.com/. Equilibrado en michelin',7,1,85240.0,'2020-01-03','Garaje casa (Ciudad Real)','Yo',15.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (112,'ITV','ITV - NO CUMPLE. Cambio de rueda',6,1,86890.0,'2020-02-28','Alcobendas - ITV ATISAE','Yo',25.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (113,'Cambio rueda delantera','Pilot road 2 delantera	Cambio de rueda y valvula del pedido de ventaneumaticos',7,1,87090.0,'2020-02-28','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmOperation" VALUES (114,'Cambio bateria','Compra bateria',8,2,76393.0,'2020-07-03','Garaje casa (Ciudad Real)','Yo',0.0,NULL);
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v1.2.3','2006-09-12 12:32:00');
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (2,'configDistance','KM','2006-09-12 12:32:00');
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (3,'configMoney','EURO','2006-09-12 12:32:00');
+INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,90400,2,1,650,'2020-07-11','2006-09-19','Y');
+INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,76500,3,1,50,'2020-07-11','2006-09-12','Y');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (1,'M','MOTORBIKE');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (2,'C','CAR');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (3,'O','OTHER');
@@ -360,152 +498,6 @@ INSERT OR IGNORE INTO "mtmConfigMaintenance" VALUES (35,3,14);
 INSERT OR IGNORE INTO "mtmConfigMaintenance" VALUES (36,3,15);
 INSERT OR IGNORE INTO "mtmConfigMaintenance" VALUES (37,3,19);
 INSERT OR IGNORE INTO "mtmConfigMaintenance" VALUES (38,3,20);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (1,2,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (2,2,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (3,2,11);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (4,2,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (5,3,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (6,3,4);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (7,3,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (8,3,18);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (9,4,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (10,4,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (11,4,11);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (12,4,13);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (13,4,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (14,5,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (15,5,4);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (16,5,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (17,5,6);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (18,5,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (19,5,18);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (20,6,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (21,6,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (22,6,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (23,6,18);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (24,7,10);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (25,8,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (26,8,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (27,8,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (28,8,18);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (29,9,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (30,9,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (31,9,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (32,9,25);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (33,11,18);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (34,13,7);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (35,13,12);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (36,14,1);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (37,16,11);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (38,16,22);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (39,17,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (40,17,4);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (41,17,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (42,17,6);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (43,17,16);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (44,17,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (45,18,2);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (46,20,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (47,20,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (48,22,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (49,22,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (50,25,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (51,25,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (52,26,6);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (53,27,20);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (54,27,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (56,28,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (57,28,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (59,28,32);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (60,29,7);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (61,29,12);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (62,30,31);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (63,31,7);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (64,31,12);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (65,33,1);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (66,37,4);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (67,37,16);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (68,37,18);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (69,42,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (70,42,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (71,42,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (72,44,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (73,44,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (74,44,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (75,45,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (76,45,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (77,45,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (78,46,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (79,46,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (80,46,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (81,47,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (82,47,4);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (83,47,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (84,47,6);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (85,47,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (86,47,8);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (87,50,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (88,50,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (89,50,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (90,50,19);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (91,52,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (92,52,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (93,52,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (94,52,7);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (95,52,12);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (96,57,2);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (97,62,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (98,62,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (99,62,10);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (100,62,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (101,62,7);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (102,62,12);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (103,63,1);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (104,65,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (105,65,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (106,65,6);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (107,65,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (108,75,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (109,75,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (110,75,6);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (111,75,7);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (112,75,12);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (113,75,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (114,75,8);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (115,75,16);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (116,75,24);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (117,77,2);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (118,87,1);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (119,88,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (120,88,4);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (121,88,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (122,88,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (123,96,19);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (124,100,15);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (125,102,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (126,102,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (127,102,7);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (128,102,12);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (129,102,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (130,106,8);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (131,106,9);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (132,107,6);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (133,108,8);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (134,110,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (135,110,4);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (136,110,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (137,110,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (138,114,3);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (139,114,4);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (140,114,5);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (141,114,17);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (142,121,7);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (143,121,10);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (144,121,12);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (145,122,2);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (146,122,29);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (147,124,1);
-INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (148,124,28);
 INSERT OR IGNORE INTO "mtmMaintenanceFreq" VALUES (1,'O','ONCE');
 INSERT OR IGNORE INTO "mtmMaintenanceFreq" VALUES (2,'C','CALENDAR');
 INSERT OR IGNORE INTO "mtmOperationType" VALUES (1,'MW','MAINTENANCE_WORKSHOP');

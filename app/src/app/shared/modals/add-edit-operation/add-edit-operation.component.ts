@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { Constants, ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/index';
 import {
-  ModalInputModel, ModalOutputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
+  ModalInputModel, ModalOutputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, MaintenanceModel
 } from '@models/index';
 import {
   DataBaseService, OperationService, CommonService, ConfigurationService, ControlService,
@@ -36,7 +36,8 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   operationType: OperationTypeModel[] = [];
   vehicles: VehicleModel[] = [];
   maintenanceElement: MaintenanceElementModel[] = [];
-  maintenanceElementSelect: number[] = [];
+  maintenanceElementSelect: MaintenanceElementModel[] = [];
+  idMaintenanceElementSelect: number[] = [];
   formatDate = this.calendarService.getFormatCalendar();
   measure: any = {};
   coin: any = {};
@@ -103,9 +104,11 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
 
     this.maintenanceElementSubscription = this.dbService.getMaintenanceElement().subscribe(data => {
       this.maintenanceElement = this.configurationService.orderMaintenanceElement(data);
+      this.idMaintenanceElementSelect = [];
       this.maintenanceElementSelect = [];
       if (!!this.operation.listMaintenanceElement && this.operation.listMaintenanceElement.length > 0) {
-        this.maintenanceElementSelect = this.operation.listMaintenanceElement.map(x => x.id);
+        this.maintenanceElementSelect = this.operation.listMaintenanceElement;
+        this.idMaintenanceElementSelect = this.operation.listMaintenanceElement.map(x => x.id);
       }
     });
 
@@ -129,7 +132,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       if (result !== '') {
         this.controlService.showToast(PageEnum.MODAL_OPERATION, result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
-        if (!this.modalInputModel.isCreate && this.maintenanceElementSelect.length > 0 &&
+        if (!this.modalInputModel.isCreate && this.idMaintenanceElementSelect.length > 0 &&
           !this.isOperationTypeWithReplacement()) {
           this.showConfirmSaveWithDelete();
         } else {
@@ -142,10 +145,13 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   saveOperation() {
     if (!this.isOperationTypeWithReplacement()) {
       this.operation.listMaintenanceElement = [];
-    } else if (!!this.maintenanceElementSelect && this.maintenanceElementSelect.length > 0) {
-      this.operation.listMaintenanceElement = this.maintenanceElement.filter(x =>
-        this.maintenanceElementSelect.some(y => y === x.id)
-      );
+    } else if (!!this.idMaintenanceElementSelect && this.idMaintenanceElementSelect.length > 0) {
+      this.operation.listMaintenanceElement = this.maintenanceElementSelect;
+      this.operation.listMaintenanceElement.forEach(x => {
+        if (x.price === null) {
+          x.price = 0;
+        }
+      });
     }
     this.operationService.saveOperation(this.operation,
       (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
@@ -172,6 +178,27 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       textarea.value = null;
       textarea.value = data;
     }
+  }
+
+  changeReplacement() {
+    this.idMaintenanceElementSelect.forEach(x => {
+      if (!this.maintenanceElementSelect.some(y => y.id === x)) {
+        const replacement: MaintenanceElementModel = this.maintenanceElement.find(y => y.id === x);
+        this.maintenanceElementSelect = [...this.maintenanceElementSelect,
+          new MaintenanceElementModel(replacement.name, replacement.description, false, null, replacement.id)];
+      }
+    });
+    let deleteIndex: number[] = [];
+    this.maintenanceElementSelect.forEach((x, index) => {
+      if (!this.idMaintenanceElementSelect.some(y => y === x.id)) {
+        deleteIndex = [...deleteIndex, index];
+      }
+    });
+    deleteIndex.forEach(x => this.maintenanceElementSelect.splice(x, 1));
+  }
+
+  getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
+    return this.configurationService.getIconReplacement(maintenanceElement);
   }
 
   showConfirmSaveWithDelete() {

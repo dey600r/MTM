@@ -59,5 +59,20 @@
             [labels]="dashboardOpTypeExpenses.showLabels"
             [doughnut]="dashboardOpTypeExpenses.isDoughnut">
         </ngx-charts-pie-chart>
+        <ion-list-header class="padding-list-header">
+            <ion-icon size="large" name="cog"></ion-icon>
+            <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerReplacement' | translate }}</h3>
+        </ion-list-header>
+        <ngx-charts-pie-chart class="justify-center"
+            [view]="dashboardReplacementExpenses.view"
+            [scheme]="dashboardReplacementExpenses.colorScheme"
+            [results]="dashboardReplacementExpenses.data"
+            [gradient]="dashboardReplacementExpenses.gradient"
+            [legend]="dashboardReplacementExpenses.showLegend"
+            [legendTitle]="dashboardReplacementExpenses.legendTitle"
+            [legendPosition]="dashboardReplacementExpenses.legendPosition"
+            [labels]="dashboardReplacementExpenses.showLabels"
+            [doughnut]="dashboardReplacementExpenses.isDoughnut">
+        </ngx-charts-pie-chart>
     </div>
 </ion-content>
