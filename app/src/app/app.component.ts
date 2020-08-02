@@ -8,8 +8,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, ControlService } from '@services/index';
-import { PageEnum } from './core/utils';
+import { DataBaseService, ControlService, SettingsService } from '@services/index';
+import { PageEnum, Constants } from './core/utils';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +24,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private dbService: DataBaseService,
     private translator: TranslateService,
-    private controlService: ControlService
+    private controlService: ControlService,
+    private settingsService: SettingsService
   ) {
     this.initializeApp();
   }
@@ -43,6 +44,10 @@ export class AppComponent {
       // DB
       this.dbService.initDB();
       this.controlService.activateButtonExist(PageEnum.HOME);
+
+      // FILES
+      this.settingsService.createDiretory(Constants.EXPORT_DIR_NAME);
+      this.settingsService.createDiretory(Constants.IMPORT_DIR_NAME);
     });
   }
 

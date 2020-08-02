@@ -560,7 +560,7 @@ export class DashboardService {
                 descriptionOperation: op.description,
                 kmOperation: op.km,
                 dateOperation: op.date,
-                priceOperation: priceSum,
+                priceOperation: Math.round(priceSum * 100) / 100 ,
                 idMaintenance: main.id,
                 descriptionMaintenance: main.description,
                 kmMaintenance: main.km,

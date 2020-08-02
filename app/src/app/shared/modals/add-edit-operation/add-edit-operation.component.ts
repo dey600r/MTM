@@ -150,9 +150,13 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       this.operation.listMaintenanceElement.forEach(x => {
         if (x.price === null) {
           x.price = 0;
+        } else {
+          x.price = (x.price.toString().includes(',') ? Number(x.price.toString().replace(',', '.')) : x.price);
         }
       });
     }
+    this.operation.price = (this.operation.price.toString().includes(',') ?
+      Number(this.operation.price.toString().replace(',', '.')) : this.operation.price);
     this.operationService.saveOperation(this.operation,
       (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
       this.closeModal();

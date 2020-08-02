@@ -18,20 +18,79 @@
       <h3 class="header-list">{{ 'COMMON.CUSTOM_SETTINGS' | translate }}</h3>
     </ion-list-header>
     <ion-item>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.MEASURING' | translate }}</ion-text>
-        </ion-label>
-        <ion-select interface="popover" [(ngModel)]="distanceSelected.code" (ionChange)="changeDistance()">
-          <ion-select-option [(value)]="d.code" *ngFor="let d of listDistances">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.COIN' | translate }}</ion-text>
-        </ion-label>
-        <ion-select interface="popover" [(ngModel)]="moneySelected.code" (ionChange)="changeMoney()">
-            <ion-select-option [(value)]="m.code" *ngFor="let m of listMoney" >{{m.valueLarge + ' - ' + m.value}}</ion-select-option>
-          </ion-select>
-      </ion-item>
+      <ion-label position="stacked">
+        <ion-text>{{ 'COMMON.MEASURING' | translate }}</ion-text>
+      </ion-label>
+      <ion-select interface="popover" [(ngModel)]="distanceSelected.code" (ionChange)="changeDistance()">
+        <ion-select-option [(value)]="d.code" *ngFor="let d of listDistances">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">
+        <ion-text>{{ 'COMMON.COIN' | translate }}</ion-text>
+      </ion-label>
+      <ion-select interface="popover" [(ngModel)]="moneySelected.code" (ionChange)="changeMoney()">
+        <ion-select-option [(value)]="m.code" *ngFor="let m of listMoney" >{{m.valueLarge + ' - ' + m.value}}</ion-select-option>
+      </ion-select>
+    </ion-item>
   </ion-list>
+
+  <!-- EXPORTS / IMPORTS -->
+  <ion-list>
+    <ion-list-header class="padding-list-header">
+      <ion-icon size="large" name="download"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.MANAGE_DATA' | translate }}</h3>
+      <ion-button class="btn-width-list" fill="clear" (click)="showGuideExportImport()">
+        <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+  </ion-list>
+  <ion-item>
+    <div class="main-item">
+      <div>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.EXPORT' | translate }}</ion-text>
+        </ion-label>
+        <div class="table-row">
+          <div class="min-width90">
+            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathExports" (click)="showRealExportPath()"></ion-input>
+            <ion-input placeholder="--" type="text" disabled [(ngModel)]="lastExport"></ion-input>
+          </div>
+          <div class="max-width60">
+            <ion-button fill="clear" (click)="exportData()">
+              <ion-icon class="btn-color" name="exit"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="deleteExportFiles()">
+              <ion-icon class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-item>
+  <ion-item>
+    <div class="main-item">
+      <div>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.IMPORT' | translate }}</ion-text>
+        </ion-label>
+        <div class="table-row">
+          <div class="min-width90">
+            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathImports" (click)="showRealImportPath()"></ion-input>
+            <ion-select class="min-width100" interface="popover" [(ngModel)]="importFileSelected" placeholder="{{ 'COMMON.SELECT' | translate }}">
+              <ion-select-option [(value)]="n.name" *ngFor="let n of listImportsFile" >{{n.name}}</ion-select-option>
+            </ion-select>
+          </div>
+          <div class="max-width60">
+            <ion-button fill="clear" (click)="importData()">
+              <ion-icon class="btn-color" name="enter"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="deleteImportFiles()">
+              <ion-icon class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-item>
 </ion-content>

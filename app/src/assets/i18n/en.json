@@ -78,7 +78,10 @@
         "EURO": "Euro",
         "DOLLAR": "Dollar",
         "POUND": "Pound",
-        "NOTIFY_MAINTENANCE": "Notify maintenances"
+        "NOTIFY_MAINTENANCE": "Notify maintenances",
+        "MANAGE_DATA": "Manage Data",
+        "EXPORT": "Export to:",
+        "IMPORT": "Import from:"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -88,7 +91,25 @@
         "RELIABILITY": "Reliability",
         "NextChangeKm": "Next change of {{maintenance}} is at {{km}} {{measure}} on schedule {{date}}",
         "NextChangeTime": " or by the end of time {{time}}",
-        "NotExistRecords": "It doesn't exist records to {{maintenance}}. You need drive you vehicle more"
+        "NotExistRecords": "It doesn't exist records to {{maintenance}}. You need drive you vehicle more",
+        "ConfirmExportDB": "The export data base file will generate in {{path}}. Do you wish continue?",
+        "ConfirmImportDB": "The data on your application must delete before import the new data. You can restore data base with the backup file. Do you wish continue?",
+        "ConfirmDeleteExportFile": "The export files will delete on {{path}}. Do you wish continue?",
+        "ConfirmDeleteImportFile": "The import files will delete on {{path}}. Do you wish continue?",
+        "SaveExportDB": "The data base has been exported succesfully on {{file}}",
+        "SaveImportDB": "The data base has been imported succesfully",
+        "DeleteExportDB": "The export files has been deleted succesfully on {{path}}",
+        "DeleteImportDB": "The import files has been deleted succesfully on {{path}}",
+        "ErrorExportDB": "There was an error exporting DB. Restart app and try again",
+        "ErrorBackupDB": "There was an error exporting backup DB. Restart app and try again",
+        "ErrorWritingFile": "There was an error creating file. You should try activate the storage permissions on your device",
+        "ErrorWritingBackupFile": "There was an error creating backup file. You should try activate the storage permissions on your device",
+        "ErrorImportDB": "There was an error importing DB. The file is not compatible with data base",
+        "ErrorListingFiles": "There was an error trying read files. You should try activate the storage permissions on your device",
+        "GuideExportImport": "Guide to Export and Import data",
+        "GuideStep1": "1. Press export button to saving file into {{path}} with the MtM data",
+        "GuideStep2": "2. Copy manually exported file to another MtM application into {{path}}",
+        "GuideStep3": "3. Press import button to save MtM data from the other MtM application"
     },
     "PAGE_VEHICLE": {
         "YOURS_VEHICLES": "Your vehicles",
@@ -205,7 +226,9 @@
         "NoDataFound": "No data found",
         "PayForMTM": "To use this functionality you can buy the MtM application",
         "InfoCalendarKm": "You should check the {{replacement}} at {{km}}{{measure}} on the estimated date {{date}}",
-        "InfoCalendarTime": "You should check the {{replacement}} on the date {{date}}"
+        "InfoCalendarTime": "You should check the {{replacement}} on the date {{date}}",
+        "InfoNotExistsImportFile": "You didnt select any file to import. You should copy to the import path some import file generate from other MtM app {{path}}",
+        "InfoNotExistsFilesToDelete": "There are not files to delete"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

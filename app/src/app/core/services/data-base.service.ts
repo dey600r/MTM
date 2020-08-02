@@ -1,7 +1,7 @@
 import { Platform } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 // LIBRARIES IONIC
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
@@ -12,7 +12,7 @@ import {
   VehicleModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
   MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel, SystemConfigurationModel
 } from '@models/index';
-import { ConstantsTable, Constants, ConstantsColumns } from '@utils/index';
+import { ConstantsTable, Constants } from '@utils/index';
 import { SqlService } from './sql.service';
 
 import { environment } from '@environment/environment';
@@ -40,6 +40,10 @@ export class DataBaseService {
               private sqlite: SQLite,
               private http: HttpClient,
               private sqlService: SqlService) { }
+
+  getDB(): SQLiteObject {
+    return this.database;
+  }
 
   initDB() {
     this.plt.ready().then(() => {

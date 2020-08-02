@@ -78,7 +78,10 @@
         "EURO": "Euro",
         "DOLLAR": "Dolar",
         "POUND": "Libra",
-        "NOTIFY_MAINTENANCE": "Notificar mantenimientos"
+        "NOTIFY_MAINTENANCE": "Notificar mantenimientos",
+        "MANAGE_DATA": "Gestionar Datos",
+        "EXPORT": "Exportar en:",
+        "IMPORT": "Importar desde:"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -88,7 +91,25 @@
         "RELIABILITY": "Fiabilidad",
         "NextChangeKm": "El próximo cambio de {{maintenance}} es a los {{km}} {{measure}} en la fecha prevista {{date}}",
         "NextChangeTime": " o por el paso del tiempo en {{time}}",
-        "NotExistRecords": "No existen registros para {{maintenance}}. Necesitas conducir mas el vehículo"
+        "NotExistRecords": "No existen registros para {{maintenance}}. Necesitas conducir mas el vehículo",
+        "ConfirmExportDB": "La exportacion de base de datos se guardara en la ruta {{path}}. ¿Desea continuar?",
+        "ConfirmImportDB": "Los datos de su aplicación se borraran para importar la nueva base de datos. Puede restaurar los datos con el fichero de backup. ¿Desea continuar?",
+        "ConfirmDeleteExportFile": "Los archivos exportados serán eliminados de la ruta {{path}}. ¿Desea continuar?",
+        "ConfirmDeleteImportFile": "Los archivos importados serán eliminados de la ruta {{path}}. ¿Desea continuar?",
+        "SaveExportDB": "La base de datos se ha exportado correctamente en {{file}}",
+        "SaveImportDB": "La base de datos se ha importado correctamente",
+        "DeleteExportDB": "Los archivos exportados se han borrado correctamente de {{path}}",
+        "DeleteImportDB": "Los archivos importados se han borrado correctamente de {{path}}",
+        "ErrorExportDB": "Ha ocurrido un error exportando la base de datos. Reinicie la aplicación y pruebe de nuevo",
+        "ErrorBackupDB": "Ha ocurrido un error exportando el backup de base de datos. Reinicie la aplicación y pruebe de nuevo",
+        "ErrorWritingFile": "Ha ocurrido un error creando el fichero. Debería dar permisos de almacenamiento a la aplicación en la configuración de su dispositivo",
+        "ErrorWritingBackupFile": "Ha ocurrido un error creando el fichero de backup. Debería dar permisos de almacenamiento a la aplicación en la configuración de su dispositivo",
+        "ErrorImportDB": "Ha ocurrido un error importando la base de datos. El fichero no es compatible con la base de datos",
+        "ErrorListingFiles": "Ha ocurrido un error leyendo los ficheros. Debería dar permisos de almacenamiento a la aplicación en la configuración de su dispositivo",
+        "GuideExportImport": "Guia para Exportar e importar datos",
+        "GuideStep1": "1. Presiona el botón de exportar para guardar el fichero en {{path}} con los datos de MtM",
+        "GuideStep2": "2. Copia a mano el fichero exportado a otra aplicación MtM en la ruta {{path}}",
+        "GuideStep3": "3. Presiona el boton importar para importar los datos de la aplicación MtM donde se exportaron los datos"
     },
     "PAGE_VEHICLE": {
         "YOURS_VEHICLES": "Tus Vehículos",
@@ -205,7 +226,9 @@
         "NoDataFound": "No se encuentran datos",
         "PayForMTM": "Para usar esta funcionalidad debes pagar la aplicación MtM completa",
         "InfoCalendarKm": "Deberías revisar {{replacement}} a los {{km}}{{measure}} en la fecha estimada {{date}}",
-        "InfoCalendarTime": "Deberías revisar {{replacement}} en la fecha {{date}}"
+        "InfoCalendarTime": "Deberías revisar {{replacement}} en la fecha {{date}}",
+        "InfoNotExistsImportFile": "No hay seleccionado ningun archivo. Es necesario copiar algun archivo exportado de otra aplicación de MtM en la carpeta de importación {{path}}",
+        "InfoNotExistsFilesToDelete": "No existen archivos para borrar"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",

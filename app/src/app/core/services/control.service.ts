@@ -146,8 +146,8 @@ export class ControlService {
 
     // ALERTS
 
-    alertInfo(parent: PageEnum, msg: string) {
-        this.alert(parent, 'ALERT.INFO', msg);
+    alertInfo(parent: PageEnum, msg: string, header: string = 'ALERT.INFO') {
+        this.alert(parent, header, msg);
     }
 
     async alert(parent: PageEnum, header: string, msg: string) {

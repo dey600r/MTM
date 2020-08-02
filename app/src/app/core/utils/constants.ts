@@ -57,4 +57,12 @@ export class Constants {
     static SETTING_MONEY_EURO = 'EURO';
     static SETTING_MONEY_DOLLAR = 'DOLLAR';
     static SETTING_MONEY_POUND = 'POUND';
+
+    // EXPORTS AND IMPORTS
+    static EXPORT_DIR_NAME = 'exports';
+    static IMPORT_DIR_NAME = 'imports';
+    static FILE_EMPTY_NAME = 'db.txt';
+    static FORMAT_FILE_DB = 'json';
+    static EXPORT_FILE_NAME = 'mtmDB';
+    static BACKUP_FILE_NAME = 'mtmBackup';
 }

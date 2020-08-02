@@ -83,6 +83,9 @@
               { "glob": "**/*car-sport.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*car.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*reload-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*download.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*enter.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*exit.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*.svg", "input": "src/assets/icon", "output": "./svg" }
             ],
             "styles": [

@@ -30,7 +30,8 @@ export enum PageEnum {
     MODAL_DASHBOARD_VEHICLE = 10,
     MODAL_DASHBOARD_OPERATION = 11,
     MODAL_INFO = 12,
-    MODAL_CALENDAR = 13
+    MODAL_CALENDAR = 13,
+    MODAL_SETTINGS = 14
 }
 
 export enum FilterKmTimeEnum {

@@ -65,7 +65,7 @@ button.days-btn.today p {
 }
 
 .day-circle-config-warning {
-  background-color: var(--ion-color-progressbar-warning-buffer) !important;
+  background-color: var(--ion-color-progressbar-warning-progress) !important;
 }
 
 .day-circle-config-success {
@@ -88,7 +88,7 @@ button.days-btn.today p {
 }
 
 .month-packer-item.month-circle-config-warning button {
-  background-color: var(--ion-color-progressbar-warning-buffer);
+  background-color: var(--ion-color-progressbar-warning-progress);
   color: white;
 }
 
