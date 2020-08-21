@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 
 // LIBRARIES
-import { CalendarComponentOptions, DayConfig } from 'ion4-calendar';
+import { CalendarComponentOptions, DayConfig } from 'ion5-calendar';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS

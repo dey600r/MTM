@@ -14,7 +14,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { CalendarModule } from 'ion4-calendar';
+import { CalendarModule } from 'ion5-calendar';
 import { File } from '@ionic-native/file/ngx';
 
 // LIBRARIES ANGULAR

@@ -86,6 +86,10 @@
               { "glob": "**/*download.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*enter.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*exit.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*caret-down.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*caret-up.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*chevron-forward.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*chevron-back.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*.svg", "input": "src/assets/icon", "output": "./svg" }
             ],
             "styles": [
@@ -96,7 +100,8 @@
                 "input": "src/global.scss"
               }
             ],
-            "scripts": []
+            "scripts": [
+            ]
           },
           "configurations": {
             "production": {

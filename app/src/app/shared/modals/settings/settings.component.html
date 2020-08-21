@@ -52,8 +52,8 @@
           <ion-text>{{ 'COMMON.EXPORT' | translate }}</ion-text>
         </ion-label>
         <div class="table-row">
-          <div class="min-width90">
-            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathExports" (click)="showRealExportPath()"></ion-input>
+          <div class="min-width90" (click)="showRealExportPath()">
+            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathExports"></ion-input>
             <ion-input placeholder="--" type="text" disabled [(ngModel)]="lastExport"></ion-input>
           </div>
           <div class="max-width60">

@@ -35,7 +35,8 @@ $colors: (
   cal-color : #ff8732,
   gray-light: var(--ion-color-light-shade)
 );
-@import "~ion4-calendar/dist/index.scss";
+
+// @import "ion4-calendar/dist/index.scss";
 
 // CSS CALENDAR
 .day-text-config {
@@ -73,32 +74,32 @@ button.days-btn.today p {
 }
 
 .month-packer-item.month-circle-config-all button {
-  background-color: var(--ion-color-medium-tint);
+  background-color: var(--ion-color-medium-tint) !important;
   color: white;
 }
 
 .month-packer-item.month-circle-config-skull button {
-  background-color: var(--ion-color-progressbar-danger-progress);
+  background-color: var(--ion-color-progressbar-danger-progress) !important;
   color: white;
 }
 
 .month-packer-item.month-circle-config-danger button {
-  background-color: var(--ion-color-progressbar-danger-buffer);
+  background-color: var(--ion-color-progressbar-danger-buffer) !important;
   color: white;
 }
 
 .month-packer-item.month-circle-config-warning button {
-  background-color: var(--ion-color-progressbar-warning-progress);
+  background-color: var(--ion-color-progressbar-warning-progress) !important;
   color: white;
 }
 
 .month-packer-item.month-circle-config-success button {
-  background-color: var(--ion-color-progressbar-success-buffer);
+  background-color: var(--ion-color-progressbar-success-buffer) !important;
   color: white;
 }
 
 // BUG Calendar windows: Dont show icons
-.button-native.sc-ion-button-md .sc-ion-icon-md-h.md.hydrated .s-ion-icon {
+.button-native.sc-ion-button-md .sc-ion-icon-h.md.hydrated .s-ion-icon {
   display: block;
   width: inherit;
   height: inherit;  
