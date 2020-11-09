@@ -1,0 +1,46 @@
+.main-container {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+.sub-container {
+    padding-right: 20%;
+    padding-left: 20%;
+}
+
+mat-tab-group {
+    text-align: center;
+}
+
+img {
+    border: 1px solid #ddd; /* Gray border */
+    border-radius: 4px;  /* Rounded border */
+    padding: 5px; /* Some padding */
+    width: 90%; /* Set a small width */
+    height: auto;
+  }
+  
+  /* Add a hover effect (blue shadow) */
+//   img:hover {
+//     box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+//   }
+
+.icon {
+    width: 50px;
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+}
+
+.responsive {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -1,0 +1,36 @@
+
+<div>
+    <mat-grid-list cols="3" rowHeight="2:1">
+        <mat-grid-tile colspan="1" rowspan="1" style.background="#DDBDF1">
+            <img class="icon" [src]="icon">
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1" style.background="#DDBDF1">
+            <h1>{{ 'MTM_LARGE' | translate }}</h1>
+        </mat-grid-tile>
+    </mat-grid-list> 
+    
+</div>
+
+<div class="main-container">
+    <div class="sub-container">
+        <mat-grid-list cols="2" rowHeight="1:4">
+            <mat-grid-tile>
+                <mat-tab-group mat-align-tabs="center">
+                    <mat-tab label="Android">
+                        <img [src]="slides[0]">
+                        <!-- <div *ngFor="let img of slides">
+                            <img [src]="img">
+                        </div> -->
+                    </mat-tab>
+                    <mat-tab label="Window">
+                        <img [src]="slides[1]">
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-grid-tile>
+            <mat-grid-tile>2</mat-grid-tile>
+        </mat-grid-list>
+    </div>
+</div>
+
+
+
