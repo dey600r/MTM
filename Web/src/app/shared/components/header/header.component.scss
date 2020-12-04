@@ -1,0 +1,21 @@
+.header {
+    height: 87px;
+    background-color: var(--main-color);
+    position: fixed;
+    width: 100%;
+    z-index: 4000;
+}
+
+.sub-header {
+    padding-right: 5%;
+    padding-left: 5%;
+}
+
+.header h2 {
+    padding-top: 11px;
+    color: var(--main-text-color);
+    margin: 0px;
+    text-align: center;
+    font-style: italic;
+}
+

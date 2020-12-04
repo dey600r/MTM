@@ -8,19 +8,34 @@ module.exports = function (config) {
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
+      require('karma-edge-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
+      require('karma-sonarqube-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, './coverage/MtMWeb'),
+      dir: require('path').join(__dirname, './coverage'),
       reports: ['html', 'lcovonly', 'text-summary'],
-      fixWebpackSourcePaths: true
+      fixWebpackSourcePaths: true,
+      combineBrowserReports: true,
+      'report-config': {
+        html: {
+          subdir: 'html'
+        }
+      }
     },
-    reporters: ['progress', 'kjhtml'],
+    sonarqubeReporter: {
+      basePath: 'src',     
+      filePattern: '**/*spec.ts', 
+      encoding: 'utf-8',        
+      outputFolder: './coverage', 
+      reportName: 'junit-test.xml'
+    },
+    reporters: ['progress', 'kjhtml', 'sonarqube'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

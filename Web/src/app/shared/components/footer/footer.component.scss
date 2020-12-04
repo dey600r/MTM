@@ -1,0 +1,24 @@
+.footer {
+    bottom: 0px;
+    width: 100%;
+    height: 70px;
+    background-color: var(--main-color);
+}
+
+.footer h4 {
+    padding-top: 25px;
+    padding-bottom: 10px;
+    color: var(--main-text-color);
+    text-align: center;
+    margin: 0px;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.footer p {
+    color: var(--main-text-color);
+    text-align: center;
+    margin: 0px;
+    font-style: italic;
+    font-size: 10px;
+}

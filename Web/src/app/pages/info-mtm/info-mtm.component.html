@@ -1,0 +1,25 @@
+<div class="main-container">
+    <div class="sub-container">
+        <div class="container-carousel">
+            <p-tabView styleClass="tabview-custom">
+                <p-tabPanel>
+                    <ng-template pTemplate = "header">
+                        <em class="pi pi-android"></em>
+                        <span>Android</span>
+                    </ng-template>
+                    <app-icon-carousel [dataInfo]="'android'"></app-icon-carousel>
+                </p-tabPanel>
+                <p-tabPanel header="windows">
+                    <ng-template pTemplate = "header">
+                        <em class="pi pi-microsoft"></em>
+                        <span>Windows</span>
+                    </ng-template>
+                    <app-icon-carousel [dataInfo]="'windows'"></app-icon-carousel>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+        <div class="p-grid p-flex-column">
+            <app-icon-doc [dataInfo]="infoMtM"></app-icon-doc>
+        </div>
+    </div>
+</div>

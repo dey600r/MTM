@@ -1,0 +1,18 @@
+<div class="p-col">
+    <div class="box">
+        <h3 class="shadow-title">{{ dataInfo.title | translate }}</h3>
+    </div>
+    <div class="box">
+        <div class="p-grid shadow">
+            <div class="p-col-12 p-md-2 p-lg-2 center">
+                <img [alt]="dataInfo.icons[0].alt" [src]="dataInfo.icons[0].icon" class="icon icon-mtm" [pTooltip]="dataInfo.icons[0].tooltip">
+            </div>
+            <div class="p-col-12 p-md-8 p-lg-8 center">
+                <p>{{ dataInfo.description | translate }}</p>
+            </div>
+            <div class="p-col-12 p-md-2 p-lg-2 center">
+                <button pButton pRipple type="button" icon="pi pi-eye" class="p-button-rounded" (click)="navigateTo(dataInfo.icons[0].href)"></button>
+            </div>
+        </div>
+    </div>
+</div>

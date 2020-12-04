@@ -1,15 +1,19 @@
+import { NgModule, Injector, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+
+import { TranslateModule, TranslateLoader, TranslateStore, TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { MainModule } from '@modules/main.module';
 
-import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
-import { environment } from '../environments/environment';
+import { environment } from '@environments/environment';
+import { LOCATION_INITIALIZED } from '@angular/common';
+import { Constants } from '@utils/constants';
 
 @NgModule({
   declarations: [
@@ -17,23 +21,48 @@ import { environment } from '../environments/environment';
   ],
   imports: [
     BrowserModule,
+    MainModule,
     AppRoutingModule,
-    BrowserAnimationsModule
-    // HttpClientModule,
-    // TranslateModule.forRoot({
-    //   loader: {
-    //     provide: TranslateLoader,
-    //     useFactory: (createTranslateLoader),
-    //     deps: [HttpClient]
-    //   }
-    // }),
+    BrowserAnimationsModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFactory,
+      deps: [TranslateService, Injector],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
 
-// tslint:disable-next-line: typedef
-export function createTranslateLoader(http: HttpClient) {
+export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, environment.pathTranslate, '.json');
+}
+
+export function appInitializerFactory(translate: TranslateService, injector: Injector): any {
+  return () => new Promise<any>((resolve: any) => {
+    const locationInitialized = injector.get(LOCATION_INITIALIZED, Promise.resolve(null));
+    locationInitialized.then(() => {
+      let userLang = navigator.language.split('-')[0];
+      userLang = /(es|en)/gi.test(userLang) ? userLang : Constants.LANGUAGE_EN;
+      translate.setDefaultLang(userLang);
+      translate.use(userLang).subscribe(() => {
+        console.warn(`Successfully initialized '${userLang}' language.'`);
+      }, err => {
+        console.error(`Problem with '${userLang}' language initialization.'`);
+      }, () => {
+        resolve(null);
+      });
+    });
+  });
 }

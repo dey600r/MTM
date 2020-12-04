@@ -1,37 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeRoutingModule } from './home-routing.module'
+import { HomeRoutingModule } from './home-routing.module';
 
 import { HomeComponent } from './home.component';
+import { ComponentModule } from '@modules/component.module';
 
-import { MaterialModule } from '../../shared/modules/material.module';
+import { PrimengModule } from '@shared/modules/primeng.module';
 
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
-import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
-import { environment } from '../../../environments/environment';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ HomeComponent ],
   imports: [
-    MaterialModule,
+    PrimengModule,
     CommonModule,
     HomeRoutingModule,
     HttpClientModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
-  ]
+    ComponentModule,
+    TranslateModule.forChild()
+  ],
+  providers: [ ]
 })
 export class HomeModule { }
-
-// tslint:disable-next-line: typedef
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.pathTranslate, '.json');
-}
