@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Constants } from '@utils/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { InfoDeveloperModel, InfoIconModel } from '@app/core/models';
+import { InfoDeveloperModel, InfoIconModel, InfoProjectModel } from '@app/core/models';
 
 import { environment } from '@environments/environment';
 
@@ -14,7 +14,7 @@ import { environment } from '@environments/environment';
 export class HomeComponent implements OnInit {
 
   infoDeveloper: InfoDeveloperModel = new InfoDeveloperModel();
-  infoProjects: InfoDeveloperModel = new InfoDeveloperModel();
+  infoProjects: InfoProjectModel = new InfoProjectModel();
   infoSkills: InfoDeveloperModel = new InfoDeveloperModel();
   infoHobbies: InfoDeveloperModel = new InfoDeveloperModel();
 
@@ -25,9 +25,11 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     const assetsIcon: string = environment.pathIcons;
     this.infoDeveloper = new InfoDeveloperModel('HOME.titleInfoDeveloper', 'HOME.descriptionInfoDeveloper');
-    this.infoProjects = new InfoDeveloperModel(
-      'HOME.titleProjects', 'HOME.descriptionProjects',
-      [new InfoIconModel(`${assetsIcon}/icon.png`, this.translator.instant('HOME.MTM_LARGE'), 'MtM', Constants.ROUTE_INFO_MTM)]);
+    this.infoProjects = new InfoProjectModel('HOME.titleProjects',
+      new InfoDeveloperModel(
+        'COMMON.MTM_LARGE', 'HOME.descriptionProjects',
+        [new InfoIconModel(`${assetsIcon}/icon.png`, this.translator.instant('COMMON.MTM_LARGE'), 'MtM', Constants.ROUTE_INFO_MTM)]
+      ));
     this.infoSkills = new InfoDeveloperModel(
       'HOME.titleTechnologicalSkills', 'HOME.descriptionTechnologicalSkills',
       [

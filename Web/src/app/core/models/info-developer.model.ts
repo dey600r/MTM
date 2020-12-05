@@ -1,13 +1,10 @@
-import { preserveWhitespacesDefault } from '@angular/compiler';
+import { InfoBaseDescModel } from './info-base.model';
 import { InfoIconModel } from './info-icon.model';
 
-export class InfoDeveloperModel {
-    title: string;
-    description: string;
+export class InfoDeveloperModel extends InfoBaseDescModel {
     icons: InfoIconModel[];
     constructor(t: string = '', d: string = '', i: InfoIconModel[] = []) {
-        this.title = t;
-        this.description = d;
+        super(t, d);
         this.icons = i;
     }
 }

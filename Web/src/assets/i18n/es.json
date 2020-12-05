@@ -2,14 +2,14 @@
     "COMMON": {
         "title": "Dey Apps",
         "home": "Home",
-        "infoMtm": "Info MtM",
+        "infoMtm": "App MtM",
         "subtitle": "Home Software Developer",
         "contact": "Contact: deyhome.mtm@gmail.com",
         "footer": "Copyright © 2020 - David Jiménez - All rigths reserved",
-        "iconDesignedBy": "Iconos diseñados por {{url}}"
+        "iconDesignedBy": "Iconos diseñados por {{url}}",
+        "MTM_LARGE": "Motor Track Manager"
     },
     "HOME": {
-        "MTM_LARGE": "Motor Track Manager",
         "titleInfoDeveloper": "Información del desarrollador",
         "descriptionInfoDeveloper": "Mi carrera profesional se desarrolla en su mayor parte en la consultoría IT participando en grandes cliente internacionales. He evolucionado principalmente en el ambito tecnológico de ingeniería del software, aunque también he participado en tareas de gestión de proyectos. Me considero una persona proactiva y con un objectivo de mejora profesional continua.",
         "titleProjects": "Proyectos",

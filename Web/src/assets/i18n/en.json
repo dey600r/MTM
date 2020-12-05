@@ -2,14 +2,14 @@
     "COMMON": {
         "title": "Dey Apps",
         "home": "Home",
-        "infoMtm": "Info MtM",
+        "infoMtm": "App MtM",
         "subtitle": "Home Software Developer",
         "contact": "Contact: deyhome.mtm@gmail.com",
         "footer": "Copyright © 2020 - David Jiménez - All rigths reserved",
-        "iconDesignedBy": "Icons designed by {{url}}"
+        "iconDesignedBy": "Icons designed by {{url}}",
+        "MTM_LARGE": "Motor Track Manager"
     },
     "HOME": {
-        "MTM_LARGE": "Motor Track Manager",
         "titleInfoDeveloper": "Developer Information",
         "descriptionInfoDeveloper": "My professional career is mostly in IT consulting, participating in large international clients. I have evolved mainly in the technological field of software engineering, although I have also participated in project management tasks. I consider myself a proactive person with an objective of continuous professional improvement.",
         "titleProjects": "Projects",
