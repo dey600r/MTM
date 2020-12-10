@@ -1,0 +1,9 @@
+<p-tabView styleClass="tabview-custom">
+    <p-tabPanel *ngFor="let tab of dataInfo">
+        <ng-template pTemplate = "header">
+            <em [class]="tab.icon"></em>
+            <span style="margin-left: 4px;">{{ tab.title }}</span>
+        </ng-template>
+        <app-icon-carousel [dataInfo]="tab.type"></app-icon-carousel>
+    </p-tabPanel>
+</p-tabView>
