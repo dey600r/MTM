@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { UtilsService } from '@app/core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '@environments/environment';
-import { InfoDeveloperModel, InfoIconModel } from '@models/index';
+import { InfoDeveloperModel, InfoIconModel, InfoTabModel } from '@models/index';
 import { Constants } from '@utils/constants';
+import { InfoCardModel } from '@app/core/models/info-card.model';
 
 @Component({
   selector: 'app-info-mtm',
@@ -14,6 +15,8 @@ export class InfoMtmComponent implements OnInit {
 
   icon = '';
 
+  infoListCard: InfoCardModel[] = [];
+  infoImageMtM: InfoTabModel[] = [];
   infoMtM: InfoDeveloperModel = new InfoDeveloperModel();
 
   constructor(private translator: TranslateService,
@@ -24,8 +27,24 @@ export class InfoMtmComponent implements OnInit {
     const assetsIcon: string = environment.pathIcons;
     this.icon = this.utilService.joinPath([assetsIcon, 'icon.png']);
 
+    this.infoListCard = [
+      new InfoCardModel('INFO_MTM.titleExpensesVehicles', 'INFO_MTM.descriptionExpensesVehicles',
+        this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-expenses-vehicles.png'])),
+      new InfoCardModel('INFO_MTM.titleCalendar', 'INFO_MTM.descriptionCalendar',
+        this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-calendar.png'])),
+      new InfoCardModel('INFO_MTM.titleExpensesReplacement', 'INFO_MTM.descriptionExpensesReplacement',
+        this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-expenses-replacements.png'])),
+      new InfoCardModel('INFO_MTM.titleNotifications', 'INFO_MTM.descriptionNotifications',
+        this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-notification.png']))
+    ];
+
+    this.infoImageMtM = [
+      new InfoTabModel('Android', Constants.TYPE_APP_ANDROID, 'pi pi-android'),
+      new InfoTabModel('Windows 10', Constants.TYPE_APP_WINDOWS, 'pi pi-microsoft')
+    ];
+
     this.infoMtM = new InfoDeveloperModel(
-      'HOME.titleTechnologicalSkills', 'HOME.descriptionTechnologicalSkills',
+      'INFO_MTM.titleTechnologiesUsed', 'INFO_MTM.descriptionTechnologiesUsed',
       [
         new InfoIconModel(`${assetsIcon}/icon-ionic.png`, 'Ionic', 'Ionic', Constants.URL_IONIC),
         new InfoIconModel(`${assetsIcon}/icon-angular.png`, 'Angular', 'Angular', Constants.URL_ANGULAR),

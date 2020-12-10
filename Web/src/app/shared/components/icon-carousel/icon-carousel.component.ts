@@ -16,11 +16,14 @@ export class IconCarouselComponent implements OnInit {
   @Input() dataInfo = Constants.TYPE_APP_ANDROID;
 
   picturesApp: PictureModel[] = [];
+  responsiveOptions: any;
 
   constructor(private utilService: UtilsService,
               private translator: TranslateService) { }
 
   ngOnInit(): void {
+    this.calculateNumVisibleImages();
+
     const pathImages: string = this.utilService.getPathImages(this.dataInfo);
     this.picturesApp = [
       {
@@ -40,8 +43,57 @@ export class IconCarouselComponent implements OnInit {
         url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture3.png']),
         type: 'android',
         app: 'mtm'
+      },
+      {
+        name: 'Image4',
+        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture4.png']),
+        type: 'android',
+        app: 'mtm'
+      },
+      {
+        name: 'Image5',
+        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture5.png']),
+        type: 'android',
+        app: 'mtm'
+      },
+      {
+        name: 'Image6',
+        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture6.png']),
+        type: 'android',
+        app: 'mtm'
       }
     ];
+  }
+
+  calculateNumVisibleImages(): void {
+    if (this.dataInfo === Constants.TYPE_APP_ANDROID) {
+      this.responsiveOptions = [
+        {
+            breakpoint: '3000px',
+            numVisible: 3,
+            numScroll: 1
+        },
+        {
+            breakpoint: '840px',
+            numVisible: 2,
+            numScroll: 1
+        },
+        {
+            breakpoint: '560px',
+            numVisible: 1,
+            numScroll: 1
+        }
+    ];
+    } else {
+      this.responsiveOptions = [
+        {
+            breakpoint: '3000px',
+            numVisible: 1,
+            numScroll: 1
+        }
+    ];
+    }
+
   }
 
 }

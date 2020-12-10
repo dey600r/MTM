@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { IconDocComponent } from '@components/icon-doc/icon-doc.component';
 import { IconProjectComponent } from '@components/icon-project/icon-project.component';
 import { IconCarouselComponent } from '@components/icon-carousel/icon-carousel.component';
+import { IconTabComponent } from '@components/icon-tab/icon-tab.component';
+import { IconListCardComponent } from '@components/icon-list-card/icon-list-card.component';
 
 import { PrimengModule } from './primeng.module';
 
@@ -14,7 +16,9 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     IconDocComponent,
     IconProjectComponent,
-    IconCarouselComponent
+    IconCarouselComponent,
+    IconTabComponent,
+    IconListCardComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +29,9 @@ import { HttpClientModule } from '@angular/common/http';
   exports: [
     IconDocComponent,
     IconProjectComponent,
-    IconCarouselComponent
+    IconCarouselComponent,
+    IconTabComponent,
+    IconListCardComponent
   ],
   providers: []
 })

@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
       },
       {
         label: this.translator.instant('COMMON.infoMtm'),
-        icon: 'pi pi-fw pi-android',
+        icon: 'icon-mtm',
         routerLink: [Constants.ROUTE_INFO_MTM]
       }
     ];

@@ -1,13 +1,11 @@
-<div class="container-carousel">
-    <p-carousel [value]="picturesApp">
-        <ng-template let-pict pTemplate="item">
-            <div class="product-item">
-                <div class="product-item-content">
-                    <div class="p-mb-3">
-                        <img [alt]="pict.name" [src]="pict.url" class="product-image">
-                    </div>
-                </div>  
-            </div>
-        </ng-template>
-    </p-carousel>
-</div>
+<p-carousel [value]="picturesApp" [numVisible]="1" [numScroll]="1" [responsiveOptions]="responsiveOptions">
+    <ng-template let-pict pTemplate="item">
+        <div class="product-item">
+            <div class="product-item-content">
+                <div class="p-mb-3">
+                    <img [alt]="pict.name" [src]="pict.url" class="product-image">
+                </div>
+            </div>  
+        </div>
+    </ng-template>
+</p-carousel>
