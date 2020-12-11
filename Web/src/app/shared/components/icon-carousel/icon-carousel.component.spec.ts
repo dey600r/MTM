@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SetupTest } from 'src/setup-test';
+
 import { IconCarouselComponent } from './icon-carousel.component';
 
 describe('IconCarouselComponent', () => {
@@ -7,9 +9,7 @@ describe('IconCarouselComponent', () => {
   let fixture: ComponentFixture<IconCarouselComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ IconCarouselComponent ]
-    })
+    await TestBed.configureTestingModule(SetupTest.config)
     .compileComponents();
   });
 

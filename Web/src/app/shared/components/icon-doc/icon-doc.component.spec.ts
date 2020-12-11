@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SetupTest } from 'src/setup-test';
+
 import { IconDocComponent } from './icon-doc.component';
 
 describe('IconDocComponent', () => {
@@ -7,9 +9,7 @@ describe('IconDocComponent', () => {
   let fixture: ComponentFixture<IconDocComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ IconDocComponent ]
-    })
+    await TestBed.configureTestingModule(SetupTest.config)
     .compileComponents();
   });
 

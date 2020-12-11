@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SetupTest } from 'src/setup-test';
+
 import { IconTabComponent } from './icon-tab.component';
 
 describe('IconTabComponent', () => {
@@ -7,9 +9,7 @@ describe('IconTabComponent', () => {
   let fixture: ComponentFixture<IconTabComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ IconTabComponent ]
-    })
+    await TestBed.configureTestingModule(SetupTest.config)
     .compileComponents();
   });
 

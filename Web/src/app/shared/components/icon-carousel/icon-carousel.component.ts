@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UtilsService } from '@services/utils.service';
 
-import { environment } from '@environments/environment';
 import { PictureModel } from '@models/index';
 import { TranslateService } from '@ngx-translate/core';
 import { Constants } from '@utils/constants';

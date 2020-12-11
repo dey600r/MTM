@@ -38,7 +38,7 @@ export class AppComponent {
       this.translator.use(userLang);
     }).finally(() => {
       // CONFIGURATION
-      this.statusBar.styleDefault();
+      this.statusBar.styleBlackTranslucent();
       this.splashScreen.hide();
 
       // DB

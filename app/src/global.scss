@@ -36,8 +36,6 @@ $colors: (
   gray-light: var(--ion-color-light-shade)
 );
 
-// @import "ion4-calendar/dist/index.scss";
-
 // CSS CALENDAR
 .day-text-config {
   p { color: white !important; }
@@ -104,6 +102,14 @@ button.days-btn.today p {
   width: inherit;
   height: inherit;  
 }
+
+// .color-dark {
+//   background-color: var(--ion-color-dark);
+// }
+
+// ion-list {
+//   background: none !important;
+// }
 
 // SPLASH SCREEN ANIMATION
 

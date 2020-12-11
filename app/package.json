@@ -28,7 +28,8 @@
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug --consolelogs",
     "deploy:debug-windows": "ionic cordova run windows --debug -- --arch=x64 --appx=uap --platform=x64",
-    "deploy:prod-electron": "ng build --prod --base-href . && electron-packager . C:/Proyectos/MTM/Utils/Versions/Electron/MtM_David_2.0.4 --platform=win32 --arch=x64 --electron-version=8.2.4 --overwrite"
+    "deploy:prod-electron": "ng build --prod --base-href . && electron-packager . C:/Proyectos/MTM/Utils/Versions/Electron/MtM_David_2.0.4 --platform=win32 --arch=x64 --electron-version=8.2.4 --overwrite",
+    "sonarqube": "ng test --code-coverage --watch=false && sonar-scanner.bat"
   },
   "private": true,
   "dependencies": {
