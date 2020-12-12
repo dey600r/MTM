@@ -14,7 +14,7 @@
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="19" />
     <preference name="android-targetSdkVersion" value="29" />
-    <preference name="WindowsStoreIdentityName" value="52193DeyHome.MotortrackManager" />
+    <preference name="WindowsStoreIdentityName" value="52193DeyHome.MotortrackManagerDebug" />
     <preference name="WindowsStorePublisherName" value="DeyHome" />
     <preference name="WindowsStoreDisplayName" value="Motor Track Manager" />
     <preference name="windows-target-version" value="10.0" />

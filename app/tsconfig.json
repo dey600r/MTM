@@ -1,39 +1,17 @@
+/*
+  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
+  It is not intended to be used to perform a compilation.
+
+  To learn more about this file see: https://angular.io/config/solution-tsconfig.
+*/
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "paths": {
-      "@app/*": ["src/app/*"],
-      "@environment/*": ["src/environments/*"],
-      "@services/*": ["src/app/core/services/*"],
-      "@models/*": ["src/app/core/models/*"],
-      "@utils/*": ["src/app/core/utils/*"],
-      "@shared/*": ["src/app/shared/*"],
-      "@modals/*": ["src/app/shared/modals/*"],
-      "@popovers/*": ["src/app/shared/popovers/*"],
-      "@pipes/*": ["src/app/shared/pipes/*"],
-      "@pages/*": ["src/app/pages/*"],
-      "@components/*": ["src/app/shared/components/*"]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
     }
-  },
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
-  }
+  ]
 }
