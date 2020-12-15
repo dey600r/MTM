@@ -11,7 +11,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // UTILS
 import { environment } from '@environment/environment';
-import { PipeModule } from '@pipes/pipes.module';
+import { PipeModule } from '@app/shared/modules/pipes.module';
 
 // COMPONENTS
 import { OperationPage } from './operation.page';

@@ -235,7 +235,7 @@ export class SqlService {
   }
 
   getMapConfiguration(data: any, vehicle: boolean): ConfigurationModel {
-    let result: ConfigurationModel = new ConfigurationModel();
+    let result: ConfigurationModel;
     if (vehicle) {
       const masterConf: boolean = (data.masterConfiguration === Constants.DATABASE_YES);
       result = {
@@ -336,7 +336,7 @@ export class SqlService {
   }
 
   getMapMaintenance(data: any, conf: boolean): MaintenanceModel {
-    let result: MaintenanceModel = new MaintenanceModel();
+    let result: MaintenanceModel;
     if (conf) {
       result = {
         id: Number(data.idMaintenance),
@@ -684,13 +684,12 @@ export class SqlService {
 
   /* DELETES SQL */
 
-  deleteSql(table: string, column: string, data: number[] = []): string {
+  deleteSql(table: string, column: string, data: number[] = [],
+            columnExtra: string = '', dataExtra: number[] = []): string {
     let sql = `DELETE FROM ${table} WHERE ${column} in (`;
-    for (let i = 0; i < data.length; i++) {
-      sql += data[i];
-      if ((i + 1) < data.length) {
-        sql += ',';
-      }
+    sql += this.getDataSeparatedWithCom(data);
+    if (columnExtra !== '' && dataExtra.length > 0) {
+      sql += `) AND ${columnExtra} in (${this.getDataSeparatedWithCom(dataExtra)}`;
     }
     return `${sql}); `;
   }
@@ -698,5 +697,16 @@ export class SqlService {
   /* SQL UTLS */
   getValueWithCom(data: any): string {
     return (data !== null ? `'${data}'` : data);
+  }
+
+  getDataSeparatedWithCom(data: number[]): string {
+    let sql = '';
+    for (let i = 0; i < data.length; i++) {
+      sql += data[i];
+      if ((i + 1) < data.length) {
+        sql += ',';
+      }
+    }
+    return sql;
   }
 }

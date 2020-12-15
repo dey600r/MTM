@@ -60,6 +60,13 @@ export class ConfigurationService {
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
     }
 
+    deleteConfigManintenance(idConfiguration: number, idMaintenance: number) {
+        const sqlDB: string = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
+            ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION, [idConfiguration],
+            ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, [idMaintenance]);
+        return this.dbService.executeScriptDataBase(sqlDB, [ConstantsTable.TABLE_MTM_CONFIGURATION]);
+    }
+
     getSqlDeleteConfiguration(configuration: ConfigurationModel, vehicles: VehicleModel[]): string {
         let sqlDB = '';
         if (!!configuration.listMaintenance && configuration.listMaintenance.length > 0) {

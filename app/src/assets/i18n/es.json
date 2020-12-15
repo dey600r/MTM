@@ -109,7 +109,10 @@
         "GuideExportImport": "Guia para Exportar e importar datos",
         "GuideStep1": "1. Presiona el botón de exportar para guardar el fichero en {{path}} con los datos de MtM",
         "GuideStep2": "2. Copia a mano el fichero exportado a otra aplicación MtM en la ruta {{path}}",
-        "GuideStep3": "3. Presiona el boton importar para importar los datos de la aplicación MtM donde se exportaron los datos"
+        "GuideStep3": "3. Presiona el boton importar para importar los datos de la aplicación MtM donde se exportaron los datos",
+        "ConfirmDeleteConfigurationMaintenance": "El mantenimiento {{maintenance}} será desactivado en la configuración {{configuration}}. ¿Desea continuar?",
+        "DeleteSaveConfigurationMaintenance": "El mantenimiento {{maintenance}} ha sido desactivado. Se puede reactivar en la configuración de {{configuration}}",
+        "ValidateDeleteConfigurationMaintenance": "No se puede desactivar el mantenimiento {{maintenance}} en la configuración {{configuration}}"
     },
     "PAGE_VEHICLE": {
         "YOURS_VEHICLES": "Tus Vehículos",

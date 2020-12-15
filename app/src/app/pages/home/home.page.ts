@@ -20,6 +20,7 @@ import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
 import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
 import { SettingsComponent } from '@modals/settings/settings.component';
+import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 
 @Component({
   selector: 'app-home',
@@ -36,8 +37,9 @@ export class HomePage implements OnInit {
   activateInfo = false;
   wears: WearVehicleProgressBarViewModel[] = [];
   allWears: WearVehicleProgressBarViewModel[] = [];
-  hideVehicles: boolean[] = [];
+  vehicleSelected: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
   operations: OperationModel[] = [];
+  maintenances: MaintenanceModel[] = [];
   loaded = false;
   measure: any = {};
 
@@ -75,6 +77,7 @@ export class HomePage implements OnInit {
         this.maintenanceSubscription = this.dbService.getMaintenance().subscribe(maintenances => {
           this.vehicleSubscription.unsubscribe();
           if (!!maintenances && maintenances.length > 0) {
+            this.maintenances = maintenances;
             this.vehicleSubscription = this.dbService.getVehicles().subscribe(vehicles => {
               this.operationSubscription.unsubscribe();
               this.operations = [];
@@ -90,7 +93,6 @@ export class HomePage implements OnInit {
                       this.operations, vehiclesActives, configurations, maintenances);
                     this.allWears.forEach((x, index) => {
                       this.wears = [...this.wears, Object.assign({}, x)];
-                      this.hideVehicles[index] = (index !== 0);
                       let listWears: WearReplacementProgressBarViewModel[] = [];
                       const kmVehicle: number = this.calendarService.calculateWearKmVehicleEstimated(x);
                       x.listWearReplacement.forEach(z => {
@@ -101,6 +103,8 @@ export class HomePage implements OnInit {
                       });
                       this.wears.find(y => x.idVehicle === y.idVehicle).listWearReplacement = listWears;
                     });
+                    this.vehicleSelected = (this.vehicleSelected.idVehicle === -1 ?
+                      this.wears[0] : this.wears.find(x => x.idVehicle === this.vehicleSelected.idVehicle));
                     this.activateInfo = this.activateModeInfo(vehiclesActives, this.operations, this.wears);
                     this.timeOutLoader();
                   });
@@ -172,6 +176,10 @@ export class HomePage implements OnInit {
     return this.dashboardService.getDateCalculateMonths(wear.calculateMonths);
   }
 
+  segmentChanged( event ) {
+    this.vehicleSelected = this.wears.find(x => x.idVehicle === Number(event.detail.value));
+  }
+
   // MODALS
 
   openInfoNotification(m: WearVehicleProgressBarViewModel, w: WearReplacementProgressBarViewModel) {
@@ -210,6 +218,37 @@ export class HomePage implements OnInit {
   openSettings() {
     this.controlService.openModal(PageEnum.HOME,
       SettingsComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
+  }
+
+  openModalMaintenance(w: WearReplacementProgressBarViewModel): void {
+    const rowMaintenance: MaintenanceModel = this.maintenances.find(x => x.id === w.idMaintenance);
+    this.controlService.openModal(PageEnum.CONFIGURATION,
+      AddEditMaintenanceComponent, new ModalInputModel(false, rowMaintenance, [this.vehicleSelected.kmVehicle], PageEnum.HOME));
+  }
+
+  desactivateMaintenance(w: WearReplacementProgressBarViewModel): void {
+    if (this.vehicleSelected.idConfiguration === 1) {
+      this.controlService.showToast(PageEnum.HOME, 'PAGE_HOME.ValidateDeleteConfigurationMaintenance',
+              {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration},
+              Constants.DELAY_TOAST_NORMAL);
+    } else {
+      this.controlService.showConfirm(PageEnum.HOME, this.translator.instant('COMMON.CONFIGURATION'),
+      this.translator.instant('PAGE_HOME.ConfirmDeleteConfigurationMaintenance',
+        {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration}),
+      {
+        text: this.translator.instant('COMMON.ACCEPT'),
+        handler: () => {
+          this.configurationService.deleteConfigManintenance(this.vehicleSelected.idConfiguration, w.idMaintenance).then(x => {
+            this.controlService.showToast(PageEnum.HOME, 'PAGE_HOME.DeleteSaveConfigurationMaintenance',
+              {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration},
+              Constants.DELAY_TOAST_NORMAL);
+          }).catch(e => {
+            this.controlService.showToast(PageEnum.VEHICLE, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+          });
+        }
+      }
+    );
+    }
   }
 
   getIconVehicle(wear: WearVehicleProgressBarViewModel): string {

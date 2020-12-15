@@ -10,6 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "skipLibCheck": true,
     "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
@@ -29,7 +30,8 @@
       "@popovers/*": ["src/app/shared/popovers/*"],
       "@pipes/*": ["src/app/shared/pipes/*"],
       "@pages/*": ["src/app/pages/*"],
-      "@components/*": ["src/app/shared/components/*"]
+      "@components/*": ["src/app/shared/components/*"],
+      "@modules/*": ["src/app/shared/modules/*"]
     }
   },
   "angularCompilerOptions": {

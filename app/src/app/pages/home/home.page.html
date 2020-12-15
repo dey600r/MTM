@@ -18,73 +18,88 @@
 <ion-content [hidden]="!loaded">
   <!-- INFO -->
   <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
+  <!-- SEGMENT -->
+  <ion-segment *ngIf="!activateInfo" class="segment-button-fixed" 
+    [value]="this.vehicleSelected.idVehicle" [scrollable]="this.wears.length>2" (ionChange)="segmentChanged($event)">
+    <ion-segment-button *ngFor="let m of wears; let i = index;" [value]="m.idVehicle" layout="icon-start">
+      <ion-label>
+        {{ m.nameVehicle }}
+        <div [class]="getClassProgressbar(m.warning, 'progress-bar')">
+          <ion-progress-bar [value]="m.percent"></ion-progress-bar>
+        </div>
+      </ion-label>
+      <ion-icon size="small" [name]="getIconVehicle(m)"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
   <!-- List Vehicles -->
-  <ion-list *ngFor="let m of wears; let i = index;">
-    <ion-list-header (click)="hideVehicles[i] = !hideVehicles[i]" class="padding-list-header">
-      <ion-icon size="large" [name]="getIconVehicle(m)"></ion-icon>
-      <h3 class="header-list">{{ m.nameVehicle }}</h3>
-      <ion-button fill="clear">
-        <ion-icon *ngIf="hideVehicles[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideVehicles[i]" size="small" color="primary" name="caret-up-circle"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <!-- Progress bar vehicle -->
-    <div *ngIf="hideVehicles[i]" [class]="getClassProgressbar(m.warning, 'progress-bar')">
-      <ion-progress-bar [value]="m.percent"></ion-progress-bar>
-    </div>
-    <!-- Items Maintenances -->
-    <ion-item button *ngFor="let w of m.listWearReplacement" [hidden]="hideVehicles[i]" (click)="openInfoNotification(m, w)">
-      <!-- Ivatar -->
-      <ion-avatar slot="start" class="max-width10 avatar-row">
-        <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(w)"></ion-icon>
-      </ion-avatar>
-      <div class="main-div">
-        <div>
-          <!-- Label -->
+  <ion-list *ngIf="!activateInfo" class="segment-top">
+    <ion-item-sliding *ngFor="let w of this.vehicleSelected.listWearReplacement">
+      <!-- SLIDING START -->
+      <ion-item-options side="start">
+        <ion-item-option class="day-circle-config-skull" (click)="desactivateMaintenance(w)">
+          <ion-icon slot="icon-only" name="notifications-off-circle-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <!-- ITEM -->
+      <ion-item button (click)="openInfoNotification(this.vehicleSelected, w)">
+        <!-- Ivatar -->
+        <ion-avatar slot="start" class="max-width10 avatar-row">
+          <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(w)"></ion-icon>
+        </ion-avatar>
+        <div class="main-div">
           <div>
-            <ion-label>
-              <h3 class="font-size16">{{ w.descriptionMaintenance }}</h3>
-              <p class="margin-botton0">{{ w.nameMaintenanceElement }}</p>
-            </ion-label>
-          </div>
-          <div class="table-row">
-            <!-- KMS -->
-            <div class="margin-right5 table-row">
-              <ion-icon [class]="getClassIcon(w.warningKms, 'icon-row')" [color]="getClassIcon(w.warningKms, '')" size="small"
-              [name]="getIconKms(w.warningKms)"></ion-icon>
-              <p class="p-row">{{ getKmPercent(w) }} {{measure.value}}</p>
+            <!-- Label -->
+            <div>
+              <ion-label>
+                <h3 class="font-size16">{{ w.descriptionMaintenance }}</h3>
+                <p class="margin-botton0">{{ w.nameMaintenanceElement }}</p>
+              </ion-label>
             </div>
-            <!-- ICON -->
-            <div class="icon-notification">
-              <ion-icon *ngIf="w.fromKmMaintenance !== 0" [color]="getClassIcon(w.warningKms, '')" size="small"
-              [class]="getClassIcon(w.warningKms, 'icon-row')" name="walk"></ion-icon>
-              <ion-icon *ngIf="w.toKmMaintenance !== null" [color]="getClassIcon(w.warningKms, '')" size="small"
-              [class]="getClassIcon(w.warningKms, 'icon-row')" name="trail-sign"></ion-icon>
-              <ion-icon *ngIf="w.initMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
-              [class]="getClassIcon(w.warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
-              <ion-icon *ngIf="!w.initMaintenance && w.wearMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
-                [class]="getClassIcon(w.warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
+            <div class="table-row">
+              <!-- KMS -->
+              <div class="margin-right5 table-row">
+                <ion-icon [class]="getClassIcon(w.warningKms, 'icon-row')" [color]="getClassIcon(w.warningKms, '')" size="small"
+                [name]="getIconKms(w.warningKms)"></ion-icon>
+                <p class="p-row">{{ getKmPercent(w) }} {{measure.value}}</p>
+              </div>
+              <!-- ICON -->
+              <div class="icon-notification">
+                <ion-icon *ngIf="w.fromKmMaintenance !== 0" [color]="getClassIcon(w.warningKms, '')" size="small"
+                [class]="getClassIcon(w.warningKms, 'icon-row')" name="walk"></ion-icon>
+                <ion-icon *ngIf="w.toKmMaintenance !== null" [color]="getClassIcon(w.warningKms, '')" size="small"
+                [class]="getClassIcon(w.warningKms, 'icon-row')" name="trail-sign"></ion-icon>
+                <ion-icon *ngIf="w.initMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
+                [class]="getClassIcon(w.warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
+                <ion-icon *ngIf="!w.initMaintenance && w.wearMaintenance" [color]="getClassIcon(w.warningKms, '')" size="small"
+                  [class]="getClassIcon(w.warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
+              </div>
             </div>
-          </div>
-          <!-- Progress bar maintenace -->
-          <div [class]="getClassProgressbar(w.warningKms, '')">
-            <ion-progress-bar [value]="w.percentKms"></ion-progress-bar>
-          </div>
-          <div *ngIf="w.timeMaintenance > 0" class="table-row">
-            <!-- MONTHS -->
-            <div class="margin-right5 table-row">
-              <ion-icon [color]="getClassIcon(w.warningMonths, '')" size="small"
-                [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
-              <p class="p-row">{{ getTimePercent(w) }}</p>
-            </div>
-          </div>
             <!-- Progress bar maintenace -->
-          <div *ngIf="w.timeMaintenance > 0" [class]="getClassProgressbar(w.warningMonths, '')">
-            <ion-progress-bar [value]="w.percentMonths"></ion-progress-bar>
+            <div [class]="getClassProgressbar(w.warningKms, '')">
+              <ion-progress-bar [value]="w.percentKms"></ion-progress-bar>
+            </div>
+            <div *ngIf="w.timeMaintenance > 0" class="table-row">
+              <!-- MONTHS -->
+              <div class="margin-right5 table-row">
+                <ion-icon [color]="getClassIcon(w.warningMonths, '')" size="small"
+                  [class]="getClassIcon(w.warningMonths, 'icon-row')" [name]="getIconKms(w.warningMonths)"></ion-icon>
+                <p class="p-row">{{ getTimePercent(w) }}</p>
+              </div>
+            </div>
+              <!-- Progress bar maintenace -->
+            <div *ngIf="w.timeMaintenance > 0" [class]="getClassProgressbar(w.warningMonths, '')">
+              <ion-progress-bar [value]="w.percentMonths"></ion-progress-bar>
+            </div>
           </div>
         </div>
-      </div>
-    </ion-item>
+      </ion-item>
+      <!-- SLIDING END -->
+      <ion-item-options side="end">
+        <ion-item-option class="day-circle-config-blue" (click)="openModalMaintenance(w)">
+          <ion-icon slot="icon-only" name="pencil"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 </ion-content>
 
@@ -98,19 +113,26 @@
 </ion-header>
 
 <ion-content *ngIf="!loaded">
-  <ion-list *ngFor="let i of [1, 2]">
+  <ion-list>
     <ion-list-header class="padding-list-header">
-      <ion-label style="width: 85%">
-        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
-      </ion-label>
-      <ion-label>
+      <ion-label style="width: 10%">
         <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
       </ion-label>
+      <ion-label style="width: 35%">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
+      </ion-label>
+      <ion-label style="width: 10%">
+        <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
+      </ion-label>
+      <ion-label style="width: 35%">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
+      </ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let i of [1, 2]">
+    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6]">
       <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
       <ion-label>
         <h3><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></h3>
+        <p><ion-skeleton-text animated style="width: 75%"></ion-skeleton-text></p>
         <p><ion-skeleton-text animated style="width: 75%"></ion-skeleton-text></p>
       </ion-label>
     </ion-item>

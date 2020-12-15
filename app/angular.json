@@ -90,6 +90,8 @@
               { "glob": "**/*caret-up.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*chevron-forward.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*chevron-back.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*notifications-off-circle-outline.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*pencil.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*.svg", "input": "src/assets/icon", "output": "./svg" }
             ],
             "styles": [

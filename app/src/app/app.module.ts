@@ -11,61 +11,26 @@ import { CommonModule } from '@angular/common';
 // LIBRARIES IONIC
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { SQLite } from '@ionic-native/sqlite/ngx';
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { CalendarModule } from 'ion5-calendar';
-import { File } from '@ionic-native/file/ngx';
 
 // LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
-import { DataBaseService, CommonService } from '@services/index';
 import { environment } from '@environment/environment';
 
 // COMPONENTS
 import { AppComponent } from './app.component';
-import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
-import { AddEditVehicleComponent } from '@app/shared/modals/add-edit-vehicle/add-edit-vehicle.component';
-import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
-import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
-import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
-import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
-import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
-import { SettingsComponent } from '@modals/settings/settings.component';
-import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
-import { PipeModule } from '@pipes/pipes.module';
+
+// MODULES
+import { ComponentModule } from '@modules/component.module';
+import { PipeModule } from '@modules/pipes.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AddEditConfigurationComponent,
-    AddEditVehicleComponent,
-    AddEditOperationComponent,
-    AddEditMaintenanceComponent,
-    AddEditMaintenanceElementComponent,
-    DashboardComponent,
-    InfoNotificationComponent,
-    SettingsComponent,
-    InfoCalendarComponent,
-    SearchDashboardPopOverComponent
+    AppComponent
   ],
-  entryComponents: [
-    AddEditConfigurationComponent,
-    AddEditVehicleComponent,
-    AddEditOperationComponent,
-    AddEditMaintenanceComponent,
-    AddEditMaintenanceElementComponent,
-    DashboardComponent,
-    InfoNotificationComponent,
-    InfoCalendarComponent,
-    SettingsComponent,
-    SearchDashboardPopOverComponent
-  ],
+  entryComponents: [],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -78,25 +43,18 @@ import { PipeModule } from '@pipes/pipes.module';
         deps: [HttpClient]
       }
     }),
-    NgxChartsModule,
     AppRoutingModule,
     CommonModule,
     FormsModule,
     PipeModule,
-    CalendarModule
+    ComponentModule
   ],
   exports: [
   ],
   providers: [
-    File,
     StatusBar,
     SplashScreen,
-    SQLite,
-    SQLitePorter,
-    DataBaseService,
-    CommonService,
     TranslateStore,
-    ScreenOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

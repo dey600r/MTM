@@ -109,7 +109,10 @@
         "GuideExportImport": "Guide to Export and Import data",
         "GuideStep1": "1. Press export button to saving file into {{path}} with the MtM data",
         "GuideStep2": "2. Copy manually exported file to another MtM application into {{path}}",
-        "GuideStep3": "3. Press import button to save MtM data from the other MtM application"
+        "GuideStep3": "3. Press import button to save MtM data from the other MtM application",
+        "ConfirmDeleteConfigurationMaintenance": "The maintenance {{maintenance}} will be desactivated on {{configuration}} configuration. Do you wish continue?",
+        "DeleteSaveConfigurationMaintenance": "The maintenance {{maintenance}} has been desactivated. You can activate again on {{configuration}} configuration.",
+        "ValidateDeleteConfigurationMaintenance": "You can`t desactive the maintenance {{maintenance}} on {{configuration}} configuration"
     },
     "PAGE_VEHICLE": {
         "YOURS_VEHICLES": "Your vehicles",

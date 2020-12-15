@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { DateFormatCalendarPipe } from './date-format-calendar.pipe';
+import { DateFormatCalendarPipe } from '../pipes/date-format-calendar.pipe';
 
 @NgModule({
     imports: [],

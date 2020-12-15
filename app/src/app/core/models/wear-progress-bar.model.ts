@@ -12,6 +12,8 @@ export class WearVehicleProgressBarViewModel {
     percentKm = 0;
     percentTime = 0;
     warning: WarningWearEnum = WarningWearEnum.SUCCESS;
+    idConfiguration = -1;
+    nameConfiguration = '';
     listWearReplacement: WearReplacementProgressBarViewModel[] = [];
     constructor(id: number = -1, name: string = '', km: number = 0, dateP: Date = new Date(),
                 kmsM: number = 0, dateK: Date = new Date(), per: number = 0, perKm: number = 0, perTime: number = 0,

@@ -292,13 +292,12 @@ export class DashboardService {
     mapWearToDashboardTimeRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): any[] {
         let result: any[] = [];
         if (!!data && data.listWearReplacement.length > 0) {
-            let initKm: number = data.listWearReplacement[0].fromKmMaintenance;
+            const initKm: number = data.listWearReplacement[0].fromKmMaintenance;
             const estimated: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'), []);
             const real: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'), []);
             if (initKm === 0) {
                 estimated.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
                 real.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
-                initKm = 0;
             }
             const kmEstimated: number = this.calendarService.calculateWearKmVehicleEstimated(data);
             data.listWearReplacement.forEach(x => {
@@ -378,6 +377,8 @@ export class DashboardService {
                         percentKm: 0,
                         percentTime: 0,
                         warning: this.getPercentVehicle(wearReplacement, kmVehicleEstimated),
+                        idConfiguration: config.id,
+                        nameConfiguration: config.name,
                         listWearReplacement: this.orderMaintenanceWear(wearReplacement)
                     }];
                 }
@@ -734,6 +735,8 @@ export class DashboardService {
                     percentKm: Math.floor(perKm),
                     percentTime: Math.floor(perTime),
                     warning: this.getPercentVehicle(wearReplacement, kmVehicle),
+                    idConfiguration: vehicleWear.idConfiguration,
+                    nameConfiguration: vehicleWear.nameConfiguration,
                     listWearReplacement: this.commonService.orderBy(wearReplacement, ConstantsColumns.COLUMN_MODEL_KM_ACUMULATE_MAINTENANCE)
                 };
             }
