@@ -5,7 +5,10 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, CommonService, OperationService, ControlService, DashboardService, SettingsService } from '@services/index';
+import {
+  DataBaseService, CommonService, OperationService, ControlService,
+  DashboardService, SettingsService, VehicleService
+} from '@services/index';
 import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
   OperationTypeModel, SearchDashboardModel
@@ -16,7 +19,6 @@ import { ConstantsColumns, Constants, ActionDBEnum, PageEnum } from '@utils/inde
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-operation',
@@ -26,6 +28,7 @@ import { Subscription } from 'rxjs';
 export class OperationPage implements OnInit {
 
   // MODAL
+  input: ModalInputModel = new ModalInputModel();
   dataReturned: ModalOutputModel;
 
   // MODEL
@@ -36,8 +39,10 @@ export class OperationPage implements OnInit {
   operations: OperationModel[] = [];
   operationsVehicle: OperationModel[] = [];
   allOperations: OperationModel[] = [];
-  nameFilterVehicle = '';
-  loaded = false;
+  vehicles: VehicleModel[] = [];
+  vehicleSelected = -1;
+  loadedHeader = false;
+  loadedBody = false;
   iconNameHeaderLeft = 'bar-chart';
   measure: any = {};
   coin: any = {};
@@ -47,6 +52,7 @@ export class OperationPage implements OnInit {
               private translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
+              private vehicleService: VehicleService,
               private operationService: OperationService,
               private dashboardService: DashboardService,
               private settingsService: SettingsService,
@@ -67,6 +73,9 @@ export class OperationPage implements OnInit {
   }
 
   initPage() {
+
+    this.input = new ModalInputModel(false, null, [], PageEnum.HOME, Constants.STATE_INFO_OPERATION_EMPTY);
+
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
@@ -74,35 +83,33 @@ export class OperationPage implements OnInit {
       }
     });
 
+    this.dbService.getVehicles().subscribe(data => {
+      if (!!data && data.length > 0) {
+        this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
+        this.vehicleSelected = (this.vehicleSelected === -1 ?
+          this.vehicles[0].id : this.vehicles.find(x => x.id === this.vehicleSelected).id);
+      } else {
+        this.vehicles = [];
+      }
+    });
+
     this.dbService.getOperations().subscribe(data => {
-      this.allOperations = data;
       this.filterDashboard = this.dashboardService.getSearchDashboard();
-      this.dashboardService.setSearchOperation((this.filterDashboard.searchVehicle.brand === null ?
-        (!!data && data.length > 0 ? data[0].vehicle : new VehicleModel(null, null, null, null, null, null, null, null, null, true, 0)) :
-        this.filterDashboard.searchVehicle));
+      if (!!data && data.length > 0) {
+        this.allOperations = data;
+        this.operationsVehicle = this.allOperations.filter(x => x.vehicle.id === this.vehicleSelected);
+      } else {
+        this.allOperations = [];
+        this.operationsVehicle = [];
+      }
     });
 
     this.dashboardService.getObserverSearchOperation().subscribe(filter => {
-      this.operationsVehicle = this.allOperations.filter(op => op.vehicle.id === filter.searchVehicle.id);
-      if (this.operationsVehicle.length === 0) {
-        this.iconNameHeaderLeft = 'information-circle';
-      } else {
-        this.iconNameHeaderLeft = 'bar-chart';
-      }
+      this.loadOperationVehicles();
+      this.loadIconDashboard(this.operationsVehicle);
       this.filterDashboard = filter;
-      if (this.filterDashboard.searchVehicle.brand !== null) {
-        this.nameFilterVehicle = `${filter.searchVehicle.brand} ${filter.searchVehicle.model}`;
-      }
-      const filteredText: string = filter.searchText.toLowerCase();
-      this.operations = this.commonService.orderBy(
-        this.operationsVehicle.filter(op =>
-          (op.description.toLowerCase().includes(filteredText) || op.details.toLowerCase().includes(filteredText) ||
-          op.owner.toLowerCase().includes(filteredText) || op.location.toLowerCase().includes(filteredText)) &&
-          (filter.searchOperationType.length === 0 || filter.searchOperationType.some(y => y.id === op.operationType.id)) &&
-          (filter.searchMaintenanceElement.length === 0 ||
-            filter.searchMaintenanceElement.some(y => op.listMaintenanceElement.some(z => y.id === z.id)))
-        ),
-        ConstantsColumns.COLUMN_MTM_OPERATION_KM);
+      this.operations = this.commonService.orderBy(this.filterOperations(filter, this.operationsVehicle),
+        ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
       this.detector.detectChanges();
     });
   }
@@ -112,15 +119,20 @@ export class OperationPage implements OnInit {
     document.getElementById('custom-overlay').style.display === '') {
       document.getElementById('custom-overlay').style.display = 'none';
     }
-    if (!this.loaded) {
-      setTimeout(() => { this.loaded = true; }, 1200);
+    if (!this.loadedHeader || !this.loadedBody) {
+      setTimeout(() => {
+        this.loadedHeader = true;
+        this.loadedBody = true;
+      }, 1500);
     }
   }
 
   /** MODALS */
 
-  openOperationModal(row: OperationModel = new OperationModel(null, null, new OperationTypeModel(), this.filterDashboard.searchVehicle),
-                     create: boolean = true) {
+  openOperationModal(
+      row: OperationModel = new OperationModel(null, null, new OperationTypeModel(),
+      this.vehicles.find(x => x.id === this.vehicleSelected)),
+      create: boolean = true) {
     this.rowSelected = row;
     this.controlService.openModal(PageEnum.OPERATION,
       AddEditOperationComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.OPERATION));
@@ -184,10 +196,54 @@ export class OperationPage implements OnInit {
     return Math.round(totalPrice * 100) / 100;
   }
 
+  segmentChanged(event: any): void {
+    this.loadedBody = false;
+    setTimeout(() => {
+      this.loadedBody = true;
+    }, 500);
+    this.vehicleSelected = Number(event.detail.value);
+    this.loadOperationVehicles();
+    this.operations = this.commonService.orderBy(this.filterOperations(this.filterDashboard,
+      this.allOperations.filter(x => x.vehicle.id === Number(event.detail.value))),
+        ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
+    this.loadIconDashboard(this.operations);
+  }
+
+  activeSegmentScroll(): boolean {
+    return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && this.vehicles.length > 2) || this.vehicles.length > 10;
+  }
+
+  filterOperations(filter: SearchDashboardModel, operations: OperationModel[]): OperationModel[] {
+    const filteredText: string = filter.searchText.toLowerCase();
+    return operations.filter(op =>
+      (op.description.toLowerCase().includes(filteredText) || op.details.toLowerCase().includes(filteredText) ||
+      op.owner.toLowerCase().includes(filteredText) || op.location.toLowerCase().includes(filteredText)) &&
+      (filter.searchOperationType.length === 0 || filter.searchOperationType.some(y => y.id === op.operationType.id)) &&
+      (filter.searchMaintenanceElement.length === 0 ||
+        filter.searchMaintenanceElement.some(y => op.listMaintenanceElement.some(z => y.id === z.id)))
+    );
+  }
+
+  loadOperationVehicles(): void {
+    this.operationsVehicle = this.allOperations.filter(op => op.vehicle.id === this.vehicleSelected);
+  }
+
   /** ICONS */
+
+  loadIconDashboard(operations: OperationModel[]): void {
+    if (operations.length === 0) {
+      this.iconNameHeaderLeft = 'information-circle';
+    } else {
+      this.iconNameHeaderLeft = 'bar-chart';
+    }
+  }
 
   getIconInfoDashboard(): string {
     return this.operationsVehicle.length > 0 ? 'bar-chart' : 'information-circle';
+  }
+
+  getIconVehicle(vehicle: VehicleModel): string {
+    return this.vehicleService.getIconVehicle(vehicle);
   }
 
   geClassIconOperationType(operation: OperationModel): string {

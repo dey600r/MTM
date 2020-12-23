@@ -14,7 +14,7 @@ import { environment } from '@environment/environment';
 
 // COMPONENT
 import { HomePage } from './home.page';
-import { AppInfoComponent } from '@components/info/app-info.component';
+import { SharedModule } from '@modules/shared.module';
 
 @NgModule({
   imports: [
@@ -29,10 +29,11 @@ import { AppInfoComponent } from '@components/info/app-info.component';
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
+    }),
+    SharedModule
   ],
   providers: [TranslateStore],
-  declarations: [HomePage, AppInfoComponent]
+  declarations: [HomePage]
 })
 export class HomePageModule {}
 

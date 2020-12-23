@@ -15,6 +15,7 @@ import { PipeModule } from '@app/shared/modules/pipes.module';
 
 // COMPONENT
 import { VehiclePage } from './vehicle.page';
+import { SharedModule } from '@modules/shared.module';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { VehiclePage } from './vehicle.page';
         deps: [HttpClient]
       }
     }),
-    PipeModule
+    PipeModule,
+    SharedModule
   ],
   providers: [TranslateStore],
   declarations: [VehiclePage]

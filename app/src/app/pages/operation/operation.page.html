@@ -1,4 +1,4 @@
-<ion-header [hidden]="!loaded">
+<ion-header [hidden]="!loadedHeader">
   <ion-toolbar>
     <!-- Button chart -->
     <ion-button slot="start" fill="clear" 
@@ -12,34 +12,23 @@
       <ion-icon size="large" name="filter"></ion-icon>
     </ion-button>
   </ion-toolbar>
+  <!-- SEGMENT -->
+  <ion-segment class="segment-button-fixed" 
+    [value]="this.vehicleSelected" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
+    <ion-segment-button *ngFor="let v of vehicles; let i = index;" [value]="v.id" layout="icon-start">
+      <ion-label>
+        {{ v.brand + ' ' + v.model }}
+      </ion-label>
+      <ion-icon size="small" [name]="getIconVehicle(v)"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
 </ion-header>
 
-<ion-content [hidden]="!loaded">
-  <ion-list>
-    <ion-list-header class="padding-list-header">
-      <!-- Title -->
-      <ion-icon size="large" name="construct"></ion-icon>
-      <h3 *ngIf="this.operations.length === 0 && this.filterDashboard.searchVehicle.brand === null"
-        class="header-list">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h3>
-      <h3 *ngIf="this.filterDashboard.searchVehicle.brand !== null" class="header-list">{{ 'COMMON.OPERATIONS_OF' | translate }} {{ nameFilterVehicle }}</h3>
-      <!-- Button create -->
-      <ion-button class="btn-width-list" *ngIf="this.filterDashboard.searchVehicle.brand !== null" fill="clear" (click)="openOperationModal()">
-        <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
-      </ion-button>
-      <!-- Button info -->
-      <ion-button class="btn-width-list" *ngIf="this.operations.length === 0 && this.filterDashboard.searchVehicle.brand === null" 
-        fill="clear" (click)="showModalInfoVehicle()">
-        <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <div *ngIf="operations.length === 0" class="info-content">
-      <div class="info-main">
-          <div>
-              <ion-icon size="large" name="construct"></ion-icon>
-              <h2 class="margin-top5">{{ 'ALERT.OperationEmpty' | translate }}</h2>
-          </div>
-      </div>
-    </div>
+<ion-content [hidden]="!loadedBody">
+  <!-- INFO -->
+  <app-info *ngIf="operations.length === 0" [inputInfo]="input"></app-info>
+  <!-- LIST -->
+  <ion-list *ngIf="operations.length > 0" class="segment-top margin-bottom45">
     <ion-item button *ngFor="let op of operations">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10" (click)="openOperationModal(op, false)">
@@ -64,28 +53,46 @@
       </ion-label>
     </ion-item>
   </ion-list>
+  <ion-fab *ngIf="this.vehicles.length > 0" horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button (click)="openOperationModal()">
+      <ion-icon name="duplicate"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab *ngIf="this.vehicles.length === 0" horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button (click)="showModalInfoVehicle()">
+      <ion-icon name="information-circle"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 
 <!-- SKELETON LOADER INITAL -->
-<ion-header *ngIf="!loaded">
+<ion-header *ngIf="!loadedHeader">
   <ion-toolbar>
     <ion-title style="padding-left: 20%; padding-right: 20%;">
       <ion-skeleton-text animated></ion-skeleton-text>
     </ion-title>
   </ion-toolbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="2" style="text-align: center;">
+        <ion-spinner name="lines-small" color="medium"></ion-spinner>
+      </ion-col>
+      <ion-col size="4" style="text-align: center;">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="2" style="text-align: center;">
+        <ion-spinner name="lines-small" color="medium"></ion-spinner>
+      </ion-col>
+      <ion-col size="4" style="text-align: center;">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-header>
 
-<ion-content *ngIf="!loaded">
+<ion-content *ngIf="!loadedBody">
   <ion-list>
-    <ion-list-header class="padding-list-header">
-      <ion-label style="width: 85%">
-        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
-      </ion-label>
-      <ion-label>
-        <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
-      </ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]">
       <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
       <ion-label>
         <h3><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></h3>

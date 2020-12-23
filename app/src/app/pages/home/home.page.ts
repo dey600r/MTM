@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
@@ -40,7 +40,8 @@ export class HomePage implements OnInit {
   vehicleSelected: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
   operations: OperationModel[] = [];
   maintenances: MaintenanceModel[] = [];
-  loaded = false;
+  loadedHeader = false;
+  loadedBody = false;
   measure: any = {};
 
   // SUBSCRIPTION
@@ -126,7 +127,8 @@ export class HomePage implements OnInit {
   ionViewDidEnter() {
     // RELOAD NOTIFICATIONS
     if (this.controlService.getDateLastUse().toDateString() !== new Date().toDateString()) {
-      this.loaded = false;
+      this.loadedHeader = false;
+      this.loadedBody = false;
       this.dbService.vehicles.next(this.dbService.vehiclesData);
       this.controlService.setDateLastUse();
     }
@@ -138,8 +140,11 @@ export class HomePage implements OnInit {
     document.getElementById('custom-overlay').style.display === '') {
       setTimeout(() => { document.getElementById('custom-overlay').style.display = 'none'; }, 3000);
     }
-    if (!this.loaded) {
-      setTimeout(() => { this.loaded = true; }, 2500);
+    if (!this.loadedHeader || !this.loadedBody) {
+      setTimeout(() => {
+        this.loadedHeader = true;
+        this.loadedBody = true;
+      }, 2500);
     }
   }
 
@@ -176,8 +181,16 @@ export class HomePage implements OnInit {
     return this.dashboardService.getDateCalculateMonths(wear.calculateMonths);
   }
 
-  segmentChanged( event ) {
+  segmentChanged(event: any): void {
+    this.loadedBody = false;
+    setTimeout(() => {
+      this.loadedBody = true;
+    }, 500);
     this.vehicleSelected = this.wears.find(x => x.idVehicle === Number(event.detail.value));
+  }
+
+  activeSegmentScroll(): boolean {
+    return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && this.wears.length > 2) || this.wears.length > 10;
   }
 
   // MODALS
@@ -196,9 +209,6 @@ export class HomePage implements OnInit {
           y.toKmMaintenance >= x.fromKmMaintenance - margenGrouper && y.toKmMaintenance <= x.fromKmMaintenance + margenGrouper)));
     }
     listGroupWear = [...listGroupWear, w];
-    // Change filter operation to easy
-    this.dashboardService.setSearchOperation(new VehicleModel(m.nameVehicle, '',
-      null, null, null, null, null, null, null, true, m.idVehicle));
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
       new WearVehicleProgressBarViewModel(m.idVehicle, m.nameVehicle, m.kmVehicle, m.datePurchaseVehicle,
         m.kmsPerMonthVehicle, m.dateKmsVehicle, m.percent, m.percentKm, m.percentTime, m.warning, listGroupWear),

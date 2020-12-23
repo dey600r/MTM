@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
-import { ConstantsColumns, ActionDBEnum, PageEnum } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, PageEnum, Constants } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
   VehicleModel, OperationModel
@@ -40,10 +40,8 @@ export class ConfigurationPage implements OnInit {
   maintenanceElements: MaintenanceElementModel[] = [];
   maxKm = 0;
   measure: any = {};
-
-  hideConfiguration = false;
-  hideMaintenance = true;
-  hideReplacement = true;
+  segmentHeader: any[] = [];
+  segmentSelected = 1;
 
   loaded = false;
 
@@ -68,6 +66,14 @@ export class ConfigurationPage implements OnInit {
   }
 
   initPage() {
+
+    this.segmentSelected = 1;
+    this.segmentHeader = [
+      { id: 1, title: 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS', icon: 'cog'},
+      { id: 2, title: 'PAGE_CONFIGURATION.MAINTENANCES', icon: 'build'},
+      { id: 3, title: 'PAGE_CONFIGURATION.REPLACEMENTS', icon: 'repeat'}
+    ];
+
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
@@ -111,6 +117,27 @@ export class ConfigurationPage implements OnInit {
     if (!this.loaded) {
       setTimeout(() => { this.loaded = true; }, 1200);
     }
+  }
+
+  segmentChanged(event: any): void {
+    this.segmentSelected = Number(event.detail.value);
+  }
+
+  openModalSegmentSelected() {
+    switch (this.segmentSelected) {
+      case 1:
+        this.openConfigurationModal();
+        break;
+      case 2:
+        this.openMaintenanceModal();
+        break;
+      default:
+        this.openReplacementModal();
+    }
+  }
+
+  activeSegmentScroll(): boolean {
+    return this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE;
   }
 
   /** CONFIGURATION */

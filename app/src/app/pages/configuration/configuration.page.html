@@ -4,65 +4,44 @@
       <ion-title class="align-center">{{ 'COMMON.CONFIGURATIONS' | translate }}</ion-title>
     </ion-title>
   </ion-toolbar>
+  <!-- SEGMENT -->
+  <ion-segment class="segment-button-fixed" [scrollable]="activeSegmentScroll()" [value]="segmentSelected" 
+    (ionChange)="segmentChanged($event)">
+    <ion-segment-button [value]="seg.id" layout="icon-start" *ngFor="let seg of segmentHeader">
+      <ion-label>{{ seg.title | translate }}</ion-label>
+      <ion-icon size="small" [name]="seg.icon"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
 </ion-header>
 <ion-content [hidden]="!loaded">
   <!-- CONFIGURATIONS -->
-  <ion-list>
-    <ion-list-header class="padding-list-header">
-      <!-- Title -->
-      <ion-icon size="large" name="cog" (click)="hideConfiguration = !hideConfiguration"></ion-icon>
-      <h3 class="header-list" (click)="hideConfiguration = !hideConfiguration">{{ 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS' | translate }}</h3>
-      <ion-button class="margin-right-15" fill="clear" (click)="hideConfiguration = !hideConfiguration">
-        <ion-icon *ngIf="hideConfiguration" size="small" class="btn-color" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideConfiguration" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
-      </ion-button>
-      <!-- Button Create -->
-      <ion-button class="btn-width-list" fill="clear" (click)="openConfigurationModal()">
-        <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <div *ngIf="!hideConfiguration">
-      <ion-item button *ngFor="let c of configurations">
-        <!-- Labels -->
-        <ion-label class="min-width75 label-event-force" (click)="openConfigurationModal(c, false)">
-          <h2 class="text-overflow">{{ c.name }}</h2>
-          <h3 class="text-overflow">{{ c.description }}</h3>
+  <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 1">
+    <ion-item button *ngFor="let c of configurations">
+      <!-- Labels -->
+      <ion-label class="min-width75 label-event-force" (click)="openConfigurationModal(c, false)">
+        <h2 class="text-overflow">{{ c.name }}</h2>
+        <h3 class="text-overflow">{{ c.description }}</h3>
+      </ion-label>
+      <!-- Buttons edit / create -->
+      <ion-label *ngIf="c.master" class="align-right fix-width69">
+        <ion-label>
+          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+          </ion-button>
         </ion-label>
-        <!-- Buttons edit / create -->
-        <ion-label *ngIf="c.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-              <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-            </ion-button>
-          </ion-label>
+      </ion-label>
+      <ion-label *ngIf="!c.master" class="align-right fix-width69">
+        <ion-label>
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
+            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+          </ion-button>
         </ion-label>
-        <ion-label *ngIf="!c.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
-              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-            </ion-button>
-          </ion-label>
-        </ion-label>
-      </ion-item>
-    </div>
+      </ion-label>
+    </ion-item>
   </ion-list>
   <!-- MAINTENANCES -->
-  <ion-list>
-    <ion-list-header class="padding-list-header">
-      <!-- Icon -->
-      <ion-icon size="large" name="build" (click)="hideMaintenance = !hideMaintenance"></ion-icon>
-      <!-- Title -->
-      <h3 class="header-list" (click)="hideMaintenance = !hideMaintenance">{{ 'PAGE_CONFIGURATION.MAINTENANCES' | translate }}</h3>
-      <ion-button class="margin-right-15" fill="clear" (click)="hideMaintenance = !hideMaintenance">
-        <ion-icon *ngIf="hideMaintenance" size="small" class="btn-color" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideMaintenance" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
-      </ion-button>
-      <!-- Button Create -->
-      <ion-button class="btn-width-list" fill="clear" (click)="openMaintenanceModal()">
-        <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <ion-item button *ngFor="let m of maintenances" [hidden]="hideMaintenance">
+  <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 2">
+    <ion-item button *ngFor="let m of maintenances">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10" (click)="openMaintenanceModal(m, false)">
         <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(m)"></ion-icon>
@@ -100,22 +79,8 @@
     </ion-item>
   </ion-list>
   <!-- MAINTENANCE ELEMNTS / REPLACEMENT -->
-  <ion-list>
-    <ion-list-header class="padding-list-header">
-      <!-- Icon -->
-      <ion-icon size="large" name="repeat" (click)="hideReplacement = !hideReplacement"></ion-icon>
-      <!-- Tittle -->
-      <h3 class="header-list" (click)="hideReplacement = !hideReplacement">{{ 'PAGE_CONFIGURATION.REPLACEMENTS' | translate }}</h3>
-      <ion-button class="margin-right-15" fill="clear" (click)="hideReplacement = !hideReplacement">
-        <ion-icon *ngIf="hideReplacement" size="small" class="btn-color" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideReplacement" size="small" class="btn-color" name="caret-up-circle"></ion-icon>
-      </ion-button>
-      <!-- Button Create -->
-      <ion-button class="btn-width-list" fill="clear" (click)="openReplacementModal()">
-        <ion-icon size="large" class="btn-color" name="add-circle"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <ion-item button *ngFor="let me of maintenanceElements" [hidden]="hideReplacement">
+  <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 3">
+    <ion-item button *ngFor="let me of maintenanceElements">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10" (click)="openReplacementModal(me, false)">
         <ion-icon size="large" class="icon-color" [name]="this.getIconReplacement(me)"></ion-icon>
@@ -142,6 +107,11 @@
       </ion-label>
     </ion-item>
   </ion-list>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button (click)="openModalSegmentSelected()">
+      <ion-icon name="duplicate"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 
 <!-- SKELETON LOADER INITAL -->
@@ -151,19 +121,27 @@
       <ion-skeleton-text animated></ion-skeleton-text>
     </ion-title>
   </ion-toolbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="2" style="text-align: center;">
+        <ion-spinner name="lines-small" color="medium"></ion-spinner>
+      </ion-col>
+      <ion-col size="4" style="text-align: center;">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="2" style="text-align: center;">
+        <ion-spinner name="lines-small" color="medium"></ion-spinner>
+      </ion-col>
+      <ion-col size="4" style="text-align: center;">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-header>
 
 <ion-content *ngIf="!loaded">
-  <ion-list *ngFor="let i of [1, 2, 3]">
-    <ion-list-header class="padding-list-header">
-      <ion-label style="width: 85%">
-        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
-      </ion-label>
-      <ion-label>
-        <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
-      </ion-label>
-    </ion-list-header>
-    <ion-item *ngIf="i === 1">
+  <ion-list>
+    <ion-item *ngFor="let i of [1, 2, 3, 4]">
       <ion-label>
         <h3><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></h3>
         <p><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></p>

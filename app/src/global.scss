@@ -107,6 +107,11 @@ button.days-btn.today p {
   height: inherit;  
 }
 
+// BUG SEGMENT windows: Dont work scroll
+// ion-segment-button {
+//   min-width: 90px !important;
+// }
+
 // .color-dark {
 //   background-color: var(--ion-color-dark);
 // }
@@ -118,16 +123,12 @@ button.days-btn.today p {
 /* SEGMENTS */
 
 .segment-button-fixed {
-  height: 50px;
-  position: fixed;
-  z-index: 10000;
-  width: 100%;
-  background-color: white;
-  box-shadow: 1px 7px 10px #ddd;
+  box-shadow: 1px 7px 12px #ddd;
+  //justify-content: center !important;
 }
 
 .segment-top {
-  padding-top: 50px;
+  padding-top: 10px;
 }
 
 // SPLASH SCREEN ANIMATION

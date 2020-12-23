@@ -205,7 +205,7 @@
         "AddVehicleToExpenses": "You must add motorbikes to see the expenses",
         "OperationEmpty": "There isn't operation",
         "AddOperation": "You must add operation",
-        "AddOperationToExpenses": "You must add operations to see the expenses",
+        "AddOperationToExpenses": "You must add operations or clean the filter to see the expenses",
         "ConfigurationEmpty": "There isn't maintenance associated to configuration",
         "AddConfiguration": "You must associate maintenance to configuration",
         "InfoNotOperationKmTime": "You must add operation to pass maintenance before {{km}} {{measure}} or {{time}}",

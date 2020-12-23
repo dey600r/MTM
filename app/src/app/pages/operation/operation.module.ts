@@ -12,6 +12,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // UTILS
 import { environment } from '@environment/environment';
 import { PipeModule } from '@app/shared/modules/pipes.module';
+import { SharedModule } from '@modules/shared.module';
 
 // COMPONENTS
 import { OperationPage } from './operation.page';
@@ -30,7 +31,8 @@ import { OperationPage } from './operation.page';
         deps: [HttpClient]
       }
     }),
-    PipeModule
+    PipeModule,
+    SharedModule
   ],
   providers: [TranslateStore],
   declarations: [OperationPage]

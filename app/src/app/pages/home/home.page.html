@@ -1,4 +1,4 @@
-<ion-header [hidden]="!loaded">
+<ion-header [hidden]="!loadedHeader">
   <ion-toolbar>
     <!-- Button Calendar -->
     <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openInfoCalendar()">
@@ -13,14 +13,9 @@
       <ion-icon size="large" name="settings"></ion-icon>
     </ion-button>
   </ion-toolbar>
-</ion-header>
-
-<ion-content [hidden]="!loaded">
-  <!-- INFO -->
-  <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- SEGMENT -->
   <ion-segment *ngIf="!activateInfo" class="segment-button-fixed" 
-    [value]="this.vehicleSelected.idVehicle" [scrollable]="this.wears.length>2" (ionChange)="segmentChanged($event)">
+    [value]="this.vehicleSelected.idVehicle" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
     <ion-segment-button *ngFor="let m of wears; let i = index;" [value]="m.idVehicle" layout="icon-start">
       <ion-label>
         {{ m.nameVehicle }}
@@ -31,13 +26,18 @@
       <ion-icon size="small" [name]="getIconVehicle(m)"></ion-icon>
     </ion-segment-button>
   </ion-segment>
+</ion-header>
+
+<ion-content [hidden]="!loadedBody">
+  <!-- INFO -->
+  <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- List Vehicles -->
   <ion-list *ngIf="!activateInfo" class="segment-top">
     <ion-item-sliding *ngFor="let w of this.vehicleSelected.listWearReplacement">
       <!-- SLIDING START -->
       <ion-item-options side="start">
         <ion-item-option class="day-circle-config-skull" (click)="desactivateMaintenance(w)">
-          <ion-icon slot="icon-only" name="notifications-off-circle-outline"></ion-icon>
+          <ion-icon slot="icon-only" name="notifications-off"></ion-icon>
         </ion-item-option>
       </ion-item-options>
       <!-- ITEM -->
@@ -96,7 +96,7 @@
       <!-- SLIDING END -->
       <ion-item-options side="end">
         <ion-item-option class="day-circle-config-blue" (click)="openModalMaintenance(w)">
-          <ion-icon slot="icon-only" name="pencil"></ion-icon>
+          <ion-icon slot="icon-only" name="build"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
@@ -104,30 +104,32 @@
 </ion-content>
 
 <!-- SKELETON LOADER INITAL -->
-<ion-header *ngIf="!loaded">
+<ion-header *ngIf="!loadedHeader">
   <ion-toolbar>
     <ion-title style="padding-left: 20%; padding-right: 20%;">
       <ion-skeleton-text animated></ion-skeleton-text>
     </ion-title>
   </ion-toolbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="2" style="text-align: center;">
+        <ion-spinner name="lines-small" color="medium"></ion-spinner>
+      </ion-col>
+      <ion-col size="4" style="text-align: center;">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="2" style="text-align: center;">
+        <ion-spinner name="lines-small" color="medium"></ion-spinner>
+      </ion-col>
+      <ion-col size="4" style="text-align: center;">
+        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-header>
 
-<ion-content *ngIf="!loaded">
+<ion-content *ngIf="!loadedBody">
   <ion-list>
-    <ion-list-header class="padding-list-header">
-      <ion-label style="width: 10%">
-        <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
-      </ion-label>
-      <ion-label style="width: 35%">
-        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
-      </ion-label>
-      <ion-label style="width: 10%">
-        <ion-spinner name="lines-small" color="medium" slot="end"></ion-spinner>
-      </ion-label>
-      <ion-label style="width: 35%">
-        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
-      </ion-label>
-    </ion-list-header>
     <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6]">
       <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
       <ion-label>

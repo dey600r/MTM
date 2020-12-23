@@ -877,9 +877,8 @@ export class DashboardService {
         return this.searchDashboard;
     }
 
-    setSearchOperation(sm: VehicleModel = new VehicleModel(), sot: OperationTypeModel[] = [],
+    setSearchOperation(sot: OperationTypeModel[] = [],
                        sme: MaintenanceElementModel[] = [], st: string = '') {
-        this.searchDashboard.searchVehicle = sm;
         this.searchDashboard.searchOperationType = sot;
         this.searchDashboard.searchMaintenanceElement = sme;
         this.searchDashboard.searchText = st;

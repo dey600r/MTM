@@ -115,9 +115,6 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
         this.vehicleService.saveVehicle(this.vehicle,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
-          if (this.vehicle.id !== -1) { // Change filter operation to easy
-            this.dashboardService.setSearchOperation(this.vehicle);
-          }
           this.controlService.showToast(PageEnum.MODAL_VEHICLE, (
             this.modalInputModel.isCreate ? 'PAGE_VEHICLE.AddSaveVehicle' : 'PAGE_VEHICLE.EditSaveVehicle'),
             { vehicle: this.vehicle.model });

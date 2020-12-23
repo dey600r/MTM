@@ -205,7 +205,7 @@
         "AddVehicleToExpenses": "Añada vehículos para ver los gastos",
         "OperationEmpty": "No se encuentran operaciones",
         "AddOperation": "Añada operaciones",
-        "AddOperationToExpenses": "Añada operaciones para ver los gastos",
+        "AddOperationToExpenses": "Añada operaciones o limpia el filtro para ver los gastos",
         "ConfigurationEmpty": "No se encuentran mantenimientos asociados a la configuración",
         "AddConfiguration": "Añada mantenimientos a la configuración",
         "InfoNotOperationKmTime": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} {{measure}} o {{time}}",

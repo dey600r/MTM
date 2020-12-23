@@ -1,16 +1,21 @@
 <ion-content>
-    <div class="info-content">
+    <div [ngClass]="{'info-content-height-icon': inputInfo.isCreate,
+            'info-content-height-no-icon': !inputInfo.isCreate}">
         <div class="info-main">
             <div *ngIf="isVehicleEmpty()">
                 <ion-icon size="large" name="home"></ion-icon>
                 <h2 class="margin-top5">{{ 'ALERT.VehicleEmpty' | translate }}</h2>
+            </div>
+            <div *ngIf="isOperationPageEmpty()">
+                <ion-icon size="large" name="construct"></ion-icon>
+                <h2 class="margin-top5">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h2>
             </div>
             <div *ngIf="isNotificationPageEmpty()">
                 <ion-icon size="large" name="cog"></ion-icon>
                 <h2 class="margin-top5">{{ 'ALERT.ConfigurationEmpty' | translate }}</h2>
             </div>
         </div>
-        <div>
+        <div *ngIf="inputInfo.isCreate">
             <div class="info-tab">
                 <div class="info-icon dissapear">
                     <ion-icon></ion-icon>

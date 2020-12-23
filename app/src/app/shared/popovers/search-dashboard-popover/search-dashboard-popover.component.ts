@@ -24,10 +24,8 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     measure: any = {};
     coin: any = {};
     refresh = true;
-    vehicles: VehicleModel[] = [];
     operationTypes: OperationTypeModel[] = [];
     maintenanceElements: MaintenanceElementModel[] = [];
-    filterVehicle = 1;
     filterOpType: number[] = [];
     filterMaintElement: number[] = [];
     filterMonth: FilterMonthsEnum = FilterMonthsEnum.MONTH;
@@ -46,7 +44,6 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }];
 
     // SUSCRIPTION
-    vehicleSubscription: Subscription = new Subscription();
     operationTypeSubscription: Subscription = new Subscription();
     maintenanceElementSubscription: Subscription = new Subscription();
     settingsSubscription: Subscription = new Subscription();
@@ -75,11 +72,6 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
         this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
             this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
-        this.vehicleSubscription = this.dbService.getVehicles().subscribe(data => {
-            this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
-            this.filterVehicle = this.searchDashboard.searchVehicle.id;
-        });
-
         this.operationTypeSubscription = this.dbService.getOperationType().subscribe(data => {
             this.filterOpType = [];
             this.operationTypes = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
@@ -102,7 +94,6 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     }
 
     ngOnDestroy() {
-        this.vehicleSubscription.unsubscribe();
         this.operationTypeSubscription.unsubscribe();
         this.maintenanceElementSubscription.unsubscribe();
     }
@@ -114,12 +105,10 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
 
     onChangeFilterOperationGrouper() {
         if (this.refresh) {
-            this.searchDashboard.searchVehicle = this.vehicles.find(x => this.filterVehicle === x.id);
             this.searchDashboard.searchOperationType = this.operationTypes.filter(x => this.filterOpType.some(y => x.id === y));
             this.searchDashboard.searchMaintenanceElement = this.maintenanceElements.filter(x =>
                 this.filterMaintElement.some(y => x.id === y));
-            this.dashboardService.setSearchOperation(this.searchDashboard.searchVehicle,
-                                                    this.searchDashboard.searchOperationType,
+            this.dashboardService.setSearchOperation(this.searchDashboard.searchOperationType,
                                                     this.searchDashboard.searchMaintenanceElement,
                                                     this.searchDashboard.searchText);
         }
@@ -131,7 +120,6 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
             this.dashboardService.setSearchDashboard(
                 new SearchDashboardModel(this.searchDashboard.showPerMont,
                                         this.searchDashboard.searchText,
-                                        this.searchDashboard.searchVehicle,
                                         this.searchDashboard.searchOperationType,
                                         this.searchDashboard.searchMaintenanceElement,
                                         this.searchDashboard.showAxis,
@@ -151,7 +139,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
 
     clearFilter() {
         this.refresh = false;
-        this.searchDashboard = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', this.vehicles.find(x => this.filterVehicle === x.id));
+        this.searchDashboard = new SearchDashboardModel(FilterMonthsEnum.MONTH, '');
         this.filterOpType = [];
         this.filterMaintElement = [];
         this.filterMonth = FilterMonthsEnum.MONTH;

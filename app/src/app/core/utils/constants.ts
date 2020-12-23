@@ -1,10 +1,15 @@
 export class Constants {
+    // DELAYS
     static DELAY_TOAST = 1300;
     static DELAY_TOAST_IS_FREE = 2500;
     static DELAY_TOAST_NORMAL = 3500;
     static DELAY_TOAST_HIGH = 5000;
     static DELAY_TOAST_HIGHER = 7000;
 
+    // WIDHTS
+    static MAX_WIDTH_SEGMENT_SCROLABLE = 800;
+
+    // FORMAT
     static DATE_FORMAT_ES = 'DD/MM/YYYY';
     static DATE_FORMAT_EN = 'MM/DD/YYYY';
     static DATE_FORMAT_DB = 'YYYY-MM-DD';

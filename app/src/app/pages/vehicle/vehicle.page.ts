@@ -21,11 +21,11 @@ import { DashboardComponent } from '@modals/dashboard/dashboard.component';
 export class VehiclePage implements OnInit {
 
   // MODAL
+  input: ModalInputModel = new ModalInputModel();
   dataReturned: ModalOutputModel;
 
   // MODEL
   rowSelected: VehicleModel = new VehicleModel();
-  activateInfo = false;
 
   // DATA
   vehicles: VehicleModel[] = [];
@@ -52,6 +52,9 @@ export class VehiclePage implements OnInit {
   /** INIT */
 
   ngOnInit() {
+
+    this.input = new ModalInputModel(false, null, [], PageEnum.HOME, Constants.STATE_INFO_VEHICLE_EMPTY);
+
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
@@ -59,15 +62,7 @@ export class VehiclePage implements OnInit {
     });
 
     this.dbService.getVehicles().subscribe(data => {
-      if (!!data && data.length > 0) {
-        if (this.dashboardService.getSearchDashboard().searchVehicle.brand === null ||
-          data.length === this.vehicles.length - 1) {
-          this.dashboardService.setSearchOperation(data[0]);
-        } else if (data.length === this.vehicles.length + 1) {
-          // Insert new vehicle, change filter to easy
-          this.dashboardService.setSearchOperation(data.find(x => !this.vehicles.some(y => x.id === y.id)));
-        }
-      } else {
+      if (!data || data.length === 0) {
         this.dashboardService.setSearchOperation();
       }
       this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
@@ -110,10 +105,6 @@ export class VehiclePage implements OnInit {
 
   showModalInfo() {
     this.controlService.showToast(PageEnum.VEHICLE, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
-  }
-
-  changeFilterOperation(idVehicle: number) {
-    this.dashboardService.setSearchOperation(this.vehicles.find(x => x.id === idVehicle));
   }
 
   showConfirmDelete() {
