@@ -32,7 +32,7 @@
   <!-- INFO -->
   <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- List Vehicles -->
-  <ion-list *ngIf="!activateInfo" class="segment-top">
+  <ion-list *ngIf="!activateInfo" class="segment-top margin-bottom55">
     <ion-item-sliding *ngFor="let w of this.vehicleSelected.listWearReplacement">
       <!-- SLIDING START -->
       <ion-item-options side="start">
@@ -95,12 +95,21 @@
       </ion-item>
       <!-- SLIDING END -->
       <ion-item-options side="end">
-        <ion-item-option class="day-circle-config-blue" (click)="openModalMaintenance(w)">
+        <ion-item-option class="day-circle-config-blue" (click)="openModalMaintenance(w, false)">
           <ion-icon slot="icon-only" name="build"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="grid"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="openModalVehicle()"><ion-icon color="primary" name="home"></ion-icon></ion-fab-button>
+      <ion-fab-button (click)="openModalOperation()"><ion-icon color="primary" name="construct"></ion-icon></ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>
 
 <!-- SKELETON LOADER INITAL -->

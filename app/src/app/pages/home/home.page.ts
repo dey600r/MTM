@@ -21,6 +21,8 @@ import { InfoNotificationComponent } from '@modals/info-notification/info-notifi
 import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
 import { SettingsComponent } from '@modals/settings/settings.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
+import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
+import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 
 @Component({
   selector: 'app-home',
@@ -230,10 +232,25 @@ export class HomePage implements OnInit {
       SettingsComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
   }
 
-  openModalMaintenance(w: WearReplacementProgressBarViewModel): void {
-    const rowMaintenance: MaintenanceModel = this.maintenances.find(x => x.id === w.idMaintenance);
-    this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditMaintenanceComponent, new ModalInputModel(false, rowMaintenance, [this.vehicleSelected.kmVehicle], PageEnum.HOME));
+  openModalVehicle(): void {
+    this.controlService.openModal(PageEnum.HOME,
+      AddEditVehicleComponent, new ModalInputModel(true, new VehicleModel(), [], PageEnum.HOME));
+  }
+
+  openModalOperation(): void {
+    const operation: OperationModel = new OperationModel();
+    operation.vehicle.id = this.vehicleSelected.idVehicle;
+    this.controlService.openModal(PageEnum.HOME,
+      AddEditOperationComponent, new ModalInputModel(true, operation, [], PageEnum.HOME));
+  }
+
+  openModalMaintenance(w: WearReplacementProgressBarViewModel = null, create: boolean = true): void {
+    let rowMaintenance: MaintenanceModel = new MaintenanceModel();
+    if (w !== null) {
+      rowMaintenance = this.maintenances.find(x => x.id === w.idMaintenance);
+    }
+    this.controlService.openModal(PageEnum.HOME,
+      AddEditMaintenanceComponent, new ModalInputModel(create, rowMaintenance, [this.vehicleSelected.kmVehicle], PageEnum.HOME));
   }
 
   desactivateMaintenance(w: WearReplacementProgressBarViewModel): void {
