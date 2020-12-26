@@ -36,6 +36,7 @@ export class Constants {
     static STATE_INFO_OPERATION_EMPTY = 'operation_empty';
     static STATE_INFO_VEHICLE_EMPTY = 'vehicle_empty';
     static STATE_INFO_NOTIFICATION_EMPTY = 'notification_empty';
+    static STATE_INFO_NOTIFICATION_WITHOUT = 'notification_without';
 
     static DATABASE_YES = 'Y';
     static DATABASE_NO = 'N';
@@ -62,6 +63,10 @@ export class Constants {
     static SETTING_MONEY_EURO = 'EURO';
     static SETTING_MONEY_DOLLAR = 'DOLLAR';
     static SETTING_MONEY_POUND = 'POUND';
+
+    // DB
+    static NEXT_DEPLOY_TITLE_SEPARATOR = '**->';
+    static NEXT_DEPLOY_SCRIPT_SEPARATOR = '**>';
 
     // EXPORTS AND IMPORTS
     static EXPORT_DIR_NAME = 'exports';

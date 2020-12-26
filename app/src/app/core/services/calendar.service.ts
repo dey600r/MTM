@@ -10,7 +10,6 @@ import {
     WearVehicleProgressBarViewModel, InfoCalendarVehicleViewModel, InfoCalendarMaintenanceViewModel,
     InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, VehicleModel
 } from '../models';
-import { zip } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -141,10 +140,10 @@ export class CalendarService {
 
     createInfoCalendarReplacement(wear: WearVehicleProgressBarViewModel, replacement: WearReplacementProgressBarViewModel,
                                   km: boolean): InfoCalendarReplacementViewModel {
-        let dateResult: Date = new Date();
+        let dateResult: Date;
         let kms = 0;
         let times = 0;
-        let warnings: WarningWearEnum = WarningWearEnum.DANGER;
+        let warnings: WarningWearEnum;
         if (km) {
             const kmVehicle: number = this.calculateWearKmVehicleEstimated(wear);
             kms = kmVehicle + replacement.calculateKms;

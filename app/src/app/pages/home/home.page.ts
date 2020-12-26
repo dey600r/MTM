@@ -44,6 +44,8 @@ export class HomePage implements OnInit {
   maintenances: MaintenanceModel[] = [];
   loadedHeader = false;
   loadedBody = false;
+  hideOpButton = false;
+  hideFabButton = false;
   measure: any = {};
 
   // SUBSCRIPTION
@@ -106,18 +108,23 @@ export class HomePage implements OnInit {
                       });
                       this.wears.find(y => x.idVehicle === y.idVehicle).listWearReplacement = listWears;
                     });
+                    if (!this.vehicleSelected) {
+                      this.vehicleSelected = new WearVehicleProgressBarViewModel();
+                    }
                     this.vehicleSelected = (this.vehicleSelected.idVehicle === -1 ?
                       this.wears[0] : this.wears.find(x => x.idVehicle === this.vehicleSelected.idVehicle));
-                    this.activateInfo = this.activateModeInfo(vehiclesActives, this.operations, this.wears);
+                    this.activateInfo = this.activateModeInfo(vehiclesActives, this.wears);
                     this.timeOutLoader();
                   });
                 } else {
                   this.timeOutLoader();
-                  this.activateInfo = this.activateModeInfo(vehiclesActives, [], []);
+                  this.activateInfo = this.activateModeInfo(vehiclesActives, []);
+                  this.vehicleSelected = new WearVehicleProgressBarViewModel();
                 }
               } else {
                 this.timeOutLoader();
-                this.activateInfo = this.activateModeInfo(vehicles, [], []);
+                this.activateInfo = this.activateModeInfo(vehicles, []);
+                this.vehicleSelected = new WearVehicleProgressBarViewModel();
               }
             });
           }
@@ -150,11 +157,15 @@ export class HomePage implements OnInit {
     }
   }
 
-  activateModeInfo(m: VehicleModel[], op: OperationModel[], w: WearVehicleProgressBarViewModel[]): boolean {
+  activateModeInfo(m: VehicleModel[], w: WearVehicleProgressBarViewModel[]): boolean {
     let result = true;
+    this.hideOpButton = false;
+    this.hideFabButton = false;
     if (m === null || m.length === 0) {
+      this.hideOpButton = true;
       this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_VEHICLE_EMPTY);
     } else if (w === null  || w.length === 0) {
+      this.hideFabButton = true;
       this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_NOTIFICATION_EMPTY);
     } else {
       result = false;
@@ -189,6 +200,7 @@ export class HomePage implements OnInit {
       this.loadedBody = true;
     }, 500);
     this.vehicleSelected = this.wears.find(x => x.idVehicle === Number(event.detail.value));
+    this.activateModeInfo([new VehicleModel()], [this.vehicleSelected]);
   }
 
   activeSegmentScroll(): boolean {

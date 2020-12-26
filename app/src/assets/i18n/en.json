@@ -207,6 +207,7 @@
         "AddOperation": "You must add operation",
         "AddOperationToExpenses": "You must add operations or clean the filter to see the expenses",
         "ConfigurationEmpty": "There isn't maintenance associated to configuration",
+        "ConfigurationWithout": "No active notifications",
         "AddConfiguration": "You must associate maintenance to configuration",
         "InfoNotOperationKmTime": "You must add operation to pass maintenance before {{km}} {{measure}} or {{time}}",
         "InfoNotOperationKm": "You must add operation to pass maintenance before {{km}} {{measure}}",

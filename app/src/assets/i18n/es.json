@@ -207,6 +207,7 @@
         "AddOperation": "Añada operaciones",
         "AddOperationToExpenses": "Añada operaciones o limpia el filtro para ver los gastos",
         "ConfigurationEmpty": "No se encuentran mantenimientos asociados a la configuración",
+        "ConfigurationWithout": "No se encuentran notificaciones activas",
         "AddConfiguration": "Añada mantenimientos a la configuración",
         "InfoNotOperationKmTime": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} {{measure}} o {{time}}",
         "InfoNotOperationKm": "Hay que añadir una operación para pasar el mantenimiento antes de {{km}} {{measure}}",

@@ -75,13 +75,13 @@ export class DataBaseService {
     const dateLastUpdateApp: Date = new Date(environment.lastUpdate);
     if (dateLastUpdateApp > data.updated) { // NEW VERSION - DB VERSION SHORTER THAN APP VERSION
       this.http.get(`${Constants.PATH_FILE_DB}${Constants.FILE_NAME_NEXT_DEPLOY_DB}.sql`, { responseType: 'text'}).subscribe(sql => {
-        const sqlVersions: string[] = sql.split('**->');
+        const sqlVersions: string[] = sql.split(Constants.NEXT_DEPLOY_TITLE_SEPARATOR);
         const numericVersionApp: number = this.getVersion(environment.lastVersion);
         const numericVersionDB: number = this.getVersion(data.value);
         let sqlNextDeploy = '';
         sqlVersions.forEach(x => {
           if (!!x) {
-            const subSqlNextDeploy: string[] = x.split('**>');
+            const subSqlNextDeploy: string[] = x.split(Constants.NEXT_DEPLOY_SCRIPT_SEPARATOR);
             if (!!subSqlNextDeploy && subSqlNextDeploy.length > 1 && !!subSqlNextDeploy[1]) {
               const numVesion: number = this.getVersion(subSqlNextDeploy[0].substr(13));
               if (numericVersionDB < numVesion && numericVersionApp >= numVesion) {

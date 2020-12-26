@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { SearchDashboardModel, OperationTypeModel, ModalInputModel, VehicleModel, MaintenanceElementModel } from '@models/index';
+import { SearchDashboardModel, OperationTypeModel, ModalInputModel, MaintenanceElementModel } from '@models/index';
 import { DashboardService, CommonService, DataBaseService, SettingsService } from '@services/index';
 import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
 

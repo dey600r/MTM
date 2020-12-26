@@ -116,27 +116,7 @@
 
 <!-- SKELETON LOADER INITAL -->
 <ion-header *ngIf="!loaded">
-  <ion-toolbar>
-    <ion-title style="padding-left: 20%; padding-right: 20%;">
-      <ion-skeleton-text animated></ion-skeleton-text>
-    </ion-title>
-  </ion-toolbar>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="2" style="text-align: center;">
-        <ion-spinner name="lines-small" color="medium"></ion-spinner>
-      </ion-col>
-      <ion-col size="4" style="text-align: center;">
-        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
-      </ion-col>
-      <ion-col size="2" style="text-align: center;">
-        <ion-spinner name="lines-small" color="medium"></ion-spinner>
-      </ion-col>
-      <ion-col size="4" style="text-align: center;">
-        <ion-skeleton-text animated style="width: 85%"></ion-skeleton-text>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <app-header-skeleton [input]="[2, 4, 2, 4]"></app-header-skeleton>
 </ion-header>
 
 <ion-content *ngIf="!loaded">

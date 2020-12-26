@@ -1,5 +1,5 @@
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { RouterModule, RouteReuseStrategy, PreloadAllModules } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import { environment } from '@environment/environment';
 
 // COMPONENT
 import { ConfigurationPage } from './configuration.page';
+import { SharedModule } from '@modules/shared.module';
 
 @NgModule({
   declarations: [ConfigurationPage],
@@ -29,7 +30,8 @@ import { ConfigurationPage } from './configuration.page';
         useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
-    })
+    }),
+    SharedModule
   ],
   providers: [TranslateStore],
 })

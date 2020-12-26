@@ -1,6 +1,5 @@
 import { FilterMonthsEnum, FilterKmTimeEnum } from '@utils/index';
 import { MaintenanceElementModel } from './maintenance-element.model';
-import { VehicleModel } from './vehicle.model';
 import { OperationTypeModel } from './operation-type.model';
 
 export class SearchDashboardModel {

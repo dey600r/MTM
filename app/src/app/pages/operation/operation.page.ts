@@ -90,6 +90,7 @@ export class OperationPage implements OnInit {
           this.vehicles[0].id : this.vehicles.find(x => x.id === this.vehicleSelected).id);
       } else {
         this.vehicles = [];
+        this.vehicleSelected = -1;
       }
     });
 
@@ -102,6 +103,7 @@ export class OperationPage implements OnInit {
         this.allOperations = [];
         this.operationsVehicle = [];
       }
+      this.dashboardService.setSearchOperation();
     });
 
     this.dashboardService.getObserverSearchOperation().subscribe(filter => {
@@ -123,7 +125,7 @@ export class OperationPage implements OnInit {
       setTimeout(() => {
         this.loadedHeader = true;
         this.loadedBody = true;
-      }, 1500);
+      }, 1000);
     }
   }
 

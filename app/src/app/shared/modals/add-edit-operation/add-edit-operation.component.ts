@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { Constants, ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/index';
 import {
-  ModalInputModel, ModalOutputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, MaintenanceModel
+  ModalInputModel, ModalOutputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
 import {
   DataBaseService, OperationService, CommonService, ConfigurationService, ControlService,

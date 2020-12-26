@@ -11,10 +11,12 @@ import { HttpClientModule } from '@angular/common/http';
 
 // COMPONENTS
 import { AppInfoComponent } from '@components/info/app-info.component';
+import { HeaderSkeletonComponent } from '@components/header-skeleton/header-skeleton.component';
 
 @NgModule({
   declarations: [
-    AppInfoComponent
+    AppInfoComponent,
+    HeaderSkeletonComponent
   ],
   entryComponents: [],
   imports: [
@@ -25,7 +27,8 @@ import { AppInfoComponent } from '@components/info/app-info.component';
     TranslateModule.forChild()
   ],
   exports: [
-    AppInfoComponent
+    AppInfoComponent,
+    HeaderSkeletonComponent
   ],
   providers: [
   ]
