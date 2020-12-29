@@ -20,6 +20,7 @@
       "dom"
     ],
     "paths": {
+      "@src/*": ["src/*"],
       "@app/*": ["src/app/*"],
       "@environment/*": ["src/environments/*"],
       "@services/*": ["src/app/core/services/*"],

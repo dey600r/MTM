@@ -145,7 +145,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   saveOperation() {
     if (!this.isOperationTypeWithReplacement()) {
       this.operation.listMaintenanceElement = [];
-    } else if (!!this.idMaintenanceElementSelect && this.idMaintenanceElementSelect.length > 0) {
+    } else {
       this.operation.listMaintenanceElement = this.maintenanceElementSelect;
       this.operation.listMaintenanceElement.forEach(x => {
         if (x.price === null) {
@@ -185,20 +185,12 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   }
 
   changeReplacement() {
+    this.maintenanceElementSelect = [];
     this.idMaintenanceElementSelect.forEach(x => {
-      if (!this.maintenanceElementSelect.some(y => y.id === x)) {
-        const replacement: MaintenanceElementModel = this.maintenanceElement.find(y => y.id === x);
-        this.maintenanceElementSelect = [...this.maintenanceElementSelect,
-          new MaintenanceElementModel(replacement.name, replacement.description, false, null, replacement.id)];
-      }
+      const replacement: MaintenanceElementModel = this.maintenanceElement.find(y => y.id === x);
+      this.maintenanceElementSelect = [...this.maintenanceElementSelect,
+        new MaintenanceElementModel(replacement.name, replacement.description, false, null, replacement.id)];
     });
-    let deleteIndex: number[] = [];
-    this.maintenanceElementSelect.forEach((x, index) => {
-      if (!this.idMaintenanceElementSelect.some(y => y === x.id)) {
-        deleteIndex = [...deleteIndex, index];
-      }
-    });
-    deleteIndex.forEach(x => this.maintenanceElementSelect.splice(x, 1));
   }
 
   getIconReplacement(maintenanceElement: MaintenanceElementModel): string {

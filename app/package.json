@@ -24,7 +24,7 @@
     "build:release-david-android": "C:/Proyectos/MTM/Utils/Versions/deploy-release-david-android.bat",
     "build:release-david-android-bundle": "C:/Proyectos/MTM/Utils/Versions/deploy-release-david-android-bundle.bat",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
-    "deploy:apk": "adb -d install -r C:/Proyectos/MTM/Utils/Versions/Android/MtM_David_v2.2.1/MtM_David_v2.2.1.apk",
+    "deploy:apk": "adb -d install -r C:/Proyectos/MTM/Utils/Versions/Android/MtM_David_v3.0.0/MtM_David_v3.0.0.apk",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug --consolelogs",
     "deploy:debug-windows": "ionic cordova run windows --debug -- --arch=x64 --appx=uap --platform=x64",
