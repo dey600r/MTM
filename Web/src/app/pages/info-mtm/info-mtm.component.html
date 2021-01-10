@@ -2,6 +2,16 @@
     <div class="sub-container">
         <app-icon-list-card [dataInfo]="infoListCard"></app-icon-list-card>
         <app-icon-tab [dataInfo]="infoImageMtM"></app-icon-tab>
+        <div class="product-item">
+            <div class="product-item-content">
+                <a [href]="hrefGooglePlay" target="_blank">
+                    <img alt="google-play" class="product-image" [src]="imgGooglePlay">    
+                </a>
+                <a [href]="hrefMicrosoftStore" target="_blank">
+                    <img alt="microsoft-store" class="product-image" [src]="imgMicrosoftStore">    
+                </a>
+            </div>
+        </div>
         <div class="p-grid p-flex-column">
             <app-icon-doc [dataInfo]="infoMtM"></app-icon-doc>
         </div>

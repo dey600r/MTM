@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { UtilsService } from '@services/utils.service';
 
 import { PictureModel } from '@models/index';
@@ -15,60 +15,40 @@ export class IconCarouselComponent implements OnInit {
   @Input() dataInfo = Constants.TYPE_APP_ANDROID;
 
   picturesApp: PictureModel[] = [];
-  responsiveOptions: any;
+  responsiveOptions: any = [
+    {
+        breakpoint: '1024px',
+        numVisible: 1,
+        numScroll: 1
+    }
+  ];
 
   constructor(private utilService: UtilsService,
-              private translator: TranslateService) { }
+              private translator: TranslateService,
+              private changeDetector: ChangeDetectorRef) {
+  }
 
   ngOnInit(): void {
-    this.calculateNumVisibleImages();
 
     const pathImages: string = this.utilService.getPathImages(this.dataInfo);
-    this.picturesApp = [
-      {
-        name: 'Image1',
-        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture1.png']),
-        type: 'android',
+    this.picturesApp = [];
+    for (let i = 1; i < 11; i++) {
+      this.picturesApp = [...this.picturesApp, {
+        name: `Image${i}`,
+        url: this.utilService.joinPath([pathImages, this.translator.currentLang, `Capture${i}.png`]),
+        type: this.dataInfo,
         app: 'mtm'
-      },
-      {
-        name: 'Image2',
-        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture2.png']),
-        type: 'android',
-        app: 'mtm'
-      },
-      {
-        name: 'Image3',
-        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture3.png']),
-        type: 'android',
-        app: 'mtm'
-      },
-      {
-        name: 'Image4',
-        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture4.png']),
-        type: 'android',
-        app: 'mtm'
-      },
-      {
-        name: 'Image5',
-        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture5.png']),
-        type: 'android',
-        app: 'mtm'
-      },
-      {
-        name: 'Image6',
-        url: this.utilService.joinPath([pathImages, this.translator.currentLang, 'Capture6.png']),
-        type: 'android',
-        app: 'mtm'
-      }
-    ];
+      }];
+    }
+
+    this.calculateNumVisibleImages();
   }
 
   calculateNumVisibleImages(): void {
     if (this.dataInfo === Constants.TYPE_APP_ANDROID) {
       this.responsiveOptions = [
         {
-            breakpoint: '3000px',
+            breakpoint: '4000px',
             numVisible: 3,
             numScroll: 1
         },
@@ -86,13 +66,13 @@ export class IconCarouselComponent implements OnInit {
     } else {
       this.responsiveOptions = [
         {
-            breakpoint: '3000px',
+            breakpoint: '4000px',
             numVisible: 1,
             numScroll: 1
         }
-    ];
+      ];
     }
-
+    this.changeDetector.markForCheck();
   }
 
 }

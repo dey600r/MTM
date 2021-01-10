@@ -19,6 +19,11 @@ export class InfoMtmComponent implements OnInit {
   infoImageMtM: InfoTabModel[] = [];
   infoMtM: InfoDeveloperModel = new InfoDeveloperModel();
 
+  imgGooglePlay = '';
+  imgMicrosoftStore = '';
+  hrefGooglePlay = '';
+  hrefMicrosoftStore = '';
+
   constructor(private translator: TranslateService,
               private utilService: UtilsService) {
   }
@@ -51,6 +56,17 @@ export class InfoMtmComponent implements OnInit {
         new InfoIconModel(`${assetsIcon}/icon-cordova.png`, 'Cordova', 'Cordova', Constants.ICON_URL_EGG),
         new InfoIconModel(`${assetsIcon}/icon-sqlite.png`, 'Sqlite', 'Sqlite', Constants.ICON_URL_KLIPARTZ)
       ]);
+
+    this.imgGooglePlay = this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'google_play.png']);
+    this.imgMicrosoftStore = this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'microsoft_store.png']);
+
+    if (this.translator.currentLang === Constants.LANGUAGE_EN) {
+      this.hrefGooglePlay = Constants.URL_MTM_ANDROID_EN;
+      this.hrefMicrosoftStore = Constants.URL_MTM_WINDOWS_EN;
+    } else {
+      this.hrefGooglePlay = Constants.URL_MTM_ANDROID_ES;
+      this.hrefMicrosoftStore = Constants.URL_MTM_WINDOWS_ES;
+    }
   }
 
 }
