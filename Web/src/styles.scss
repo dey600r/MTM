@@ -17,6 +17,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .sub-container {
     padding-right: 12%;
     padding-left: 12%;
+    max-width: 1800px;
+    margin: 0 auto;
 }
 
 .container-carousel {
@@ -55,7 +57,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .p-tabmenu .p-tabmenu-nav {
     background: var(--main-color);
-    border: dee2e6;
+    border: #dee2e6;
     border-width: 0 0 2px 0;
 }
 
@@ -85,6 +87,25 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     box-shadow: none;
 }
 
+/* CAROUSEL */
+
+/* PARA INTERNET EXPORER */
+.p-carousel-items-content {
+    max-height: 600px;
+}
+
+@media (max-width: 800px) {
+    .p-carousel-items-content {
+        max-height: 500px;
+    }
+}
+
+@media (max-width: 600px) {
+    .p-carousel-items-content {
+        max-height: 400px;
+    }
+}
+
 /* ICONS */
 
 .icon {
@@ -109,4 +130,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 h3 {
     color: var(--main-color);
+}
+
+p {
+    line-height: 1.35em;
 }

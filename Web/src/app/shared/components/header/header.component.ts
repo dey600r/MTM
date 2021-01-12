@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { Constants } from '@app/core/utils/constants';
 import { Router, Event } from '@angular/router';
+import cssVars from 'css-vars-ponyfill';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,7 @@ export class HeaderComponent implements OnInit {
   constructor(private location: Location,
               private router: Router,
               private translator: TranslateService) {
+    cssVars();
   }
 
   ngOnInit(): void {

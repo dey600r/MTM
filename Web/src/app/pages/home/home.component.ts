@@ -28,8 +28,16 @@ export class HomeComponent implements OnInit {
     this.infoProjects = new InfoProjectModel('HOME.titleProjects',
       new InfoDeveloperModel(
         'COMMON.MTM_LARGE', 'HOME.descriptionProjects',
-        [new InfoIconModel(`${assetsIcon}/icon.png`, this.translator.instant('COMMON.MTM_LARGE'), 'MtM', Constants.ROUTE_INFO_MTM)]
-      ));
+        [new InfoIconModel('pi pi-eye', this.translator.instant('COMMON.MTM_LARGE'), 'MtM', Constants.ROUTE_INFO_MTM,
+          'button-gray'),
+        new InfoIconModel('pi pi-android', 'Android', 'MtM',
+          (this.translator.currentLang === Constants.LANGUAGE_EN ? Constants.URL_MTM_ANDROID_EN : Constants.URL_MTM_ANDROID_ES),
+          'button-gray', true),
+          new InfoIconModel('pi pi-microsoft', 'Windows', 'MtM',
+          (this.translator.currentLang === Constants.LANGUAGE_EN ? Constants.URL_MTM_WINDOWS_EN : Constants.URL_MTM_WINDOWS_ES),
+          'button-gray', true)],
+      ),
+      new InfoIconModel(`${assetsIcon}/icon.png`, this.translator.instant('COMMON.MTM_LARGE'), 'MtM', Constants.ROUTE_INFO_MTM));
     this.infoSkills = new InfoDeveloperModel(
       'HOME.titleTechnologicalSkills', 'HOME.descriptionTechnologicalSkills',
       [

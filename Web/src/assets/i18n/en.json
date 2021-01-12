@@ -14,6 +14,7 @@
         "descriptionInfoDeveloper": "My professional career is mostly in IT consulting, participating in large international clients. I have evolved mainly in the technological field of software engineering, although I have also participated in project management tasks. I consider myself a proactive person with an objective of continuous professional improvement.",
         "titleProjects": "Projects",
         "descriptionProjects": "Application to manage the maintenance of personal vehicles without having to remember when a review was made and how much is left for the next oil change of your motorcycle or car.",
+        "descriptionLargeProjects": "Application to manage the maintenance of personal vehicles without having to remember when a review was made and how much is left for the next oil change of your motorcycle or car. It helps you to know at any time when you should pass the next review and the life of your vehicle parts by configuring each maintenance in a personalized way.",
         "titleTechnologicalSkills": "Tecnological Skills",
         "descriptionTechnologicalSkills": "My technological concerns have led me to master Microsoft programming tools and languages, such as .NET Framework, .NET CORE, Entity Framework or Sql Server. I have also had the opportunity to evolve in Google technology such as Angular, firebase or Play Store. Besides, as I personally like to try everything, I have been able to work with Ionic and Cordova for multiplatform mobile technologies.",
         "titleHobbies": "Hobbies",
@@ -29,6 +30,6 @@
         "titleNotifications": "Notificaciones",
         "descriptionNotifications": "The application allows you to define personalized maintenance for each of your vehicles. Based on these configurations, it notifies you how long and how many kilometers the parts of your vehicles have lived.",
         "titleTechnologiesUsed": "Technologies Used",
-        "descriptionTechnologiesUsed": "Multiplatform application for Android and Windows 10. Implemented with the Ionic 6 and Angular 9 frameworks. With the help of VS Code it has been possible to develop with the programming languages HTML5, CSS3, Typescript 3.8 and SQL."
+        "descriptionTechnologiesUsed": "Multiplatform application for Android and Windows 10. Implemented with the Ionic 6 and Angular 11 frameworks. With the help of VS Code it has been possible to develop with the programming languages HTML5, CSS3, Typescript 4 and SQL."
     }
 }

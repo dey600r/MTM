@@ -5,7 +5,7 @@
     <div class="box">
         <div class="p-grid shadow">
             <div class="p-col-12 p-md-2 p-lg-2 center">
-                <img [alt]="dataInfo.infoDeveloper.icons[0].alt" [src]="dataInfo.infoDeveloper.icons[0].icon" class="icon icon-mtm">
+                <img [alt]="dataInfo.infoIcon.alt" [src]="dataInfo.infoIcon.icon" class="icon icon-mtm">
             </div>
             <div class="p-col-12 p-md-8 p-lg-8 center">
                 <div>
@@ -14,7 +14,12 @@
                 </div>
             </div>
             <div class="p-col-12 p-md-2 p-lg-2 center">
-                <button pButton pRipple type="button" icon="pi pi-eye" class="p-button-rounded" [pTooltip]="dataInfo.infoDeveloper.icons[0].tooltip" (click)="navigateTo(dataInfo.infoDeveloper.icons[0].href)"></button>
+                <div class="p-grid center">
+                    <div class="p-col-4 p-md-7 p-lg-7 center padding-buttons" *ngFor="let icon of dataInfo.infoDeveloper.icons">
+                        <button pButton pRipple type="button" [icon]="icon.icon" [class]="'p-button-rounded ' + icon.styleClass"
+                            [pTooltip]="icon.tooltip" (click)="navigateTo(icon)"></button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

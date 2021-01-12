@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UtilsService } from '@app/core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '@environments/environment';
-import { InfoDeveloperModel, InfoIconModel, InfoTabModel } from '@models/index';
+import { InfoDeveloperModel, InfoIconModel, InfoTabModel, InfoProjectCardModel } from '@models/index';
 import { Constants } from '@utils/constants';
 import { InfoCardModel } from '@app/core/models/info-card.model';
 
@@ -15,7 +15,7 @@ export class InfoMtmComponent implements OnInit {
 
   icon = '';
 
-  infoListCard: InfoCardModel[] = [];
+  infoListCard: InfoProjectCardModel = new InfoProjectCardModel();
   infoImageMtM: InfoTabModel[] = [];
   infoMtM: InfoDeveloperModel = new InfoDeveloperModel();
 
@@ -32,7 +32,7 @@ export class InfoMtmComponent implements OnInit {
     const assetsIcon: string = environment.pathIcons;
     this.icon = this.utilService.joinPath([assetsIcon, 'icon.png']);
 
-    this.infoListCard = [
+    this.infoListCard = new InfoProjectCardModel('COMMON.MTM_LARGE', 'HOME.descriptionLargeProjects', [
       new InfoCardModel('INFO_MTM.titleExpensesVehicles', 'INFO_MTM.descriptionExpensesVehicles',
         this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-expenses-vehicles.png'])),
       new InfoCardModel('INFO_MTM.titleCalendar', 'INFO_MTM.descriptionCalendar',
@@ -41,7 +41,7 @@ export class InfoMtmComponent implements OnInit {
         this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-expenses-replacements.png'])),
       new InfoCardModel('INFO_MTM.titleNotifications', 'INFO_MTM.descriptionNotifications',
         this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-notification.png']))
-    ];
+    ]);
 
     this.infoImageMtM = [
       new InfoTabModel('Android', Constants.TYPE_APP_ANDROID, 'pi pi-android'),

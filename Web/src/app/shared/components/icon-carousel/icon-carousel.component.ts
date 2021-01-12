@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UtilsService } from '@services/utils.service';
 
 import { PictureModel } from '@models/index';
@@ -15,17 +15,10 @@ export class IconCarouselComponent implements OnInit {
   @Input() dataInfo = Constants.TYPE_APP_ANDROID;
 
   picturesApp: PictureModel[] = [];
-  responsiveOptions: any = [
-    {
-        breakpoint: '1024px',
-        numVisible: 1,
-        numScroll: 1
-    }
-  ];
+  responsiveOptions: any = [];
 
   constructor(private utilService: UtilsService,
-              private translator: TranslateService,
-              private changeDetector: ChangeDetectorRef) {
+              private translator: TranslateService) {
   }
 
   ngOnInit(): void {
@@ -72,7 +65,6 @@ export class IconCarouselComponent implements OnInit {
         }
       ];
     }
-    this.changeDetector.markForCheck();
   }
 
 }

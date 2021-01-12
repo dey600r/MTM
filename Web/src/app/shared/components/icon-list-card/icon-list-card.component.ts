@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { InfoCardModel } from '@app/core/models/info-card.model';
+import { InfoProjectCardModel } from '@app/core/models/info-card.model';
 
 @Component({
   selector: 'app-icon-list-card',
@@ -8,7 +8,7 @@ import { InfoCardModel } from '@app/core/models/info-card.model';
 })
 export class IconListCardComponent implements OnInit {
 
-  @Input() dataInfo: InfoCardModel[] = [];
+  @Input() dataInfo: InfoProjectCardModel = new InfoProjectCardModel();
 
   constructor() { }
 
