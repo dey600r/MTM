@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="p-col-12 p-md-2 p-lg-2 center">
-                <div class="p-grid center">
+                <div class="p-grid center padding-grid-button">
                     <div class="p-col-4 p-md-7 p-lg-7 center padding-buttons" *ngFor="let icon of dataInfo.infoDeveloper.icons">
                         <button pButton pRipple type="button" [icon]="icon.icon" [class]="'p-button-rounded ' + icon.styleClass"
                             [pTooltip]="icon.tooltip" (click)="navigateTo(icon)"></button>

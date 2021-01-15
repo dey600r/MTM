@@ -13,6 +13,7 @@ import { environment } from '@environments/environment';
 })
 export class HomeComponent implements OnInit {
 
+  infoIconDeveloper: InfoIconModel = new InfoIconModel();
   infoDeveloper: InfoDeveloperModel = new InfoDeveloperModel();
   infoProjects: InfoProjectModel = new InfoProjectModel();
   infoSkills: InfoDeveloperModel = new InfoDeveloperModel();
@@ -24,6 +25,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     const assetsIcon: string = environment.pathIcons;
+
+    this.infoIconDeveloper = new InfoIconModel(`${assetsIcon}/icon-developer.png`, '', 'icon-developer', '',
+      '', 'item-developer');
+
     this.infoDeveloper = new InfoDeveloperModel('HOME.titleInfoDeveloper', 'HOME.descriptionInfoDeveloper');
     this.infoProjects = new InfoProjectModel('HOME.titleProjects',
       new InfoDeveloperModel(
@@ -32,10 +37,10 @@ export class HomeComponent implements OnInit {
           'button-gray'),
         new InfoIconModel('pi pi-android', 'Android', 'MtM',
           (this.translator.currentLang === Constants.LANGUAGE_EN ? Constants.URL_MTM_ANDROID_EN : Constants.URL_MTM_ANDROID_ES),
-          'button-gray', true),
+          'button-gray', '', true),
           new InfoIconModel('pi pi-microsoft', 'Windows', 'MtM',
           (this.translator.currentLang === Constants.LANGUAGE_EN ? Constants.URL_MTM_WINDOWS_EN : Constants.URL_MTM_WINDOWS_ES),
-          'button-gray', true)],
+          'button-gray', '', true)],
       ),
       new InfoIconModel(`${assetsIcon}/icon.png`, this.translator.instant('COMMON.MTM_LARGE'), 'MtM', Constants.ROUTE_INFO_MTM));
     this.infoSkills = new InfoDeveloperModel(

@@ -5,6 +5,7 @@ import { environment } from '@environments/environment';
 import { InfoDeveloperModel, InfoIconModel, InfoTabModel, InfoProjectCardModel } from '@models/index';
 import { Constants } from '@utils/constants';
 import { InfoCardModel } from '@app/core/models/info-card.model';
+import { InfoBaseIconModel } from '@app/core/models/info-base.model';
 
 @Component({
   selector: 'app-info-mtm',
@@ -15,14 +16,13 @@ export class InfoMtmComponent implements OnInit {
 
   icon = '';
 
+  infoIconMtM: InfoIconModel = new InfoIconModel();
   infoListCard: InfoProjectCardModel = new InfoProjectCardModel();
   infoImageMtM: InfoTabModel[] = [];
+  infoLinksMtm: InfoBaseIconModel [] = [];
+  infoMtMFree: InfoDeveloperModel = new InfoDeveloperModel();
+  infoLinksMtmFree: InfoBaseIconModel[] = [];
   infoMtM: InfoDeveloperModel = new InfoDeveloperModel();
-
-  imgGooglePlay = '';
-  imgMicrosoftStore = '';
-  hrefGooglePlay = '';
-  hrefMicrosoftStore = '';
 
   constructor(private translator: TranslateService,
               private utilService: UtilsService) {
@@ -31,6 +31,9 @@ export class InfoMtmComponent implements OnInit {
   ngOnInit(): void {
     const assetsIcon: string = environment.pathIcons;
     this.icon = this.utilService.joinPath([assetsIcon, 'icon.png']);
+
+    this.infoIconMtM = new InfoIconModel(this.icon, '', 'icon-mtm', '',
+      '', 'item-mtm');
 
     this.infoListCard = new InfoProjectCardModel('COMMON.MTM_LARGE', 'HOME.descriptionLargeProjects', [
       new InfoCardModel('INFO_MTM.titleExpensesVehicles', 'INFO_MTM.descriptionExpensesVehicles',
@@ -48,6 +51,8 @@ export class InfoMtmComponent implements OnInit {
       new InfoTabModel('Windows 10', Constants.TYPE_APP_WINDOWS, 'pi pi-microsoft')
     ];
 
+    this.infoMtMFree = new InfoDeveloperModel('COMMON.MTM_FREE', 'INFO_MTM.descriptionMtMFree');
+
     this.infoMtM = new InfoDeveloperModel(
       'INFO_MTM.titleTechnologiesUsed', 'INFO_MTM.descriptionTechnologiesUsed',
       [
@@ -57,15 +62,29 @@ export class InfoMtmComponent implements OnInit {
         new InfoIconModel(`${assetsIcon}/icon-sqlite.png`, 'Sqlite', 'Sqlite', Constants.ICON_URL_KLIPARTZ)
       ]);
 
-    this.imgGooglePlay = this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'google_play.png']);
-    this.imgMicrosoftStore = this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'microsoft_store.png']);
+    const imgGooglePlay: string = this.utilService.joinPath(
+      [environment.pathOthers, this.translator.currentLang, 'google_play.png']);
+    const imgMicrosoftStore: string = this.utilService.joinPath(
+      [environment.pathOthers, this.translator.currentLang, 'microsoft_store.png']);
 
     if (this.translator.currentLang === Constants.LANGUAGE_EN) {
-      this.hrefGooglePlay = Constants.URL_MTM_ANDROID_EN;
-      this.hrefMicrosoftStore = Constants.URL_MTM_WINDOWS_EN;
+      this.infoLinksMtm = [
+        new InfoBaseIconModel(imgGooglePlay, Constants.URL_MTM_ANDROID_EN, Constants.URL_MTM_ANDROID_EN),
+        new InfoBaseIconModel(imgMicrosoftStore, Constants.URL_MTM_WINDOWS_EN, Constants.URL_MTM_WINDOWS_EN)
+      ];
+      this.infoLinksMtmFree = [
+        new InfoBaseIconModel(imgGooglePlay, Constants.URL_MTM_FREE_ANDROID_EN, Constants.URL_MTM_FREE_ANDROID_EN),
+        new InfoBaseIconModel(imgMicrosoftStore, Constants.URL_MTM_FREE_WINDOWS_EN, Constants.URL_MTM_FREE_WINDOWS_EN)
+      ];
     } else {
-      this.hrefGooglePlay = Constants.URL_MTM_ANDROID_ES;
-      this.hrefMicrosoftStore = Constants.URL_MTM_WINDOWS_ES;
+      this.infoLinksMtm = [
+        new InfoBaseIconModel(imgGooglePlay, Constants.URL_MTM_ANDROID_ES, Constants.URL_MTM_ANDROID_ES),
+        new InfoBaseIconModel(imgMicrosoftStore, Constants.URL_MTM_WINDOWS_ES, Constants.URL_MTM_WINDOWS_ES)
+      ];
+      this.infoLinksMtmFree = [
+        new InfoBaseIconModel(imgGooglePlay, Constants.URL_MTM_FREE_ANDROID_ES, Constants.URL_MTM_FREE_ANDROID_ES),
+        new InfoBaseIconModel(imgMicrosoftStore, Constants.URL_MTM_FREE_WINDOWS_ES, Constants.URL_MTM_FREE_WINDOWS_ES)
+      ];
     }
   }
 

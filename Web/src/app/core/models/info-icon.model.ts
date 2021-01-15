@@ -1,17 +1,16 @@
-export class InfoIconModel {
-    icon: string;
+import { InfoBaseIconModel } from './info-base.model';
+
+export class InfoIconModel extends InfoBaseIconModel {
     tooltip: string;
-    alt: string;
-    href: string;
     styleClass: string;
+    styleParentClass: string;
     external: boolean;
     constructor(i: string = '', t: string = '', a: string = '', h: string = '', style: string = '',
-                ext: boolean = false) {
-        this.icon = i;
+                styleParent: string = '', ext: boolean = false) {
+        super(i, a, h);
         this.tooltip = t;
-        this.alt = a;
-        this.href = h;
         this.styleClass = style;
+        this.styleParentClass = styleParent;
         this.external = ext;
     }
 }

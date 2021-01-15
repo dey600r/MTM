@@ -8,6 +8,9 @@ import { IconProjectComponent } from '@components/icon-project/icon-project.comp
 import { IconCarouselComponent } from '@components/icon-carousel/icon-carousel.component';
 import { IconTabComponent } from '@components/icon-tab/icon-tab.component';
 import { IconListCardComponent } from '@components/icon-list-card/icon-list-card.component';
+import { IconLinksComponent } from '@components/icon-links/icon-links.component';
+import { IconHeaderComponent } from '@components/icon-header/icon-header.component';
+import { BackgroundHeaderComponent } from '@components/background-header/background-header.component';
 
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
@@ -38,7 +41,10 @@ export class SetupTest {
           IconProjectComponent,
           IconCarouselComponent,
           IconTabComponent,
-          IconListCardComponent
+          IconListCardComponent,
+          IconLinksComponent,
+          IconHeaderComponent,
+          BackgroundHeaderComponent
         ],
         providers: [
           TranslateService

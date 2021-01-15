@@ -12,3 +12,14 @@ export class InfoBaseDescModel extends InfoBaseModel {
         this.description = d;
     }
 }
+
+export class InfoBaseIconModel {
+    icon: string;
+    alt: string;
+    href: string;
+    constructor(i: string = '', a: string = '', h: string = '') {
+        this.icon = i;
+        this.alt = a;
+        this.href = h;
+    }
+}

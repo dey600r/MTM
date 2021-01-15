@@ -7,11 +7,12 @@
         "contact": "Contact: deyhome.mtm@gmail.com",
         "footer": "Copyright © 2020 - David Jiménez - All rigths reserved",
         "iconDesignedBy": "Iconos diseñados por {{url}}",
-        "MTM_LARGE": "Motor Track Manager"
+        "MTM_LARGE": "Motor Track Manager",
+        "MTM_FREE": "MtM Free"
     },
     "HOME": {
         "titleInfoDeveloper": "Información del desarrollador",
-        "descriptionInfoDeveloper": "Mi carrera profesional se desarrolla en su mayor parte en la consultoría IT participando en grandes clientes internacionales. He evolucionado principalmente en el ámbito tecnológico de ingeniería del software, aunque también he participado en tareas de gestión de proyectos. Me considero una persona proactiva y con un objectivo de mejora profesional continua.",
+        "descriptionInfoDeveloper": "Mi carrera profesional se desarrolla en su mayor parte en consultoría IT participando en grandes clientes internacionales. He evolucionado principalmente en el ámbito tecnológico de ingeniería del software, aunque también he participado en tareas de gestión de proyectos. Me considero una persona proactiva y con un objectivo de mejora profesional continua.",
         "titleProjects": "Proyectos",
         "descriptionProjects": "Aplicación para gestionar los mantenimientos de los vehículos personales sin necesidad de recordar cuándo se realizó una revisión y cuánto queda para el siguiente cambio de aceite de su moto o coche.",
         "descriptionLargeProjects": "Aplicación para gestionar los mantenimientos de los vehículos personales sin necesidad de recordar cuando se realizo una revisión y cuanto queda para el siguiente cambio de aceite de su moto o coche. Te ayuda a conocer en cualquier momento cuando deberías pasar la siguiente revisión y la vida de las piezas de tu vehículo configurando cada mantenimiento de una manera personalizada.",
@@ -30,6 +31,7 @@
         "titleNotifications": "Notificaciones",
         "descriptionNotifications": "La aplicación te permite definir mantenimientos personalizados para cada uno de tus vehículos. En base a estas configuraciones te notifica cuanto tiempo y kilómetros de vida tienen las piezas de tus vehículos.",
         "titleTechnologiesUsed": "Tecnologías utilizadas",
-        "descriptionTechnologiesUsed": "Aplicación multiplataforma para Android y Windows 10. Implementada con los frameworks Ionic 6 y Angular 11. Se han utilizado librerías o plugins como Cordova y Sqlite. Con la ayuda de VS Code se ha podido desarrollar con los lenguajes de programación HTML5, CSS3, Typescript 4 y SQL."
+        "descriptionTechnologiesUsed": "Aplicación multiplataforma para Android y Windows 10. Implementada con los frameworks Ionic 6 y Angular 11. Se han utilizado librerías o plugins como Cordova y Sqlite. Con la ayuda de VS Code se ha podido desarrollar con los lenguajes de programación HTML5, CSS3, Typescript 4 y SQL.",
+        "descriptionMtMFree": "La aplicación también está disponible gratuitamente pero con una funcionalidad reducida. Aún así con esta versión se puede utilizar el registro de vehículos, operaciones, una amplia gama de configuraciones para los mantenimientos y las notificaciones. Utilizando la aplicación completa se podría disfrutar de los avisos del calendario, control de gastos y resumen de mantenimientos y recambios."
     }
 }

@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/MtMWeb",
+    "public": "dist/DeyApps",
     "ignore": [
       "firebase.json",
       "**/.*",

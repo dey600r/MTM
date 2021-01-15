@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HomeRoutingModule } from './home-routing.module';
 
 import { HomeComponent } from './home.component';
+
 import { ComponentModule } from '@modules/component.module';
 
 import { PrimengModule } from '@shared/modules/primeng.module';

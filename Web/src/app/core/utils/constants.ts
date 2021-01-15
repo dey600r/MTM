@@ -22,4 +22,9 @@ export class Constants {
     static URL_MTM_ANDROID_EN = 'https://play.google.com/store/apps/details?id=mtm.ionic.dey125r&hl=en_419';
     static URL_MTM_WINDOWS_ES = 'https://www.microsoft.com/es-es/p/motor-track-manager/9nzcmw19fh21?activetab=pivot:overviewtab';
     static URL_MTM_WINDOWS_EN = 'https://www.microsoft.com/en-us/p/motor-track-manager/9nzcmw19fh21?activetab=pivot:overviewtab';
+
+    static URL_MTM_FREE_ANDROID_ES = 'https://play.google.com/store/apps/details?id=mtm.free.ionic.dey125r&hl=es_419';
+    static URL_MTM_FREE_ANDROID_EN = 'https://play.google.com/store/apps/details?id=mtm.free.ionic.dey125r&hl=en_419';
+    static URL_MTM_FREE_WINDOWS_ES = 'https://www.microsoft.com/es-es/p/motor-track-manager-free/9pcbjjbqkj59?activetab=pivot:overviewtab';
+    static URL_MTM_FREE_WINDOWS_EN = 'https://www.microsoft.com/en-us/p/motor-track-manager-free/9pcbjjbqkj59?activetab=pivot:overviewtab';
 }

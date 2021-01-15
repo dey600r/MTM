@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "MtMWeb": {
+    "DeyApps": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/MtMWeb",
+            "outputPath": "dist/DeyApps",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -70,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "MtMWeb:build"
+            "browserTarget": "DeyApps:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "MtMWeb:build:production"
+              "browserTarget": "DeyApps:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "MtMWeb:build"
+            "browserTarget": "DeyApps:build"
           }
         },
         "test": {
@@ -124,16 +124,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "MtMWeb:serve"
+            "devServerTarget": "DeyApps:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "MtMWeb:serve:production"
+              "devServerTarget": "DeyApps:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "MtMWeb"
+  "defaultProject": "DeyApps"
 }
