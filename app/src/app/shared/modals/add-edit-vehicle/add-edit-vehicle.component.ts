@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, Constants, PageEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel, ModalOutputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel } from '@models/index';
 import {
   DataBaseService, VehicleService, CommonService, CalendarService, ControlService, DashboardService, SettingsService
@@ -106,7 +106,7 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     if (this.isValidForm(f)) {
       const result = this.validateDateAndKmToOperations();
       if (result !== '') {
-        this.controlService.showToast(PageEnum.MODAL_VEHICLE, result, null, Constants.DELAY_TOAST_HIGHER);
+        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.WARNING, result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
         // Save date to change km to calculate maintenance
         if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.vehicle.km) {
@@ -115,11 +115,11 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
         this.vehicleService.saveVehicle(this.vehicle,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
-          this.controlService.showToast(PageEnum.MODAL_VEHICLE, (
-            this.modalInputModel.isCreate ? 'PAGE_VEHICLE.AddSaveVehicle' : 'PAGE_VEHICLE.EditSaveVehicle'),
+          this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.SUCCESS,
+            (this.modalInputModel.isCreate ? 'PAGE_VEHICLE.AddSaveVehicle' : 'PAGE_VEHICLE.EditSaveVehicle'),
             { vehicle: this.vehicle.model });
         }).catch(e => {
-          this.controlService.showToast(PageEnum.MODAL_VEHICLE, 'PAGE_VEHICLE.ErrorSaveVehicle');
+          this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
         });
       }
     }

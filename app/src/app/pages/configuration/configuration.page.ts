@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
-import { ConstantsColumns, ActionDBEnum, PageEnum, Constants } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
   VehicleModel, OperationModel
@@ -174,10 +174,10 @@ export class ConfigurationPage implements OnInit {
             x.configuration.id = 1;
           });
           this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, vehiclesDeleteConfig).then(x => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveConfiguration',
-              { configuration: this.rowConfSelected.name });
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
+               'PAGE_CONFIGURATION.DeleteSaveConfiguration', { configuration: this.rowConfSelected.name });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
           });
         }
       }
@@ -211,10 +211,10 @@ export class ConfigurationPage implements OnInit {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
           this.configurationService.saveMaintenance(this.rowMainSelected, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveMaintenance',
-              { maintenance: this.rowMainSelected.description });
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
+              'PAGE_CONFIGURATION.DeleteSaveMaintenance', { maintenance: this.rowMainSelected.description });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
           });
         }
       }
@@ -256,10 +256,10 @@ export class ConfigurationPage implements OnInit {
         handler: () => {
           this.configurationService.saveMaintenanceElement(this.rowReplSelected,
               ActionDBEnum.DELETE, operationsWithReplacement).then(x => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveReplacement',
-              { replacement: this.rowReplSelected.name });
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
+              'PAGE_CONFIGURATION.DeleteSaveReplacement', { replacement: this.rowReplSelected.name });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
           });
         }
       }

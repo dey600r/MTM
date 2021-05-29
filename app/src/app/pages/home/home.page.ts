@@ -14,7 +14,7 @@ import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
   MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel
 } from '@models/index';
-import { WarningWearEnum, PageEnum, Constants } from '@utils/index';
+import { WarningWearEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -235,7 +235,7 @@ export class HomePage implements OnInit {
         InfoCalendarComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
     } else {
       const msg = `${this.translator.instant('ALERT.NotificationEmpty')} ${this.translator.instant('ALERT.AddMustVehicle')}`;
-      this.controlService.showMsgToast(PageEnum.HOME, msg);
+      this.controlService.showMsgToast(PageEnum.HOME, ToastTypeEnum.WARNING, msg);
     }
   }
 
@@ -267,7 +267,7 @@ export class HomePage implements OnInit {
 
   desactivateMaintenance(w: WearReplacementProgressBarViewModel): void {
     if (this.vehicleSelected.idConfiguration === 1) {
-      this.controlService.showToast(PageEnum.HOME, 'PAGE_HOME.ValidateDeleteConfigurationMaintenance',
+      this.controlService.showToast(PageEnum.HOME, ToastTypeEnum.WARNING, 'PAGE_HOME.ValidateDeleteConfigurationMaintenance',
               {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration},
               Constants.DELAY_TOAST_NORMAL);
     } else {
@@ -278,11 +278,11 @@ export class HomePage implements OnInit {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
           this.configurationService.deleteConfigManintenance(this.vehicleSelected.idConfiguration, w.idMaintenance).then(x => {
-            this.controlService.showToast(PageEnum.HOME, 'PAGE_HOME.DeleteSaveConfigurationMaintenance',
+            this.controlService.showToast(PageEnum.HOME, ToastTypeEnum.SUCCESS, 'PAGE_HOME.DeleteSaveConfigurationMaintenance',
               {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration},
               Constants.DELAY_TOAST_NORMAL);
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
           });
         }
       }

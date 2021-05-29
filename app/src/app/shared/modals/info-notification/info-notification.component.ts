@@ -15,7 +15,7 @@ import {
   DashboardService, ConfigurationService, ControlService, CalendarService,
   SettingsService, DataBaseService
 } from '@services/index';
-import { WarningWearEnum, Constants, PageEnum } from '@utils/index';
+import { WarningWearEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // COMPONENTS
@@ -29,52 +29,52 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class InfoNotificationComponent implements OnInit, OnDestroy {
 
-    // MODAL MODELS
-    modalInputModel: ModalInputModel = new ModalInputModel();
-    modalOutputModel: ModalOutputModel = new ModalOutputModel();
+  // MODAL MODELS
+  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
-    // MODEL FORM
-    wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-    dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
-    dashboardRecordsMaintenance: DashboardModel = new DashboardModel([], []);
-    currentPopover = null;
-    hideGraph = true;
-    hideSummary = false;
-    hideRecords = true;
-    isCalendar = true;
-    linear: any = shape.curveMonotoneX; // shape.curveBasis;
+  // MODEL FORM
+  wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
+  dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
+  dashboardRecordsMaintenance: DashboardModel = new DashboardModel([], []);
+  currentPopover = null;
+  hideGraph = true;
+  hideSummary = false;
+  hideRecords = true;
+  isCalendar = true;
+  linear: any = shape.curveMonotoneX;
 
-    // DATA
-    dataMaintenance: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-    vehicleKmEstimated = 0;
-    nameMaintenanceElement = '';
-    nameMaintenance = '';
-    labelNameVehicle = '';
-    labelVehicleKm = '';
-    labelReliability = '';
-    labelPercent = 0;
-    labelNextChange = '';
-    labelLifeReplacement = '';
-    labelNotRecord = '';
-    measure: any = {};
+  // DATA
+  dataMaintenance: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
+  vehicleKmEstimated = 0;
+  nameMaintenanceElement = '';
+  nameMaintenance = '';
+  labelNameVehicle = '';
+  labelVehicleKm = '';
+  labelReliability = '';
+  labelPercent = 0;
+  labelNextChange = '';
+  labelLifeReplacement = '';
+  labelNotRecord = '';
+  measure: any = {};
 
-    // SUBSCRIPTION
-    searchSubscription: Subscription = new Subscription();
-    screenSubscription: Subscription = new Subscription();
-    settingsSubscription: Subscription = new Subscription();
+  // SUBSCRIPTION
+  searchSubscription: Subscription = new Subscription();
+  screenSubscription: Subscription = new Subscription();
+  settingsSubscription: Subscription = new Subscription();
 
-    constructor(private platform: Platform,
-                private navParams: NavParams,
-                private modalController: ModalController,
-                private dashboardService: DashboardService,
-                private configurationService: ConfigurationService,
-                private calendarService: CalendarService,
-                private controlService: ControlService,
-                private screenOrientation: ScreenOrientation,
-                private changeDetector: ChangeDetectorRef,
-                private translator: TranslateService,
-                private settingsService: SettingsService,
-                private dbService: DataBaseService) {
+  constructor(private platform: Platform,
+              private navParams: NavParams,
+              private modalController: ModalController,
+              private dashboardService: DashboardService,
+              private configurationService: ConfigurationService,
+              private calendarService: CalendarService,
+              private controlService: ControlService,
+              private screenOrientation: ScreenOrientation,
+              private changeDetector: ChangeDetectorRef,
+              private translator: TranslateService,
+              private settingsService: SettingsService,
+              private dbService: DataBaseService) {
   }
 
   ngOnInit() {
@@ -129,7 +129,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     }
 
     if (environment.isFree) {
-      this.controlService.showToast(PageEnum.MODAL_INFO, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
+      this.controlService.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
       setTimeout(() => {
         this.closeModal();
       }, Constants.DELAY_TOAST_IS_FREE);
@@ -276,13 +276,13 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
           { timeop: this.calendarService.getDateString(dateOperation), time: this.calendarService.getDateString(dateMaintenance) });
       }
     }
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
   showInfoVehicle() {
     const msg = this.translator.instant('ALERT.LastUpdateVehicleKm',
       { date: this.calendarService.getDateString(new Date(this.dataMaintenance.dateKmsVehicle)), measurelarge: this.measure.valueLarge });
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
   showInfoReliability() {
@@ -305,7 +305,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
           { maintenance: wear.descriptionMaintenance, percentKm: Math.floor((1 - wear.percentKms) * 100),
             percentTime: Math.floor((1 - wear.percentMonths) * 100), measurelarge: this.measure.valueLarge}));
     }
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
   showInfoMaintenance() {
@@ -332,7 +332,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       msg = this.translator.instant('ALERT.InfoMaintenanceWearTime',
         { maintenance: wear.descriptionMaintenance, between: msgFromTo });
     }
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST_HIGH);
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
   showInfoLifeReplacement() {
@@ -348,7 +348,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         msg += this.translator.instant('ALERT.InfoTimeNotOk');
       }
     }
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, msg, Constants.DELAY_TOAST);
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST);
   }
 
   getMaintenanceNow(wears: WearReplacementProgressBarViewModel[]): WearReplacementProgressBarViewModel {

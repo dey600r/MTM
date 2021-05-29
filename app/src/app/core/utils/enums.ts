@@ -38,3 +38,10 @@ export enum FilterKmTimeEnum {
     KM = 'KM',
     TIME = 'TIME'
 }
+
+export enum ToastTypeEnum {
+    SUCCESS = 'success',
+    WARNING = 'warning',
+    DANGER = 'danger',
+    INFO = 'primary'
+}

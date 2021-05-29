@@ -69,6 +69,7 @@ export class Constants {
     static NEXT_DEPLOY_SCRIPT_SEPARATOR = '**>';
 
     // EXPORTS AND IMPORTS
+    static OUTPUT_DIR_NAME = 'OutputMtM';
     static EXPORT_DIR_NAME = 'exports';
     static IMPORT_DIR_NAME = 'imports';
     static FILE_EMPTY_NAME = 'db.txt';

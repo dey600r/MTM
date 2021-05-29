@@ -1,22 +1,27 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { CalendarComponentOptions, DayConfig } from 'ion5-calendar';
 import { TranslateService } from '@ngx-translate/core';
 
-// UTILS
+// MODELS
 import {
   ModalInputModel, ModalOutputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
   MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel, InfoCalendarReplacementViewModel
 } from '@models/index';
+
+// SERVICES
 import {
   CalendarService, CommonService, DashboardService, ConfigurationService, VehicleService,
   ControlService, SettingsService, DataBaseService
 } from '@services/index';
-import { Constants, ConstantsColumns, WarningWearEnum, PageEnum } from '@app/core/utils';
+
+// UTILS
+import { Constants, ConstantsColumns, WarningWearEnum, PageEnum, ToastTypeEnum } from '@app/core/utils';
 import { environment } from '@environment/environment';
-import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'info-calendar',
@@ -82,7 +87,7 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
     this.initCalendar();
 
     if (environment.isFree) {
-      this.controlService.showToast(PageEnum.MODAL_INFO, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
+      this.controlService.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
       setTimeout(() => {
         this.closeModal();
       }, Constants.DELAY_TOAST_IS_FREE);
@@ -266,7 +271,7 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
     } else {
       msg = this.translator.instant('ALERT.InfoCalendarTime', {replacement: repl.nameReplacement, date: repl.dateFormat});
     }
-    this.controlService.showMsgToast(PageEnum.MODAL_CALENDAR, msg, Constants.DELAY_TOAST_HIGH);
+    this.controlService.showMsgToast(PageEnum.MODAL_CALENDAR, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
 
   // ICONS

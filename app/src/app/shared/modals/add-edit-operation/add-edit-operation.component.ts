@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/index';
+import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
@@ -130,7 +130,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     if (this.isValidForm(f)) {
       const result = this.validateDateToKm();
       if (result !== '') {
-        this.controlService.showToast(PageEnum.MODAL_OPERATION, result, null, Constants.DELAY_TOAST_HIGHER);
+        this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.WARNING, result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
         if (!this.modalInputModel.isCreate && this.idMaintenanceElementSelect.length > 0 &&
           !this.isOperationTypeWithReplacement()) {
@@ -160,11 +160,11 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     this.operationService.saveOperation(this.operation,
       (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
       this.closeModal();
-      this.controlService.showToast(PageEnum.MODAL_OPERATION,
+      this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.SUCCESS,
         this.modalInputModel.isCreate ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation',
           { operation: this.operation.description });
     }).catch(e => {
-      this.controlService.showToast(PageEnum.MODAL_OPERATION, 'PAGE_OPERATION.ErrorSaveOperation');
+      this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
     });
   }
 

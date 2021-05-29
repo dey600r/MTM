@@ -4,7 +4,7 @@ import { Form } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum } from '@app/core/utils';
+import { ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel } from '@models/index';
 import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
@@ -88,11 +88,11 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
       this.configurationService.saveConfiguration(this.configuration,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.controlService.showToast(PageEnum.MODAL_CONFIGURATION,
+        this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.SUCCESS,
           (this.modalInputModel.isCreate ? 'PAGE_CONFIGURATION.AddSaveConfiguration' : 'PAGE_CONFIGURATION.EditSaveConfiguration'),
           { configuration: this.configuration.name });
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+        this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
       });
     }
   }

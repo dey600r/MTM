@@ -13,7 +13,7 @@ import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
   OperationTypeModel, SearchDashboardModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
@@ -155,11 +155,11 @@ export class OperationPage implements OnInit {
   }
 
   showModalInfoVehicle() {
-    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddVehicleToAddOperation', Constants.DELAY_TOAST_NORMAL);
+    this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.INFO, 'ALERT.AddVehicleToAddOperation', Constants.DELAY_TOAST_NORMAL);
   }
 
   showModalInfoOperation() {
-    this.controlService.showToast(PageEnum.OPERATION, 'ALERT.AddOperationToExpenses', Constants.DELAY_TOAST_NORMAL);
+    this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.INFO, 'ALERT.AddOperationToExpenses', Constants.DELAY_TOAST_NORMAL);
   }
 
   showConfirmDelete() {
@@ -169,10 +169,10 @@ export class OperationPage implements OnInit {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
           this.operationService.saveOperation(this.rowSelected, ActionDBEnum.DELETE).then(x => {
-            this.controlService.showToast(PageEnum.OPERATION,
+            this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.SUCCESS,
               'PAGE_OPERATION.DeleteSaveOperation', {operation: this.rowSelected.description});
           }).catch(e => {
-            this.controlService.showToast(PageEnum.OPERATION, 'PAGE_OPERATION.ErrorSaveOperation');
+            this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
           });
         }
       }

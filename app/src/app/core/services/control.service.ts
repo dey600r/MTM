@@ -8,7 +8,7 @@ import * as Moment from 'moment';
 
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
-import { Constants, PageEnum } from '@utils/index';
+import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -103,7 +103,7 @@ export class ControlService {
 
     // CONFIRMS
 
-    async showConfirm(parent: PageEnum, title: string, msg: string, buttonAccept: any) {
+    async showConfirm(parent: PageEnum, title: string, msg: string, buttonAccept: any, callbackCancel: any = () => {}) {
         this.desactivateButtonExist();
         const alert = await this.alertController.create({
             header: title,
@@ -115,6 +115,7 @@ export class ControlService {
                 cssClass: 'secondary',
                 handler: () => {
                     this.activateButtonExist(parent);
+                    callbackCancel();
                 }
             }, buttonAccept
             ]
@@ -125,18 +126,19 @@ export class ControlService {
 
     // TOAST
 
-    showToast(parent: PageEnum, msg: string, data: any = null, delay: number = Constants.DELAY_TOAST,
+    showToast(parent: PageEnum, type: ToastTypeEnum, msg: string, data: any = null, delay: number = Constants.DELAY_TOAST,
               pos: string = Constants.TOAST_POSITION_BOTTOM) {
-        this.showMsgToast(parent, this.translator.instant(msg, data), delay, pos);
+        this.showMsgToast(parent, type, this.translator.instant(msg, data), delay, pos);
     }
 
-    async showMsgToast(parent: PageEnum, msg: string, delay: number = Constants.DELAY_TOAST,
+    async showMsgToast(parent: PageEnum, type: ToastTypeEnum, msg: string, delay: number = Constants.DELAY_TOAST,
                        pos: any = Constants.TOAST_POSITION_BOTTOM) {
         this.desactivateButtonExist();
         const toast = await this.toastController.create({
             message: msg,
             duration: delay,
-            position: pos
+            position: pos,
+            color: type
         });
         toast.onDidDismiss().then((dataReturned) => {
             this.activateButtonExist(parent);

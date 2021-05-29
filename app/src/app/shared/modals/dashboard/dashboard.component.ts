@@ -8,7 +8,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 // UTILS
 import { DashboardService, ControlService, VehicleService } from '@services/index';
 import { DashboardModel, OperationModel, ModalInputModel, ModalOutputModel } from '@models/index';
-import { PageEnum, Constants } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // COMPONENTS
@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     if (environment.isFree) {
-      this.controlService.showToast(PageEnum.MODAL_INFO, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
+      this.controlService.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
       setTimeout(() => {
         this.closeModal();
       }, Constants.DELAY_TOAST_IS_FREE);

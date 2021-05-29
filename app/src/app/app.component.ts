@@ -46,8 +46,7 @@ export class AppComponent {
       this.controlService.activateButtonExist(PageEnum.HOME);
 
       // FILES
-      this.settingsService.createDiretory(Constants.EXPORT_DIR_NAME);
-      this.settingsService.createDiretory(Constants.IMPORT_DIR_NAME);
+      this.settingsService.createOutputDirectory();
     });
   }
 

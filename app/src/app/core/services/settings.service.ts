@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
-import { File } from '@ionic-native/file/ngx';
+import { DirectoryEntry, File } from '@ionic-native/file/ngx';
 
 // UTILS
 import { Constants, ConstantsTable } from '@utils/index';
@@ -74,7 +74,7 @@ export class SettingsService {
     /** EXPORTS AND IMPORTS */
 
     getDataDirectory(): string {
-        return (!!this.file.externalDataDirectory ? this.file.externalDataDirectory : this.file.dataDirectory);
+        return (!!this.file.externalRootDirectory ? this.file.externalRootDirectory : this.file.dataDirectory);
     }
 
     getRootDirectory(): string {
@@ -82,29 +82,45 @@ export class SettingsService {
     }
 
     getRootPathFiles(filePath: string = ''): string {
-        return `${this.getDataDirectory()}${filePath}`;
+        return `${this.getDataDirectory()}${this.getRootRelativePath(filePath)}`;
     }
 
     getRootRelativePath(filePath: string = ''): string {
-        const dataDirectory: string = this.getDataDirectory();
-        return `${dataDirectory.substring(this.getRootDirectory().length, dataDirectory.length)}${filePath}`;
+        return `${Constants.OUTPUT_DIR_NAME}/${filePath}`;
     }
 
     getRootRealRelativePath(filePath: string = ''): string {
         const dataDirectory: string = this.getRealRelativeDirectory();
-        return `${dataDirectory.substring(this.getRootDirectory().length, dataDirectory.length)}${filePath}`;
+        return `${dataDirectory.substring(this.getRootDirectory().length, dataDirectory.length)}${this.getRootRelativePath(filePath)}`;
     }
 
     getRealRelativeDirectory(): string {
-        return (!!this.file.externalDataDirectory ? this.file.externalDataDirectory : this.getRealPathWindows());
+        return (!!this.file.externalRootDirectory ? this.file.externalRootDirectory : this.getRealPathWindows());
     }
 
     getRealPathWindows(): string {
-        return 'C:\\Users\\<USER>\\AppData\\Local\\Packages\\<52193DeyHome.MotortrackManager>\\LocalState\\';
+        return `C:\\Users\\<USER>\\AppData\\Local\\Packages\\<52193DeyHome.MotortrackManager>\\LocalState\\${Constants.OUTPUT_DIR_NAME}`;
     }
 
     getPathFile(fileName: string, filePath: string = '') {
         return this.getRootPathFiles(filePath) + '/' + fileName;
+    }
+
+    createOutputDirectory() {
+        this.file.checkDir(this.getDataDirectory(), Constants.OUTPUT_DIR_NAME).then(dir => {
+            console.log(`${Constants.OUTPUT_DIR_NAME} directory exists`);
+            this.createDiretory(Constants.EXPORT_DIR_NAME);
+            this.createDiretory(Constants.IMPORT_DIR_NAME);
+        }).catch(errCheck => {
+            console.log(`${Constants.OUTPUT_DIR_NAME} directory dont exists`);
+            this.file.createDir(this.getDataDirectory(), Constants.OUTPUT_DIR_NAME, false).then(newDir => {
+                console.log(`${Constants.OUTPUT_DIR_NAME} directory created`);
+                this.createDiretory(Constants.EXPORT_DIR_NAME);
+                this.createDiretory(Constants.IMPORT_DIR_NAME);
+            }).catch(errCreate => {
+                console.log(`Error creating ${Constants.OUTPUT_DIR_NAME} directory`);
+            });
+        });
     }
 
     createDiretory(dirName: string) {
@@ -113,6 +129,7 @@ export class SettingsService {
         }).catch(errCheck => {
             console.log(`${dirName} directory dont exists`);
             this.file.createDir(this.getRootPathFiles(), dirName, false).then(newDir => {
+                console.log(`${dirName} directory created`);
                 this.file.createFile(this.getRootPathFiles(dirName), Constants.FILE_EMPTY_NAME, true);
             }).catch(errCreate => {
                 console.log(`Error creating ${dirName} directory`);

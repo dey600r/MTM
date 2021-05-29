@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, Constants, PageEnum } from '@utils/index';
+import { ActionDBEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, MaintenanceModel,
   MaintenanceFreqModel, MaintenanceElementModel
@@ -120,22 +120,23 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
       this.configurationService.saveMaintenance(this.maintenance,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, (this.modalInputModel.isCreate ?
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.SUCCESS, (this.modalInputModel.isCreate ?
             'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),
           { maintenance: this.maintenance.description });
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
       });
     }
   }
 
   showInfoInit() {
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, this.translator.instant('ALERT.InfoMaintenanceInit'), Constants.DELAY_TOAST_HIGH);
+    this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO,
+      this.translator.instant('ALERT.InfoMaintenanceInit'), Constants.DELAY_TOAST_HIGH);
   }
 
   showInfoWear() {
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, this.translator.instant('ALERT.InfoMaintenanceWear',
-      { measurelarge: this.measure.valueLarge }), Constants.DELAY_TOAST_HIGH);
+    this.controlService.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, 'ALERT.InfoMaintenanceWear',
+    { measurelarge: this.measure.valueLarge }, Constants.DELAY_TOAST_HIGH);
   }
 
   isInitDisabled(): boolean {
