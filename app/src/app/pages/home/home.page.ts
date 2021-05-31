@@ -12,7 +12,7 @@ import {
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel
+  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel, ConfigurationModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 
@@ -70,12 +70,19 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
+    this.getSystemConfiguration();
+    this.initDashboard();
+  }
+
+  getSystemConfiguration() {
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
       }
     });
+  }
 
+  initDashboard() {
     this.dbService.getConfigurations().subscribe(configurations => {
       this.maintenanceSubscription.unsubscribe();
       if (!!configurations && configurations.length > 0) {
@@ -84,53 +91,62 @@ export class HomePage implements OnInit {
           if (!!maintenances && maintenances.length > 0) {
             this.maintenances = maintenances;
             this.vehicleSubscription = this.dbService.getVehicles().subscribe(vehicles => {
-              this.operationSubscription.unsubscribe();
-              this.operations = [];
-              this.wears = [];
-              this.allWears = [];
-              if (!!vehicles && vehicles.length > 0) {
-                const vehiclesActives: VehicleModel[] = vehicles.filter(x => x.active);
-                if (!!vehiclesActives && vehiclesActives.length > 0) {
-                  this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
-                    this.operations = operations.filter(x => x.vehicle.active);
-                    this.wears = [];
-                    this.allWears = this.dashboardService.getWearReplacementToVehicle(
-                      this.operations, vehiclesActives, configurations, maintenances);
-                    this.allWears.forEach((x, index) => {
-                      this.wears = [...this.wears, Object.assign({}, x)];
-                      let listWears: WearReplacementProgressBarViewModel[] = [];
-                      const kmVehicle: number = this.calendarService.calculateWearKmVehicleEstimated(x);
-                      x.listWearReplacement.forEach(z => {
-                      if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
-                          z.fromKmMaintenance <= kmVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= kmVehicle)) {
-                          listWears = [...listWears, z];
-                        }
-                      });
-                      this.wears.find(y => x.idVehicle === y.idVehicle).listWearReplacement = listWears;
-                    });
-                    if (!this.vehicleSelected) {
-                      this.vehicleSelected = new WearVehicleProgressBarViewModel();
-                    }
-                    this.vehicleSelected = (this.vehicleSelected.idVehicle === -1 ?
-                      this.wears[0] : this.wears.find(x => x.idVehicle === this.vehicleSelected.idVehicle));
-                    this.activateInfo = this.activateModeInfo(vehiclesActives, this.wears);
-                    this.timeOutLoader();
-                  });
-                } else {
-                  this.timeOutLoader();
-                  this.activateInfo = this.activateModeInfo(vehiclesActives, []);
-                  this.vehicleSelected = new WearVehicleProgressBarViewModel();
-                }
-              } else {
-                this.timeOutLoader();
-                this.activateInfo = this.activateModeInfo(vehicles, []);
-                this.vehicleSelected = new WearVehicleProgressBarViewModel();
-              }
+              this.calculateVehiclesToDashboard(vehicles, configurations, maintenances);
             });
           }
         });
       }
     });
+  }
+
+  calculateVehiclesToDashboard(vehicles: VehicleModel[], configurations: ConfigurationModel[], maintenances: MaintenanceModel[]) {
+    this.operationSubscription.unsubscribe();
+    this.operations = [];
+    this.wears = [];
+    this.allWears = [];
+    if (!!vehicles && vehicles.length > 0) {
+      const vehiclesActives: VehicleModel[] = vehicles.filter(x => x.active);
+      if (!!vehiclesActives && vehiclesActives.length > 0) {
+        this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
+          this.calculateDashboard(vehiclesActives, operations, configurations, maintenances);
+        });
+      } else {
+        this.timeOutLoader();
+        this.activateInfo = this.activateModeInfo(vehiclesActives, []);
+        this.vehicleSelected = new WearVehicleProgressBarViewModel();
+      }
+    } else {
+      this.timeOutLoader();
+      this.activateInfo = this.activateModeInfo(vehicles, []);
+      this.vehicleSelected = new WearVehicleProgressBarViewModel();
+    }
+  }
+
+  calculateDashboard(vehiclesActives: VehicleModel[], operations: OperationModel[],
+                     configurations: ConfigurationModel[], maintenances: MaintenanceModel[]) {
+    this.operations = operations.filter(x => x.vehicle.active);
+    this.wears = [];
+    this.allWears = this.dashboardService.getWearReplacementToVehicle(
+      this.operations, vehiclesActives, configurations, maintenances);
+    this.allWears.forEach((x, index) => {
+      this.wears = [...this.wears, Object.assign({}, x)];
+      let listWears: WearReplacementProgressBarViewModel[] = [];
+      const kmVehicle: number = this.calendarService.calculateWearKmVehicleEstimated(x);
+      x.listWearReplacement.forEach(z => {
+      if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
+          z.fromKmMaintenance <= kmVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= kmVehicle)) {
+          listWears = [...listWears, z];
+        }
+      });
+      this.wears.find(y => x.idVehicle === y.idVehicle).listWearReplacement = listWears;
+    });
+    if (!this.vehicleSelected) {
+      this.vehicleSelected = new WearVehicleProgressBarViewModel();
+    }
+    this.vehicleSelected = (this.vehicleSelected.idVehicle === -1 ?
+      this.wears[0] : this.wears.find(x => x.idVehicle === this.vehicleSelected.idVehicle));
+    this.activateInfo = this.activateModeInfo(vehiclesActives, this.wears);
+    this.timeOutLoader();
   }
 
   ionViewDidEnter() {

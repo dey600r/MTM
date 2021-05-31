@@ -609,11 +609,11 @@ export class DashboardService {
     }
 
     calculatePercent(total: number, value: number): number {
-        return (total === 0 ? 0 : (value >= 0 ? (total - value) / total : 1));
+        return (total === 0 || total === null ? 0 : (value >= 0 ? (total - value) / total : 1));
     }
 
     calculatePercentNegative(total: number, value: number): number {
-        return (total === 0 ? 0 : (value >= 0 ? value / total : 1));
+        return (total === 0 || total === null ? 0 : (value >= 0 ? value / total : 1));
     }
 
     getDateCalculateMonths(time: number): string {

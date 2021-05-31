@@ -1,16 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-header-skeleton',
   templateUrl: './header-skeleton.component.html',
   styleUrls: ['./header-skeleton.component.scss'],
 })
-export class HeaderSkeletonComponent implements OnInit {
+export class HeaderSkeletonComponent {
 
   @Input() input: number[] = [];
-
-  constructor() { }
-
-  ngOnInit() {}
 
 }

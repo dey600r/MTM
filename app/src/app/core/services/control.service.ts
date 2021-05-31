@@ -9,6 +9,7 @@ import * as Moment from 'moment';
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { environment } from '@environment/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -57,6 +58,21 @@ export class ControlService {
         return this.translator.currentLang === 'es' ? Constants.DATE_FORMAT_ES : Constants.DATE_FORMAT_EN;
     }
 
+    // IS MTM FREE
+
+    isAppFree(modalController: ModalController, ) {
+        if (environment.isFree) {
+            this.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
+            setTimeout(() => {
+                this.closeModal(modalController);
+            }, Constants.DELAY_TOAST_IS_FREE);
+        }
+    }
+
+    async closeModal(modalController: ModalController) {
+        await modalController.dismiss(new ModalOutputModel(true));
+    }
+
     // EXIT BUTTON
 
     activateButtonExist(parent: PageEnum) {
@@ -102,7 +118,6 @@ export class ControlService {
     }
 
     // CONFIRMS
-
     async showConfirm(parent: PageEnum, title: string, msg: string, buttonAccept: any, callbackCancel: any = () => {}) {
         this.desactivateButtonExist();
         const alert = await this.alertController.create({

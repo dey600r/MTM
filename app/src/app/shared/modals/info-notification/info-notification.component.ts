@@ -16,7 +16,6 @@ import {
   SettingsService, DataBaseService
 } from '@services/index';
 import { WarningWearEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
-import { environment } from '@environment/environment';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
@@ -81,65 +80,75 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
         this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.measure = this.settingsService.getDistanceSelected(settings);
-      }
-    });
+    this.getSettings();
 
     this.configureResume();
 
-    this.wear = this.dashboardService.getWearReplacement(this.modalInputModel.data, this.modalInputModel.dataList);
+    this.initInfoNotifications();
 
-    if (this.wear.listWearReplacement.length > 0) {
-      this.labelPercent = this.wear.percent;
-      this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
-        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-        if (!this.hideGraph) {
-          this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,
-            this.modalInputModel.dataList.filter(x => this.wear.listWearReplacement.some(y => y.idOperation === x.id)), filter);
-        }
-        if (!this.hideRecords) {
-          this.dashboardRecordsMaintenance =
-            this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter, this.measure);
-        }
-      });
-
-      this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-        let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
-        this.dashboardVehicleExpenses.view = windowSize;
-        this.dashboardRecordsMaintenance.view = windowSize;
-        setTimeout(() => {
-          windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-          if (windowSize[0] === windowSize[1]) {
-            this.dashboardVehicleExpenses.view = windowSize;
-            this.dashboardRecordsMaintenance.view = windowSize;
-            this.changeDetector.detectChanges();
-          }
-        }, 200);
-      });
-    } else {
-      const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
-      this.isCalendar = false;
-      this.labelPercent = Math.round((1 -
-        (wear.timeMaintenance === 0 ? wear.percentKms : (wear.percentKms + wear.percentMonths) / 2)) * 100);
-      if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
-        this.labelNotRecord = this.translator.instant('PAGE_HOME.NotExistRecords', {maintenance: this.nameMaintenanceElement });
-      }
-    }
-
-    if (environment.isFree) {
-      this.controlService.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
-      setTimeout(() => {
-        this.closeModal();
-      }, Constants.DELAY_TOAST_IS_FREE);
-    }
+    this.controlService.isAppFree(this.modalController);
   }
 
   ngOnDestroy() {
     this.searchSubscription.unsubscribe();
     this.screenSubscription.unsubscribe();
     this.settingsSubscription.unsubscribe();
+  }
+
+  initInfoNotifications() {
+    this.wear = this.dashboardService.getWearReplacement(this.modalInputModel.data, this.modalInputModel.dataList);
+
+    if (this.wear.listWearReplacement.length > 0) {
+      this.labelPercent = this.wear.percent;
+      this.getObserverSearchDashboard();
+      this.getObserverOrientationChange();
+    } else {
+      const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
+      this.isCalendar = false;
+      this.labelPercent = Math.round((1 - (wear.timeMaintenance === 0 || wear.timeMaintenance === null ?
+          wear.percentKms : (wear.percentKms + wear.percentMonths) / 2)) * 100);
+      if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
+        this.labelNotRecord = this.translator.instant('PAGE_HOME.NotExistRecords', {maintenance: this.nameMaintenanceElement });
+      }
+    }
+  }
+
+  getObserverSearchDashboard() {
+    this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
+      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+      if (!this.hideGraph) {
+        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,
+          this.modalInputModel.dataList.filter(x => this.wear.listWearReplacement.some(y => y.idOperation === x.id)), filter);
+      }
+      if (!this.hideRecords) {
+        this.dashboardRecordsMaintenance =
+          this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter, this.measure);
+      }
+    });
+  }
+
+  getObserverOrientationChange() {
+    this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
+      let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      this.dashboardVehicleExpenses.view = windowSize;
+      this.dashboardRecordsMaintenance.view = windowSize;
+      setTimeout(() => {
+        windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        if (windowSize[0] === windowSize[1]) {
+          this.dashboardVehicleExpenses.view = windowSize;
+          this.dashboardRecordsMaintenance.view = windowSize;
+          this.changeDetector.detectChanges();
+        }
+      }, 200);
+    });
+  }
+
+  getSettings() {
+    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
+      if (!!settings && settings.length > 0) {
+        this.measure = this.settingsService.getDistanceSelected(settings);
+      }
+    });
   }
 
   configureResume() {
@@ -178,11 +187,16 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     }
     const calendarKm: InfoCalendarReplacementViewModel =
       this.calendarService.createInfoCalendarReplacement(this.dataMaintenance, wear, true);
+    const calendarTime: InfoCalendarReplacementViewModel =
+      this.calendarService.createInfoCalendarReplacement(this.dataMaintenance, wear, false);
+    const dateMaintenance: Date = (calendarKm.date < calendarTime.date || wear.timeMaintenance === null ?
+      calendarKm.date : calendarTime.date);
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
       {
         maintenance: this.nameMaintenanceElement,
         km: (calendarKm.km > this.vehicleKmEstimated ? calendarKm.km : this.vehicleKmEstimated),
-        date: (calendarKm.km > this.vehicleKmEstimated ? calendarKm.dateFormat : this.calendarService.getDateString(today)),
+        date: (calendarKm.km > this.vehicleKmEstimated ?
+          this.calendarService.getDateString(dateMaintenance) : this.calendarService.getDateString(today)),
         measure: this.measure.value
       });
   }
@@ -289,7 +303,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     let msg = '';
     if (this.wear.listWearReplacement.length > 0) {
       const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.wear.listWearReplacement);
-      msg = (wear.timeMaintenance === 0 ?
+      msg = (wear.timeMaintenance === 0 || wear.timeMaintenance === null ?
         this.translator.instant('ALERT.InfoReliabilityPercentKm',
           { maintenance: wear.descriptionMaintenance, percentKm: this.wear.percentKm, measurelarge: this.measure.valueLarge }) :
         this.translator.instant('ALERT.InfoReliabilityPercentTime',
@@ -297,7 +311,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
             measurelarge: this.measure.valueLarge }));
     } else {
       const wear: WearReplacementProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearReplacement);
-      msg = (wear.timeMaintenance === 0 ?
+      msg = (wear.timeMaintenance === 0 || wear.timeMaintenance === null ?
         this.translator.instant('ALERT.InfoReliabilityPercentKm',
           { maintenance: wear.descriptionMaintenance, percentKm: Math.floor((1 - wear.percentKms) * 100),
             measurelarge: this.measure.valueLarge }) :
@@ -322,7 +336,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         msgFromTo += ` ${translateBetween} ${x.fromKmMaintenance} ${this.measure.value} ${translateAnd} ` +
         `${(x.toKmMaintenance === null ? '∞' : x.toKmMaintenance)} ${this.measure.value}`;
       }
-      msgFromTo += (x.timeMaintenance === 0 ? '' : ` ${translateOr} ${x.timeMaintenance} ${translateMonths}`);
+      msgFromTo += (x.timeMaintenance === 0 || x.timeMaintenance === null ? '' : ` ${translateOr} ${x.timeMaintenance} ${translateMonths}`);
       msgFromTo += index + 1 === this.dataMaintenance.listWearReplacement.length ? ' ' : ` ${translateAnd} `;
     });
     if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
@@ -364,8 +378,9 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.controlService.showPopover(PageEnum.MODAL_INFO, ev, SearchDashboardPopOverComponent, this.modalInputModel);
   }
 
-  async closeModal() {
+  closeModal() {
     this.modalOutputModel = new ModalOutputModel(true);
-    await this.modalController.dismiss(this.modalOutputModel);
+    this.controlService.closeModal(this.modalController);
   }
+
 }

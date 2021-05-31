@@ -20,8 +20,6 @@ import {
 
 // UTILS
 import { Constants, ConstantsColumns, WarningWearEnum, PageEnum, ToastTypeEnum } from '@app/core/utils';
-import { environment } from '@environment/environment';
-
 
 @Component({
   selector: 'info-calendar',
@@ -86,21 +84,11 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
 
     this.initCalendar();
 
-    if (environment.isFree) {
-      this.controlService.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
-      setTimeout(() => {
-        this.closeModal();
-      }, Constants.DELAY_TOAST_IS_FREE);
-    }
+    this.controlService.isAppFree(this.modalController);
   }
 
   ngOnDestroy() {
     this.settingsSubscription.unsubscribe();
-  }
-
-  async closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
-    await this.modalController.dismiss(this.modalOutputModel);
   }
 
   initCalendar() {
@@ -171,30 +159,34 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
           node = node.parentElement;
         }
         if (node.nodeName === 'ION-BUTTON') {
-          if (!this.select && !this.monthChange) {
-            if ($event.target.innerText.includes(this.yearSelect)) {
-              this.yearSelect = Number($event.target.innerText.split(' ')[1]);
-              this.yearActive = !this.yearActive;
-              if (this.yearActive) { // TURN ON YEARS
-                this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
-              } else { // TURN OFF YEARS
-                this.showNotificationBetweenDates(
-                  new Date(this.yearSelect, this.monthSelect, 1), new Date(this.yearSelect, this.monthSelect + 1, 0));
-              }
-            } else if (!!node.classList && node.classList.length > 0) {
-              if (node.classList.contains('back')) { // BACK YEAR
-                this.yearSelect -= 1;
-              } else if (node.classList.contains('forward')) { // FORWARD YEAR
-                this.yearSelect += 1;
-              }
-              this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
-            }
-          }
+          this.actionButtonCalendar($event, node);
         }
         this.select = false;
         this.monthChange = false;
         this.activeSpinner = false;
       }, 150);
+    }
+  }
+
+  actionButtonCalendar($event: any, node: any) {
+    if (!this.select && !this.monthChange) {
+      if ($event.target.innerText.includes(this.yearSelect)) {
+        this.yearSelect = Number($event.target.innerText.split(' ')[1]);
+        this.yearActive = !this.yearActive;
+        if (this.yearActive) { // TURN ON YEARS
+          this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
+        } else { // TURN OFF YEARS
+          this.showNotificationBetweenDates(
+            new Date(this.yearSelect, this.monthSelect, 1), new Date(this.yearSelect, this.monthSelect + 1, 0));
+        }
+      } else if (!!node.classList && node.classList.length > 0) {
+        if (node.classList.contains('back')) { // BACK YEAR
+          this.yearSelect -= 1;
+        } else if (node.classList.contains('forward')) { // FORWARD YEAR
+          this.yearSelect += 1;
+        }
+        this.showNotificationBetweenDates(new Date(this.yearSelect, 0, 1), new Date(this.yearSelect, 11, 31));
+      }
     }
   }
 
@@ -292,5 +284,10 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
   getIconVehicle(infoVehicle: InfoCalendarVehicleViewModel): string {
     return this.vehicleService.getIconVehicle(new VehicleModel(null, null, null, null, null,
       new VehicleTypeModel(infoVehicle.typeVehicle)));
+  }
+
+  closeModal() {
+    this.modalOutputModel = new ModalOutputModel(true);
+    this.controlService.closeModal(this.modalController);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -25,7 +25,7 @@ import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.compo
   templateUrl: 'operation.page.html',
   styleUrls: ['operation.page.scss', '../../app.component.scss']
 })
-export class OperationPage implements OnInit {
+export class OperationPage {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
@@ -67,10 +67,6 @@ export class OperationPage implements OnInit {
   }
 
   /** INIT */
-
-  ngOnInit() {
-
-  }
 
   initPage() {
 

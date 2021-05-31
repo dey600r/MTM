@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -22,7 +22,7 @@ import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance
   templateUrl: 'configuration.page.html',
   styleUrls: ['../../app.component.scss']
 })
-export class ConfigurationPage implements OnInit {
+export class ConfigurationPage {
 
   // MODAL
   dataReturned: ModalOutputModel;
@@ -53,16 +53,13 @@ export class ConfigurationPage implements OnInit {
               private configurationService: ConfigurationService,
               private settingsService: SettingsService,
               private detector: ChangeDetectorRef) {
-      this.platform.ready().then(() => {
-        let userLang = navigator.language.split('-')[0];
-        userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-        this.translator.use(userLang);
-      }).finally(() => {
-        this.initPage();
-      });
-    }
-
-  ngOnInit() {
+    this.platform.ready().then(() => {
+      let userLang = navigator.language.split('-')[0];
+      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
+      this.translator.use(userLang);
+    }).finally(() => {
+      this.initPage();
+    });
   }
 
   initPage() {

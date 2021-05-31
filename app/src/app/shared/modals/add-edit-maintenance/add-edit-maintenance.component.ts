@@ -172,8 +172,12 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   }
 
   changeRange() {
-    this.showRange = (this.valueRange.upper === this.maxKm && this.valueRange.lower === 0 ? '' :
-      `[ ${this.valueRange.lower}${this.measure.value} - ${(this.valueRange.upper === this.maxKm ? '∞' :
-      `${this.valueRange.upper}${this.measure.value}`)} ]`);
+    const valueUpperMax: boolean = this.valueRange.upper === this.maxKm;
+    if (valueUpperMax && this.valueRange.lower === 0) {
+      this.showRange = '';
+    } else {
+      const value = `${this.valueRange.upper}${this.measure.value}`;
+      this.showRange = `[ ${this.valueRange.lower}${this.measure.value} - ${(valueUpperMax ? '∞' : value)} ]`;
+    }
   }
 }
