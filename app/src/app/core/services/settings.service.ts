@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
-import { DirectoryEntry, File } from '@ionic-native/file/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 // UTILS
 import { Constants, ConstantsTable } from '@utils/index';

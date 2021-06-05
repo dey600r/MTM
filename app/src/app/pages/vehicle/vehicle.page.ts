@@ -120,7 +120,7 @@ export class VehiclePage implements OnInit {
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.vehicleService.saveVehicle(this.rowSelected, ActionDBEnum.DELETE, ops).then(x => {
+          this.vehicleService.saveVehicle([this.rowSelected], ActionDBEnum.DELETE, ops).then(x => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_VEHICLE.DeleteSaveVehicle',
               { vehicle: `${this.rowSelected.brand} ${this.rowSelected.model}` });
           }).catch(e => {

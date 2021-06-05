@@ -112,7 +112,7 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
         if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.vehicle.km) {
           this.vehicle.dateKms = new Date();
         }
-        this.vehicleService.saveVehicle(this.vehicle,
+        this.vehicleService.saveVehicle([this.vehicle],
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
           this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.SUCCESS,

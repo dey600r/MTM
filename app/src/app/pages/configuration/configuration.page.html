@@ -16,27 +16,42 @@
 <ion-content [hidden]="!loaded">
   <!-- CONFIGURATIONS -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 1">
-    <ion-item button *ngFor="let c of configurations">
-      <!-- Labels -->
-      <ion-label class="min-width75 label-event-force" (click)="openConfigurationModal(c, false)">
-        <h2 class="text-overflow">{{ c.name }}</h2>
-        <h3 class="text-overflow">{{ c.description }}</h3>
-      </ion-label>
-      <!-- Buttons edit / create -->
-      <ion-label *ngIf="c.master" class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-          </ion-button>
+    <ion-item-sliding *ngFor="let c of configurations" #slidingItem>
+      <!-- SLIDING START -->
+      <ion-item-options side="start" *ngIf="vehicles.length > 0">
+        <ion-item-option class="day-circle-config-blue" (click)="openSelect(slidingItem, c)">
+          <ion-icon slot="icon-only" name="home"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item button>
+        <!-- Labels -->
+        <ion-label class="min-width75 label-event-force" (click)="openConfigurationModal(c, false)">
+          <h2 class="text-overflow">{{ c.name }}</h2>
+          <h3 class="text-overflow">{{ c.description }}</h3>
         </ion-label>
-      </ion-label>
-      <ion-label *ngIf="!c.master" class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
-            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-          </ion-button>
+        <!-- Buttons edit / create -->
+        <ion-label *ngIf="c.master" class="align-right fix-width69">
+          <ion-label>
+            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+              <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+            </ion-button>
+          </ion-label>
         </ion-label>
-      </ion-label>
+        <ion-label *ngIf="!c.master" class="align-right fix-width69">
+          <ion-label>
+            <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
+              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </ion-label>
+        </ion-label>
+      </ion-item>
+    </ion-item-sliding>
+    <ion-item hidden>
+      <ion-label>{{ 'COMMON.VEHICLES' | translate }}</ion-label>
+      <ion-select #selectVehicles name="selectVehicles" multiple [cancelText]="this.translateCancel"
+          [okText]="this.translateAccept" [(ngModel)]="this.vehiclesSelected" (ionChange)="changeVehicleSelected()">
+        <ion-select-option [(value)]="v.id" *ngFor="let v of vehicles">{{ v.brand + ' ' + v.model }}</ion-select-option>
+      </ion-select>
     </ion-item>
   </ion-list>
   <!-- MAINTENANCES -->

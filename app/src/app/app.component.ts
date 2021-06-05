@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, ControlService, SettingsService } from '@services/index';
-import { PageEnum, Constants } from './core/utils';
+import { PageEnum } from './core/utils';
 
 @Component({
   selector: 'app-root',

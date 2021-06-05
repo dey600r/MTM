@@ -199,7 +199,9 @@
         "DeleteSaveReplacement": "The spare part {{replacement}} has been deleted succesfully",
         "ErrorSaveReplacement": "There was an erro while saving spare part data",
         "ConfirmDeleteReplacement": "The spare part {{replacement}} will be deleted. Do you wish continue?",
-        "ConfirmDeleteReplacementWithOperations": "The spare part {{replacement}} will be deleted with its operations associated. Do you wish continue?"
+        "ConfirmDeleteReplacementWithOperations": "The spare part {{replacement}} will be deleted with its operations associated. Do you wish continue?",
+        "ConfirmSaveVehiclesAssociatedToConfiguration": "The selected vehicles will be associated to the configuration {{configuration}}. The deselected vehicles will be associated to the production configuration. Do you wish continue?",
+        "EditSaveVehiclesAssociated": "The vehicles has been associated succesfully to configuration"
     },
     "ALERT" : {
         "INFO": "Info",

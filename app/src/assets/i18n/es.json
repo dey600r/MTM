@@ -199,7 +199,9 @@
         "DeleteSaveReplacement": "El recambio {{replacement}} ha sido borrada correctamente",
         "ErrorSaveReplacement": "Ha ocurrido un error guardando los datos del recambio",
         "ConfirmDeleteReplacement": "El recambio {{replacement}} se va a borrar. ¿Desea continuar?",
-        "ConfirmDeleteReplacementWithOperations": "El recambio {{replacement}} se va a borrar con sus operaciones asociadas. ¿Desea continuar?"
+        "ConfirmDeleteReplacementWithOperations": "El recambio {{replacement}} se va a borrar con sus operaciones asociadas. ¿Desea continuar?",
+        "ConfirmSaveVehiclesAssociatedToConfiguration": "Los vehículos seleccionados se asociarán a la configuración {{configuration}}. Los vehiculos deseleccionados se asociarán a la configuración de fábrica. ¿Desea Continuar?",
+        "EditSaveVehiclesAssociated": "Los vehículos han sido asociados correctamente a la configuración"
     },
     "ALERT" : {
         "INFO": "Info",

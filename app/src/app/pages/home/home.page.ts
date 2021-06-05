@@ -272,16 +272,18 @@ export class HomePage implements OnInit {
       AddEditOperationComponent, new ModalInputModel(true, operation, [], PageEnum.HOME));
   }
 
-  openModalMaintenance(w: WearReplacementProgressBarViewModel = null, create: boolean = true): void {
+  openModalMaintenance(itemSliding: any, w: WearReplacementProgressBarViewModel = null, create: boolean = true): void {
     let rowMaintenance: MaintenanceModel = new MaintenanceModel();
     if (w !== null) {
       rowMaintenance = this.maintenances.find(x => x.id === w.idMaintenance);
     }
+    if (itemSliding) { itemSliding.close(); }
     this.controlService.openModal(PageEnum.HOME,
       AddEditMaintenanceComponent, new ModalInputModel(create, rowMaintenance, [this.vehicleSelected.kmVehicle], PageEnum.HOME));
   }
 
-  desactivateMaintenance(w: WearReplacementProgressBarViewModel): void {
+  desactivateMaintenance(itemSliding: any, w: WearReplacementProgressBarViewModel): void {
+    if (itemSliding) { itemSliding.close(); }
     if (this.vehicleSelected.idConfiguration === 1) {
       this.controlService.showToast(PageEnum.HOME, ToastTypeEnum.WARNING, 'PAGE_HOME.ValidateDeleteConfigurationMaintenance',
               {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration},
