@@ -15,7 +15,7 @@
     <preference name="android-minSdkVersion" value="22" />
     <preference name="android-targetSdkVersion" value="29" />
     <preference name="WindowsStoreIdentityName" value="52193DeyHome.MotortrackManager" />
-    <preference name="WindowsStorePublisherName" value="DeyHome" />
+    <preference name="WindowsStorePublisherName" value="DeyApps" />
     <preference name="WindowsStoreDisplayName" value="Motor Track Manager" />
     <preference name="windows-target-version" value="10.0" />
     <preference name="windows-phone-target-version" value="10.0" />

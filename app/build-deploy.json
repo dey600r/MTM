@@ -7,7 +7,7 @@
         },
         "release": {
             "packageCertificateKeyFile": "C:/Proyectos/MTM/Utils/Versions/Windows/mtm-certificate-store-windows.pfx",
-            "packageThumbprint": "12DA30109039E058955F4BD867EA793103151465",
+            "packageThumbprint": "01FD13CF2FD59C1D3C02D9682049B8A7114CAB07",
             "publisherId": "CN=80134EF7-25E7-4845-874A-1C3C8CEA4CAE"
         }
     }

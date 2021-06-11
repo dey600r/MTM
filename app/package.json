@@ -89,7 +89,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^8.9.5",
     "codelyzer": "^6.0.0",
-    "cordova-android": "^9.1.0",
+    "cordova-android": "^8.1.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
