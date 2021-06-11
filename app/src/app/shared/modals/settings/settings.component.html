@@ -76,18 +76,13 @@
         </ion-label>
         <div class="table-row">
           <div class="min-width90">
-            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathImports" (click)="showRealImportPath()"></ion-input>
-            <ion-select class="min-width100" interface="popover" [(ngModel)]="importFileSelected" placeholder="{{ 'COMMON.SELECT' | translate }}">
-              <ion-select-option [(value)]="n.name" *ngFor="let n of listImportsFile" >{{n.name}}</ion-select-option>
-            </ion-select>
+            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathImports"></ion-input>
           </div>
           <div class="max-width60">
-            <ion-button fill="clear" (click)="importData()">
+            <ion-button fill="clear" (click)="f.click()">
               <ion-icon class="btn-color" name="enter"></ion-icon>
             </ion-button>
-            <ion-button fill="clear" (click)="deleteImportFiles()">
-              <ion-icon class="btn-color" name="trash"></ion-icon>
-            </ion-button>
+            <input id="file-input" class="ion-hide" #f type="file" (change)="validFileAndImport($event)">    
           </div>
         </div>
       </div>

@@ -33,10 +33,10 @@
   <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- List Vehicles -->
   <ion-list *ngIf="!activateInfo" class="segment-top margin-bottom55">
-    <ion-item-sliding *ngFor="let w of this.vehicleSelected.listWearReplacement">
+    <ion-item-sliding *ngFor="let w of this.vehicleSelected.listWearReplacement" #itemSliding>
       <!-- SLIDING START -->
       <ion-item-options side="start">
-        <ion-item-option class="day-circle-config-skull" (click)="desactivateMaintenance(w)">
+        <ion-item-option class="day-circle-config-skull" (click)="desactivateMaintenance(itemSliding, w)">
           <ion-icon slot="icon-only" name="notifications-off"></ion-icon>
         </ion-item-option>
       </ion-item-options>
@@ -95,7 +95,7 @@
       </ion-item>
       <!-- SLIDING END -->
       <ion-item-options side="end">
-        <ion-item-option class="day-circle-config-blue" (click)="openModalMaintenance(w, false)">
+        <ion-item-option class="day-circle-config-blue" (click)="openModalMaintenance(itemSliding, w, false)">
           <ion-icon slot="icon-only" name="build"></ion-icon>
         </ion-item-option>
       </ion-item-options>

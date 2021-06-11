@@ -8,8 +8,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 // UTILS
 import { DashboardService, ControlService, VehicleService } from '@services/index';
 import { DashboardModel, OperationModel, ModalInputModel, ModalOutputModel } from '@models/index';
-import { PageEnum, Constants } from '@utils/index';
-import { environment } from '@environment/environment';
+import { PageEnum } from '@utils/index';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
@@ -85,12 +84,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }, 200);
     });
 
-    if (environment.isFree) {
-      this.controlService.showToast(PageEnum.MODAL_INFO, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
-      setTimeout(() => {
-        this.closeModal();
-      }, Constants.DELAY_TOAST_IS_FREE);
-    }
+    this.controlService.isAppFree(this.modalController);
   }
 
   ngOnDestroy() {
@@ -98,9 +92,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.screenSubscription.unsubscribe();
   }
 
-  async closeModal() {
+  closeModal() {
     this.modalOutputModel = new ModalOutputModel(true);
-    await this.modalController.dismiss(this.modalOutputModel);
+    this.controlService.closeModal(this.modalController);
   }
 
   getParent(page: PageEnum): PageEnum {

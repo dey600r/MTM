@@ -1,12 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, ChangeDetectorRef, ViewChildren, ViewChild } from '@angular/core';
+import { IonSelect, Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
-import { ConstantsColumns, ActionDBEnum, PageEnum, Constants } from '@utils/index';
+import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService } from '@services/index';
+import { ConstantsColumns, ActionDBEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
   VehicleModel, OperationModel
@@ -22,7 +22,7 @@ import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance
   templateUrl: 'configuration.page.html',
   styleUrls: ['../../app.component.scss']
 })
-export class ConfigurationPage implements OnInit {
+export class ConfigurationPage {
 
   // MODAL
   dataReturned: ModalOutputModel;
@@ -42,8 +42,14 @@ export class ConfigurationPage implements OnInit {
   measure: any = {};
   segmentHeader: any[] = [];
   segmentSelected = 1;
+  vehiclesSelected: number[] = [];
+  translateAccept = '';
+  translateCancel = '';
+  changeFake = false;
 
   loaded = false;
+
+  @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -52,17 +58,15 @@ export class ConfigurationPage implements OnInit {
               private controlService: ControlService,
               private configurationService: ConfigurationService,
               private settingsService: SettingsService,
+              private vehicleService: VehicleService,
               private detector: ChangeDetectorRef) {
-      this.platform.ready().then(() => {
-        let userLang = navigator.language.split('-')[0];
-        userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-        this.translator.use(userLang);
-      }).finally(() => {
-        this.initPage();
-      });
-    }
-
-  ngOnInit() {
+    this.platform.ready().then(() => {
+      let userLang = navigator.language.split('-')[0];
+      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
+      this.translator.use(userLang);
+    }).finally(() => {
+      this.initPage();
+    });
   }
 
   initPage() {
@@ -85,7 +89,7 @@ export class ConfigurationPage implements OnInit {
         this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
       }
       // Filter to get less elemnts to better perfomance
-      this.vehicles = data.filter(x => x.configuration.id !== 1);
+      this.vehicles = data;
     });
 
     this.dbService.getOperations().subscribe(data => {
@@ -140,6 +144,24 @@ export class ConfigurationPage implements OnInit {
     return this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE;
   }
 
+  openSelect(itemSliding: any, configuration: ConfigurationModel) {
+    this.rowConfSelected = configuration;
+    if (this.translateAccept === '') { this.translateAccept = this.translator.instant('COMMON.ACCEPT'); }
+    if (this.translateCancel === '') { this.translateCancel = this.translator.instant('COMMON.CANCEL'); }
+    this.vehiclesSelected = this.vehicles.filter(x => x.configuration.id === configuration.id).map(x => x.id);
+    this.changeFake = true;
+    if (itemSliding) { itemSliding.close(); }
+    this.detector.detectChanges();
+    this.selectVehicles.open();
+  }
+
+  changeVehicleSelected() {
+    if (!this.changeFake) {
+      this.showConfirmSaveVehiclesAssociatedToConfiguration();
+    }
+    this.changeFake = false;
+  }
+
   /** CONFIGURATION */
 
   openConfigurationModal(row: ConfigurationModel = new ConfigurationModel(), create: boolean = true) {
@@ -174,14 +196,55 @@ export class ConfigurationPage implements OnInit {
             x.configuration.id = 1;
           });
           this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, vehiclesDeleteConfig).then(x => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveConfiguration',
-              { configuration: this.rowConfSelected.name });
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
+               'PAGE_CONFIGURATION.DeleteSaveConfiguration', { configuration: this.rowConfSelected.name });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
           });
         }
       }
     );
+  }
+
+  showConfirmSaveVehiclesAssociatedToConfiguration() {
+    const msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmSaveVehiclesAssociatedToConfiguration',
+      { configuration: this.rowConfSelected.name });
+    this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,
+    {
+      text: this.translator.instant('COMMON.ACCEPT'),
+      handler: () => {
+        this.saveVehiclesAssociatedToConfiguration();
+      }
+    });
+  }
+
+  saveVehiclesAssociatedToConfiguration() {
+    const vehiclesAssociatedToConfigurationSelected: VehicleModel[] =
+      this.vehicles.filter(x => x.configuration.id === this.rowConfSelected.id);
+    const vehiclesChangeToConfigurationDefault: VehicleModel[] = vehiclesAssociatedToConfigurationSelected.filter(x =>
+      !this.vehiclesSelected.some(y => y === x.id));
+    const vehiclesChangeToConfigurationSelected: VehicleModel[] = this.vehicles.filter(x =>
+      this.vehiclesSelected.some(y => y === x.id));
+    let vehiclesToSave: VehicleModel[] = [];
+    if (vehiclesChangeToConfigurationDefault.length > 0) {
+      vehiclesChangeToConfigurationDefault.forEach(x => {
+        x.configuration.id = 1;
+        vehiclesToSave = [...vehiclesToSave, x];
+      });
+    }
+    if (vehiclesChangeToConfigurationSelected.length > 0) {
+      vehiclesChangeToConfigurationSelected.forEach(x => {
+        x.configuration.id = this.rowConfSelected.id;
+        vehiclesToSave = [...vehiclesToSave, x];
+      });
+    }
+    if (vehiclesToSave.length > 0) {
+      this.vehicleService.saveVehicle(vehiclesToSave, ActionDBEnum.UPDATE).then(res => {
+        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_CONFIGURATION.EditSaveVehiclesAssociated');
+      }).catch(e => {
+        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+      });
+    }
   }
 
   /** MAINTENANCE */
@@ -211,10 +274,10 @@ export class ConfigurationPage implements OnInit {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
           this.configurationService.saveMaintenance(this.rowMainSelected, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveMaintenance',
-              { maintenance: this.rowMainSelected.description });
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
+              'PAGE_CONFIGURATION.DeleteSaveMaintenance', { maintenance: this.rowMainSelected.description });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
           });
         }
       }
@@ -256,10 +319,10 @@ export class ConfigurationPage implements OnInit {
         handler: () => {
           this.configurationService.saveMaintenanceElement(this.rowReplSelected,
               ActionDBEnum.DELETE, operationsWithReplacement).then(x => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.DeleteSaveReplacement',
-              { replacement: this.rowReplSelected.name });
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
+              'PAGE_CONFIGURATION.DeleteSaveReplacement', { replacement: this.rowReplSelected.name });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
           });
         }
       }

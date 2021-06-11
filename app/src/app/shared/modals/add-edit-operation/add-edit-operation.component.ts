@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDBEnum, ConstantsColumns, PageEnum } from '@utils/index';
+import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
   ModalInputModel, ModalOutputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
@@ -130,7 +130,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     if (this.isValidForm(f)) {
       const result = this.validateDateToKm();
       if (result !== '') {
-        this.controlService.showToast(PageEnum.MODAL_OPERATION, result, null, Constants.DELAY_TOAST_HIGHER);
+        this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.WARNING, result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
         if (!this.modalInputModel.isCreate && this.idMaintenanceElementSelect.length > 0 &&
           !this.isOperationTypeWithReplacement()) {
@@ -160,11 +160,11 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     this.operationService.saveOperation(this.operation,
       (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
       this.closeModal();
-      this.controlService.showToast(PageEnum.MODAL_OPERATION,
+      this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.SUCCESS,
         this.modalInputModel.isCreate ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation',
           { operation: this.operation.description });
     }).catch(e => {
-      this.controlService.showToast(PageEnum.MODAL_OPERATION, 'PAGE_OPERATION.ErrorSaveOperation');
+      this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
     });
   }
 
@@ -251,12 +251,6 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
 
   validateDateToKm(): string {
     let msgResult = '';
-    const dateSelected = new Date(this.operation.date);
-    const kmSelected = this.operation.km;
-    const minDate = this.calculateMinDate(this.operation);
-    const maxDate = this.calculateMaxDate(this.operation);
-    const minKm = this.calculateMinKm(this.operation);
-    const maxKm = this.calculateMaxKm(this.operation);
     const vehicle: VehicleModel = this.vehicles.find(x => x.id === this.operation.vehicle.id);
 
     // Validate not future
@@ -264,37 +258,61 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       msgResult = this.translator.instant('PAGE_OPERATION.AddDateNotFuture');
     } else {
       // Validate min and max date operation
-      if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
-        msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
-                  {
-                    dateIni: this.calendarService.getDateString(minDate),
-                    dateFin: this.calendarService.getDateString(maxDate)
-                  })} ` +
-                  `${this.translator.instant('COMMON.OR')} `;
-      } else if (!!minDate && !(!!maxDate) && dateSelected < minDate) {
-        msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
-                  { dateIni: this.calendarService.getDateString(minDate) })} ` +
-                  `${this.translator.instant('COMMON.OR')} `;
-      } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
-        msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
-                  {
-                    dateIni: this.calendarService.getDateString(vehicle.datePurchase),
-                    dateFin: this.calendarService.getDateString(maxDate)
-                  })} ` +
-                  `${this.translator.instant('COMMON.OR')} `;
-      }
+      msgResult = this.validateMinMaxDateOperation(vehicle);
 
       // Validate min and max km operation
-      if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
-        msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween',
-          {measure: this.measure.valueLarge, kmIni: minKm, kmFin: maxKm});
-      } else if (!(!!maxKm) && kmSelected < minKm) {
-        msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween',
-        {measure: this.measure.valueLarge, kmIni: minKm, kmFin: vehicle.km});
-      }
+      msgResult += this.validateMinMaxKmOperation(vehicle);
     }
 
     // Validate max km vehicle
+    msgResult += this.validateMaxKmVehicle(vehicle);
+
+    return msgResult;
+  }
+
+  validateMinMaxDateOperation(vehicle: VehicleModel): string {
+    const dateSelected = new Date(this.operation.date);
+    const minDate = this.calculateMinDate(this.operation);
+    const maxDate = this.calculateMaxDate(this.operation);
+    let msgResult = '';
+    if (!!minDate && !!maxDate && (dateSelected < minDate || dateSelected > maxDate)) {
+      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
+                {
+                  dateIni: this.calendarService.getDateString(minDate),
+                  dateFin: this.calendarService.getDateString(maxDate)
+                })} `;
+    } else if (!!minDate && !(!!maxDate) && dateSelected < minDate) {
+      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
+                { dateIni: this.calendarService.getDateString(minDate) })} `;
+    } else if (!(!!minDate) && !!maxDate && dateSelected > maxDate) {
+      msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateBetween',
+                {
+                  dateIni: this.calendarService.getDateString(vehicle.datePurchase),
+                  dateFin: this.calendarService.getDateString(maxDate)
+                })} `;
+    }
+    return msgResult;
+  }
+
+  validateMinMaxKmOperation(vehicle: VehicleModel): string {
+    const kmSelected = this.operation.km;
+    const minKm = this.calculateMinKm(this.operation);
+    const maxKm = this.calculateMaxKm(this.operation);
+    let msgResult = '';
+    if (!!maxKm && (kmSelected < minKm || kmSelected > maxKm)) {
+      msgResult += (msgResult === '' ? '' : `${this.translator.instant('COMMON.OR')} `);
+      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween',
+        {measure: this.measure.valueLarge, kmIni: minKm, kmFin: maxKm});
+    } else if (!(!!maxKm) && kmSelected < minKm) {
+      msgResult += (msgResult === '' ? '' : `${this.translator.instant('COMMON.OR')} `);
+      msgResult += this.translator.instant('PAGE_OPERATION.AddKmBetween',
+        {measure: this.measure.valueLarge, kmIni: minKm, kmFin: vehicle.km});
+    }
+    return msgResult;
+  }
+
+  validateMaxKmVehicle(vehicle: VehicleModel): string {
+    let msgResult = '';
     if (!!this.vehicles && this.vehicles.length > 0 && msgResult === '') {
       if (vehicle.km < this.operation.km) {
         msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower', {measure: this.measure.valueLarge, kmFin: vehicle.km});
@@ -303,7 +321,6 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
                 { dateIni: this.calendarService.getDateString(vehicle.datePurchase) })}`;
       }
     }
-
     return msgResult;
   }
 
@@ -342,7 +359,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       x.id !== op.id);
 
     if (!!operationsKmBefore && operationsKmBefore.length > 0) {
-      resultDate = new Date(this.commonService.max(operationsKmBefore, ConstantsColumns.COLUMN_MTM_OPERATION_DATE));
+      resultDate = new Date(this.commonService.max(operationsKmBefore, ConstantsColumns.COLUMN_MTM_OPERATION_DATE), 0, 0, 0);
     }
 
     return resultDate;
@@ -355,7 +372,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       x.id !== op.id);
 
     if (!!operationsKmAfter && operationsKmAfter.length > 0) {
-      resultDate = new Date(this.commonService.min(operationsKmAfter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE));
+      resultDate = new Date(this.commonService.min(operationsKmAfter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE), 0, 0, 0);
     }
 
     return resultDate;

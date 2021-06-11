@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouteReuseStrategy } from '@angular/router';
-import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
-import { IonicModule, IonicRouteStrategy, AngularDelegate } from '@ionic/angular';
+import { IonicModule, IonicRouteStrategy, AngularDelegate, ModalController, PopoverController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
@@ -16,7 +16,6 @@ import {
   TranslateParser, MissingTranslationHandler, USE_DEFAULT_LANG, USE_STORE
 } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { ModalController, PopoverController } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
 
 // TESTING LIBRARIES

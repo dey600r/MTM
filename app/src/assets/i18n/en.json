@@ -81,7 +81,8 @@
         "NOTIFY_MAINTENANCE": "Notify maintenances",
         "MANAGE_DATA": "Manage Data",
         "EXPORT": "Export to:",
-        "IMPORT": "Import from:"
+        "IMPORT": "Import from:",
+        "SELECT_FILE": "Select file ..."
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -102,6 +103,7 @@
         "DeleteImportDB": "The import files has been deleted succesfully on {{path}}",
         "ErrorExportDB": "There was an error exporting DB. Restart app and try again",
         "ErrorBackupDB": "There was an error exporting backup DB. Restart app and try again",
+        "ErrorReadingFile": "There was an error reading file. You should try again with JSON file",
         "ErrorWritingFile": "There was an error creating file. You should try activate the storage permissions on your device",
         "ErrorWritingBackupFile": "There was an error creating backup file. You should try activate the storage permissions on your device",
         "ErrorImportDB": "There was an error importing DB. The file is not compatible with data base",
@@ -112,7 +114,11 @@
         "GuideStep3": "3. Press import button to save MtM data from the other MtM application",
         "ConfirmDeleteConfigurationMaintenance": "The maintenance {{maintenance}} will be desactivated on {{configuration}} configuration. Do you wish continue?",
         "DeleteSaveConfigurationMaintenance": "The maintenance {{maintenance}} has been desactivated. You can activate again on {{configuration}} configuration.",
-        "ValidateDeleteConfigurationMaintenance": "You can`t desactive the maintenance {{maintenance}} on {{configuration}} configuration"
+        "ValidateDeleteConfigurationMaintenance": "You can`t desactive the maintenance {{maintenance}} on {{configuration}} configuration",
+        "InfoNotExistsImportFile": "You didnt select any file to import. This file has to be a export from another MtM application",
+        "InfoNotExistsFilesToDelete": "There are not files to delete",
+        "FileMandatoryJSON": "The file format has to be a JSON",
+        "ErrorFormatDB": "The content of the file is not correct. This file has to be a export from another MtM application"
     },
     "PAGE_VEHICLE": {
         "YOURS_VEHICLES": "Your vehicles",
@@ -193,7 +199,9 @@
         "DeleteSaveReplacement": "The spare part {{replacement}} has been deleted succesfully",
         "ErrorSaveReplacement": "There was an erro while saving spare part data",
         "ConfirmDeleteReplacement": "The spare part {{replacement}} will be deleted. Do you wish continue?",
-        "ConfirmDeleteReplacementWithOperations": "The spare part {{replacement}} will be deleted with its operations associated. Do you wish continue?"
+        "ConfirmDeleteReplacementWithOperations": "The spare part {{replacement}} will be deleted with its operations associated. Do you wish continue?",
+        "ConfirmSaveVehiclesAssociatedToConfiguration": "The selected vehicles will be associated to the configuration {{configuration}}. The deselected vehicles will be associated to the production configuration. Do you wish continue?",
+        "EditSaveVehiclesAssociated": "The vehicles has been associated succesfully to configuration"
     },
     "ALERT" : {
         "INFO": "Info",
@@ -230,9 +238,7 @@
         "NoDataFound": "No data found",
         "PayForMTM": "To use this functionality you can buy the MtM application",
         "InfoCalendarKm": "You should check the {{replacement}} at {{km}}{{measure}} on the estimated date {{date}}",
-        "InfoCalendarTime": "You should check the {{replacement}} on the date {{date}}",
-        "InfoNotExistsImportFile": "You didnt select any file to import. You should copy to the import path some import file generate from other MtM app {{path}}",
-        "InfoNotExistsFilesToDelete": "There are not files to delete"
+        "InfoCalendarTime": "You should check the {{replacement}} on the date {{date}}"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

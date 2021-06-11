@@ -81,7 +81,8 @@
         "NOTIFY_MAINTENANCE": "Notificar mantenimientos",
         "MANAGE_DATA": "Gestionar Datos",
         "EXPORT": "Exportar en:",
-        "IMPORT": "Importar desde:"
+        "IMPORT": "Importar desde:",
+        "SELECT_FILE": "Selecciona un fichero ..."
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -102,6 +103,7 @@
         "DeleteImportDB": "Los archivos importados se han borrado correctamente de {{path}}",
         "ErrorExportDB": "Ha ocurrido un error exportando la base de datos. Reinicie la aplicación y pruebe de nuevo",
         "ErrorBackupDB": "Ha ocurrido un error exportando el backup de base de datos. Reinicie la aplicación y pruebe de nuevo",
+        "ErrorReadingFile": "Ha ocurrido un error leyendo el archivo. Debería intentarlo de nuevo con un fichero json",
         "ErrorWritingFile": "Ha ocurrido un error creando el fichero. Debería dar permisos de almacenamiento a la aplicación en la configuración de su dispositivo",
         "ErrorWritingBackupFile": "Ha ocurrido un error creando el fichero de backup. Debería dar permisos de almacenamiento a la aplicación en la configuración de su dispositivo",
         "ErrorImportDB": "Ha ocurrido un error importando la base de datos. El fichero no es compatible con la base de datos",
@@ -112,7 +114,11 @@
         "GuideStep3": "3. Presiona el boton importar para importar los datos de la aplicación MtM donde se exportaron los datos",
         "ConfirmDeleteConfigurationMaintenance": "El mantenimiento {{maintenance}} será desactivado en la configuración {{configuration}}. ¿Desea continuar?",
         "DeleteSaveConfigurationMaintenance": "El mantenimiento {{maintenance}} ha sido desactivado. Se puede reactivar en la configuración de {{configuration}}",
-        "ValidateDeleteConfigurationMaintenance": "No se puede desactivar el mantenimiento {{maintenance}} en la configuración {{configuration}}"
+        "ValidateDeleteConfigurationMaintenance": "No se puede desactivar el mantenimiento {{maintenance}} en la configuración {{configuration}}",
+        "InfoNotExistsImportFile": "No hay seleccionado ningun archivo. Este archivo debe ser una exportación de otra aplicacion MtM",
+        "InfoNotExistsFilesToDelete": "No existen archivos para borrar",
+        "FileMandatoryJSON": "El formato del fichero tiene que ser un JSON",
+        "ErrorFormatDB": "El contenido del fichero no es el correcto. Este archivo debe ser una exportación de otra aplicacion MtM"
     },
     "PAGE_VEHICLE": {
         "YOURS_VEHICLES": "Tus Vehículos",
@@ -193,7 +199,9 @@
         "DeleteSaveReplacement": "El recambio {{replacement}} ha sido borrada correctamente",
         "ErrorSaveReplacement": "Ha ocurrido un error guardando los datos del recambio",
         "ConfirmDeleteReplacement": "El recambio {{replacement}} se va a borrar. ¿Desea continuar?",
-        "ConfirmDeleteReplacementWithOperations": "El recambio {{replacement}} se va a borrar con sus operaciones asociadas. ¿Desea continuar?"
+        "ConfirmDeleteReplacementWithOperations": "El recambio {{replacement}} se va a borrar con sus operaciones asociadas. ¿Desea continuar?",
+        "ConfirmSaveVehiclesAssociatedToConfiguration": "Los vehículos seleccionados se asociarán a la configuración {{configuration}}. Los vehiculos deseleccionados se asociarán a la configuración de fábrica. ¿Desea Continuar?",
+        "EditSaveVehiclesAssociated": "Los vehículos han sido asociados correctamente a la configuración"
     },
     "ALERT" : {
         "INFO": "Info",
@@ -230,9 +238,7 @@
         "NoDataFound": "No se encuentran datos",
         "PayForMTM": "Para usar esta funcionalidad debes pagar la aplicación MtM completa",
         "InfoCalendarKm": "Deberías revisar {{replacement}} a los {{km}}{{measure}} en la fecha estimada {{date}}",
-        "InfoCalendarTime": "Deberías revisar {{replacement}} en la fecha {{date}}",
-        "InfoNotExistsImportFile": "No hay seleccionado ningun archivo. Es necesario copiar algun archivo exportado de otra aplicación de MtM en la carpeta de importación {{path}}",
-        "InfoNotExistsFilesToDelete": "No existen archivos para borrar"
+        "InfoCalendarTime": "Deberías revisar {{replacement}} en la fecha {{date}}"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 
 // LIBRARIES
 
@@ -11,21 +11,11 @@ import { Constants, PageEnum } from '@utils/index';
   templateUrl: 'app-info.component.html',
   styleUrls: ['app-info.component.scss', '../../../app.component.scss']
 })
-export class AppInfoComponent implements OnInit, OnDestroy {
+export class AppInfoComponent {
 
   // MODAL MODELS
   @Input() inputInfo: ModalInputModel = new ModalInputModel();
   @Output() modalOutputModel: ModalOutputModel = new ModalOutputModel();
-
-  constructor() {
-   }
-
-  ngOnInit() {
-
-  }
-
-  ngOnDestroy() {
-  }
 
   isVehicleEmpty(): boolean {
     return this.inputInfo.parentPage !== PageEnum.VEHICLE && this.isVehiclePageEmpty();

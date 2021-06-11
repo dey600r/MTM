@@ -5,7 +5,7 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService } from '@services/index';
 import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
@@ -104,7 +104,7 @@ export class VehiclePage implements OnInit {
   }
 
   showModalInfo() {
-    this.controlService.showToast(PageEnum.VEHICLE, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
+    this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
   }
 
   showConfirmDelete() {
@@ -120,11 +120,11 @@ export class VehiclePage implements OnInit {
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.vehicleService.saveVehicle(this.rowSelected, ActionDBEnum.DELETE, ops).then(x => {
-            this.controlService.showToast(PageEnum.VEHICLE, 'PAGE_VEHICLE.DeleteSaveVehicle',
+          this.vehicleService.saveVehicle([this.rowSelected], ActionDBEnum.DELETE, ops).then(x => {
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_VEHICLE.DeleteSaveVehicle',
               { vehicle: `${this.rowSelected.brand} ${this.rowSelected.model}` });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, 'PAGE_VEHICLE.ErrorSaveVehicle');
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
           });
         }
       }

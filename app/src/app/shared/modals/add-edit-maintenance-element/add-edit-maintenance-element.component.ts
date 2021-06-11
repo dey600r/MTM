@@ -3,7 +3,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 
 // UTILS
-import { ActionDBEnum, PageEnum } from '@app/core/utils';
+import { ActionDBEnum, PageEnum, ToastTypeEnum } from '@app/core/utils';
 import { ModalInputModel, ModalOutputModel, MaintenanceElementModel } from '@models/index';
 import { ConfigurationService, ControlService } from '@services/index';
 
@@ -46,11 +46,11 @@ export class AddEditMaintenanceElementComponent implements OnInit {
       this.configurationService.saveMaintenanceElement(this.maintenanceElement,
           (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, (this.modalInputModel.isCreate ?
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.SUCCESS, (this.modalInputModel.isCreate ?
           'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),
           { replacement: this.maintenanceElement.name });
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
       });
     }
   }

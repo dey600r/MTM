@@ -8,3 +8,4 @@ alter table "mtmVehicle" add "active" TEXT not null default 'Y';
 **->nextDeployDB_v2.2.0**>
 alter table "mtmOpMaintElem" add "price" REAL NOT NULL DEFAULT 0;
 **->nextDeployDB_v3.0.0**>
+**->nextDeployDB_v3.0.1**>

@@ -15,15 +15,15 @@ export class VehicleService {
                 private operationService: OperationService) {
     }
 
-    saveVehicle(vehicle: VehicleModel, action: ActionDBEnum, operations: OperationModel[] = []) {
+    saveVehicle(vehicles: VehicleModel[], action: ActionDBEnum, operations: OperationModel[] = []) {
         let sqlDB = '';
         let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_VEHICLE];
         switch (action) {
             case ActionDBEnum.CREATE:
-                sqlDB = this.sqlService.insertSqlVehicle([vehicle]);
+                sqlDB = this.sqlService.insertSqlVehicle(vehicles);
                 break;
             case ActionDBEnum.UPDATE:
-                sqlDB = this.sqlService.updateSqlVehicle([vehicle]);
+                sqlDB = this.sqlService.updateSqlVehicle(vehicles);
                 listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_OPERATION];
                 break;
             case ActionDBEnum.DELETE:
@@ -32,7 +32,7 @@ export class VehicleService {
                     listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_OPERATION];
                 }
                 sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_VEHICLE,
-                    ConstantsColumns.COLUMN_MTM_ID, [vehicle.id]); // DELETE VEHICLE
+                    ConstantsColumns.COLUMN_MTM_ID, vehicles.map(x => x.id)); // DELETE VEHICLE
                 break;
         }
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);

@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   ModalInputModel, ModalOutputModel
 } from '@models/index';
-import { Constants, PageEnum } from '@utils/index';
+import { Constants, PageEnum, ConstantsTable, ToastTypeEnum } from '@utils/index';
 import { SettingsService, DataBaseService, ControlService } from '@services/index';
 
 @Component({
@@ -55,6 +55,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.settingsService.createOutputDirectory();
+
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
         this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
@@ -72,8 +74,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     // EXPORTS AND IMPORTS
 
     this.pathExports = this.settingsService.getRootRelativePath(Constants.EXPORT_DIR_NAME);
-    this.pathImports = this.settingsService.getRootRelativePath(Constants.IMPORT_DIR_NAME);
-    this.getListImportsFile();
+    this.pathImports = this.translator.instant('COMMON.SELECT_FILE');
+
     this.getLastExportFile();
   }
 
@@ -119,74 +121,106 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.file.writeFile(this.settingsService.getRootPathFiles(Constants.EXPORT_DIR_NAME), exportFileName,
         JSON.stringify(json), { replace : true}).then(() => {
             this.getLastExportFile();
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.SaveExportDB', {file: exportFileName});
+            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveExportDB', {file: exportFileName});
           }).catch(err => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.ErrorWritingFile');
+            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingFile');
           });
     }).catch(e => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.ErrorExportDB');
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorExportDB');
     });
   }
 
   // IMPORT DATA
-  importData() {
-    if (!!this.importFileSelected) {
-      this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.MANAGE_DATA'),
-      this.translator.instant('PAGE_HOME.ConfirmImportDB', { path: this.settingsService.getRootRelativePath(Constants.EXPORT_DIR_NAME) }),
-        {
-          text: this.translator.instant('COMMON.ACCEPT'),
-          handler: () => {
-            this.importJsonToDB();
-          }
-        }
-      );
+  validFileAndImport(event: any) {
+    if (!event.target.files || event.target.files.length === 0) {
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'PAGE_HOME.InfoNotExistsImportFile');
+    } else if (event.target.files[0].type !== 'application/json' || !event.target.files[0].type.includes('json')) {
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'PAGE_HOME.FileMandatoryJSON');
+      this.clearInputFile(event);
     } else {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'ALERT.InfoNotExistsImportFile',
-        {path: this.settingsService.getRootRelativePath(Constants.IMPORT_DIR_NAME)}, Constants.DELAY_TOAST_HIGH);
+      this.readFileJson(event);
     }
   }
 
-  importJsonToDB() {
+  clearInputFile(event: any) {
+    event.target.value = '';
+    this.pathImports = this.translator.instant('COMMON.SELECT_FILE');
+  }
+
+  readFileJson(event: any) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const contentFile: string = e.target.result;
+      if (this.validateStructureJsonDB(contentFile)) {
+        this.pathImports = file.name;
+        this.importData(contentFile, event);
+      } else {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'PAGE_HOME.ErrorFormatDB');
+        this.clearInputFile(event);
+      }
+    };
+    reader.onerror = (error) => {
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorReadingFile');
+      this.clearInputFile(event);
+    };
+    reader.readAsText(file);
+  }
+
+  importData(contentFile: string, event: any) {
+      this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.MANAGE_DATA'),
+      this.translator.instant('PAGE_HOME.ConfirmImportDB'),
+        {
+          text: this.translator.instant('COMMON.ACCEPT'),
+          handler: () => {
+            this.importJsonToDB(contentFile, event);
+          }
+        },
+        () => { this.clearInputFile(event); }
+      );
+  }
+
+  validateStructureJsonDB(contentFile: string): boolean {
+    return contentFile.includes(ConstantsTable.TABLE_MTM_CONFIGURATION) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_CONFIG_MAINT) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_OPERATION) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_OPERATION_TYPE) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_VEHICLE) &&
+    contentFile.includes(ConstantsTable.TABLE_MTM_VEHICLE_TYPE);
+  }
+
+  importJsonToDB(contentFile: string, event: any) {
     // Backup
     this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then((json: any) => {
       const backupFileName: string = this.settingsService.generateNameExportFile(Constants.BACKUP_FILE_NAME);
       // Write backup file
       this.file.writeFile(this.settingsService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
         JSON.stringify(json), { replace : true}).then(() => {
-            this.getListImportsFile();
-            // Read import file
-            this.file.readAsText(this.settingsService.getRootPathFiles(Constants.IMPORT_DIR_NAME),
-              this.importFileSelected).then(contentFile => {
-              // IMPORT DB
-              this.sqlitePorter.importJsonToDb(this.dbService.getDB(), JSON.parse(contentFile)).then((ok: any) => {
-                this.dbService.loadAllTables();
-                this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.SaveImportDB');
-              }).catch(e => {
-                this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.ErrorImportDB');
-              });
+            // IMPORT DB
+            this.sqlitePorter.importJsonToDb(this.dbService.getDB(), JSON.parse(contentFile)).then((ok: any) => {
+              this.dbService.loadAllTables();
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
+            }).catch(e => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB');
+              this.clearInputFile(event);
             });
           }).catch(err => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.ErrorWritingBackupFile');
+            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
+            this.clearInputFile(event);
           });
     }).catch(e => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.ErrorBackupDB');
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorBackupDB');
+      this.clearInputFile(event);
     });
   }
 
   // GET LIST FILES
-  getListImportsFile() {
-    this.file.listDir(this.settingsService.getRootPathFiles(), Constants.IMPORT_DIR_NAME).then((listFiles: Entry[]) => {
-      this.listImportsFile = [];
-      const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
-      if (!!listActual && listActual.length > 0) {
-        this.listImportsFile = listActual;
-      }
-      this.changeDetector.detectChanges();
-    }).catch(err => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.ErrorListingFiles');
-    });
-  }
-
   getLastExportFile() {
     this.file.listDir(this.settingsService.getRootPathFiles(), Constants.EXPORT_DIR_NAME).then((listFiles: Entry[]) => {
       this.lastExport = '';
@@ -196,16 +230,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
       }
       this.changeDetector.detectChanges();
     }).catch(err => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.ErrorListingFiles');
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles');
     });
   }
 
   showRealExportPath() {
-    this.controlService.showToast(PageEnum.MODAL_SETTINGS, this.settingsService.getRootRealRelativePath(Constants.EXPORT_DIR_NAME));
+    this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.INFO,
+      this.settingsService.getRootRealRelativePath(Constants.EXPORT_DIR_NAME));
   }
 
   showRealImportPath() {
-    this.controlService.showToast(PageEnum.MODAL_SETTINGS, this.settingsService.getRootRealRelativePath(Constants.IMPORT_DIR_NAME));
+    this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.INFO,
+      this.settingsService.getRootRealRelativePath(Constants.IMPORT_DIR_NAME));
   }
 
   showGuideExportImport() {
@@ -233,19 +269,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
       );
   }
 
-  deleteImportFiles() {
-    this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.MANAGE_DATA'),
-      this.translator.instant('PAGE_HOME.ConfirmDeleteImportFile',
-        { path: this.settingsService.getRootRelativePath(Constants.IMPORT_DIR_NAME) }),
-        {
-          text: this.translator.instant('COMMON.ACCEPT'),
-          handler: () => {
-            this.deleteFiles(Constants.IMPORT_DIR_NAME);
-          }
-        }
-      );
-  }
-
   deleteFiles(path: string) {
     this.file.listDir(this.settingsService.getRootPathFiles(), path).then((listFiles: Entry[]) => {
       const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
@@ -253,23 +276,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
         listActual.forEach(f => {
           this.file.removeFile(this.settingsService.getRootPathFiles(path), f.name);
         });
-        let msg = '';
-        switch (path) {
-          case Constants.EXPORT_DIR_NAME:
-            msg = 'PAGE_HOME.DeleteExportDB';
-            this.getLastExportFile();
-            break;
-          case Constants.IMPORT_DIR_NAME:
-            msg = 'PAGE_HOME.DeleteImportDB';
-            this.getListImportsFile();
-            break;
-        }
-        this.controlService.showToast(PageEnum.MODAL_SETTINGS, msg, {path: this.settingsService.getRootRelativePath(path)});
+        this.getLastExportFile();
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.DeleteExportDB',
+          {path: this.settingsService.getRootRelativePath(path)});
       } else {
-        this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'ALERT.InfoNotExistsFilesToDelete');
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'PAGE_HOME.InfoNotExistsFilesToDelete');
       }
     }).catch(err => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, 'PAGE_HOME.ErrorListingFiles');
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles');
     });
   }
 }

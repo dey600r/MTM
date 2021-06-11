@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, ControlService, SettingsService } from '@services/index';
-import { PageEnum, Constants } from './core/utils';
+import { PageEnum } from './core/utils';
 
 @Component({
   selector: 'app-root',
@@ -46,8 +46,7 @@ export class AppComponent {
       this.controlService.activateButtonExist(PageEnum.HOME);
 
       // FILES
-      this.settingsService.createDiretory(Constants.EXPORT_DIR_NAME);
-      this.settingsService.createDiretory(Constants.IMPORT_DIR_NAME);
+      this.settingsService.createOutputDirectory();
     });
   }
 
