@@ -82,7 +82,12 @@
         "MANAGE_DATA": "Manage Data",
         "EXPORT": "Export to:",
         "IMPORT": "Import from:",
-        "SELECT_FILE": "Select file ..."
+        "SELECT_FILE": "Select file ...",
+        "THEMES": "Themes",
+        "MODE": "Mode",
+        "LIGHT": "Light",
+        "DARK": "Dark",
+        "SKY": "Sky"
     },
     "PAGE_HOME": {
         "HOME": "Home",

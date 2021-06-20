@@ -35,13 +35,18 @@ package-lock.json
 /app/resources
 /app/build.json
 /app/build-demo.json
+
 /Utils
+
+/DB/backup
+
 App/.gradle/
 App/gradle/
 App/gradlew
 App/gradlew.bat
 App/.scannerwork
 App/src/app/.scannerwork
+
 
 Web/.idea
 Web/.sonarqube

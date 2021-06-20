@@ -43,6 +43,7 @@ export class Constants {
 
     static IONIC_APP = 'app';
 
+    static KEY_CONFIG_THEME = 'configTheme';
     static KEY_CONFIG_DISTANCE = 'configDistance';
     static KEY_CONFIG_MONEY = 'configMoney';
     static KEY_LAST_UPDATE_DB = 'lastUpdate';
@@ -63,6 +64,12 @@ export class Constants {
     static SETTING_MONEY_EURO = 'EURO';
     static SETTING_MONEY_DOLLAR = 'DOLLAR';
     static SETTING_MONEY_POUND = 'POUND';
+    static SETTING_THEME_DARK = 'D';
+    static SETTING_THEME_DARK_DESC = 'DARK';
+    static SETTING_THEME_SKY = 'S';
+    static SETTING_THEME_SKY_DESC = 'SKY';
+    static SETTING_THEME_LIGHT = 'L';
+    static SETTING_THEME_LIGHT_DESC = 'LIGHT';
 
     // DB
     static NEXT_DEPLOY_TITLE_SEPARATOR = '**->';

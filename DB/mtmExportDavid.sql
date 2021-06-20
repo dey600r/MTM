@@ -377,6 +377,7 @@ INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (160,116,17,0.5);
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v1.2.3','2021-06-06 19:00:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (2,'configDistance','KM','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (3,'configMoney','EURO','2006-09-12 12:32:00');
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (4,'configTheme','L','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmVehicle" VALUES (1,'R6','Yamaha',2005,97160,2,1,650,'2020-12-25','2006-09-19','Y');
 INSERT OR IGNORE INTO "mtmVehicle" VALUES (2,'gt125r','Hyosung',2006,76750,3,1,50,'2020-12-25','2006-09-12','Y');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (1,'M','MOTORBIKE');

@@ -7,12 +7,16 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { File, Entry } from '@ionic-native/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
-// UTILS
+// MODELS
 import {
   ModalInputModel, ModalOutputModel
 } from '@models/index';
+
+// UTILS
 import { Constants, PageEnum, ConstantsTable, ToastTypeEnum } from '@utils/index';
-import { SettingsService, DataBaseService, ControlService } from '@services/index';
+
+// SERVICES
+import { SettingsService, DataBaseService, ControlService, ThemeService } from '@services/index';
 
 @Component({
   selector: 'settings',
@@ -33,6 +37,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     listMoney: any[] = [];
     moneySelected: any = {};
 
+    // DATA THEMES
+    listThemes: string [] = [];
+    themeSelected: any = { code: 'L'};
+
     // DATA EXPORTS AND IMPORTS
     listImportsFile: Entry[] = [];
     importFileSelected = '';
@@ -51,7 +59,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 private file: File,
                 private sqlitePorter: SQLitePorter,
                 private controlService: ControlService,
-                private translator: TranslateService) {
+                private translator: TranslateService,
+                private themeService: ThemeService) {
   }
 
   ngOnInit() {
@@ -63,11 +72,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
     // SETTINGS
     this.listDistances = this.settingsService.getListDistance();
     this.listMoney = this.settingsService.getListMoney();
+    this.listThemes = this.settingsService.getListThemes();
 
     this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.distanceSelected = this.settingsService.getDistanceSelected(settings);
         this.moneySelected = this.settingsService.getMoneySelected(settings);
+        this.themeSelected = this.settingsService.getThemeSelected(settings);
       }
     });
 
@@ -88,8 +99,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     await this.modalController.dismiss(this.modalOutputModel);
   }
 
-  /** SETTINGS */
-
   // EVENTS SETTINGS
 
   changeDistance() {
@@ -98,6 +107,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   changeMoney() {
     this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_MONEY, this.moneySelected.code);
+  }
+
+  changeTheme() {
+    this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, this.themeSelected.code);
+    this.themeService.changeTheme(this.themeSelected.code);
   }
 
   /** EXPORTS AND IMPORTS */
@@ -204,6 +218,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         JSON.stringify(json), { replace : true}).then(() => {
             // IMPORT DB
             this.sqlitePorter.importJsonToDb(this.dbService.getDB(), JSON.parse(contentFile)).then((ok: any) => {
+              this.settingsService.insertSystemConfiguration();
               this.dbService.loadAllTables();
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
             }).catch(e => {

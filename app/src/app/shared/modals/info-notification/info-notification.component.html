@@ -5,7 +5,7 @@
             <ion-icon size="large" class="btn-color" name="filter"></ion-icon>
         </ion-button>
         <!-- Title -->
-        <ion-title class="align-center">{{ labelNameVehicle }}</ion-title>
+        <ion-title color="text-header" class="align-center">{{ labelNameVehicle }}</ion-title>
         <!-- Button Close -->
         <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
           <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
@@ -26,21 +26,21 @@
       </ion-button>
     </ion-list-header>
     <ion-item *ngIf="!hideSummary" button (click)="showInfoVehicle()">
-      <p>{{ labelVehicleKm }}</p>
+      <p class="ion-color-info-summary">{{ labelVehicleKm }}</p>
     </ion-item>
     <ion-item *ngIf="!hideSummary" button (click)="showInfoReliability()">
-      <p>{{ labelReliability }}</p>
-      <p slot="end">{{ labelPercent }} %</p>
+      <p class="ion-color-info-summary">{{ labelReliability }}</p>
+      <p class="ion-color-info-summary" slot="end">{{ labelPercent }} %</p>
       <ion-icon slot="end" size="small" [class]="getIconPercent('color')" [color]="getIconPercent('color')" [name]="getIconPercent('icon')"></ion-icon>
     </ion-item>
     <ion-item *ngIf="!hideSummary" button (click)="showInfoMaintenance()">
-      <p>{{ labelNextChange }}</p>
+      <p class="ion-color-info-summary">{{ labelNextChange }}</p>
     </ion-item>
     <ion-item *ngIf="!hideSummary" button (click)="showInfoLifeReplacement()">
-      <p>{{ labelLifeReplacement }}</p>
+      <p class="ion-color-info-summary">{{ labelLifeReplacement }}</p>
     </ion-item>
     <ion-item *ngIf="labelNotRecord !== ''">
-      <p>{{ labelNotRecord }}</p>
+      <p class="ion-color-info-summary">{{ labelNotRecord }}</p>
     </ion-item>
   </ion-list>
   <!-- CHART -->

@@ -1,11 +1,11 @@
 <ion-header [hidden]="!loaded">
   <ion-toolbar>
     <ion-title>
-      <ion-title class="align-center">{{ 'COMMON.CONFIGURATIONS' | translate }}</ion-title>
+      <ion-title color="text-header" class="align-center">{{ 'COMMON.CONFIGURATIONS' | translate }}</ion-title>
     </ion-title>
   </ion-toolbar>
   <!-- SEGMENT -->
-  <ion-segment class="segment-button-fixed" [scrollable]="activeSegmentScroll()" [value]="segmentSelected" 
+  <ion-segment class="segment-button-fixed ion-segment-color" [scrollable]="activeSegmentScroll()" [value]="segmentSelected" 
     (ionChange)="segmentChanged($event)">
     <ion-segment-button [value]="seg.id" layout="icon-start" *ngFor="let seg of segmentHeader">
       <ion-label>{{ seg.title | translate }}</ion-label>

@@ -46,6 +46,17 @@ export class SettingsService {
                 this.translator.instant(`COMMON.${Constants.SETTING_MONEY_POUND}`))];
     }
 
+    getListThemes(): any[] {
+        return [
+            this.mapToAnyCustomSetting(Constants.SETTING_THEME_LIGHT,
+                this.translator.instant(`COMMON.${Constants.SETTING_THEME_LIGHT_DESC}`), Constants.SETTING_THEME_LIGHT),
+            this.mapToAnyCustomSetting(Constants.SETTING_THEME_DARK,
+                this.translator.instant(`COMMON.${Constants.SETTING_THEME_DARK_DESC}`), Constants.SETTING_THEME_DARK),
+            this.mapToAnyCustomSetting(Constants.SETTING_THEME_SKY,
+                this.translator.instant(`COMMON.${Constants.SETTING_THEME_SKY_DESC}`), Constants.SETTING_THEME_SKY)
+          ];
+    }
+
     getDistanceSelected(settings: SystemConfigurationModel[]): any {
         const select: any = this.getListDistance().find(x => x.code === settings.find(y => y.key === Constants.KEY_CONFIG_DISTANCE).value);
         return this.mapToAnyCustomSetting(select.code, select.value, select.valueLarge);
@@ -53,6 +64,11 @@ export class SettingsService {
 
     getMoneySelected(settings: SystemConfigurationModel[]): any {
         const select: any = this.getListMoney().find(x => x.code === settings.find(y => y.key === Constants.KEY_CONFIG_MONEY).value);
+        return this.mapToAnyCustomSetting(select.code, select.value, select.valueLarge);
+    }
+
+    getThemeSelected(settings: SystemConfigurationModel[]): any {
+        const select: any = this.getListThemes().find(x => x.code === settings.find(y => y.key === Constants.KEY_CONFIG_THEME).value);
         return this.mapToAnyCustomSetting(select.code, select.value, select.valueLarge);
     }
 
@@ -64,6 +80,12 @@ export class SettingsService {
                 this.sqlService.updateSqlSystemConfiguration(key, value, this.calendarService.getDateStringToDB(new Date())),
                 [ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
         }
+    }
+
+    insertSystemConfiguration() {
+        this.dbService.executeScriptDataBase(
+            this.sqlService.insertSqlSystemConfiguration(
+                [new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_LIGHT, new Date(), 4)]));
     }
 
     mapToAnyCustomSetting(c: string, v: string, vl: string): any {

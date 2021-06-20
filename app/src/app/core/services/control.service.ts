@@ -153,7 +153,8 @@ export class ControlService {
             message: msg,
             duration: delay,
             position: pos,
-            color: type
+            color: type,
+            cssClass: 'custom-toast'
         });
         toast.onDidDismiss().then((dataReturned) => {
             this.activateButtonExist(parent);

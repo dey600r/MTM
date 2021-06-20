@@ -82,7 +82,12 @@
         "MANAGE_DATA": "Gestionar Datos",
         "EXPORT": "Exportar en:",
         "IMPORT": "Importar desde:",
-        "SELECT_FILE": "Selecciona un fichero ..."
+        "SELECT_FILE": "Selecciona un fichero ...",
+        "THEMES": "Temas",
+        "MODE": "Modo",
+        "LIGHT": "Claro",
+        "DARK": "Oscuro",
+        "SKY": "Cielo"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
