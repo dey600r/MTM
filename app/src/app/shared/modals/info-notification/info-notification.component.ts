@@ -195,8 +195,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       {
         maintenance: this.nameMaintenanceElement,
         km: (calendarKm.km > this.vehicleKmEstimated ? calendarKm.km : this.vehicleKmEstimated),
-        date: (calendarKm.km > this.vehicleKmEstimated ?
-          this.calendarService.getDateString(dateMaintenance) : this.calendarService.getDateString(today)),
+        date: this.calendarService.getDateString(dateMaintenance),
         measure: this.measure.value
       });
   }

@@ -76,45 +76,69 @@ $colors: (
 );
 
 // CSS CALENDAR
+
+// Days
 .day-text-config {
   p { color: white !important; }
-}
-
-button.days-btn.today p {
-  font-weight: bold;
-}
-
-.days-box .days .days-btn p {
-  color: var(--ion-color-step-750) !important;
-}
-
-.days-box .days .days-btn.today p {
-  color: var(--ion-color-step-900) !important;
 }
 
 .day-circle-config-all {
   background-color: var(--ion-color-step-150) !important;
 }
 
+button.day-circle-config-all.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
+}
+
 .day-circle-config-skull {
   background-color: rgba(var(--ion-color-progressbar-danger-progress), 0.7) !important;
+}
+
+button.day-circle-config-skull.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
 }
 
 .day-circle-config-danger {
   background-color: rgba(var(--ion-color-progressbar-danger-progress), 0.4) !important;
 }
 
+button.day-circle-config-danger.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
+}
+
 .day-circle-config-warning {
-  background-color: rgba(var(--ion-color-progressbar-warning-progress), 0.4) !important;
+  background-color: rgba(var(--ion-color-progressbar-warning-progress), 0.5) !important;
+}
+
+button.day-circle-config-warning.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
 }
 
 .day-circle-config-success {
   background-color: rgba(var(--ion-color-progressbar-success-progress), 0.4) !important;
 }
 
+button.day-circle-config-success.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
+}
+
 .day-circle-config-blue {
   background-color: rgba(var(--ion-color-primary-rgb), 0.4) !important;
 }
+
+button.days-btn.today p {
+  font-weight: bold;
+}
+
+button.days-btn p {
+  color: var(--ion-color-step-750) !important;
+}
+
+button.days-btn.today p {
+  color: var(--ion-color-step-900) !important;
+}
+
+// Months
 
 .month-packer-item button {
   color: var(--ion-color-step-750) !important;
@@ -131,7 +155,7 @@ button.days-btn.today p {
 }
 
 .month-packer-item.month-circle-config-skull button {
-  background-color: rgba(var(--ion-color-progressbar-danger-progress), 0.9) !important;
+  background-color: rgba(var(--ion-color-progressbar-danger-progress), 0.7) !important;
   color: var(--ion-color-text-header-shade) !important;
 }
 
