@@ -165,13 +165,13 @@
         "AddDateLower": "Date lower {{dateFin}}",
         "AddDateHigher": "Date higher {{dateIni}}",
         "AddKmBetween": "{{measure}} between {{kmIni}} and {{kmFin}}",
-        "AddKmLower": "{{measure}} lower {{kmFin}} with respect to vehicle",
         "AddSaveOperation": "The operation {{operation}} has been added succesfully",
         "EditSaveOperation": "The operation {{operation}} has been modified succesfully",
         "DeleteSaveOperation": "The operation {{operation}} has been deleted succesfully",
         "ErrorSaveOperation": "There was an erro while saving operation data",
         "ConfirmDeleteOperation": "The operation {{operation}} will be deleted. Do you wish continue?",
-        "ConfirmSaveToDeleteReplacement": "The replacement will be deleted. Do you wish continue?"
+        "ConfirmSaveToDeleteReplacement": "The replacement will be deleted. Do you wish continue?",
+        "ConfitmUpdateVehicleKm": "The operation cannot have more {{measure}} than the vehicle ({{kmFin}}). Do you wish to upgradet the vehicle?"
     },
     "PAGE_CONFIGURATION": {
         "YOURS_CONFIGURATIONS": "Configurations",

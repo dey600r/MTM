@@ -13,7 +13,7 @@ import {
 } from '@models/index';
 import {
   DataBaseService, OperationService, CommonService, ConfigurationService, ControlService,
-  CalendarService, SettingsService
+  CalendarService, SettingsService, VehicleService
 } from '@services/index';
 
 @Component({
@@ -66,7 +66,8 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     private calendarService: CalendarService,
     private controlService: ControlService,
     private configurationService: ConfigurationService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private vehicleService: VehicleService
   ) {
     this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
     this.translateMe = this.translator.instant('COMMON.ME');
@@ -136,9 +137,26 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
           !this.isOperationTypeWithReplacement()) {
           this.showConfirmSaveWithDelete();
         } else {
-          this.saveOperation();
+          this.checkUpdateBeforeSaveOperation();
         }
       }
+    }
+  }
+
+  checkUpdateBeforeSaveOperation() {
+    const vehicle: VehicleModel = this.vehicles.find(x => x.id === this.operation.vehicle.id);
+    if (vehicle.km < this.operation.km) {
+      this.controlService.showConfirm(PageEnum.MODAL_OPERATION, this.translator.instant('COMMON.OPERATION'),
+        this.translator.instant('PAGE_OPERATION.ConfitmUpdateVehicleKm', {measure: this.measure.valueLarge, kmFin: vehicle.km}),
+        {
+          text: this.translator.instant('COMMON.ACCEPT'),
+          handler: () => {
+            this.saveOperation();
+          }
+        }
+      );
+    } else {
+      this.saveOperation();
     }
   }
 
@@ -155,6 +173,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
         }
       });
     }
+    this.updateKmVehicle();
     this.operation.price = (this.operation.price.toString().includes(',') ?
       Number(this.operation.price.toString().replace(',', '.')) : this.operation.price);
     this.operationService.saveOperation(this.operation,
@@ -166,6 +185,19 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
     });
+  }
+
+  updateKmVehicle() {
+    const vehicle: VehicleModel = this.vehicles.find(x => x.id === this.operation.vehicle.id);
+    if (vehicle.km < this.operation.km) {
+      vehicle.km = this.operation.km;
+      vehicle.dateKms = new Date();
+      this.vehicleService.saveVehicle([vehicle], ActionDBEnum.UPDATE).then(res => {
+        console.log('UPDATE VEHICLE KM');
+      }).catch(e => {
+        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+      });
+    }
   }
 
   async closeModal() {
@@ -203,7 +235,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.saveOperation();
+          this.checkUpdateBeforeSaveOperation();
         }
       }
     );
@@ -314,9 +346,7 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   validateMaxKmVehicle(vehicle: VehicleModel): string {
     let msgResult = '';
     if (!!this.vehicles && this.vehicles.length > 0 && msgResult === '') {
-      if (vehicle.km < this.operation.km) {
-        msgResult = this.translator.instant('PAGE_OPERATION.AddKmLower', {measure: this.measure.valueLarge, kmFin: vehicle.km});
-      } else if (new Date(vehicle.datePurchase) > new Date(this.operation.date)) {
+      if (new Date(vehicle.datePurchase) > new Date(this.operation.date)) {
         msgResult = `${this.translator.instant('PAGE_OPERATION.AddDateHigher',
                 { dateIni: this.calendarService.getDateString(vehicle.datePurchase) })}`;
       }

@@ -171,7 +171,8 @@
         "DeleteSaveOperation": "La operación {{operation}} ha sido borrada correctamente",
         "ErrorSaveOperation": "Ha ocurrido un error guardando los datos de la operación",
         "ConfirmDeleteOperation": "La operación {{operation}} se va a borrar. ¿Desea continuar?",
-        "ConfirmSaveToDeleteReplacement": "Los recambios se van a borrar. ¿Desea continuar?"
+        "ConfirmSaveToDeleteReplacement": "Los recambios se van a borrar. ¿Desea continuar?",
+        "ConfitmUpdateVehicleKm": "La operacion no puede tener mas {{measure}} que el vehículo ({{kmFin}}). ¿Desea actualizar el vehículo?"
     },
     "PAGE_CONFIGURATION": {
         "YOURS_CONFIGURATIONS": "Configuraciones",
