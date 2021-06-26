@@ -27,7 +27,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
     modalInputModel: ModalInputModel = new ModalInputModel();
-    modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
     // MODEL FORM
 
@@ -95,8 +94,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   async closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
-    await this.modalController.dismiss(this.modalOutputModel);
+    this.controlService.closeModal(this.modalController);
   }
 
   // EVENTS SETTINGS

@@ -59,11 +59,11 @@
             [labels]="dashboardOpTypeExpenses.showLabels"
             [doughnut]="dashboardOpTypeExpenses.isDoughnut">
         </ngx-charts-pie-chart>
-        <ion-list-header class="padding-list-header">
+        <ion-list-header class="padding-list-header" *ngIf="dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0">
             <ion-icon size="large" name="cog"></ion-icon>
             <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerReplacement' | translate }}</h3>
         </ion-list-header>
-        <ngx-charts-pie-chart class="justify-center"
+        <ngx-charts-pie-chart *ngIf="dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0" class="justify-center"
             [view]="dashboardReplacementExpenses.view"
             [scheme]="dashboardReplacementExpenses.colorScheme"
             [results]="dashboardReplacementExpenses.data"

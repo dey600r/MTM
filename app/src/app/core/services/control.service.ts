@@ -17,7 +17,6 @@ import { environment } from '@environment/environment';
 export class ControlService {
 
     private dateLastUse = new Date();
-    private dataReturned = new ModalOutputModel();
     private listPages: PageEnum[] = [PageEnum.HOME, PageEnum.VEHICLE, PageEnum.OPERATION, PageEnum.CONFIGURATION];
 
     // SUBSCRIPTION
@@ -69,8 +68,8 @@ export class ControlService {
         }
     }
 
-    async closeModal(modalController: ModalController) {
-        await modalController.dismiss(new ModalOutputModel(true));
+    async closeModal(modalController: ModalController, modalOuput: ModalOutputModel = new ModalOutputModel()) {
+        await modalController.dismiss(modalOuput);
     }
 
     // EXIT BUTTON
@@ -204,22 +203,17 @@ export class ControlService {
 
     // MODALS
 
-    async openModal(parent: PageEnum, modalComponent: any, inputModel: ModalInputModel) {
+    async openModal(parent: PageEnum, modalComponent: any, inputModel: ModalInputModel): Promise<HTMLIonModalElement> {
         this.desactivateButtonExist();
-        const modal = await this.modalController.create({
+        const modal: HTMLIonModalElement = await this.modalController.create({
           component: modalComponent,
           componentProps: inputModel
         });
         modal.onDidDismiss().then((dataReturned) => {
-          if (dataReturned !== null) {
-            this.dataReturned = dataReturned.data;
-          }
           this.activateButtonExist(parent);
         });
-        return await modal.present();
+        await modal.present();
+        return modal;
     }
 
-    getOutPutModal() {
-        return this.dataReturned;
-    }
 }

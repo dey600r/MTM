@@ -148,7 +148,11 @@
         "ConfirmDeleteVehicleOperation": "El vehículo {{vehicle}} y sus operaciones se van a borrar. ¿Desea continuar?",
         "ExpensesPerVehicle": "Gastos por vehículo",
         "ExpensesPerOperationType": "Gastos por tipo de operación",
-        "ExpensesPerReplacement": "Gastos por recambio"
+        "ExpensesPerReplacement": "Gastos por recambio",
+        "ConfirmActivateNotificationVehicle": "Las notificaciones de {{vehicle}} serán activadas. ¿Desea continuar?",
+        "ConfirmDesactivateNotificationVehicle": "Las notificaciones de {{vehicle}} serán desactivadas. ¿Desea continuar?",
+        "DesactivatedNotificationVehicle": "Las notificaciones del vehículo han sido desactivadas correctamente",
+        "ActivatedNotificationVehicle": "Las notificaciones del vehículo han sido activadas correctamente"
     },
     "PAGE_OPERATION": {
         "YOURS_OPERATIONS": "Operaciones del vehículo",
@@ -207,7 +211,11 @@
         "ConfirmDeleteReplacement": "El recambio {{replacement}} se va a borrar. ¿Desea continuar?",
         "ConfirmDeleteReplacementWithOperations": "El recambio {{replacement}} se va a borrar con sus operaciones asociadas. ¿Desea continuar?",
         "ConfirmSaveVehiclesAssociatedToConfiguration": "Los vehículos seleccionados se asociarán a la configuración {{configuration}}. Los vehiculos deseleccionados se asociarán a la configuración de fábrica. ¿Desea Continuar?",
-        "EditSaveVehiclesAssociated": "Los vehículos han sido asociados correctamente a la configuración"
+        "EditSaveVehiclesAssociated": "Los vehículos han sido asociados correctamente a la configuración",
+        "AssignConfigurationToVehicle": "Asignar {{configuration}} a vehículos",
+        "AssignMaintenanceToConfiguration": "Asignar {{maintenance}} a configuraciones",
+        "ConfirmSaveMaintenancesAssociatedToConfiguration": "Las configuraciones seleccionadas se asociarán al mantenimiento {{maintenance}}. Las configuraciones deseleccionados se desasignaran. ¿Desea continuar?",
+        "EditSaveMaintenancesAssociated": "Las configuraciones han sido asociadas correctamente al mantenimiento"
     },
     "ALERT" : {
         "INFO": "Info",

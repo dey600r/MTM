@@ -211,10 +211,10 @@ export class DashboardService {
     getPrefilterOperation(data: OperationModel[], filter: SearchDashboardModel): OperationModel[] {
         let operationPreFilter: OperationModel[] = [];
         if (filter.showMyData) {
-            operationPreFilter = data.filter(x => x.owner === null || x.owner.toLowerCase() === Constants.OWNER_ME ||
+            operationPreFilter = data.filter(x => x.owner === null || x.owner === '' || x.owner.toLowerCase() === Constants.OWNER_ME ||
                 x.owner.toLowerCase() === Constants.OWNER_YO);
         } else {
-            operationPreFilter = data.filter(x => x.owner !== null && x.owner.toLowerCase() !== Constants.OWNER_ME &&
+            operationPreFilter = data.filter(x => x.owner !== null && x.owner !== '' && x.owner.toLowerCase() !== Constants.OWNER_ME &&
                 x.owner.toLowerCase() !== Constants.OWNER_YO);
         }
         operationPreFilter = operationPreFilter.filter(z => data.some(x => z.operationType.id === x.operationType.id &&

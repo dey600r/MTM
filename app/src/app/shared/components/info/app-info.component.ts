@@ -15,7 +15,6 @@ export class AppInfoComponent {
 
   // MODAL MODELS
   @Input() inputInfo: ModalInputModel = new ModalInputModel();
-  @Output() modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   isVehicleEmpty(): boolean {
     return this.inputInfo.parentPage !== PageEnum.VEHICLE && this.isVehiclePageEmpty();

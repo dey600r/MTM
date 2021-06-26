@@ -30,7 +30,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
-  modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
@@ -378,7 +377,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
     this.controlService.closeModal(this.modalController);
   }
 

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ViewChildren, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { IonSelect, Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -6,16 +6,17 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService } from '@services/index';
-import { ConstantsColumns, ActionDBEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, PageEnum, Constants, ToastTypeEnum, ModalOutputEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
-  VehicleModel, OperationModel
+  VehicleModel, OperationModel, ListModalModel, ListDataModalModel
 } from '@models/index';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
+import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 
 @Component({
   selector: 'app-configuration',
@@ -42,10 +43,6 @@ export class ConfigurationPage {
   measure: any = {};
   segmentHeader: any[] = [];
   segmentSelected = 1;
-  vehiclesSelected: number[] = [];
-  translateAccept = '';
-  translateCancel = '';
-  changeFake = false;
 
   loaded = false;
 
@@ -144,22 +141,58 @@ export class ConfigurationPage {
     return this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE;
   }
 
-  openSelect(itemSliding: any, configuration: ConfigurationModel) {
+  async openListModalConfiguration(itemSliding: any, configuration: ConfigurationModel) {
     this.rowConfSelected = configuration;
-    if (this.translateAccept === '') { this.translateAccept = this.translator.instant('COMMON.ACCEPT'); }
-    if (this.translateCancel === '') { this.translateCancel = this.translator.instant('COMMON.CANCEL'); }
-    this.vehiclesSelected = this.vehicles.filter(x => x.configuration.id === configuration.id).map(x => x.id);
-    this.changeFake = true;
+    let listDataModel: ListDataModalModel[] = [];
+    this.vehicles.forEach(x => {
+      listDataModel = [...listDataModel,
+        new ListDataModalModel(
+          x.id,
+          `${x.brand} ${x.model}`,
+          x.configuration.name,
+          `${x.km} ${this.measure.value}`,
+          this.vehicleService.getIconVehicle(x),
+          (x.configuration.id === configuration.id)
+        )];
+    });
+    const listModel: ListModalModel = new ListModalModel(this.translator.instant('PAGE_CONFIGURATION.AssignConfigurationToVehicle',
+      { configuration : configuration.name }), true, listDataModel);
+    const modal = await this.controlService.openModal(PageEnum.CONFIGURATION,
+      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>(true, listModel, [], PageEnum.CONFIGURATION));
+
+    const { data } = await modal.onWillDismiss();
     if (itemSliding) { itemSliding.close(); }
-    this.detector.detectChanges();
-    this.selectVehicles.open();
+    if (data && data.data && data.action === ModalOutputEnum.SAVE) {
+      this.showConfirmSaveVehiclesAssociatedToConfiguration(data.data);
+    }
   }
 
-  changeVehicleSelected() {
-    if (!this.changeFake) {
-      this.showConfirmSaveVehiclesAssociatedToConfiguration();
+  async openListModalMaintenance(itemSliding: any, maintenance: MaintenanceModel) {
+    this.rowMainSelected = maintenance;
+    let listDataModel: ListDataModalModel[] = [];
+
+    this.configurations.forEach(x => {
+      listDataModel = [...listDataModel,
+        new ListDataModalModel(
+          x.id,
+          x.name,
+          '',
+          x.description,
+          'cog',
+          (x.listMaintenance && x.listMaintenance.some(z => z.id === maintenance.id)),
+          (x.id === 1)
+        )];
+    });
+    const listModel: ListModalModel = new ListModalModel(this.translator.instant('PAGE_CONFIGURATION.AssignMaintenanceToConfiguration',
+      { maintenance : maintenance.description }), !maintenance.master, listDataModel);
+    const modal = await this.controlService.openModal(PageEnum.CONFIGURATION,
+      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>(true, listModel, [], PageEnum.CONFIGURATION));
+
+    const { data } = await modal.onWillDismiss();
+    if (itemSliding) { itemSliding.close(); }
+    if (data && data.data && data.action === ModalOutputEnum.SAVE) {
+      this.showConfirmSaveMaintenancesAssociatedToConfiguration(data.data);
     }
-    this.changeFake = false;
   }
 
   /** CONFIGURATION */
@@ -206,25 +239,25 @@ export class ConfigurationPage {
     );
   }
 
-  showConfirmSaveVehiclesAssociatedToConfiguration() {
+  showConfirmSaveVehiclesAssociatedToConfiguration(data: ListModalModel) {
     const msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmSaveVehiclesAssociatedToConfiguration',
       { configuration: this.rowConfSelected.name });
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,
     {
       text: this.translator.instant('COMMON.ACCEPT'),
       handler: () => {
-        this.saveVehiclesAssociatedToConfiguration();
+        this.saveVehiclesAssociatedToConfiguration(data);
       }
     });
   }
 
-  saveVehiclesAssociatedToConfiguration() {
+  saveVehiclesAssociatedToConfiguration(data: ListModalModel) {
     const vehiclesAssociatedToConfigurationSelected: VehicleModel[] =
       this.vehicles.filter(x => x.configuration.id === this.rowConfSelected.id);
     const vehiclesChangeToConfigurationDefault: VehicleModel[] = vehiclesAssociatedToConfigurationSelected.filter(x =>
-      !this.vehiclesSelected.some(y => y === x.id));
+      data.listData.some(y => y.id === x.id && !y.selected));
     const vehiclesChangeToConfigurationSelected: VehicleModel[] = this.vehicles.filter(x =>
-      this.vehiclesSelected.some(y => y === x.id));
+      data.listData.some(y => y.id === x.id && y.selected));
     let vehiclesToSave: VehicleModel[] = [];
     if (vehiclesChangeToConfigurationDefault.length > 0) {
       vehiclesChangeToConfigurationDefault.forEach(x => {
@@ -290,6 +323,43 @@ export class ConfigurationPage {
 
   getReplacementCommas(replacements: MaintenanceElementModel[]): string {
     return this.configurationService.getReplacement(replacements);
+  }
+
+  showConfirmSaveMaintenancesAssociatedToConfiguration(data: ListModalModel) {
+    const msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmSaveMaintenancesAssociatedToConfiguration',
+      { maintenance: this.rowMainSelected.description });
+    this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.MAINTENANCE'), msg,
+    {
+      text: this.translator.instant('COMMON.ACCEPT'),
+      handler: () => {
+        this.saveMaintenanceAssociatedToConfiguration(data);
+      }
+    });
+  }
+
+  saveMaintenanceAssociatedToConfiguration(data: ListModalModel) {
+    let configurationSave: ConfigurationModel[] = [];
+    let configurationDelete: ConfigurationModel[] = [];
+    this.configurations.forEach(c => {
+      if (c.listMaintenance && c.listMaintenance.length > 0) {
+        c.listMaintenance.forEach(m => {
+          if (this.rowMainSelected.id === m.id && data.listData.some(x => x.id === c.id && !x.selected)) {
+            configurationDelete = [...configurationDelete, new ConfigurationModel(c.name, c.description, c.master, [m], c.id)];
+          }
+        });
+      }
+    });
+    data.listData.forEach(x => {
+      if (x.selected && this.configurations.some(c => c.id === x.id && !c.listMaintenance.some(m => m.id === this.rowMainSelected.id))) {
+        configurationSave = [...configurationSave, new ConfigurationModel('', '', true, [this.rowMainSelected], x.id)];
+      }
+    });
+    this.configurationService.saveConfigurationMaintenance(configurationSave, configurationDelete).then(res => {
+      this.controlService.showToast(PageEnum.MODAL_CONFIGURATION,
+        ToastTypeEnum.SUCCESS, 'PAGE_CONFIGURATION.EditSaveMaintenancesAssociated');
+    }).catch(e => {
+      this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+    });
   }
 
   /** MAINTENANCE ELEMENTS / REPLACEMENT */

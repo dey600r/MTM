@@ -135,4 +135,25 @@ export class VehiclePage implements OnInit {
     return this.vehicleService.getIconVehicle(vehicle);
   }
 
+  activateNotificationVehicle(itemSliding: any, vehicle: VehicleModel) {
+    this.rowSelected = vehicle;
+    const message: string = (this.rowSelected.active ? 'PAGE_VEHICLE.ConfirmDesactivateNotificationVehicle' : 'PAGE_VEHICLE.ConfirmActivateNotificationVehicle');
+    this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.VEHICLES'),
+      this.translator.instant(message, {vehicle: `${this.rowSelected.brand} ${this.rowSelected.model}`}),
+      {
+        text: this.translator.instant('COMMON.ACCEPT'),
+        handler: () => {
+          const resMsg: string = (this.rowSelected.active ? 'PAGE_VEHICLE.DesactivatedNotificationVehicle' : 'PAGE_VEHICLE.ActivatedNotificationVehicle');
+          this.rowSelected.active = !this.rowSelected.active;
+          this.vehicleService.saveVehicle([this.rowSelected], ActionDBEnum.UPDATE).then(x => {
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, resMsg);
+          }).catch(e => {
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+          });
+        }
+      }
+    );
+    if (itemSliding) { itemSliding.close(); }
+  }
+
 }

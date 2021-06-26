@@ -25,7 +25,6 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
-  modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // MODEL FORM
   operation: OperationModel = new OperationModel();
@@ -200,9 +199,8 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     }
   }
 
-  async closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
-    await this.modalController.dismiss(this.modalOutputModel);
+  closeModal() {
+    this.controlService.closeModal(this.modalController);
   }
 
   moveCursorToEnd(event: any) {

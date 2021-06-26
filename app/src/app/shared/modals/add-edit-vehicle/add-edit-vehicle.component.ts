@@ -22,7 +22,6 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
-  modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // MODEL FORM
   vehicle: VehicleModel = new VehicleModel();
@@ -125,9 +124,8 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     }
   }
 
-  async closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
-    await this.modalController.dismiss(this.modalOutputModel);
+  closeModal() {
+    this.controlService.closeModal(this.modalController);
   }
 
   isValidForm(f: any): boolean {

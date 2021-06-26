@@ -29,6 +29,7 @@ import { InfoNotificationComponent } from '@modals/info-notification/info-notifi
 import { SettingsComponent } from '@modals/settings/settings.component';
 import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popo
     InfoNotificationComponent,
     SettingsComponent,
     InfoCalendarComponent,
-    SearchDashboardPopOverComponent
+    SearchDashboardPopOverComponent,
+    ListDataToUpdateComponent
   ],
   entryComponents: [],
   imports: [
@@ -63,7 +65,8 @@ import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popo
     InfoNotificationComponent,
     SettingsComponent,
     InfoCalendarComponent,
-    SearchDashboardPopOverComponent
+    SearchDashboardPopOverComponent,
+    ListDataToUpdateComponent
   ],
   providers: [
     File,

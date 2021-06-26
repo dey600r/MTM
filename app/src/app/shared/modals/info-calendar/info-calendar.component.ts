@@ -30,7 +30,6 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
-  modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // DATA
   listInfoCalendar: InfoCalendarVehicleViewModel[] = [];
@@ -287,7 +286,6 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
     this.controlService.closeModal(this.modalController);
   }
 }
