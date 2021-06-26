@@ -184,7 +184,7 @@ export class ConfigurationPage {
         )];
     });
     const listModel: ListModalModel = new ListModalModel(this.translator.instant('PAGE_CONFIGURATION.AssignMaintenanceToConfiguration',
-      { maintenance : maintenance.description }), !maintenance.master, listDataModel);
+      { maintenance : maintenance.description }), true, listDataModel);
     const modal = await this.controlService.openModal(PageEnum.CONFIGURATION,
       ListDataToUpdateComponent, new ModalInputModel<ListModalModel>(true, listModel, [], PageEnum.CONFIGURATION));
 

@@ -374,7 +374,7 @@ INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (157,116,4,20.3);
 INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (158,116,5,7.15);
 INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (159,116,6,39.21);
 INSERT OR IGNORE INTO "mtmOpMaintElem" VALUES (160,116,17,0.5);
-INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v1.2.3','2021-06-06 19:00:00');
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v3.1.0','2021-07-01 19:00:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (2,'configDistance','KM','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (3,'configMoney','EURO','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (4,'configTheme','L','2006-09-12 12:32:00');
