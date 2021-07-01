@@ -45,3 +45,8 @@ export enum ToastTypeEnum {
     DANGER = 'danger',
     INFO = 'primary'
 }
+
+export enum ModalOutputEnum {
+    SAVE = 1,
+    CANCEL = 2
+}

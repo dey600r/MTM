@@ -2,15 +2,15 @@
   <ion-toolbar>
     <!-- Button Calendar -->
     <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openInfoCalendar()">
-      <ion-icon size="large" name="calendar"></ion-icon>
+      <ion-icon color="primary" size="large" name="calendar"></ion-icon>
     </ion-button>
     <!-- Tittle -->
     <ion-title>
-      <ion-title class="align-center">{{ 'PAGE_HOME.HOME' | translate }}</ion-title>
+      <ion-title color="text-header" class="align-center">{{ 'PAGE_HOME.HOME' | translate }}</ion-title>
     </ion-title>
     <!-- Button filter -->
     <ion-button slot="end" fill="clear" (click)="openSettings()" class="btn-width-header">
-      <ion-icon size="large" name="settings"></ion-icon>
+      <ion-icon color="primary" size="large" name="settings"></ion-icon>
     </ion-button>
   </ion-toolbar>
   <!-- SEGMENT -->
@@ -36,7 +36,7 @@
     <ion-item-sliding *ngFor="let w of this.vehicleSelected.listWearReplacement" #itemSliding>
       <!-- SLIDING START -->
       <ion-item-options side="start">
-        <ion-item-option class="day-circle-config-skull" (click)="desactivateMaintenance(itemSliding, w)">
+        <ion-item-option class="day-circle-config-danger" (click)="desactivateMaintenance(itemSliding, w)">
           <ion-icon slot="icon-only" name="notifications-off"></ion-icon>
         </ion-item-option>
       </ion-item-options>
@@ -106,8 +106,8 @@
       <ion-icon name="grid"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ion-fab-button (click)="openModalVehicle()"><ion-icon color="primary" name="home"></ion-icon></ion-fab-button>
-      <ion-fab-button *ngIf="!hideOpButton" (click)="openModalOperation()"><ion-icon color="primary" name="construct"></ion-icon></ion-fab-button>
+      <ion-fab-button color="fab-back" (click)="openModalVehicle()"><ion-icon color="primary" name="home"></ion-icon></ion-fab-button>
+      <ion-fab-button color="fab-back" *ngIf="!hideOpButton" (click)="openModalOperation()"><ion-icon color="primary" name="construct"></ion-icon></ion-fab-button>
     </ion-fab-list>
   </ion-fab>
 </ion-content>

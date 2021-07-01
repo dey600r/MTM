@@ -30,7 +30,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
-  modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
@@ -195,8 +194,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       {
         maintenance: this.nameMaintenanceElement,
         km: (calendarKm.km > this.vehicleKmEstimated ? calendarKm.km : this.vehicleKmEstimated),
-        date: (calendarKm.km > this.vehicleKmEstimated ?
-          this.calendarService.getDateString(dateMaintenance) : this.calendarService.getDateString(today)),
+        date: this.calendarService.getDateString(dateMaintenance),
         measure: this.measure.value
       });
   }
@@ -379,7 +377,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
     this.controlService.closeModal(this.modalController);
   }
 

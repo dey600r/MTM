@@ -28,24 +28,24 @@
   --ion-color-tertiary-tint: #7e57ff;
 
   /** success **/
-  --ion-color-success: #10dc60;
-  --ion-color-success-rgb: 16, 220, 96;
+  --ion-color-success: #248B24;
+  --ion-color-success-rgb: 36, 139, 36;
   --ion-color-success-contrast: #ffffff;
   --ion-color-success-contrast-rgb: 255, 255, 255;
   --ion-color-success-shade: #0ec254;
   --ion-color-success-tint: #28e070;
 
   /** warning **/
-  --ion-color-warning: #ffce00;
-  --ion-color-warning-rgb: 255, 206, 0;
+  --ion-color-warning: #EAB950;
+  --ion-color-warning-rgb: 234, 185, 80;
   --ion-color-warning-contrast: #ffffff;
   --ion-color-warning-contrast-rgb: 255, 255, 255;
   --ion-color-warning-shade: #e0b500;
   --ion-color-warning-tint: #ffd31a;
 
   /** danger **/
-  --ion-color-danger: #f04141;
-  --ion-color-danger-rgb: 245, 61, 61;
+  --ion-color-danger: #B04F47;
+  --ion-color-danger-rgb: 176, 79, 71;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
   --ion-color-danger-shade: #d33939;
@@ -75,11 +75,59 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 
+  /* GRAYS **/
+  --ion-color-step-50: #f2f3f3;
+  --ion-color-step-100: #eaebec;
+  --ion-color-step-150: #e2e4e4;
+  --ion-color-step-200: #d9dcdd;
+  --ion-color-step-250: #d1d5d6;
+  --ion-color-step-300: #c9cdcf;
+  --ion-color-step-350: #c1c6c7;
+  --ion-color-step-400: #b9bec0;
+  --ion-color-step-450: #b1b7b9;
+  --ion-color-step-500: #a9b0b2;
+  --ion-color-step-550: #a0a8aa;
+  --ion-color-step-600: #98a1a3;
+  --ion-color-step-650: #90999c;
+  --ion-color-step-700: #889295;
+  --ion-color-step-750: #808a8d;
+  --ion-color-step-800: #788386;
+  --ion-color-step-850: #6f7b7f;
+  --ion-color-step-900: #677478;
+  --ion-color-step-950: #5f6c70;
+
   /** PROGRESS BAR */
-  --ion-color-progressbar-success-buffer: rgba(0, 188, 0, 0.35);
-  --ion-color-progressbar-success-progress: rgba(0, 145, 0, 0.5);
-  --ion-color-progressbar-warning-buffer: rgba(188, 128, 0, 0.19);
-  --ion-color-progressbar-warning-progress: rgba(250, 172, 5, 0.55);
-  --ion-color-progressbar-danger-buffer: rgba(188, 0, 0, 0.35);
-  --ion-color-progressbar-danger-progress: rgba(188, 0, 0, 0.5);
+  --ion-color-progressbar-success-progress: var(--ion-color-success-rgb);
+  --ion-color-progressbar-warning-progress: var(--ion-color-warning-rgb);
+  --ion-color-progressbar-danger-progress: var(--ion-color-danger-rgb);
+
+   /** CUSTOM **/
+   --ion-color-text-header: #424242;
+   --ion-color-text-header-rgb: rgba(0, 145, 0);
+   --ion-color-text-header-contrast: #F8F8F8;
+   --ion-color-text-header-contrast-rgb: rgba(0, 145, 0);
+   --ion-color-text-header-shade: #f7f7f7;
+   --ion-color-text-header-tint: #F8F8F8;
+
+   --ion-color-fab-back: #F8F8F8;
+   --ion-color-fab-back-rgb: rgba(0, 145, 0);
+   --ion-color-fab-back-contrast: #F8F8F8;
+   --ion-color-fab-back-contrast-rgb: rgba(0, 145, 0);
+   --ion-color-fab-back-shade: #f7f7f7;
+   --ion-color-fab-back-tint: #F8F8F8;
+
+   //** CHARTS **/
+   --ion-color-chart-first: #4EE2EA;
+   --ion-color-chart-second: #34A1EF;
+   --ion-color-chart-third: #5968EE;
+   --ion-color-chart-fourth: #A640F4;
+   --ion-color-chart-five: #DE39F8;
+   --ion-color-chart-sixth: #35F1A6;
+   --ion-color-chart-seventh: #CBF431;
+   --ion-color-chart-eight: #F6A039;
+   --ion-color-chart-nine: #70F635;
+   --ion-color-chart-ten: #FB392D;
+   --ion-color-chart-eleventh: #FA4D99;
+   --ion-color-chart-twelve: #FCFC29;
+
 }

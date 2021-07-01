@@ -1,11 +1,11 @@
 <ion-header [hidden]="!loaded">
   <ion-toolbar>
     <ion-title>
-      <ion-title class="align-center">{{ 'COMMON.CONFIGURATIONS' | translate }}</ion-title>
+      <ion-title color="text-header" class="align-center">{{ 'COMMON.CONFIGURATIONS' | translate }}</ion-title>
     </ion-title>
   </ion-toolbar>
   <!-- SEGMENT -->
-  <ion-segment class="segment-button-fixed" [scrollable]="activeSegmentScroll()" [value]="segmentSelected" 
+  <ion-segment class="segment-button-fixed ion-segment-color" [scrollable]="activeSegmentScroll()" [value]="segmentSelected" 
     (ionChange)="segmentChanged($event)">
     <ion-segment-button [value]="seg.id" layout="icon-start" *ngFor="let seg of segmentHeader">
       <ion-label>{{ seg.title | translate }}</ion-label>
@@ -16,10 +16,10 @@
 <ion-content [hidden]="!loaded">
   <!-- CONFIGURATIONS -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 1">
-    <ion-item-sliding *ngFor="let c of configurations" #slidingItem>
+    <ion-item-sliding *ngFor="let c of configurations" #slidingItemConf>
       <!-- SLIDING START -->
       <ion-item-options side="start" *ngIf="vehicles.length > 0">
-        <ion-item-option class="day-circle-config-blue" (click)="openSelect(slidingItem, c)">
+        <ion-item-option class="day-circle-config-blue" (click)="openListModalConfiguration(slidingItemConf, c)">
           <ion-icon slot="icon-only" name="home"></ion-icon>
         </ion-item-option>
       </ion-item-options>
@@ -46,52 +46,53 @@
         </ion-label>
       </ion-item>
     </ion-item-sliding>
-    <ion-item hidden>
-      <ion-label>{{ 'COMMON.VEHICLES' | translate }}</ion-label>
-      <ion-select #selectVehicles name="selectVehicles" multiple [cancelText]="this.translateCancel"
-          [okText]="this.translateAccept" [(ngModel)]="this.vehiclesSelected" (ionChange)="changeVehicleSelected()">
-        <ion-select-option [(value)]="v.id" *ngFor="let v of vehicles">{{ v.brand + ' ' + v.model }}</ion-select-option>
-      </ion-select>
-    </ion-item>
   </ion-list>
   <!-- MAINTENANCES -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 2">
-    <ion-item button *ngFor="let m of maintenances">
-      <!-- Icons -->
-      <ion-avatar slot="start" class="max-width10" (click)="openMaintenanceModal(m, false)">
-        <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(m)"></ion-icon>
-      </ion-avatar>
-      <!-- Labels -->
-      <ion-label class="auto-width label-event-force" (click)="openMaintenanceModal(m, false)">
-        <h2 class="text-overflow">{{ m.description }}</h2>
-        <h3 class="text-overflow">{{ getReplacementCommas(m.listMaintenanceElement) }}</h3>
-        <div class="table-row">
-          <p *ngIf="m.time > 0" class="p-color">{{ m.km }} {{measure.value}} / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
-          <p *ngIf="m.time <= 0" class="p-color">{{ m.km }} {{measure.value}}</p>
-          <div class="icon-notification">
-            <ion-icon *ngIf="m.fromKm !== 0" class="icon-color" slot="end" size="small" name="walk"></ion-icon>
-            <ion-icon *ngIf="m.toKm !== null" class="icon-color" slot="end" size="small" name="trail-sign"></ion-icon>
-            <ion-icon *ngIf="m.init" class="icon-color" slot="end" size="small" name="navigate-circle"></ion-icon>
-            <ion-icon *ngIf="!m.init && m.wear" class="icon-color" slot="end" size="small" name="notifications-circle"></ion-icon>
+    <ion-item-sliding *ngFor="let m of maintenances" #slidingItemMain>
+      <!-- SLIDING START -->
+      <ion-item-options side="start">
+        <ion-item-option class="day-circle-config-blue" (click)="openListModalMaintenance(slidingItemMain, m)">
+          <ion-icon slot="icon-only" name="cog"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item button>
+        <!-- Icons -->
+        <ion-avatar slot="start" class="max-width10" (click)="openMaintenanceModal(m, false)">
+          <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(m)"></ion-icon>
+        </ion-avatar>
+        <!-- Labels -->
+        <ion-label class="auto-width label-event-force" (click)="openMaintenanceModal(m, false)">
+          <h2 class="text-overflow">{{ m.description }}</h2>
+          <h3 class="text-overflow">{{ getReplacementCommas(m.listMaintenanceElement) }}</h3>
+          <div class="table-row">
+            <p *ngIf="m.time > 0" class="p-color">{{ m.km }} {{measure.value}} / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+            <p *ngIf="m.time <= 0" class="p-color">{{ m.km }} {{measure.value}}</p>
+            <div class="icon-notification">
+              <ion-icon *ngIf="m.fromKm !== 0" class="icon-color" slot="end" size="small" name="walk"></ion-icon>
+              <ion-icon *ngIf="m.toKm !== null" class="icon-color" slot="end" size="small" name="trail-sign"></ion-icon>
+              <ion-icon *ngIf="m.init" class="icon-color" slot="end" size="small" name="navigate-circle"></ion-icon>
+              <ion-icon *ngIf="!m.init && m.wear" class="icon-color" slot="end" size="small" name="notifications-circle"></ion-icon>
+            </div>
           </div>
-        </div>
-      </ion-label>
-      <!-- Buttons edit / delete -->
-      <ion-label *ngIf="m.master" class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-          </ion-button>
         </ion-label>
-      </ion-label>
-      <ion-label *ngIf="!m.master" class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row" fill="clear" (click)="deleteMaintenance(m)">
-            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-          </ion-button>
+        <!-- Buttons edit / delete -->
+        <ion-label *ngIf="m.master" class="align-right fix-width69">
+          <ion-label>
+            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+              <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+            </ion-button>
+          </ion-label>
         </ion-label>
-      </ion-label>
-    </ion-item>
+        <ion-label *ngIf="!m.master" class="align-right fix-width69">
+          <ion-label>
+            <ion-button class="btn-width-row" fill="clear" (click)="deleteMaintenance(m)">
+              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </ion-label>
+        </ion-label>
+      </ion-item>
+    </ion-item-sliding>
   </ion-list>
   <!-- MAINTENANCE ELEMNTS / REPLACEMENT -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 3">

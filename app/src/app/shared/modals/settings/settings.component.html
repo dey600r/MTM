@@ -1,10 +1,10 @@
 <ion-header>
     <ion-toolbar>
         <!-- Title -->
-        <ion-title class="align-center">{{ 'COMMON.SETTINGS' | translate }}</ion-title>
+        <ion-title color="text-header" class="align-center">{{ 'COMMON.SETTINGS' | translate }}</ion-title>
         <!-- Button Close -->
         <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
-          <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
+          <ion-icon color="primary" size="large" name="close-circle"></ion-icon>
         </ion-button>
     </ion-toolbar>
 </ion-header>
@@ -35,13 +35,29 @@
     </ion-item>
   </ion-list>
 
+  <!-- THEME -->
+  <ion-list>
+    <ion-list-header class="padding-list-header">
+      <ion-icon size="large" name="color-palette"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.THEMES' | translate }}</h3>
+    </ion-list-header>
+    <ion-item>
+      <ion-label position="stacked">
+        <ion-text>{{ 'COMMON.MODE' | translate }}</ion-text>
+      </ion-label>
+      <ion-select interface="popover" [(ngModel)]="themeSelected.code" (ionChange)="changeTheme()">
+        <ion-select-option [(value)]="t.code" *ngFor="let t of listThemes">{{t.value}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
   <!-- EXPORTS / IMPORTS -->
   <ion-list>
     <ion-list-header class="padding-list-header">
       <ion-icon size="large" name="download"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.MANAGE_DATA' | translate }}</h3>
       <ion-button class="btn-width-list" fill="clear" (click)="showGuideExportImport()">
-        <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
+        <ion-icon color="primary" size="large" name="information-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
   </ion-list>
@@ -58,10 +74,10 @@
           </div>
           <div class="max-width60">
             <ion-button fill="clear" (click)="exportData()">
-              <ion-icon class="btn-color" name="exit"></ion-icon>
+              <ion-icon color="primary" name="exit"></ion-icon>
             </ion-button>
             <ion-button fill="clear" (click)="deleteExportFiles()">
-              <ion-icon class="btn-color" name="trash"></ion-icon>
+              <ion-icon color="primary" name="trash"></ion-icon>
             </ion-button>
           </div>
         </div>
@@ -80,7 +96,7 @@
           </div>
           <div class="max-width60">
             <ion-button fill="clear" (click)="f.click()">
-              <ion-icon class="btn-color" name="enter"></ion-icon>
+              <ion-icon color="primary" name="enter"></ion-icon>
             </ion-button>
             <input id="file-input" class="ion-hide" #f type="file" (change)="validFileAndImport($event)">    
           </div>

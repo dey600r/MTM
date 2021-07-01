@@ -3,31 +3,31 @@
             'info-content-height-no-icon': !inputInfo.isCreate}">
         <div class="info-main">
             <div *ngIf="isVehicleEmpty()">
-                <ion-icon size="large" name="home"></ion-icon>
-                <h2 class="margin-top5">{{ 'ALERT.VehicleEmpty' | translate }}</h2>
+                <ion-icon class="ion-color-info-init" size="large" name="home"></ion-icon>
+                <h2 class="margin-top5 ion-color-info-init">{{ 'ALERT.VehicleEmpty' | translate }}</h2>
             </div>
             <div *ngIf="isOperationPageEmpty()">
-                <ion-icon size="large" name="construct"></ion-icon>
-                <h2 class="margin-top5">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h2>
+                <ion-icon class="ion-color-info-init" size="large" name="construct"></ion-icon>
+                <h2 class="margin-top5 ion-color-info-init">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h2>
             </div>
             <div *ngIf="isNotificationPageEmpty()">
-                <ion-icon size="large" name="cog"></ion-icon>
-                <h2 class="margin-top5">{{ 'ALERT.ConfigurationEmpty' | translate }}</h2>
+                <ion-icon class="ion-color-info-init" size="large" name="cog"></ion-icon>
+                <h2 class="margin-top5 ion-color-info-init">{{ 'ALERT.ConfigurationEmpty' | translate }}</h2>
             </div>
         </div>
         <div *ngIf="inputInfo.isCreate">
             <div class="info-tab">
                 <div class="info-icon dissapear">
-                    <ion-icon></ion-icon>
+                    <ion-icon class="ion-color-info-init"></ion-icon>
                 </div>
                 <div [ngClass]="{'info-icon': true, 'dissapear': !isVehicleEmpty()}">
-                    <ion-icon size="large" name="arrow-down-circle"></ion-icon>
+                    <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
                 </div>
                 <div class="info-icon dissapear">
                     <ion-icon></ion-icon>
                 </div>
                 <div [ngClass]="{'info-icon': true, 'dissapear': !isNotificationEmpty()}">
-                    <ion-icon size="large" name="arrow-down-circle"></ion-icon>
+                    <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
                 </div>
             </div>
         </div>

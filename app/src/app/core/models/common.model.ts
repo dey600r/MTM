@@ -1,4 +1,4 @@
-import { PageEnum } from '@utils/index';
+import { ModalOutputEnum, PageEnum } from '@utils/index';
 
 export class BaseModel {
     id: number;
@@ -7,13 +7,13 @@ export class BaseModel {
     }
 }
 
-export class ModalInputModel {
+export class ModalInputModel<T = any, R = any> {
     isCreate: boolean;
     data: any;
     dataList: any[];
     parentPage: PageEnum;
     action: string;
-    constructor(create: boolean = true, d: any = null, dl: any[] = [], parentPage: PageEnum = PageEnum.HOME,
+    constructor(create: boolean = true, d: T = null, dl: R[] = [], parentPage: PageEnum = PageEnum.HOME,
                 act: string = '') {
         this.isCreate = create;
         this.data = d;
@@ -23,10 +23,12 @@ export class ModalInputModel {
     }
 }
 
-export class ModalOutputModel {
-    data: any;
-    dataList: any[];
-    constructor(d: any = null, dl: any[] = []) {
+export class ModalOutputModel<T = any, R = any> {
+    action: ModalOutputEnum;
+    data: T;
+    dataList: R[];
+    constructor(a: ModalOutputEnum = ModalOutputEnum.SAVE, d: T = null, dl: R[] = []) {
+        this.action = a;
         this.data = d;
         this.dataList = dl;
     }

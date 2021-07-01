@@ -587,6 +587,22 @@ export class SqlService {
     return `${sql}; `;
   }
 
+  insertSqlSystemConfiguration(system: SystemConfigurationModel[]): string {
+    let sql = '';
+    if (system && system.length > 0) {
+      sql = `INSERT OR IGNORE INTO ${ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION} ` +
+      `(${ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_KEY}, ${ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE}, ` +
+      `${ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_UPDATED}) `;
+      system.forEach((x, index) => {
+        sql += `SELECT '${x.key}', '${x.value}', '${new Date().toLocaleString()}'`;
+        if ((index + 1) < system.length) {
+          sql += ' UNION ';
+        }
+      });
+    }
+    return `${sql}; `;
+  }
+
   /* UPDATES SQL */
 
   updateSqlVehicle(vehicles: VehicleModel[]): string {

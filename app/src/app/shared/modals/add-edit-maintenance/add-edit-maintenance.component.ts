@@ -23,7 +23,6 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
-  modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // MODEL FORM
   maintenance: MaintenanceModel = new MaintenanceModel();
@@ -144,9 +143,8 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
       x.code === Constants.MAINTENANCE_FREQ_ONCE_CODE);
   }
 
-  async closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
-    await this.modalController.dismiss(this.modalOutputModel);
+  closeModal() {
+    this.controlService.closeModal(this.modalController);
   }
 
   isValidForm(f: any): boolean {

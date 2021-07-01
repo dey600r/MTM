@@ -17,7 +17,6 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
-  modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
   // MODEL FORM
   configuration: ConfigurationModel = new ConfigurationModel();
@@ -101,9 +100,8 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
     return this.configurationService.getReplacement(replacements);
   }
 
-  async closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
-    await this.modalController.dismiss(this.modalOutputModel);
+  closeModal() {
+    this.controlService.closeModal(this.modalController);
   }
 
   isValidForm(f: any): boolean {

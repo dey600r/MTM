@@ -82,7 +82,12 @@
         "MANAGE_DATA": "Manage Data",
         "EXPORT": "Export to:",
         "IMPORT": "Import from:",
-        "SELECT_FILE": "Select file ..."
+        "SELECT_FILE": "Select file ...",
+        "THEMES": "Themes",
+        "MODE": "Mode",
+        "LIGHT": "Light",
+        "DARK": "Dark",
+        "SKY": "Sky"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -143,7 +148,11 @@
         "ConfirmDeleteVehicleOperation": "The vehicle {{vehicle}} and operations will be deleted. Do you wish continue?",
         "ExpensesPerVehicle": "Expenses per vehicle",
         "ExpensesPerOperationType": "Expenses per operation type",
-        "ExpensesPerReplacement": "Expenses per replacement"
+        "ExpensesPerReplacement": "Expenses per replacement",
+        "ConfirmActivateNotificationVehicle": "{{vehicle}} notifications will be activated. Do you wish continue?",
+        "ConfirmDesactivateNotificationVehicle": "{{vehicle}} notifications will be disabled. Do you wish continue?",
+        "DesactivatedNotificationVehicle": "Vehicle notification has been desactivated succesfully",
+        "ActivatedNotificationVehicle": "Vehicle notification has been activated succesfully"
     },
     "PAGE_OPERATION": {
         "YOURS_OPERATIONS": "Vehicles's Operations",
@@ -160,13 +169,13 @@
         "AddDateLower": "Date lower {{dateFin}}",
         "AddDateHigher": "Date higher {{dateIni}}",
         "AddKmBetween": "{{measure}} between {{kmIni}} and {{kmFin}}",
-        "AddKmLower": "{{measure}} lower {{kmFin}} with respect to vehicle",
         "AddSaveOperation": "The operation {{operation}} has been added succesfully",
         "EditSaveOperation": "The operation {{operation}} has been modified succesfully",
         "DeleteSaveOperation": "The operation {{operation}} has been deleted succesfully",
         "ErrorSaveOperation": "There was an erro while saving operation data",
         "ConfirmDeleteOperation": "The operation {{operation}} will be deleted. Do you wish continue?",
-        "ConfirmSaveToDeleteReplacement": "The replacement will be deleted. Do you wish continue?"
+        "ConfirmSaveToDeleteReplacement": "The replacement will be deleted. Do you wish continue?",
+        "ConfitmUpdateVehicleKm": "The operation cannot have more {{measure}} than the vehicle ({{kmFin}}). Do you wish to upgradet the vehicle?"
     },
     "PAGE_CONFIGURATION": {
         "YOURS_CONFIGURATIONS": "Configurations",
@@ -201,7 +210,12 @@
         "ConfirmDeleteReplacement": "The spare part {{replacement}} will be deleted. Do you wish continue?",
         "ConfirmDeleteReplacementWithOperations": "The spare part {{replacement}} will be deleted with its operations associated. Do you wish continue?",
         "ConfirmSaveVehiclesAssociatedToConfiguration": "The selected vehicles will be associated to the configuration {{configuration}}. The deselected vehicles will be associated to the production configuration. Do you wish continue?",
-        "EditSaveVehiclesAssociated": "The vehicles has been associated succesfully to configuration"
+        "EditSaveVehiclesAssociated": "The vehicles has been associated succesfully to configuration",
+        "AssignConfigurationToVehicle": "Assign {{configuration}} to vehicles",
+        "AssignMaintenanceToConfiguration": "Assign {{maintenance}} to configuration",
+        "ConfirmSaveMaintenancesAssociatedToConfiguration": "The selected configurations will be associated to the maintenance {{maintenance}}. The deselected maintenances will be desassociated. Do you wish continue?",
+        "EditSaveMaintenancesAssociated": "The configurations has been associated succesfully to maintenance"
+        
     },
     "ALERT" : {
         "INFO": "Info",

@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService,
-  CalendarService, SettingsService
+  CalendarService, SettingsService, ThemeService
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
@@ -61,7 +61,8 @@ export class HomePage implements OnInit {
               private configurationService: ConfigurationService,
               private controlService: ControlService,
               private vehicleService: VehicleService,
-              private settingsService: SettingsService) {
+              private settingsService: SettingsService,
+              private themeService: ThemeService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -78,6 +79,8 @@ export class HomePage implements OnInit {
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
+        const theme = this.settingsService.getThemeSelected(settings);
+        this.themeService.changeTheme(theme.code);
       }
     });
   }

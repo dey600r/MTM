@@ -43,7 +43,18 @@ export class DashboardModel {
     }
 
     getColorSchemeDefault(): any {
-        return { domain: ['#1CEAF6', '#1C9BF6', '#1C32F6', '#971CF6', '#D91CF6', '#1CF69F',
-            '#C8F61C', '#F6931C', '#5FF61C', '#FD1203', '#FD0371', '#FAFD03']};
+        return { domain: [
+            'var(--ion-color-chart-first)',
+            'var(--ion-color-chart-second)',
+            'var(--ion-color-chart-third)',
+            'var(--ion-color-chart-fourth)',
+            'var(--ion-color-chart-five)',
+            'var(--ion-color-chart-sixth)',
+            'var(--ion-color-chart-seventh)',
+            'var(--ion-color-chart-eight)',
+            'var(--ion-color-chart-nine)',
+            'var(--ion-color-chart-ten)',
+            'var(--ion-color-chart-eleventh)',
+            'var(--ion-color-chart-twelve)']};
     }
 }

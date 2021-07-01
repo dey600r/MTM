@@ -25,6 +25,45 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+/** COLOR CUSTOM **/
+.ion-color-text-header {
+    --ion-color-base: var(--ion-color-text-header);
+    --ion-color-base-rgb: var(--ion-color-text-header-rgb);
+    --ion-color-contrast: var(--ion-color-text-header-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-text-header-contrast-rgb);
+    --ion-color-shade: var(--ion-color-text-header-shade);
+    --ion-color-tint: var(--ion-color-text-header-tint);
+}
+
+.ion-color-fab-back {
+  --ion-color-base: var(--ion-color-fab-back);
+  --ion-color-base-rgb: var(--ion-color-fab-back-rgb);
+  --ion-color-contrast: var(--ion-color-fab-back-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-fab-back-contrast-rgb);
+  --ion-color-shade: var(--ion-color-fab-back-shade);
+  --ion-color-tint: var(--ion-color-fab-back-tint);
+}
+
+ion-calendar.padding-calendar {
+  background-color: var(--ion-background-color);
+}
+
+ngx-charts-chart text{
+    fill: var(--ion-color-step-600, #666); 
+}
+
+.ion-color-info-summary {
+  color: var(--ion-color-step-600, #666); 
+}
+
+.ion-color-info-init {
+  color: var(--ion-color-step-350, #666); 
+}
+
+.custom-toast {
+  color: var(--ion-color-text-header-tint);
+}
+
 /* CALENDAR*/
 $colors: ( 
   primary : #488aff,
@@ -37,67 +76,102 @@ $colors: (
 );
 
 // CSS CALENDAR
+
+// Days
 .day-text-config {
   p { color: white !important; }
+}
+
+.day-circle-config-all {
+  background-color: var(--ion-color-step-150) !important;
+}
+
+button.day-circle-config-all.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
+}
+
+.day-circle-config-skull {
+  background-color: rgba(var(--ion-color-progressbar-danger-progress), 0.7) !important;
+}
+
+button.day-circle-config-skull.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
+}
+
+.day-circle-config-danger {
+  background-color: rgba(var(--ion-color-progressbar-danger-progress), 0.4) !important;
+}
+
+button.day-circle-config-danger.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
+}
+
+.day-circle-config-warning {
+  background-color: rgba(var(--ion-color-progressbar-warning-progress), 0.5) !important;
+}
+
+button.day-circle-config-warning.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
+}
+
+.day-circle-config-success {
+  background-color: rgba(var(--ion-color-progressbar-success-progress), 0.4) !important;
+}
+
+button.day-circle-config-success.days-btn p {
+  color: var(--ion-color-text-header-shade) !important;
+}
+
+.day-circle-config-blue {
+  background-color: rgba(var(--ion-color-primary-rgb), 0.4) !important;
 }
 
 button.days-btn.today p {
   font-weight: bold;
 }
 
+button.days-btn p {
+  color: var(--ion-color-step-750) !important;
+}
+
+button.days-btn.today p {
+  color: var(--ion-color-step-900) !important;
+}
+
+// Months
+
+.month-packer-item button {
+  color: var(--ion-color-step-750) !important;
+}
+
 .month-packer-item.this-month button {
   font-weight: bold;
-  color: #5b5a5a;
-}
-
-
-.day-circle-config-all {
-  background-color: var(--ion-color-medium-tint) !important;
-}
-
-.day-circle-config-skull {
-  background-color: var(--ion-color-progressbar-danger-progress) !important;
-}
-
-.day-circle-config-danger {
-  background-color: var(--ion-color-progressbar-danger-buffer) !important;
-}
-
-.day-circle-config-warning {
-  background-color: var(--ion-color-progressbar-warning-progress) !important;
-}
-
-.day-circle-config-success {
-  background-color: var(--ion-color-progressbar-success-buffer) !important;
-}
-
-.day-circle-config-blue {
-  background-color: var(--ion-color-primary-tint) !important;
+  color: var(--ion-color-step-900) !important;
 }
 
 .month-packer-item.month-circle-config-all button {
-  background-color: var(--ion-color-medium-tint) !important;
-  color: white;
+  background-color: var(--ion-color-step-350) !important;
+  color: var(--ion-color-text-header-shade) !important;
 }
 
 .month-packer-item.month-circle-config-skull button {
-  background-color: var(--ion-color-progressbar-danger-progress) !important;
-  color: white;
+  background-color: rgba(var(--ion-color-progressbar-danger-progress), 0.7) !important;
+  color: var(--ion-color-text-header-shade) !important;
 }
 
 .month-packer-item.month-circle-config-danger button {
-  background-color: var(--ion-color-progressbar-danger-buffer) !important;
-  color: white;
+  background-color: rgba(var(--ion-color-progressbar-danger-progress), 0.4) !important;
+  color: var(--ion-color-text-header-shade) !important;
 }
 
 .month-packer-item.month-circle-config-warning button {
-  background-color: var(--ion-color-progressbar-warning-progress) !important;
-  color: white;
+  background-color: rgba(var(--ion-color-progressbar-warning-progress), 0.5) !important;
+  color: var(--ion-color-text-header-shade) !important;
 }
 
 .month-packer-item.month-circle-config-success button {
-  background-color: var(--ion-color-progressbar-success-buffer) !important;
-  color: white;
+  background-color: rgba(var(--ion-color-progressbar-success-progress), 0.4) !important;
+  color: var(--ion-color-text-header-shade) !important;
 }
 
 // BUG Calendar windows: Dont show icons
@@ -105,6 +179,52 @@ button.days-btn.today p {
   display: block;
   width: inherit;
   height: inherit;  
+}
+
+// COLORS
+
+.icon-color-success {
+  --ion-color-base: rgba(var(--ion-color-progressbar-success-progress), 0.6);
+}
+
+.icon-color-gray {
+  --ion-color-base: var(--ion-color-step-600, #666);
+}
+
+.icon-color-warning {
+  --ion-color-base: rgba(var(--ion-color-progressbar-warning-progress), 0.6);
+}
+
+.icon-color-danger {
+  --ion-color-base: rgba(var(--ion-color-progressbar-danger-progress), 0.6);
+}
+
+.icon-color-skull {
+  --ion-color-base: rgba(var(--ion-color-progressbar-danger-progress), 0.8);
+}
+
+.quizz-progress-success {
+  ion-progress-bar {
+      --background: rgba(var(--ion-color-progressbar-success-progress));
+      --buffer-background: rgba(var(--ion-color-progressbar-success-progress), 0.4);
+      --progress-background: rgba(var(--ion-color-progressbar-success-progress), 0.6);
+  }
+}
+
+.quizz-progress-warning {
+  ion-progress-bar {
+      --background: rgba(var(--ion-color-progressbar-warning-progress));
+      --buffer-background: rgba(var(--ion-color-progressbar-warning-progress), 0.4);
+      --progress-background: rgba(var(--ion-color-progressbar-warning-progress), 0.6);
+  }
+}
+
+.quizz-progress-danger {
+  ion-progress-bar {
+      --background: rgba(var(--ion-color-progressbar-danger-progress));
+      --buffer-background: rgba(var(--ion-color-progressbar-danger-progress), 0.4);
+      --progress-background: rgba(var(--ion-color-progressbar-danger-progress), 0.6);
+  }
 }
 
 // BUG SEGMENT windows: Dont work scroll
@@ -123,8 +243,8 @@ button.days-btn.today p {
 /* SEGMENTS */
 
 .segment-button-fixed {
-  box-shadow: 1px 7px 12px #ddd;
-  //justify-content: center !important;
+  box-shadow: 1px 5px 11px var(--ion-color-step-50);
+  background-color: var(--ion-toolbar-background);
 }
 
 .segment-top {

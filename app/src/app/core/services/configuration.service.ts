@@ -60,6 +60,24 @@ export class ConfigurationService {
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
     }
 
+    saveConfigurationMaintenance(maintenancesNew: ConfigurationModel[], maintenancesDelete: ConfigurationModel[]) {
+        let sqlDB = '';
+        const listLoadTable: string[] = [ConstantsTable.TABLE_MTM_CONFIGURATION];
+        if (maintenancesNew && maintenancesNew.length > 0) {
+            maintenancesNew.forEach(x => {
+                sqlDB += this.sqlService.insertSqlConfigurationMaintenance(x);
+            });
+        }
+        if (maintenancesDelete && maintenancesDelete.length > 0) {
+            maintenancesDelete.forEach(x => {
+                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
+                    ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, x.listMaintenance.map(y => y.id),
+                    ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION, [x.id]);
+            });
+        }
+        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+    }
+
     deleteConfigManintenance(idConfiguration: number, idMaintenance: number) {
         const sqlDB: string = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
             ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION, [idConfiguration],

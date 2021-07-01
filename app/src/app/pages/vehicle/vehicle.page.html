@@ -11,7 +11,7 @@
       <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
     </ion-button>
     <!-- Tittle -->
-    <ion-title class="align-center">{{ 'COMMON.GARAGE' | translate }}</ion-title>
+    <ion-title color="text-header" class="align-center">{{ 'COMMON.GARAGE' | translate }}</ion-title>
   </ion-toolbar>
   <!-- SEGMENT -->
   <ion-segment class="segment-button-fixed" [value]="1">
@@ -26,33 +26,42 @@
   <app-info *ngIf="vehicles.length === 0" [inputInfo]="input"></app-info>
   <!-- LIST -->
   <ion-list *ngIf="vehicles.length > 0" class="segment-top margin-bottom45">
-    <ion-item button *ngFor="let m of vehicles" [ngClass]="{ 'disable-item-color': !m.active }">
-      <!-- Icons -->
-      <ion-avatar slot="start" class="max-width10" (click)="openVehicleModal(m, false)">
-        <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }" [name]="getIconVehicle(m)"></ion-icon>
-      </ion-avatar>
-      <!-- Labels -->
-      <ion-label class="min-width40 label-event-force" (click)="openVehicleModal(m, false)">
-        <h2>{{ m.brand }}</h2>
-        <h3>{{ m.model }}</h3>
-        <p [ngClass]="{ 'disable-item-color': !m.active }">{{ m.datePurchase | dateFormatCalendarPipe }}</p>
-      </ion-label>
-      <ion-label class="padding-left10 label-event-force" (click)="openVehicleModal(m, false)">
-        <h3>{{ m.km }} {{measure.value}}</h3>
-        <ion-label class="row-block flex-items-center">
-          <ion-icon name="cog"></ion-icon>
-          <p [ngClass]="{ 'icon-label disable-item-color': !m.active, 'icon-label': m.active }">{{ m.configuration.name }}</p>
+    <ion-item-sliding *ngFor="let v of vehicles" #slidingItem>
+      <!-- SLIDING START -->
+      <ion-item-options side="start">
+        <ion-item-option [ngClass]="{'day-circle-config-danger': v.active, 'day-circle-config-blue': !v.active}"
+          (click)="activateNotificationVehicle(slidingItem, v)">
+          <ion-icon slot="icon-only" name="stats-chart"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item button [ngClass]="{ 'disable-item-color': !v.active }">
+        <!-- Icons -->
+        <ion-avatar slot="start" class="max-width10" (click)="openVehicleModal(v, false)">
+          <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !v.active, 'icon-color': v.active }" [name]="getIconVehicle(v)"></ion-icon>
+        </ion-avatar>
+        <!-- Labels -->
+        <ion-label class="min-width40 label-event-force" (click)="openVehicleModal(v, false)">
+          <h2>{{ v.brand }}</h2>
+          <h3>{{ v.model }}</h3>
+          <p [ngClass]="{ 'disable-item-color': !v.active }">{{ v.datePurchase | dateFormatCalendarPipe }}</p>
         </ion-label>
-      </ion-label>
-      <!-- Buttons edit / delete -->
-      <ion-label class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row" fill="clear" (click)="deleteVehicle(m)">
-            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-          </ion-button>
+        <ion-label class="padding-left10 label-event-force" (click)="openVehicleModal(v, false)">
+          <h3>{{ v.km }} {{measure.value}}</h3>
+          <ion-label class="row-block flex-items-center">
+            <ion-icon name="cog"></ion-icon>
+            <p [ngClass]="{ 'icon-label disable-item-color': !v.active, 'icon-label': v.active }">{{ v.configuration.name }}</p>
+          </ion-label>
         </ion-label>
-      </ion-label>
-    </ion-item>
+        <!-- Buttons edit / delete -->
+        <ion-label class="align-right fix-width69">
+          <ion-label>
+            <ion-button class="btn-width-row" fill="clear" (click)="deleteVehicle(v)">
+              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </ion-label>
+        </ion-label>
+      </ion-item>
+    </ion-item-sliding>
   </ion-list>
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">
     <ion-fab-button (click)="openVehicleModal()">

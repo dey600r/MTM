@@ -22,7 +22,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
     modalInputModel: ModalInputModel = new ModalInputModel();
-    modalOutputModel: ModalOutputModel = new ModalOutputModel();
 
     // MODEL FORM
     dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
@@ -93,7 +92,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   closeModal() {
-    this.modalOutputModel = new ModalOutputModel(true);
     this.controlService.closeModal(this.modalController);
   }
 
