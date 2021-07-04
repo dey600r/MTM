@@ -17,6 +17,15 @@ export class Constants {
 
     static TYPE_APP_ANDROID = 'android';
     static TYPE_APP_WINDOWS = 'windows';
+    static TYPE_APP_OTHERS = 'others';
+
+    static THEME_LIGHT = 'light';
+    static THEME_DARK = 'dark';
+    static THEME_SKY = 'sky';
+
+    static THEME_LIGHT_KEY = 'L';
+    static THEME_DARK_KEY = 'D';
+    static THEME_SKY_KEY = 'S';
 
     static URL_MTM_ANDROID_ES = 'https://play.google.com/store/apps/details?id=mtm.ionic.dey125r&hl=es_419';
     static URL_MTM_ANDROID_EN = 'https://play.google.com/store/apps/details?id=mtm.ionic.dey125r&hl=en_419';

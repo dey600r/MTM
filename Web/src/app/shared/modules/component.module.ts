@@ -14,6 +14,8 @@ import { PrimengModule } from './primeng.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     IconDocComponent,
@@ -28,6 +30,8 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModule,
     PrimengModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     TranslateModule.forChild()
   ],
   exports: [

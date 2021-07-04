@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
+import { TranslateService } from '@ngx-translate/core';
+import { InfoThemeModel } from '@models/index';
 import { Constants } from '@utils/constants';
 
 @Injectable({
@@ -8,7 +10,7 @@ import { Constants } from '@utils/constants';
 })
 export class UtilsService {
 
-  constructor() { }
+  constructor(private translator: TranslateService) { }
 
   joinPath(paths: string []): string {
     let result = '.';
@@ -18,8 +20,15 @@ export class UtilsService {
     return result;
   }
 
-  getPathImages(type: string): string {
-    return (type === Constants.TYPE_APP_ANDROID ?
-      environment.pathImagesAndroid : environment.pathImagesWindows);
+  getPathMtMImages(type: string): string {
+    return this.joinPath([environment.pathMtM, this.translator.currentLang, type]);
+  }
+
+  getMtMThemes(): InfoThemeModel[] {
+    return [
+      new InfoThemeModel(Constants.THEME_LIGHT_KEY, Constants.THEME_LIGHT),
+      new InfoThemeModel(Constants.THEME_DARK_KEY, Constants.THEME_DARK),
+      new InfoThemeModel(Constants.THEME_SKY_KEY, Constants.THEME_SKY)
+    ];
   }
 }

@@ -1,8 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { UtilsService } from '@services/utils.service';
 
-import { PictureModel } from '@models/index';
-import { TranslateService } from '@ngx-translate/core';
+import { PictureModel, InfoCarouselModel } from '@models/index';
 import { Constants } from '@utils/constants';
 
 @Component({
@@ -10,26 +9,29 @@ import { Constants } from '@utils/constants';
   templateUrl: './icon-carousel.component.html',
   styleUrls: ['./icon-carousel.component.scss']
 })
-export class IconCarouselComponent implements OnInit {
+export class IconCarouselComponent implements OnInit, OnChanges {
 
-  @Input() dataInfo = Constants.TYPE_APP_ANDROID;
+  @Input() dataInfo: InfoCarouselModel = new InfoCarouselModel(Constants.TYPE_APP_ANDROID, Constants.THEME_DARK);
 
   picturesApp: PictureModel[] = [];
   responsiveOptions: any = [];
+  displayModal = false;
+  selectedPicture: PictureModel = new PictureModel();
 
-  constructor(private utilService: UtilsService,
-              private translator: TranslateService) {
+  constructor(private utilService: UtilsService) {
   }
 
   ngOnInit(): void {
+  }
 
-    const pathImages: string = this.utilService.getPathImages(this.dataInfo);
+  ngOnChanges(): void {
+    const pathImages: string = this.utilService.getPathMtMImages(this.dataInfo.type);
     this.picturesApp = [];
     for (let i = 1; i < 11; i++) {
       this.picturesApp = [...this.picturesApp, {
         name: `Image${i}`,
-        url: this.utilService.joinPath([pathImages, this.translator.currentLang, `Capture${i}.png`]),
-        type: this.dataInfo,
+        url: this.utilService.joinPath([pathImages, this.dataInfo.theme, `Capture${i}.png`]),
+        type: this.dataInfo.type,
         app: 'mtm'
       }];
     }
@@ -38,7 +40,7 @@ export class IconCarouselComponent implements OnInit {
   }
 
   calculateNumVisibleImages(): void {
-    if (this.dataInfo === Constants.TYPE_APP_ANDROID) {
+    if (this.dataInfo.type === Constants.TYPE_APP_ANDROID) {
       this.responsiveOptions = [
         {
             breakpoint: '4000px',
@@ -65,6 +67,11 @@ export class IconCarouselComponent implements OnInit {
         }
       ];
     }
+  }
+
+  showModalDialog(pict: PictureModel): void {
+    this.selectedPicture = pict;
+    this.displayModal = true;
   }
 
 }
