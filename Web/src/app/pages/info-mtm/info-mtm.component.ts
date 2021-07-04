@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UtilsService } from '@app/core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '@environments/environment';
-import { InfoDeveloperModel, InfoIconModel, InfoTabModel, InfoProjectCardModel } from '@models/index';
+import { InfoDeveloperModel, InfoIconModel, InfoTabModel, InfoProjectCardModel, InfoThemeModel } from '@models/index';
 import { Constants } from '@utils/constants';
 import { InfoCardModel } from '@app/core/models/info-card.model';
 import { InfoBaseIconModel } from '@app/core/models/info-base.model';
@@ -35,20 +35,24 @@ export class InfoMtmComponent implements OnInit {
     this.infoIconMtM = new InfoIconModel(this.icon, '', 'icon-mtm', '',
       '', 'item-mtm');
 
+    const pathImages: string = this.utilService.getPathMtMImages(Constants.TYPE_APP_OTHERS);
+
     this.infoListCard = new InfoProjectCardModel('COMMON.MTM_LARGE', 'HOME.descriptionLargeProjects', [
       new InfoCardModel('INFO_MTM.titleExpensesVehicles', 'INFO_MTM.descriptionExpensesVehicles',
-        this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-expenses-vehicles.png'])),
+        this.utilService.joinPath([pathImages, 'info-mtm-expenses-vehicles.png'])),
       new InfoCardModel('INFO_MTM.titleCalendar', 'INFO_MTM.descriptionCalendar',
-        this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-calendar.png'])),
+        this.utilService.joinPath([pathImages, 'info-mtm-calendar.png'])),
       new InfoCardModel('INFO_MTM.titleExpensesReplacement', 'INFO_MTM.descriptionExpensesReplacement',
-        this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-expenses-replacements.png'])),
+        this.utilService.joinPath([pathImages, 'info-mtm-expenses-replacements.png'])),
       new InfoCardModel('INFO_MTM.titleNotifications', 'INFO_MTM.descriptionNotifications',
-        this.utilService.joinPath([environment.pathOthers, this.translator.currentLang, 'info-mtm-notification.png']))
+        this.utilService.joinPath([pathImages, 'info-mtm-notification.png']))
     ]);
 
+    const themes: InfoThemeModel[] = this.utilService.getMtMThemes();
+
     this.infoImageMtM = [
-      new InfoTabModel('Android', Constants.TYPE_APP_ANDROID, 'pi pi-android'),
-      new InfoTabModel('Windows 10', Constants.TYPE_APP_WINDOWS, 'pi pi-microsoft')
+      new InfoTabModel('Android', themes, Constants.TYPE_APP_ANDROID, 'pi pi-android'),
+      new InfoTabModel('Windows 10', themes, Constants.TYPE_APP_WINDOWS, 'pi pi-microsoft')
     ];
 
     this.infoMtMFree = new InfoDeveloperModel('COMMON.MTM_FREE', 'INFO_MTM.descriptionMtMFree');

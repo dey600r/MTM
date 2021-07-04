@@ -8,7 +8,10 @@
         "footer": "Copyright © 2020 - David Jiménez - All rigths reserved",
         "iconDesignedBy": "Icons designed by {{url}}",
         "MTM_LARGE": "Motor Track Manager",
-        "MTM_FREE": "MtM Free"
+        "MTM_FREE": "MtM Free",
+        "light": "Light",
+        "dark": "Dark",
+        "sky": "Sky"
     },
     "HOME": {
         "titleInfoDeveloper": "Developer Information",

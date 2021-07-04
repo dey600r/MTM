@@ -38,7 +38,7 @@ import { Constants } from '@utils/constants';
       useFactory: appInitializerFactory,
       deps: [TranslateService, Injector],
       multi: true
-    }
+    },
   ],
   bootstrap: [AppComponent]
 })
