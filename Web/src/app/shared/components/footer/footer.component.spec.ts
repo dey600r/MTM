@@ -1,15 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SetupTest } from 'src/setup-test';
+import { TranslateService } from '@ngx-translate/core';
+import { SetupTest } from '@testing/index';
 
 import { FooterComponent } from './footer.component';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;
+  let translate: TranslateService;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule(SetupTest.config)
-    .compileComponents();
+    await TestBed.configureTestingModule(SetupTest.config).compileComponents();
+    translate = TestBed.inject(TranslateService);
+    await translate.use('es').toPromise();
   });
 
   beforeEach(() => {

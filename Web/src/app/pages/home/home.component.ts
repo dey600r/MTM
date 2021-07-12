@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Constants } from '@utils/constants';
 import { TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
 import { InfoDeveloperModel, InfoIconModel, InfoProjectModel } from '@app/core/models';
 
 import { environment } from '@environments/environment';
@@ -19,8 +18,7 @@ export class HomeComponent implements OnInit {
   infoSkills: InfoDeveloperModel = new InfoDeveloperModel();
   infoHobbies: InfoDeveloperModel = new InfoDeveloperModel();
 
-  constructor(private translator: TranslateService,
-              private router: Router) {
+  constructor(private translator: TranslateService) {
   }
 
   ngOnInit(): void {
@@ -65,9 +63,5 @@ export class HomeComponent implements OnInit {
           this.translator.instant('COMMON.iconDesignedBy', {url: 'Freepik ' + Constants.ICON_URL_FREE}), 'Skate',
           Constants.ICON_URL_FREEPIK)
       ]);
-  }
-
-  navigateToMtm(): void {
-     this.router.navigateByUrl('infomtm');
   }
 }

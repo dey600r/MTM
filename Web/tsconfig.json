@@ -25,7 +25,8 @@
       "@pages/*": ["src/app/pages/*"],
       "@modules/*": ["src/app/shared/modules/*"],
       "@components/*": ["src/app/shared/components/*"],
-      "@utils/*": ["src/app/core/utils/*"]
+      "@utils/*": ["src/app/core/utils/*"],
+      "@testing/*": ["src/testing/*"]
     }
   }
 }

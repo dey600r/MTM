@@ -24,7 +24,7 @@ export class InfoMtmComponent implements OnInit {
   infoLinksMtmFree: InfoBaseIconModel[] = [];
   infoMtM: InfoDeveloperModel = new InfoDeveloperModel();
 
-  constructor(private translator: TranslateService,
+  constructor(public translator: TranslateService,
               private utilService: UtilsService) {
   }
 

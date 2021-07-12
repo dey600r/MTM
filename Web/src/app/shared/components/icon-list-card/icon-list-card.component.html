@@ -1,10 +1,10 @@
 <div class="p-grid">
     <div class="p-col">
         <div class="box">
-            <h3 class="shadow-title">{{ dataInfo.title | translate }}</h3>
+            <h3 id="cardTitleApp" class="shadow-title">{{ dataInfo.title | translate }}</h3>
         </div>
         <div>
-            <p class="align-start">{{ dataInfo.description | translate }}</p>
+            <p id="cardDescriptionApp" class="align-start">{{ dataInfo.description | translate }}</p>
         </div>
         <div class="align-center-card">
             <div class="container-card" *ngFor="let data of dataInfo.listInfoCard; let i = index">

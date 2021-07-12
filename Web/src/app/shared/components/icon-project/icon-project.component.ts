@@ -13,12 +13,11 @@ export class IconProjectComponent implements OnInit {
   @Input() dataInfo: InfoProjectModel = new InfoProjectModel(
     '', new InfoDeveloperModel('', '', [new InfoIconModel()]));
 
-  constructor(private router: Router) {
+  constructor(public router: Router) {
     cssVars();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   navigateTo(url: InfoIconModel): void {
     if (url.external) {

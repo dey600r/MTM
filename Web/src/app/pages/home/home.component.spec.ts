@@ -2,14 +2,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeComponent } from './home.component';
 
-import { SetupTest } from 'src/setup-test';
+import { SetupTest } from '@testing/index';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let translate: TranslateService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule(SetupTest.config).compileComponents();
+    translate = TestBed.inject(TranslateService);
+    await translate.use('es').toPromise();
   });
 
   beforeEach(() => {
@@ -20,9 +24,5 @@ describe('HomeComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should test report', () => {
-    expect(true).toBeTruthy();
   });
 });
