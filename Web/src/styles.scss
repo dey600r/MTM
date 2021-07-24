@@ -38,6 +38,34 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     justify-content: center;
 }
 
+@media (max-width: 800px) {
+    .main-container {
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+    .sub-container {
+        padding-right: 9%;
+        padding-left: 9%;
+        border-radius: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-container {
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+    .sub-container {
+        padding-right: 7%;
+        padding-left: 7%;
+        border-radius: 20px;
+    }
+}
+
+li a.p-menuitem-link.p-ripple {
+    padding-bottom: 13px !important;
+}
+
 /* SCROLL BAR */
 ::-webkit-scrollbar {
     width: 8px;

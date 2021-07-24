@@ -8,7 +8,7 @@ import * as shape from 'd3-shape';
 
 // UTILS
 import {
-  ModalInputModel, ModalOutputModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
+  ModalInputModel, WearVehicleProgressBarViewModel, WearReplacementProgressBarViewModel,
   MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel, InfoCalendarReplacementViewModel
 } from '@models/index';
 import {
@@ -62,7 +62,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   settingsSubscription: Subscription = new Subscription();
 
   constructor(private platform: Platform,
-              private navParams: NavParams,
+              public navParams: NavParams,
               private modalController: ModalController,
               private dashboardService: DashboardService,
               private configurationService: ConfigurationService,

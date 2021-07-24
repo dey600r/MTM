@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 // COMPONENTS
-import { VehiclePage } from './vehicle.page';
+import { SettingsComponent } from './settings.component';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -11,15 +11,20 @@ import { SettingsService } from '@services/index';
 
 // CONFIGURATION
 import { SetupTest, SpyMockConfig } from '@testing/index';
+import { PageEnum } from '@utils/index';
 
-describe('VehiclePage', () => {
-  let component: VehiclePage;
-  let fixture: ComponentFixture<VehiclePage>;
+// MODELS
+import { ModalInputModel } from '@models/index';
+
+describe('SettingsComponent', () => {
+  let component: SettingsComponent;
+  let fixture: ComponentFixture<SettingsComponent>;
   let translate: TranslateService;
 
   beforeEach(waitForAsync(async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService);
+    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
+      SpyMockConfig.getProviderNavParams(new ModalInputModel(true, null, [], PageEnum.HOME)));
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
@@ -27,9 +32,8 @@ describe('VehiclePage', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(VehiclePage);
+    fixture = TestBed.createComponent(SettingsComponent);
     component = fixture.componentInstance;
-    component.loaded = true;
     fixture.detectChanges();
   });
 

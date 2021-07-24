@@ -7,7 +7,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 // UTILS
 import { DashboardService, ControlService, VehicleService } from '@services/index';
-import { DashboardModel, OperationModel, ModalInputModel, ModalOutputModel } from '@models/index';
+import { DashboardModel, OperationModel, ModalInputModel } from '@models/index';
 import { PageEnum } from '@utils/index';
 
 // COMPONENTS

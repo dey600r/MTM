@@ -1,25 +1,25 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 // COMPONENTS
-import { OperationPage } from './operation.page';
-
-// CONFIGURATIONS
-import { SetupTest, SpyMockConfig } from '@testing/index';
+import { SearchDashboardPopOverComponent } from './search-dashboard-popover.component';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { SettingsService, VehicleService } from '@services/index';
+import { SettingsService } from '@services/index';
 
-describe('OperationPage', () => {
-  let component: OperationPage;
-  let fixture: ComponentFixture<OperationPage>;
+// CONFIGURATION
+import { SetupTest, SpyMockConfig } from '@testing/index';
+
+describe('SearchDashboardPopOverComponent', () => {
+  let component: SearchDashboardPopOverComponent;
+  let fixture: ComponentFixture<SearchDashboardPopOverComponent>;
   let translate: TranslateService;
 
   beforeEach(waitForAsync(async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService, VehicleService);
+    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
@@ -27,10 +27,8 @@ describe('OperationPage', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OperationPage);
+    fixture = TestBed.createComponent(SearchDashboardPopOverComponent);
     component = fixture.componentInstance;
-    component.loadedHeader = true;
-    component.loadedBody = true;
     fixture.detectChanges();
   });
 

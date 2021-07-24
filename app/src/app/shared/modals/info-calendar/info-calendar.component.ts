@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
 import {
-  ModalInputModel, ModalOutputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
+  ModalInputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
   MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel, InfoCalendarReplacementViewModel
 } from '@models/index';
 
@@ -54,7 +54,7 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
   // TRANSLATE
   notificationEmpty = '';
 
-  constructor(private navParams: NavParams,
+  constructor(public navParams: NavParams,
               private modalController: ModalController,
               private calendarService: CalendarService,
               private commonService: CommonService,

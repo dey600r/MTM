@@ -32,7 +32,8 @@
       "@pipes/*": ["src/app/shared/pipes/*"],
       "@pages/*": ["src/app/pages/*"],
       "@components/*": ["src/app/shared/components/*"],
-      "@modules/*": ["src/app/shared/modules/*"]
+      "@modules/*": ["src/app/shared/modules/*"],
+      "@testing/*": ["src/testing"]
     }
   },
   "angularCompilerOptions": {

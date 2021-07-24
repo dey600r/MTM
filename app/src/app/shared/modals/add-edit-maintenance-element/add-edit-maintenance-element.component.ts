@@ -4,7 +4,7 @@ import { Form } from '@angular/forms';
 
 // UTILS
 import { ActionDBEnum, PageEnum, ToastTypeEnum } from '@app/core/utils';
-import { ModalInputModel, ModalOutputModel, MaintenanceElementModel } from '@models/index';
+import { ModalInputModel, MaintenanceElementModel } from '@models/index';
 import { ConfigurationService, ControlService } from '@services/index';
 
 @Component({

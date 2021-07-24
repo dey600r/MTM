@@ -16,7 +16,7 @@
 
 <ion-content fullscreen>
   <!-- CALENDAR -->
-  <ion-calendar class="padding-calendar" [(ngModel)]="dateMulti" [options]="optionsMulti" [type]="type" (click)="onClick($event)"
+  <ion-calendar class="padding-calendar" ngDefaultControl [(ngModel)]="dateMulti" [options]="optionsMulti" [type]="type" (click)="onClick($event)"
     [format]="formatCalendar" (onSelect)="onSelect($event)" (monthChange)="onMonthChange($event)">
   </ion-calendar>
 
