@@ -11,7 +11,7 @@ describe('TabsPage', () => {
   let translate: TranslateService;
 
   beforeEach(waitForAsync(async () => {
-    TestBed.configureTestingModule(SetupTest.config).compileComponents();
+    await TestBed.configureTestingModule(SetupTest.config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await translate.use('es').toPromise();
   }));

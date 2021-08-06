@@ -4,13 +4,16 @@ import { TestBed } from '@angular/core/testing';
 import { VehicleService } from './vehicle.service';
 
 // CONFIGURATIONS
-import { SetupTest } from '@src/testing';
+import { SetupTest, SpyMockConfig } from '@testing/index';
 
 describe('VehicleService', () => {
     let service: VehicleService;
 
     beforeEach(async () => {
-        TestBed.configureTestingModule(SetupTest.config);
+        await TestBed.configureTestingModule({
+            imports: SetupTest.config.imports,
+            providers: SpyMockConfig.ProvidersServices
+        }).compileComponents();
         service = TestBed.inject(VehicleService);
     });
 

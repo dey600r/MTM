@@ -45,6 +45,10 @@ export class DataBaseService {
     return this.database;
   }
 
+  setDB(db: SQLiteObject) {
+    this.database = db;
+  }
+
   initDB() {
     this.plt.ready().then(() => {
         // LOAD DATA BASE
@@ -53,7 +57,7 @@ export class DataBaseService {
           location: 'default'
         })
         .then((db: SQLiteObject) => {
-            this.database = db;
+            this.setDB(db);
             this.seedDatabase();
         }).catch(e => {
           console.log('ERROR ' + e);

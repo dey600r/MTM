@@ -24,7 +24,8 @@ describe('InfoNotificationComponent', () => {
 
   beforeEach(waitForAsync(async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService);
+    config.providers.push(SpyMockConfig.ProviderDataBaseService,
+      SpyMockConfig.getProviderNavParams(new ModalInputModel()));
     await TestBed.configureTestingModule(config).compileComponents();
     dashboardService = TestBed.inject(DashboardService);
     translate = TestBed.inject(TranslateService);

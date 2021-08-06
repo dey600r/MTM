@@ -83,7 +83,7 @@ export class SetupTest {
     ],
     providers: SpyMockConfig.Providers,
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
-} ;
+  } ;
 }
 
 // tslint:disable-next-line: typedef

@@ -12,16 +12,19 @@ export class ThemeService {
 
     constructor(private domCtrl: DomController) {}
 
-    changeTheme(themeCode: string) {
-        this.domCtrl.write(() => {
-            if (themeCode === Constants.SETTING_THEME_LIGHT) {
-                document.documentElement.style.cssText = '';
-            }
-            else {
-                this.getTheme(themeCode).styles.forEach(style => {
-                    document.documentElement.style.setProperty(style.themeVariable, style.value);
-                });
-            }
+    changeTheme(themeCode: string): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            this.domCtrl.write(() => {
+                if (themeCode === Constants.SETTING_THEME_LIGHT) {
+                    document.documentElement.style.cssText = '';
+                }
+                else {
+                    this.getTheme(themeCode).styles.forEach(style => {
+                        document.documentElement.style.setProperty(style.themeVariable, style.value);
+                    });
+                }
+                resolve(true);
+            });
         });
     }
 

@@ -1,5 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
+// LIBRARIES
+import * as Moment from 'moment';
+import { TranslateService } from '@ngx-translate/core';
+
 // PIPE
 import { DateFormatCalendarPipe } from './date-format-calendar.pipe';
 
@@ -8,7 +12,6 @@ import { CalendarService } from '@src/app/core/services';
 
 // CONFIGURATIONS
 import { SetupTest } from '@src/testing';
-import { TranslateService } from '@ngx-translate/core';
 
 describe('DateFormatCalendarPipe', () => {
     let pipe: DateFormatCalendarPipe;
@@ -23,6 +26,10 @@ describe('DateFormatCalendarPipe', () => {
 
     it('should be created', () => {
         expect(pipe).toBeTruthy();
+    });
+
+    it('should be transform date to format DD/MM/YYYY', () => {
+        expect(pipe.transform()).toEqual(Moment(new Date()).format('DD/MM/YYYY'));
     });
 
     it('should be transform date to format DD/MM/YYYY', () => {

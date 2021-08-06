@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from './search-dashboard-popover.component';
@@ -11,20 +11,25 @@ import { SettingsService } from '@services/index';
 
 // CONFIGURATION
 import { SetupTest, SpyMockConfig } from '@testing/index';
+import { PageEnum } from '@utils/index';
+
+// MODELS
+import { ModalInputModel } from '@models/index';
 
 describe('SearchDashboardPopOverComponent', () => {
   let component: SearchDashboardPopOverComponent;
   let fixture: ComponentFixture<SearchDashboardPopOverComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach(async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService);
+    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
+      SpyMockConfig.getProviderNavParams(new ModalInputModel(true, null, [], PageEnum.OPERATION)));
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
     await translate.use('es').toPromise();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SearchDashboardPopOverComponent);

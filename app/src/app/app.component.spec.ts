@@ -28,7 +28,7 @@ describe('AppComponent', () => {
   let settingsService: SettingsService;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach(async () => {
     const config: any = SetupTest.config;
     config.providers.push(
       SpyMockConfig.ProviderDataBaseService,
@@ -36,7 +36,7 @@ describe('AppComponent', () => {
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await translate.use('es').toPromise();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
@@ -67,7 +67,6 @@ describe('AppComponent', () => {
       expect(controlService.activateButtonExist).toHaveBeenCalled();
       expect(settingsService.createOutputDirectory).toHaveBeenCalled();
     });
-    
   });
 
   it('should translate app - ES', async () => {
@@ -79,4 +78,9 @@ describe('AppComponent', () => {
     expect(translate.instant('COMMON.SAVE')).toEqual(MockTranslate.EN.COMMON.SAVE);
   });
 
+  // afterAll(() => {
+  //   fixture.destroy();
+  //   //TestBed.resetTestEnvironment();
+  //   TestBed.resetTestingModule();
+  // });
 });
