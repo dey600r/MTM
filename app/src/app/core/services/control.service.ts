@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 
 // LIBRARY ANGULAR
 import { TranslateService } from '@ngx-translate/core';
-import * as Moment from 'moment';
 
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
@@ -43,33 +42,15 @@ export class ControlService {
         return this.listPages.some(x => x === page);
     }
 
-    // COMMON UTILS METHODS STRINGS
-
-    getDateString(date: Date): any {
-        return Moment(date).format(this.getFormatCalendar());
-    }
-
-    getDateStringToDB(date: Date): any {
-        return Moment(date).format(Constants.DATE_FORMAT_DB);
-    }
-
-    getFormatCalendar() {
-        return this.translator.currentLang === 'es' ? Constants.DATE_FORMAT_ES : Constants.DATE_FORMAT_EN;
-    }
-
     // IS MTM FREE
 
-    isAppFree(modalController: ModalController, ) {
+    isAppFree(modalController: ModalController) {
         if (environment.isFree) {
             this.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
             setTimeout(() => {
                 this.closeModal(modalController);
             }, Constants.DELAY_TOAST_IS_FREE);
         }
-    }
-
-    async closeModal(modalController: ModalController, modalOuput: ModalOutputModel = new ModalOutputModel()) {
-        await modalController.dismiss(modalOuput);
     }
 
     // EXIT BUTTON
@@ -105,11 +86,12 @@ export class ControlService {
             cssClass: 'custom-loader-class',
             backdropDismiss: false
         });
-        await loader.present();
-
-        await loader.onDidDismiss().then(() => {
+        
+        loader.onDidDismiss().then(() => {
             this.activateButtonExist(parent);
         });
+
+        await loader.present();
     }
 
     closeLoader() {
@@ -158,7 +140,7 @@ export class ControlService {
         toast.onDidDismiss().then((dataReturned) => {
             this.activateButtonExist(parent);
         });
-        toast.present();
+        await toast.present();
     }
 
     // ALERTS
@@ -216,4 +198,7 @@ export class ControlService {
         return modal;
     }
 
+    async closeModal(modalController: ModalController, modalOuput: ModalOutputModel = new ModalOutputModel()) {
+        await modalController.dismiss(modalOuput);
+    }
 }

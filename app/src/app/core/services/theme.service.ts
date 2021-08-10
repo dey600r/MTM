@@ -12,7 +12,7 @@ export class ThemeService {
 
     constructor(private domCtrl: DomController) {}
 
-    changeTheme(themeCode: string): Promise<boolean> {
+    changeTheme(themeCode: string) {
         return new Promise<boolean>((resolve) => {
             this.domCtrl.write(() => {
                 if (themeCode === Constants.SETTING_THEME_LIGHT) {

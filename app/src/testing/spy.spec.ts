@@ -1,4 +1,4 @@
-import { AngularDelegate, ModalController, NavParams, Platform, PopoverController } from '@ionic/angular';
+import { AngularDelegate, ModalController, NavParams, Platform, PopoverController, ToastController } from '@ionic/angular';
 import { Observable, of } from 'rxjs';
 
 // PLUGINS
@@ -19,6 +19,7 @@ import { DateFormatCalendarPipe } from '@pipes/date-format-calendar.pipe';
 // MOCK
 import { MockData } from './mock-data.spec';
 import { ModalInputModel } from '@src/app/core/models';
+import { ConstantsTest } from './constants.spec';
 
 
 export class SpyMockConfig {
@@ -41,7 +42,10 @@ export class SpyMockConfig {
         file: {
             checkDir: jasmine.createSpy().and.returnValue(Promise.resolve()),
             createDir: jasmine.createSpy().and.returnValue(Promise.resolve()),
-            listDir: jasmine.createSpy().and.returnValue(Promise.resolve([{ name: 'test.json' }]))
+            createFile: jasmine.createSpy().and.returnValue(Promise.resolve()),
+            listDir: jasmine.createSpy().and.returnValue(Promise.resolve([{ name: 'test.json' }])),
+            externalRootDirectory: ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY,
+            dataDirectory: ConstantsTest.PATH_DATA_DIRECTORY
         },
         dbService: jasmine.createSpyObj('DataBaseService',
             ['initDB', 'getSystemConfiguration', 'getConfigurations', 'getVehicles', 'getOperations', 'getMaintenance',

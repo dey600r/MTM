@@ -37,15 +37,15 @@ describe('ThemeService', () => {
     it('should be get LIGHT theme', async () => {
         await service.changeTheme(Constants.SETTING_THEME_LIGHT);
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('');
-    });
+    }, 10000);
 
     it('should be get SKY theme', async () => {
         await service.changeTheme(Constants.SETTING_THEME_SKY);
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('#00B0B9');
-    });
+    }, 10000);
 
     it('should be get DARK theme', async () => {
         await service.changeTheme(Constants.SETTING_THEME_DARK);
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('#8ab4f8');
-    });
+    }, 10000);
 });
