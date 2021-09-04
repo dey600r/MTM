@@ -8,7 +8,7 @@ import * as Moment from 'moment';
 import { Constants, WarningWearEnum } from '@utils/index';
 import {
     WearVehicleProgressBarViewModel, InfoCalendarVehicleViewModel, InfoCalendarMaintenanceViewModel,
-    InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, VehicleModel
+    InfoCalendarReplacementViewModel, WearMaintenanceProgressBarViewModel, VehicleModel
 } from '../models';
 
 @Injectable({
@@ -104,7 +104,7 @@ export class CalendarService {
         if (!!listWearsNotification && listWearsNotification.length > 0) {
             listWearsNotification.forEach(wear => {
                 let replacements: InfoCalendarMaintenanceViewModel[] = [];
-                wear.listWearReplacement.forEach(replacement => {
+                wear.listWearMaintenance.forEach(replacement => {
                     let rep: InfoCalendarMaintenanceViewModel = replacements.find(x => x.idMaintenance === replacement.idMaintenance);
                     const calendarKm: InfoCalendarReplacementViewModel = this.createInfoCalendarReplacement(wear, replacement, true);
                     if (!!!rep) {
@@ -138,7 +138,7 @@ export class CalendarService {
         return result;
     }
 
-    createInfoCalendarReplacement(wear: WearVehicleProgressBarViewModel, replacement: WearReplacementProgressBarViewModel,
+    createInfoCalendarReplacement(wear: WearVehicleProgressBarViewModel, replacement: WearMaintenanceProgressBarViewModel,
                                   km: boolean): InfoCalendarReplacementViewModel {
         let dateResult: Date;
         let kms = 0;
@@ -166,7 +166,7 @@ export class CalendarService {
         };
     }
 
-    getDateCalculatingKm(wear: WearVehicleProgressBarViewModel, replacement: WearReplacementProgressBarViewModel, kmVehicle: number): Date {
+    getDateCalculatingKm(wear: WearVehicleProgressBarViewModel, replacement: WearMaintenanceProgressBarViewModel, kmVehicle: number): Date {
         let dateResult: Date;
         if (replacement.calculateKms > 0) {
             dateResult = this.calculateKmInfoNotification(new VehicleModel(null, null, null, wear.kmVehicle, null, null,
@@ -189,7 +189,7 @@ export class CalendarService {
         return dateResult;
     }
 
-    getDateCalculatingTime(wear: WearVehicleProgressBarViewModel, replacement: WearReplacementProgressBarViewModel): Date {
+    getDateCalculatingTime(wear: WearVehicleProgressBarViewModel, replacement: WearMaintenanceProgressBarViewModel): Date {
         let dateResult: Date;
         if (replacement.calculateMonths > 0) {
             dateResult = this.calculateTimeInfoCalendar(new Date(), replacement.calculateMonths);
