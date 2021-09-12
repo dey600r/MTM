@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 // SERVICES
 import { CalendarService } from './calendar.service';
-import { DashboardService } from './dashboard.service';
+import { HomeService } from './home.service';
 
 // CONFIGURATIONS
 import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
@@ -16,7 +16,7 @@ import { InfoCalendarVehicleViewModel, WearVehicleProgressBarViewModel } from '@
 
 describe('CalendarService', () => {
     let service: CalendarService;
-    let dashboardService: DashboardService;
+    let homeService: HomeService;
     let translate: TranslateService;
 
     beforeEach(async () => {
@@ -25,7 +25,7 @@ describe('CalendarService', () => {
             providers: SpyMockConfig.ProvidersServices
         }).compileComponents();
         service = TestBed.inject(CalendarService);
-        dashboardService = TestBed.inject(DashboardService);
+        homeService = TestBed.inject(HomeService);
         translate = TestBed.inject(TranslateService);
         await translate.use('es').toPromise();
     });
@@ -89,7 +89,7 @@ describe('CalendarService', () => {
 
         const result: number = service.calculateWearKmVehicleEstimated(data);
         expect(result).toBeLessThanOrEqual(80419);
-        expect(result).toBeGreaterThanOrEqual(80381);
+        expect(result).toBeGreaterThanOrEqual(80370);
     });
 
     it('should calculate kilometer vehicle estimated without km per month and new motorbike', () => {
@@ -103,18 +103,18 @@ describe('CalendarService', () => {
     });
 
     it('should map list wear notification to list info calendar vehicle view', () => {
-        const allWears: WearVehicleProgressBarViewModel[] = dashboardService.getWearReplacementToVehicle(
+        const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
         const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears);
         expect(result[0].nameVehicle).toEqual(`${MockData.Vehicles[1].brand} ${MockData.Vehicles[1].model}`);
         expect(result[0].listInfoCalendarMaintenance[0].codeMaintenanceFreq).toEqual(Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
         expect(result[0].listInfoCalendarMaintenance[0].wearMaintenance).toEqual(false);
-        expect(result[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement[0].km).toEqual(12000);
+        expect(result[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement[0].km).toEqual(76770);
         expect(service.getInfoCalendar([])).toEqual([]);
     });
 
     it('should get list info calendar vehicle view filter with date', () => {
-        const allWears: WearVehicleProgressBarViewModel[] = dashboardService.getWearReplacementToVehicle(
+        const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
         const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears);
         const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendarReplacementDate(listInfoCalendar,
@@ -134,24 +134,24 @@ describe('CalendarService', () => {
     });
 
     it('should calculate circle color advice', () => {
-        const allWears: WearVehicleProgressBarViewModel[] = dashboardService.getWearReplacementToVehicle(
+        const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
         const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears);
 
         const resultSkull: string = service.getCircleColor(listInfoCalendar,
-            listInfoCalendar[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement[0]);
+            listInfoCalendar[0].listInfoCalendarMaintenance[2].listInfoCalendarReplacement[2]);
         expect(resultSkull).toEqual('day-circle-config-skull');
         const resultDanger: string = service.getCircleColor(listInfoCalendar,
             listInfoCalendar[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement[2]);
         expect(resultDanger).toEqual('day-circle-config-danger');
         const resultWarning: string = service.getCircleColor(listInfoCalendar,
-            listInfoCalendar[0].listInfoCalendarMaintenance[3].listInfoCalendarReplacement[0]);
+            listInfoCalendar[0].listInfoCalendarMaintenance[3].listInfoCalendarReplacement[2]);
         expect(resultWarning).toEqual('day-circle-config-warning');
         const resultSuccess: string = service.getCircleColor(listInfoCalendar,
             listInfoCalendar[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement[3]);
         expect(resultSuccess).toEqual('day-circle-config-success');
         const resultAll: string = service.getCircleColor(listInfoCalendar,
-            listInfoCalendar[0].listInfoCalendarMaintenance[1].listInfoCalendarReplacement[0]);
+            listInfoCalendar[0].listInfoCalendarMaintenance[1].listInfoCalendarReplacement[1]);
         expect(resultAll).toEqual('day-circle-config-all');
     });
 });

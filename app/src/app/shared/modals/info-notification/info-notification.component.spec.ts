@@ -7,7 +7,7 @@ import { InfoNotificationComponent } from './info-notification.component';
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { DashboardService, SettingsService } from '@services/index';
+import { HomeService } from '@services/index';
 
 // CONFIGURATION
 import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
@@ -20,14 +20,14 @@ describe('InfoNotificationComponent', () => {
   let component: InfoNotificationComponent;
   let fixture: ComponentFixture<InfoNotificationComponent>;
   let translate: TranslateService;
-  let dashboardService: DashboardService;
+  let homeService: HomeService;
 
   beforeEach(waitForAsync(async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));
     await TestBed.configureTestingModule(config).compileComponents();
-    dashboardService = TestBed.inject(DashboardService);
+    homeService = TestBed.inject(HomeService);
     translate = TestBed.inject(TranslateService);
     await translate.use('es').toPromise();
   }));
@@ -35,7 +35,7 @@ describe('InfoNotificationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(InfoNotificationComponent);
     component = fixture.componentInstance;
-    const allWears: WearVehicleProgressBarViewModel[] = dashboardService.getWearReplacementToVehicle(
+    const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
       MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
     component.navParams.data = new ModalInputModel(true, allWears[0], MockData.Operations, PageEnum.HOME);
     fixture.detectChanges();

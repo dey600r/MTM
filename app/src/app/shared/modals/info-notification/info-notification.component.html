@@ -102,49 +102,49 @@
     </ion-item>
     <!-- Items Maintenances -->
     <div *ngIf="!hideRecords">
-      <ion-item button *ngFor="let wr of wear.listWearMaintenance[0].listWearReplacement"
-        (click)="showInfo(wear.listWearMaintenance[0], wr)">
+      <ion-item button *ngFor="let wm of wear.listWearMaintenance" (click)="showInfo(wm)">
         <!-- Ivatar -->
         <ion-avatar slot="start" class="max-width10 avatar-row">
-          <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(wear.listWearMaintenance[0])"></ion-icon>
+          <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(wm)"></ion-icon>
         </ion-avatar>
         <div class="main-div">
           <div>
             <!-- Label -->
             <div>
-              <ion-label>{{ (wr.descriptionOperation === null ? wr.descriptionMaintenance : wr.descriptionOperation) }}</ion-label>
+              <ion-label>{{ (wm.listWearReplacement[0].descriptionOperation === null ?
+                wm.descriptionMaintenance : wm.listWearReplacement[0].descriptionOperation) }}</ion-label>
             </div>
             <div class="table-row">
               <!-- KMS -->
               <div class="margin-right5 table-row">
-                <ion-icon [class]="getClassIcon(wr.warningKms, 'icon-row')" [color]="getClassIcon(wr.warningKms, '')" size="small"
-                  [name]="getIconKms(wr.warningKms)"></ion-icon>
-                <p class="p-row">{{ getKmPercent(wr) }} {{measure.value}}</p>
+                <ion-icon [class]="getClassIcon(wm.listWearReplacement[0].warningKms, 'icon-row')" [color]="getClassIcon(wm.listWearReplacement[0].warningKms, '')" size="small"
+                  [name]="getIconKms(wm.listWearReplacement[0].warningKms)"></ion-icon>
+                <p class="p-row">{{ getKmPercent(wm.listWearReplacement[0]) }} {{measure.value}}</p>
               </div>
               <!-- ICON -->
               <div class="icon-notification">
-                <ion-icon *ngIf="wear.listWearMaintenance[0].initMaintenance" [color]="getClassIcon(wr.warningKms, '')" size="small"
-                [class]="getClassIcon(wr.warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
-                <ion-icon *ngIf="!wear.listWearMaintenance[0].initMaintenance && wear.listWearMaintenance[0].wearMaintenance"
-                  [color]="getClassIcon(wr.warningKms, '')" size="small"
-                  [class]="getClassIcon(wr.warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
+                <ion-icon *ngIf="wm.initMaintenance" [color]="getClassIcon(wm.listWearReplacement[0].warningKms, '')" size="small"
+                [class]="getClassIcon(wm.listWearReplacement[0].warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
+                <ion-icon *ngIf="!wm.initMaintenance && wm.wearMaintenance"
+                  [color]="getClassIcon(wm.listWearReplacement[0].warningKms, '')" size="small"
+                  [class]="getClassIcon(wm.listWearReplacement[0].warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
               </div>
             </div>
               <!-- Progress bar maintenace -->
-            <div [class]="getClassProgressbar(wr.warningKms, '')">
-              <ion-progress-bar [value]="wr.percentKms"></ion-progress-bar>
+            <div [class]="getClassProgressbar(wm.listWearReplacement[0].warningKms, '')">
+              <ion-progress-bar [value]="wm.listWearReplacement[0].percentKms"></ion-progress-bar>
             </div>
-            <div *ngIf="wear.listWearMaintenance[0].timeMaintenance > 0" class="table-row">
+            <div *ngIf="wm.timeMaintenance > 0" class="table-row">
               <!-- MONTHS -->
               <div class="margin-right5 table-row">
-                <ion-icon [color]="getClassIcon(wr.warningMonths, '')" size="small"
-                  [class]="getClassIcon(wr.warningMonths, 'icon-row')" [name]="getIconKms(wr.warningMonths)"></ion-icon>
-                <p class="p-row">{{ getTimePercent(wr) }}</p>
+                <ion-icon [color]="getClassIcon(wm.listWearReplacement[0].warningMonths, '')" size="small"
+                  [class]="getClassIcon(wm.listWearReplacement[0].warningMonths, 'icon-row')" [name]="getIconKms(wm.listWearReplacement[0].warningMonths)"></ion-icon>
+                <p class="p-row">{{ getTimePercent(wm.listWearReplacement[0]) }}</p>
               </div>
             </div>
               <!-- Progress bar maintenace -->
-            <div *ngIf="wear.listWearMaintenance[0].timeMaintenance > 0" [class]="getClassProgressbar(wr.warningMonths, '')">
-              <ion-progress-bar [value]="wr.percentMonths"></ion-progress-bar>
+            <div *ngIf="wm.timeMaintenance > 0" [class]="getClassProgressbar(wm.listWearReplacement[0].warningMonths, '')">
+              <ion-progress-bar [value]="wm.listWearReplacement[0].percentMonths"></ion-progress-bar>
             </div>
           </div>
         </div>

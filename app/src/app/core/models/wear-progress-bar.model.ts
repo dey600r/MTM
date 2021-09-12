@@ -45,6 +45,22 @@ export class WearMaintenanceProgressBarViewModel {
     wearMaintenance = false;
     listWearNotificationReplacement: WearNotificationReplacementProgressBarViewModel[] = [];
     listWearReplacement: WearReplacementProgressBarViewModel[] = [];
+    constructor(codeFreq: string = '', id: number = -1, desc: string = '', km: number = 0, time: number = 0,
+                from: number = 0, to: number = 0, init: boolean = false, wear: boolean = false,
+                listNotif: WearNotificationReplacementProgressBarViewModel[] = [],
+                listRep: WearReplacementProgressBarViewModel[] = []) {
+        this.codeMaintenanceFreq = codeFreq;
+        this.idMaintenance = id;
+        this.descriptionMaintenance = desc;
+        this.kmMaintenance = km;
+        this.timeMaintenance = time;
+        this.fromKmMaintenance = from;
+        this.toKmMaintenance = to;
+        this.initMaintenance = init;
+        this.wearMaintenance = wear;
+        this.listWearNotificationReplacement = listNotif;
+        this.listWearReplacement = listRep;
+    }
 }
 
 export class WearReplacementProgressBarViewModel {

@@ -8,7 +8,7 @@ import * as Moment from 'moment';
 import { Constants, WarningWearEnum } from '@utils/index';
 import {
     WearVehicleProgressBarViewModel, InfoCalendarVehicleViewModel, InfoCalendarMaintenanceViewModel,
-    InfoCalendarReplacementViewModel, WearMaintenanceProgressBarViewModel, VehicleModel
+    InfoCalendarReplacementViewModel, WearMaintenanceProgressBarViewModel, VehicleModel, WearReplacementProgressBarViewModel
 } from '../models';
 
 @Injectable({
@@ -103,34 +103,38 @@ export class CalendarService {
 
         if (!!listWearsNotification && listWearsNotification.length > 0) {
             listWearsNotification.forEach(wear => {
-                let replacements: InfoCalendarMaintenanceViewModel[] = [];
-                wear.listWearMaintenance.forEach(replacement => {
-                    let rep: InfoCalendarMaintenanceViewModel = replacements.find(x => x.idMaintenance === replacement.idMaintenance);
-                    const calendarKm: InfoCalendarReplacementViewModel = this.createInfoCalendarReplacement(wear, replacement, true);
+                let calMain: InfoCalendarMaintenanceViewModel[] = [];
+                wear.listWearMaintenance.forEach(wearMain => {
+                    let rep: InfoCalendarMaintenanceViewModel =
+                        calMain.find(x => x.idMaintenance === wearMain.idMaintenance);
                     if (!!!rep) {
-                        replacements = [...replacements, {
-                            idMaintenance: replacement.idMaintenance,
-                            descriptionMaintenance: replacement.descriptionMaintenance,
-                            codeMaintenanceFreq: replacement.codeMaintenanceFreq,
-                            fromKmMaintenance: replacement.fromKmMaintenance,
-                            toKmMaintenance: replacement.toKmMaintenance,
-                            initMaintenance: replacement.initMaintenance,
-                            wearMaintenance: replacement.wearMaintenance,
+                        calMain = [...calMain, {
+                            idMaintenance: wearMain.idMaintenance,
+                            descriptionMaintenance: wearMain.descriptionMaintenance,
+                            codeMaintenanceFreq: wearMain.codeMaintenanceFreq,
+                            fromKmMaintenance: wearMain.fromKmMaintenance,
+                            toKmMaintenance: wearMain.toKmMaintenance,
+                            initMaintenance: wearMain.initMaintenance,
+                            wearMaintenance: wearMain.wearMaintenance,
                             listInfoCalendarReplacement: []
                         }];
-                        rep = replacements.find(x => x.idMaintenance === replacement.idMaintenance);
+                        rep = calMain.find(x => x.idMaintenance === wearMain.idMaintenance);
                     }
-                    rep.listInfoCalendarReplacement = [...rep.listInfoCalendarReplacement, calendarKm];
-                    if (replacement.timeMaintenance !== 0 && replacement.timeMaintenance !== null) {
-                        rep.listInfoCalendarReplacement = [...rep.listInfoCalendarReplacement,
-                            this.createInfoCalendarReplacement(wear, replacement, false)];
-                    }
+                    wearMain.listWearReplacement.forEach(wearRep => {
+                        const calendarKm: InfoCalendarReplacementViewModel =
+                            this.createInfoCalendarReplacement(wear, wearMain, wearRep, true);
+                        rep.listInfoCalendarReplacement = [...rep.listInfoCalendarReplacement, calendarKm];
+                        if (wearMain.timeMaintenance !== 0 && wearMain.timeMaintenance !== null) {
+                            rep.listInfoCalendarReplacement = [...rep.listInfoCalendarReplacement,
+                                this.createInfoCalendarReplacement(wear, wearMain, wearRep, false)];
+                        }
+                    });
                 });
                 result = [...result, {
                     idVehicle: wear.idVehicle,
                     nameVehicle: wear.nameVehicle,
                     typeVehicle: wear.typeVehicle,
-                    listInfoCalendarMaintenance: replacements
+                    listInfoCalendarMaintenance: calMain
                 }];
             });
         }
@@ -138,26 +142,26 @@ export class CalendarService {
         return result;
     }
 
-    createInfoCalendarReplacement(wear: WearVehicleProgressBarViewModel, replacement: WearMaintenanceProgressBarViewModel,
-                                  km: boolean): InfoCalendarReplacementViewModel {
+    createInfoCalendarReplacement(wear: WearVehicleProgressBarViewModel, wearMain: WearMaintenanceProgressBarViewModel,
+                                  wearRep: WearReplacementProgressBarViewModel, km: boolean): InfoCalendarReplacementViewModel {
         let dateResult: Date;
         let kms = 0;
         let times = 0;
         let warnings: WarningWearEnum;
         if (km) {
             const kmVehicle: number = this.calculateWearKmVehicleEstimated(wear);
-            kms = kmVehicle + replacement.calculateKms;
-            warnings = replacement.warningKms;
-            dateResult = this.getDateCalculatingKm(wear, replacement, kmVehicle);
+            kms = kmVehicle + wearRep.calculateKms;
+            warnings = wearRep.warningKms;
+            dateResult = this.getDateCalculatingKm(wear, wearMain, wearRep, kmVehicle);
         } else {
-            times = replacement.calculateMonths;
-            warnings = replacement.warningMonths;
-            dateResult = this.getDateCalculatingTime(wear, replacement);
+            times = wearRep.calculateMonths;
+            warnings = wearRep.warningMonths;
+            dateResult = this.getDateCalculatingTime(wear, wearMain, wearRep);
         }
         return {
-            idReplacement: replacement.idMaintenanceElement,
-            nameReplacement: replacement.nameMaintenanceElement,
-            price: (replacement.priceOperation === null ? 0 : replacement.priceOperation),
+            idReplacement: wearRep.idMaintenanceElement,
+            nameReplacement: wearRep.nameMaintenanceElement,
+            price: (wearRep.priceOperation === null ? 0 : wearRep.priceOperation),
             km: kms,
             time: times,
             warning: warnings,
@@ -166,37 +170,39 @@ export class CalendarService {
         };
     }
 
-    getDateCalculatingKm(wear: WearVehicleProgressBarViewModel, replacement: WearMaintenanceProgressBarViewModel, kmVehicle: number): Date {
+    getDateCalculatingKm(wear: WearVehicleProgressBarViewModel, wearMain: WearMaintenanceProgressBarViewModel,
+                         wearRep: WearReplacementProgressBarViewModel, kmVehicle: number): Date {
         let dateResult: Date;
-        if (replacement.calculateKms > 0) {
+        if (wearRep.calculateKms > 0) {
             dateResult = this.calculateKmInfoNotification(new VehicleModel(null, null, null, wear.kmVehicle, null, null,
-                wear.kmsPerMonthVehicle, wear.dateKmsVehicle, wear.datePurchaseVehicle), 0, replacement.calculateKms);
+                wear.kmsPerMonthVehicle, wear.dateKmsVehicle, wear.datePurchaseVehicle), 0, wearRep.calculateKms);
         } else {
             let diffVehiclePurchase = 0;
             let monthsEstimated = 0;
             let dateCompare: Date = new Date();
-            if (replacement.kmOperation === null) {
+            if (wearRep.kmOperation === null) {
                 dateCompare = wear.datePurchaseVehicle;
                 diffVehiclePurchase = this.monthDiff(dateCompare, new Date());
-                monthsEstimated = (replacement.kmMaintenance * diffVehiclePurchase) / kmVehicle;
+                monthsEstimated = (wearMain.kmMaintenance * diffVehiclePurchase) / kmVehicle;
             } else {
-                dateCompare = new Date(replacement.dateOperation);
+                dateCompare = new Date(wearRep.dateOperation);
                 diffVehiclePurchase = this.monthDiff(dateCompare, new Date());
-                monthsEstimated = (replacement.kmMaintenance * diffVehiclePurchase) / (kmVehicle - replacement.kmOperation);
+                monthsEstimated = (wearMain.kmMaintenance * diffVehiclePurchase) / (kmVehicle - wearRep.kmOperation);
             }
             dateResult = this.calculateTimeInfoCalendar(dateCompare, Math.floor(monthsEstimated));
         }
         return dateResult;
     }
 
-    getDateCalculatingTime(wear: WearVehicleProgressBarViewModel, replacement: WearMaintenanceProgressBarViewModel): Date {
+    getDateCalculatingTime(wear: WearVehicleProgressBarViewModel, wearMain: WearMaintenanceProgressBarViewModel,
+                           wearRep: WearReplacementProgressBarViewModel): Date {
         let dateResult: Date;
-        if (replacement.calculateMonths > 0) {
-            dateResult = this.calculateTimeInfoCalendar(new Date(), replacement.calculateMonths);
+        if (wearRep.calculateMonths > 0) {
+            dateResult = this.calculateTimeInfoCalendar(new Date(), wearRep.calculateMonths);
         } else {
-            dateResult = (replacement.kmOperation === null ?
-                this.calculateTimeInfoCalendar(wear.datePurchaseVehicle, replacement.timeMaintenance) :
-                this.calculateTimeInfoCalendar(new Date(replacement.dateOperation), replacement.timeMaintenance));
+            dateResult = (wearRep.kmOperation === null ?
+                this.calculateTimeInfoCalendar(wear.datePurchaseVehicle, wearMain.timeMaintenance) :
+                this.calculateTimeInfoCalendar(new Date(wearRep.dateOperation), wearMain.timeMaintenance));
         }
         return dateResult;
     }

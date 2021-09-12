@@ -8,11 +8,11 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService,
-  CalendarService, SettingsService, ThemeService
+  CalendarService, SettingsService, ThemeService, HomeService
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel, ConfigurationModel, WearReplacementProgressBarViewModel
+  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel, ConfigurationModel, WearReplacementProgressBarViewModel, MaintenanceElementModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 
@@ -64,7 +64,8 @@ export class HomePage implements OnInit {
               private controlService: ControlService,
               private vehicleService: VehicleService,
               private settingsService: SettingsService,
-              private themeService: ThemeService) {
+              private themeService: ThemeService,
+              private homeService: HomeService) {
     this.platform.ready().then(() => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
@@ -131,10 +132,10 @@ export class HomePage implements OnInit {
                      configurations: ConfigurationModel[], maintenances: MaintenanceModel[]) {
     this.operations = operations.filter(x => x.vehicle.active);
     this.wears = [];
-    this.showInfoMaintenance = [];
-    this.allWears = this.dashboardService.getWearReplacementToVehicle(
+
+    this.allWears = this.homeService.getWearReplacementToVehicle(
       this.operations, vehiclesActives, configurations, maintenances);
-    this.allWears.forEach((x, index) => {
+    this.allWears.forEach(x => {
       this.wears = [...this.wears, Object.assign({}, x)];
       let listWears: WearMaintenanceProgressBarViewModel[] = [];
       const kmVehicle: number = this.calendarService.calculateWearKmVehicleEstimated(x);
@@ -142,18 +143,25 @@ export class HomePage implements OnInit {
       if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
           z.fromKmMaintenance <= kmVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= kmVehicle)) {
           listWears = [...listWears, z];
-          this.showInfoMaintenance = [...this.showInfoMaintenance, true];
         }
       });
       this.wears.find(y => x.idVehicle === y.idVehicle).listWearMaintenance = listWears;
     });
-    if (!this.vehicleSelected) {
+    if (!this.vehicleSelected || !this.wears.some(x => x.idVehicle === this.vehicleSelected.idVehicle)) {
       this.vehicleSelected = new WearVehicleProgressBarViewModel();
     }
     this.vehicleSelected = (this.vehicleSelected.idVehicle === -1 ?
       this.wears[0] : this.wears.find(x => x.idVehicle === this.vehicleSelected.idVehicle));
     this.activateInfo = this.activateModeInfo(vehiclesActives, this.wears);
+    this.initShowInfoMaintenance();
     this.timeOutLoader();
+  }
+
+  initShowInfoMaintenance() {
+    this.showInfoMaintenance = [];
+    if (this.vehicleSelected) {
+      this.vehicleSelected.listWearMaintenance.forEach(x => this.showInfoMaintenance = [...this.showInfoMaintenance, true]);
+    }
   }
 
   ionViewDidEnter() {
@@ -197,15 +205,23 @@ export class HomePage implements OnInit {
   }
 
   getClassProgressbar(warning: WarningWearEnum, styles: string): string {
-    return this.dashboardService.getClassProgressbar(warning, styles);
+    return this.homeService.getClassProgressbar(warning, styles);
+  }
+
+  getReplacementClassIcon(wearRep: WearReplacementProgressBarViewModel, styles: string): string {
+    return this.getClassIcon(this.homeService.calculateWearNotificationPriority(wearRep.warningKms, wearRep.warningMonths), styles);
+  }
+
+  getIconReplacement(wearRep: WearReplacementProgressBarViewModel): string {
+    return this.configurationService.getIconReplacement(new MaintenanceElementModel(null, null, null, 0, wearRep.idMaintenanceElement));
   }
 
   getClassIcon(warning: WarningWearEnum, styles: string): string {
-    return this.dashboardService.getClassIcon(warning, styles);
+    return this.homeService.getClassIcon(warning, styles);
   }
 
   getIconKms(warning: WarningWearEnum): string {
-    return this.dashboardService.getIconKms(warning);
+    return this.homeService.getIconKms(warning);
   }
 
   getIconMaintenance(wear: WearMaintenanceProgressBarViewModel): string {
@@ -219,6 +235,7 @@ export class HomePage implements OnInit {
       this.loadedBody = true;
     }, 500);
     this.vehicleSelected = this.wears.find(x => x.idVehicle === Number(event.detail.value));
+    this.initShowInfoMaintenance();
     this.activateModeInfo([new VehicleModel()], [this.vehicleSelected]);
   }
 
@@ -231,10 +248,10 @@ export class HomePage implements OnInit {
   openInfoNotification(wv: WearVehicleProgressBarViewModel, wm: WearMaintenanceProgressBarViewModel,
                        wr: WearReplacementProgressBarViewModel) {
     let listGroupWearMaintenance: WearMaintenanceProgressBarViewModel[] = [];
-    let listGroupWearReplacement: WearReplacementProgressBarViewModel[] = [];
     if (wm.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
       listGroupWearMaintenance = this.allWears.find(x => wv.idVehicle === x.idVehicle).listWearMaintenance.filter(x =>
-        x.idMaintenance === wm.idMaintenance && wm.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
+        wm.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE && x.listWearReplacement.some(y =>
+          y.idMaintenanceElement === wr.idMaintenanceElement));
       const margenGrouper = 4000;
       listGroupWearMaintenance = listGroupWearMaintenance.filter(x => x.idMaintenance !== wm.idMaintenance &&
         listGroupWearMaintenance.some(y =>
@@ -243,17 +260,16 @@ export class HomePage implements OnInit {
           y.fromKmMaintenance >= x.toKmMaintenance - margenGrouper && y.fromKmMaintenance <= x.toKmMaintenance + margenGrouper) ||
         (y.toKmMaintenance !== null && x.fromKmMaintenance !== null &&
           y.toKmMaintenance >= x.fromKmMaintenance - margenGrouper && y.toKmMaintenance <= x.fromKmMaintenance + margenGrouper)));
-      listGroupWearMaintenance.forEach(x =>
-        x.listWearReplacement.filter(y => y.idMaintenanceElement === wr.idMaintenanceElement)
-        .forEach(y => listGroupWearReplacement = [...listGroupWearReplacement, y]));
     }
     listGroupWearMaintenance = [...listGroupWearMaintenance, wm];
     const groupWearVehicle: WearVehicleProgressBarViewModel =
       new WearVehicleProgressBarViewModel(wv.idVehicle, wv.nameVehicle, wv.kmVehicle, wv.datePurchaseVehicle,
       wv.kmsPerMonthVehicle, wv.dateKmsVehicle, wv.percent, wv.percentKm, wv.percentTime, wv.warning, []);
     listGroupWearMaintenance.forEach(x => {
-      x.listWearReplacement = listGroupWearReplacement;
-      groupWearVehicle.listWearMaintenance = [...groupWearVehicle.listWearMaintenance, x];
+      groupWearVehicle.listWearMaintenance = [...groupWearVehicle.listWearMaintenance, new WearMaintenanceProgressBarViewModel(
+        x.codeMaintenanceFreq, x.idMaintenance, x.descriptionMaintenance, x.kmMaintenance, x.timeMaintenance,
+        x.fromKmMaintenance, x.toKmMaintenance, x.initMaintenance, x.wearMaintenance, [], [wr]
+      )];
     });
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
       groupWearVehicle, this.operations, PageEnum.HOME));
@@ -332,8 +348,8 @@ export class HomePage implements OnInit {
   }
 
   getTimePercent(wearMain: WearMaintenanceProgressBarViewModel, wearRep: WearReplacementProgressBarViewModel): string {
-    return `${this.dashboardService.getDateCalculateMonths(wearMain.timeMaintenance - wearRep.calculateMonths)} /` +
-      ` ${this.dashboardService.getDateCalculateMonths(wearMain.timeMaintenance)}`;
+    return `${this.homeService.getDateCalculateMonths(wearMain.timeMaintenance - wearRep.calculateMonths)} /` +
+      ` ${this.homeService.getDateCalculateMonths(wearMain.timeMaintenance)}`;
   }
 
 }

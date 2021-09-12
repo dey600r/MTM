@@ -7,7 +7,7 @@ import { InfoCalendarComponent } from './info-calendar.component';
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { ControlService, DashboardService, SettingsService } from '@services/index';
+import { HomeService, SettingsService } from '@services/index';
 
 // CONFIGURATION
 import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
@@ -20,14 +20,14 @@ describe('InfoCalendarComponent', () => {
   let component: InfoCalendarComponent;
   let fixture: ComponentFixture<InfoCalendarComponent>;
   let translate: TranslateService;
-  let dashboardService: DashboardService;
+  let homeService: HomeService;
 
   beforeEach(waitForAsync(async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));
     await TestBed.configureTestingModule(config).compileComponents();
-    dashboardService = TestBed.inject(DashboardService);
+    homeService = TestBed.inject(HomeService);
     translate = TestBed.inject(TranslateService);
     await translate.use('es').toPromise();
   }));
@@ -35,7 +35,7 @@ describe('InfoCalendarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(InfoCalendarComponent);
     component = fixture.componentInstance;
-    const allWears = dashboardService.getWearReplacementToVehicle(
+    const allWears = homeService.getWearReplacementToVehicle(
       MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
     component.navParams.data = new ModalInputModel(true, null, allWears, PageEnum.HOME);
     fixture.detectChanges();

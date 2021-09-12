@@ -9,13 +9,13 @@ import { TranslateService } from '@ngx-translate/core';
 // MODELS
 import {
   ModalInputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
-  MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel, InfoCalendarReplacementViewModel
+  MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel, InfoCalendarReplacementViewModel, MaintenanceElementModel
 } from '@models/index';
 
 // SERVICES
 import {
-  CalendarService, CommonService, DashboardService, ConfigurationService, VehicleService,
-  ControlService, SettingsService, DataBaseService
+  CalendarService, CommonService, ConfigurationService, VehicleService,
+  ControlService, SettingsService, DataBaseService, HomeService
 } from '@services/index';
 
 // UTILS
@@ -58,13 +58,13 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
               private modalController: ModalController,
               private calendarService: CalendarService,
               private commonService: CommonService,
-              private dashboardService: DashboardService,
               private configurationService: ConfigurationService,
               private translator: TranslateService,
               private vehicleService: VehicleService,
               private controlService: ControlService,
               private settingsService: SettingsService,
-              private dbService: DataBaseService) {
+              private dbService: DataBaseService,
+              private homeService: HomeService) {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }
@@ -268,16 +268,20 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
   // ICONS
 
   getIconKms(warning: WarningWearEnum): string {
-    return this.dashboardService.getIconKms(warning);
+    return this.homeService.getIconKms(warning);
   }
 
   getClassIcon(warning: WarningWearEnum, styles: string): string {
-    return this.dashboardService.getClassIcon(warning, styles);
+    return this.homeService.getClassIcon(warning, styles);
   }
 
   getIconMaintenance(maint: InfoCalendarMaintenanceViewModel): string {
     return this.configurationService.getIconMaintenance(
       new MaintenanceModel(null, null, new MaintenanceFreqModel(maint.codeMaintenanceFreq)));
+  }
+
+  getIconReplacement(rep: InfoCalendarReplacementViewModel): string {
+    return this.configurationService.getIconReplacement(new MaintenanceElementModel(null, null, null, 0, rep.idReplacement));
   }
 
   getIconVehicle(infoVehicle: InfoCalendarVehicleViewModel): string {
