@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
-import { ModalInputModel, ModalOutputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel } from '@models/index';
+import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel } from '@models/index';
 import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({

@@ -1,15 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 
-import { SetupTest } from '@src/setup-test';
+import { SetupTest } from '@testing/index';
 
 import { TabsPage } from './tabs.page';
 
 describe('TabsPage', () => {
   let component: TabsPage;
   let fixture: ComponentFixture<TabsPage>;
+  let translate: TranslateService;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule(SetupTest.config).compileComponents();
+  beforeEach(waitForAsync(async () => {
+    await TestBed.configureTestingModule(SetupTest.config).compileComponents();
+    translate = TestBed.inject(TranslateService);
+    await translate.use('es').toPromise();
   }));
 
   beforeEach(() => {

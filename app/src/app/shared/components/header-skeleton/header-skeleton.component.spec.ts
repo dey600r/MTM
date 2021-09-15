@@ -1,6 +1,6 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SetupTest } from '@src/setup-test';
+import { SetupTest } from '@testing/index';
 
 import { HeaderSkeletonComponent } from './header-skeleton.component';
 

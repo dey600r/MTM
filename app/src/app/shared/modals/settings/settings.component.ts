@@ -8,9 +8,7 @@ import { File, Entry } from '@ionic-native/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import {
-  ModalInputModel, ModalOutputModel
-} from '@models/index';
+import { ModalInputModel } from '@models/index';
 
 // UTILS
 import { Constants, PageEnum, ConstantsTable, ToastTypeEnum } from '@utils/index';

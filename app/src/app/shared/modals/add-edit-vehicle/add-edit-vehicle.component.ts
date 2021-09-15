@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
-import { ModalInputModel, ModalOutputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel } from '@models/index';
+import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel } from '@models/index';
 import {
   DataBaseService, VehicleService, CommonService, CalendarService, ControlService, DashboardService, SettingsService
 } from '@services/index';

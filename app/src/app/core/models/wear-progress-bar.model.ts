@@ -14,11 +14,11 @@ export class WearVehicleProgressBarViewModel {
     warning: WarningWearEnum = WarningWearEnum.SUCCESS;
     idConfiguration = -1;
     nameConfiguration = '';
-    listWearReplacement: WearReplacementProgressBarViewModel[] = [];
+    listWearMaintenance: WearMaintenanceProgressBarViewModel[] = [];
     constructor(id: number = -1, name: string = '', km: number = 0, dateP: Date = new Date(),
                 kmsM: number = 0, dateK: Date = new Date(), per: number = 0, perKm: number = 0, perTime: number = 0,
                 war: WarningWearEnum = WarningWearEnum.SUCCESS,
-                list: WearReplacementProgressBarViewModel[] = []) {
+                list: WearMaintenanceProgressBarViewModel[] = []) {
         this.idVehicle = id;
         this.nameVehicle = name;
         this.kmVehicle = km;
@@ -29,29 +29,50 @@ export class WearVehicleProgressBarViewModel {
         this.percentKm = perKm;
         this.percentTime = perTime;
         this.warning = war;
-        this.listWearReplacement = list;
+        this.listWearMaintenance = list;
+    }
+}
+
+export class WearMaintenanceProgressBarViewModel {
+    codeMaintenanceFreq = '';
+    idMaintenance = -1;
+    descriptionMaintenance = '';
+    kmMaintenance = 0; //
+    timeMaintenance = 0;
+    fromKmMaintenance = 0;
+    toKmMaintenance = 0;
+    initMaintenance = false;
+    wearMaintenance = false;
+    listWearNotificationReplacement: WearNotificationReplacementProgressBarViewModel[] = [];
+    listWearReplacement: WearReplacementProgressBarViewModel[] = [];
+    constructor(codeFreq: string = '', id: number = -1, desc: string = '', km: number = 0, time: number = 0,
+                from: number = 0, to: number = 0, init: boolean = false, wear: boolean = false,
+                listNotif: WearNotificationReplacementProgressBarViewModel[] = [],
+                listRep: WearReplacementProgressBarViewModel[] = []) {
+        this.codeMaintenanceFreq = codeFreq;
+        this.idMaintenance = id;
+        this.descriptionMaintenance = desc;
+        this.kmMaintenance = km;
+        this.timeMaintenance = time;
+        this.fromKmMaintenance = from;
+        this.toKmMaintenance = to;
+        this.initMaintenance = init;
+        this.wearMaintenance = wear;
+        this.listWearNotificationReplacement = listNotif;
+        this.listWearReplacement = listRep;
     }
 }
 
 export class WearReplacementProgressBarViewModel {
     idMaintenanceElement = -1;
     nameMaintenanceElement = '';
-    codeMaintenanceFreq = '';
     idOperation = -1;
     descriptionOperation = '';
     kmOperation = null;
     dateOperation: Date = null;
     priceOperation = 0;
-    idMaintenance = -1;
-    descriptionMaintenance = '';
-    kmMaintenance = 0;
     kmAcumulateMaintenance = 0;
-    timeMaintenance = 0;
     timeAcumulateMaintenance = 0;
-    fromKmMaintenance = 0;
-    toKmMaintenance = 0;
-    initMaintenance = false;
-    wearMaintenance = false;
     calculateKms = 0;
     calculateMonths = 0;
     percentKms = 0;
@@ -59,3 +80,11 @@ export class WearReplacementProgressBarViewModel {
     percentMonths = 0;
     warningMonths: WarningWearEnum = WarningWearEnum.SUCCESS;
 }
+
+export class WearNotificationReplacementProgressBarViewModel {
+    warning: WarningWearEnum = WarningWearEnum.SUCCESS;
+    numWarning = 0;
+    totalWarning = 0;
+}
+
+

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="310" id="mtm.free.ionic.dey125r" version="3.1.0" windows-packageVersion="3.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="320" id="mtm.free.ionic.dey125r" version="3.2.0" windows-packageVersion="3.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM Free</name>
     <description>Motor Track Manager Free</description>
     <author email="deyhome.mtm@gmail.com" href="https://mtmweb-cd867.web.app/home">DeyHome</author>
@@ -13,7 +13,7 @@
     <allow-intent href="geo:*" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="22" />
-    <preference name="android-targetSdkVersion" value="29" />
+    <preference name="android-targetSdkVersion" value="30" />
     <preference name="WindowsStoreIdentityName" value="52193DeyHome.MotortrackManagerFree" />
     <preference name="WindowsStorePublisherName" value="DeyApps" />
     <preference name="WindowsStoreDisplayName" value="Motor Track Manager Free" />

@@ -1,9 +1,9 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 // LIBRARIES
 
 // UTILS
-import { ModalInputModel, ModalOutputModel } from '@models/index';
+import { ModalInputModel } from '@models/index';
 import { Constants, PageEnum } from '@utils/index';
 
 @Component({

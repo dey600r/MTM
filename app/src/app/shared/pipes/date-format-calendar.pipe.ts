@@ -10,6 +10,6 @@ export class DateFormatCalendarPipe implements PipeTransform {
     }
 
     transform(date: Date = new Date()): string {
-    return this.calendarService.getDateString(date);
+        return this.calendarService.getDateString(date);
     }
 }
