@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';

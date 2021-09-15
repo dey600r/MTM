@@ -6,13 +6,12 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import {
-    DashboardModel, OperationModel, SearchDashboardModel,
-    ConfigurationModel, VehicleModel, MaintenanceModel, WearVehicleProgressBarViewModel,
-    WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel, WearNotificationReplacementProgressBarViewModel
+    DashboardModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel,
+    WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel
 } from '@models/index';
 import { CommonService } from './common.service';
 import { CalendarService } from './calendar.service';
-import { ConstantsColumns, WarningWearEnum, FilterMonthsEnum, Constants, FilterKmTimeEnum } from '../utils';
+import { ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum } from '../utils';
 
 @Injectable({
     providedIn: 'root'
