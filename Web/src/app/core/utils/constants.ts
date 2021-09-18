@@ -1,6 +1,7 @@
 export class Constants {
     static ROUTE_HOME = 'home';
     static ROUTE_INFO_MTM = 'infomtm';
+    static ROUTE_MTM_PRIVACIY_POLICY = 'infomtm/privacypolicy';
 
     static LANGUAGE_EN = 'en';
     static LANGUAGE_ES = 'es';

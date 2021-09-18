@@ -6,8 +6,8 @@
 }
 
 .footer h4 {
-    padding-top: 25px;
-    padding-bottom: 10px;
+    padding-top: 15px;
+    padding-bottom: 5px;
     color: var(--main-text-color);
     text-align: center;
     margin: 0px;
@@ -19,6 +19,11 @@
     color: var(--main-text-color);
     text-align: center;
     margin: 0px;
+    padding-bottom: 5px;
     font-style: italic;
     font-size: 10px;
+}
+
+.footer p a {
+    color: var(--main-text-color);
 }

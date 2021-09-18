@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
 import { TranslateService } from '@ngx-translate/core';
-import { InfoThemeModel } from '@models/index';
+import { InfoIconModel, InfoThemeModel } from '@models/index';
 import { Constants } from '@utils/constants';
 
 @Injectable({
@@ -30,5 +30,9 @@ export class UtilsService {
       new InfoThemeModel(Constants.THEME_DARK_KEY, Constants.THEME_DARK),
       new InfoThemeModel(Constants.THEME_SKY_KEY, Constants.THEME_SKY)
     ];
+  }
+
+  getIconMtm() {
+    return new InfoIconModel(this.joinPath([environment.pathIcons, 'icon.png']), '', 'icon-mtm', '', '', 'item-mtm');
   }
 }

@@ -14,7 +14,6 @@ import { InfoBaseIconModel } from '@app/core/models/info-base.model';
 })
 export class InfoMtmComponent implements OnInit {
 
-  icon = '';
 
   infoIconMtM: InfoIconModel = new InfoIconModel();
   infoListCard: InfoProjectCardModel = new InfoProjectCardModel();
@@ -30,10 +29,8 @@ export class InfoMtmComponent implements OnInit {
 
   ngOnInit(): void {
     const assetsIcon: string = environment.pathIcons;
-    this.icon = this.utilService.joinPath([assetsIcon, 'icon.png']);
 
-    this.infoIconMtM = new InfoIconModel(this.icon, '', 'icon-mtm', '',
-      '', 'item-mtm');
+    this.infoIconMtM = this.utilService.getIconMtm();
 
     const pathImages: string = this.utilService.getPathMtMImages(Constants.TYPE_APP_OTHERS);
 

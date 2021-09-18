@@ -17,6 +17,7 @@ import { AppComponent } from 'src/app/app.component';
 import { routes } from 'src/app/app-routing.module';
 import { HomeComponent } from '@pages/home/home.component';
 import { InfoMtmComponent } from '@pages/info-mtm/info-mtm.component';
+import { MtmPrivacyPolicyComponent } from '@pages/info-mtm/mtm-privacy-policy/mtm-privacy-policy.component';
 
 import { HeaderComponent } from '@components/header/header.component';
 import { FooterComponent } from '@components/footer/footer.component';
@@ -59,6 +60,7 @@ export class SetupTest {
           AppComponent,
           HomeComponent,
           InfoMtmComponent,
+          MtmPrivacyPolicyComponent,
           HeaderComponent,
           FooterComponent,
           IconDocComponent,
