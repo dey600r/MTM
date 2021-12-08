@@ -33,3 +33,54 @@ export class ModalOutputModel<T = any, R = any> {
         this.dataList = dl;
     }
 }
+
+export class BaseNameModel extends BaseModel {
+    name: string;
+    constructor(n: string = null,  id: number = 1) {
+        super(id);
+        this.name = n;
+    }
+}
+
+export class BaseDescriptionModel extends BaseModel {
+    description: string;
+    constructor(d: string = null, id: number = 1) {
+        super(id);
+        this.description = d;
+    }
+}
+
+export class BaseNameDescriptionModel extends BaseDescriptionModel {
+    name: string;
+    constructor(n: string = null, d: string = null, id: number = 1) {
+        super(d, id);
+        this.name = n;
+    }
+}
+
+export class BaseCodeDescriptionModel extends BaseDescriptionModel {
+    code: string;
+    constructor(c: string = null, d: string = null, id: number = 1) {
+        super(d, id);
+        this.code = c;
+    }
+}
+
+export class BaseMaintenanceModel extends BaseDescriptionModel {
+    km: number;
+    time: number;
+    init: boolean;
+    wear: boolean;
+    fromKm: number;
+    toKm: number;
+    constructor(d: string = null, k: number = null, t: number = null, i: boolean = false, w: boolean = false,
+                fr: number = 0, to: number = null, id: number = 1) {
+        super(d, id);
+        this.km = k;
+        this.time = t;
+        this.init = i;
+        this.wear = w;
+        this.fromKm = fr;
+        this.toKm = to;
+    }
+}

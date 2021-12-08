@@ -4,14 +4,19 @@ import { BehaviorSubject, Observable } from 'rxjs';
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
-// UTILS
+// MODELS
 import {
     DashboardModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel,
-    WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel
+    WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel,
+    InfoVehicleConfigurationModel
 } from '@models/index';
+
+// SERVICES
 import { CommonService } from './common.service';
 import { CalendarService } from './calendar.service';
-import { ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum } from '../utils';
+
+// UTILS
+import { ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +27,8 @@ export class DashboardService {
     public behaviourSearchOperation: BehaviorSubject<SearchDashboardModel>
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
     public behaviourSearchDashboard: BehaviorSubject<SearchDashboardModel>
+        = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
+    public behaviourSearchDashboardRecords: BehaviorSubject<SearchDashboardModel>
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
 
     constructor(private commonService: CommonService,
@@ -247,7 +254,7 @@ export class DashboardService {
             dataDashboard = this.mapWearToDashboardTimeRecordMaintenances(data, measure);
             translateY = this.translator.instant('COMMON.MONTHS');
         }
-        return new DashboardModel(view, dataDashboard, { domain: ['#D91CF6', '#1CEAF6', '#5FF61C']},
+        return new DashboardModel(view, dataDashboard, ['#D91CF6', '#1CEAF6', '#5FF61C'],
             filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OPERATIONS'),
             filter.showAxisLabel, this.translator.instant('PAGE_CONFIGURATION.MAINTENANCES'),
             filter.showAxisLabel, translateY, true, filter.doghnut, 'below', filter.showDataLabel);
@@ -337,10 +344,38 @@ export class DashboardService {
         return { id: i, name: n, series: s};
     }
 
+    // CHART INFO VEHICLE
+    getDashboardInfoVehicle(view: any[], data: InfoVehicleConfigurationModel): DashboardModel {
+        return new DashboardModel(view, this.mapInfoVehicleToDashboardInfo(data), [
+            'rgba(var(--ion-color-progressbar-success-progress), 0.7)',
+            'rgba(var(--ion-color-progressbar-warning-progress), 0.7)',
+            'rgba(var(--ion-color-progressbar-danger-progress), 0.5)',
+            'rgba(var(--ion-color-progressbar-danger-progress), 1)'
+        ]);
+    }
+
+    mapInfoVehicleToDashboardInfo(data: InfoVehicleConfigurationModel): any[] {
+        const dataFiltered = data.listMaintenance.filter(x => x.active);
+        return [
+            this.getDataDashboard(this.translator.instant('COMMON.SUCCESS'),
+                dataFiltered.filter(x => x.warning === WarningWearEnum.SUCCESS).length),
+            this.getDataDashboard(this.translator.instant('COMMON.WARNING'),
+                dataFiltered.filter(x => x.warning === WarningWearEnum.WARNING).length),
+            this.getDataDashboard(this.translator.instant('COMMON.DANGER'),
+                dataFiltered.filter(x => x.warning === WarningWearEnum.DANGER).length),
+            this.getDataDashboard(this.translator.instant('COMMON.UNUSABLE'),
+                dataFiltered.filter(x => x.warning === WarningWearEnum.SKULL).length)
+        ];
+    }
+
     // SEARCHER DASHBOARD
 
     getObserverSearchDashboard(): Observable<SearchDashboardModel> {
         return this.behaviourSearchDashboard.asObservable();
+    }
+
+    getObserverSearchDashboardRecords(): Observable<SearchDashboardModel> {
+        return this.behaviourSearchDashboardRecords.asObservable();
     }
 
     getObserverSearchOperation(): Observable<SearchDashboardModel> {
@@ -362,5 +397,11 @@ export class DashboardService {
     setSearchDashboard(filter: SearchDashboardModel) {
         this.searchDashboard = filter;
         this.behaviourSearchDashboard.next(this.searchDashboard);
+    }
+
+    setSearchDashboardRecords(filterKmTime: FilterKmTimeEnum, strict: boolean) {
+        this.searchDashboard.filterKmTime = filterKmTime;
+        this.searchDashboard.showStrict = strict;
+        this.behaviourSearchDashboardRecords.next(this.searchDashboard);
     }
 }

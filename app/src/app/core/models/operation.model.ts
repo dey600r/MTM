@@ -1,10 +1,9 @@
-import { BaseModel } from './common.model';
+import { BaseDescriptionModel } from './common.model';
 import { OperationTypeModel } from './operation-type.model';
 import { VehicleModel } from './vehicle.model';
 import { MaintenanceElementModel } from './maintenance-element.model';
 
-export class OperationModel extends BaseModel {
-    description: string;
+export class OperationModel extends BaseDescriptionModel {
     details: string;
     operationType: OperationTypeModel;
     vehicle: VehicleModel;
@@ -19,8 +18,7 @@ export class OperationModel extends BaseModel {
                 v: VehicleModel = new VehicleModel(), k: number = null, d: Date = new Date(), l: string = null,
                 o: string = null, p: number = null, doc: string = null, id: number = 1,
                 listME: MaintenanceElementModel[] = []) {
-        super(id);
-        this.description = desc;
+        super(desc, id);
         this.details = det;
         this.operationType = opt;
         this.vehicle = v;

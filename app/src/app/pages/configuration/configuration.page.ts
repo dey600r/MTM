@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService } from '@services/index';
-import { ConstantsColumns, ActionDBEnum, PageEnum, Constants, ToastTypeEnum, ModalOutputEnum } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
   VehicleModel, OperationModel, ListModalModel, ListDataModalModel
@@ -21,7 +21,7 @@ import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data
 @Component({
   selector: 'app-configuration',
   templateUrl: 'configuration.page.html',
-  styleUrls: ['../../app.component.scss']
+  styleUrls: []
 })
 export class ConfigurationPage {
 
@@ -138,7 +138,7 @@ export class ConfigurationPage {
   }
 
   activeSegmentScroll(): boolean {
-    return this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE;
+    return this.controlService.activeSegmentScroll(3);
   }
 
   async openListModalConfiguration(itemSliding: any, configuration: ConfigurationModel) {

@@ -209,9 +209,9 @@ export class CalendarService {
 
     calculateKmInfoNotification(vehicle: VehicleModel, kmInit: number, km: number): Date {
         const kmPerM: number = this.calculateKmsPerMonth(vehicle);
-        const diff: number = Math.round((km - kmInit) / kmPerM);
+        const diffInDays: number = Math.round((km - kmInit) / (kmPerM / 30));
         const date: Date = new Date(vehicle.dateKms);
-        date.setMonth(date.getMonth() + diff);
+        date.setDate(date.getDate() + diffInDays);
         return date;
     }
 

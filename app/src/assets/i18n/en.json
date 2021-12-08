@@ -57,6 +57,7 @@
         "SHOW_DOGHNUT": "Show doghnut",
         "SHOW_MY_DATA": "Show my data",
         "CALCULATE_PER_MONTH": "Calculate per month",
+        "STRICT_CALCULATION": "Strict calculation",
         "DATE_OPERATION": "Date operation",
         "RECORDS": "Records",
         "SUMMARY": "Summary",
@@ -87,7 +88,14 @@
         "MODE": "Mode",
         "LIGHT": "Light",
         "DARK": "Dark",
-        "SKY": "Sky"
+        "SKY": "Sky",
+        "SUMMARY_VEHICLES": "Summary of vehicles",
+        "SUCCESS": "Success",
+        "WARNING": "Warning",
+        "DANGER": "Danger",
+        "UNUSABLE": "Unusable",
+        "INFORMATION_VEHICLE": "Vehicle information",
+        "REPLACEMENT_HISTORY": "Replacement history"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -95,6 +103,7 @@
         "VehicleKm": "The distance traveled of the vehicle are {{km}} {{measure}}.",
         "VehicleEstimatedKm": "The distance estimated are {{km}} {{measure}}.",
         "RELIABILITY": "Reliability",
+        "RELIABILITY_VEHICLE": "Reliability of the vehicle",
         "NextChangeKm": "Next change of {{maintenance}} is at {{km}} {{measure}} on schedule {{date}}",
         "NextChangeTime": " or by the end of time {{time}}",
         "NotExistRecords": "It doesn't exist records to {{maintenance}}. You need drive you vehicle more",

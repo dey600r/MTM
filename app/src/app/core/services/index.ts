@@ -10,3 +10,4 @@ export * from './calendar.service';
 export * from './settings.service';
 export * from './theme.service';
 export * from './home.service';
+export * from './info-vehicle.service';

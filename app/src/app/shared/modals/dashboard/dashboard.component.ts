@@ -16,7 +16,7 @@ import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popo
 @Component({
   selector: 'dashboard',
   templateUrl: 'dashboard.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 

@@ -1,11 +1,7 @@
-import { BaseModel } from './common.model';
+import { BaseCodeDescriptionModel } from './common.model';
 
-export class OperationTypeModel extends BaseModel {
-    code: string;
-    description: string;
+export class OperationTypeModel extends BaseCodeDescriptionModel {
     constructor(c: string = null, d: string = null, id: number = 1) {
-        super(id);
-        this.code = c;
-        this.description = d;
+        super(c, d, id);
     }
 }

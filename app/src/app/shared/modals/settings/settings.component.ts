@@ -19,7 +19,7 @@ import { SettingsService, DataBaseService, ControlService, ThemeService } from '
 @Component({
   selector: 'settings',
   templateUrl: 'settings.component.html',
-  styleUrls: ['settings.component.scss', '../../../app.component.scss']
+  styleUrls: ['settings.component.scss']
 })
 export class SettingsComponent implements OnInit, OnDestroy {
 

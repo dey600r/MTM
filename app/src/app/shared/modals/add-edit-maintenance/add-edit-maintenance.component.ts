@@ -17,7 +17,7 @@ import { DataBaseService, ConfigurationService, ControlService, SettingsService 
 @Component({
   selector: 'app-add-edit-maintenance',
   templateUrl: 'add-edit-maintenance.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
 export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
 

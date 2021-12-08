@@ -86,7 +86,7 @@ export class ControlService {
             cssClass: 'custom-loader-class',
             backdropDismiss: false
         });
-        
+
         loader.onDidDismiss().then(() => {
             this.activateButtonExist(parent);
         });
@@ -200,5 +200,11 @@ export class ControlService {
 
     async closeModal(modalController: ModalController, modalOuput: ModalOutputModel = new ModalOutputModel()) {
         await modalController.dismiss(modalOuput);
+    }
+
+    // SEGMENTS
+
+    activeSegmentScroll(length: number): boolean {
+        return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && length > 2) || length > 10;
     }
 }

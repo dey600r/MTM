@@ -15,6 +15,8 @@ export class MockData {
         new MaintenanceElementModel('SPARK_PLUG', 'CHANGE_SPARK_PLUG', false, 32, 6),
         new MaintenanceElementModel('SPARK_PLUG', 'CHANGE_SPARK_PLUG', false, 34, 7),
         new MaintenanceElementModel('ENGINE_OIL', 'CHANGE_ENGINE_OIL', false, 38, 8),
+        new MaintenanceElementModel('FRONT_BRAKE_FLUID', 'CHANGE_FRONT_BRAKE_FLUID', false, 5, 9),
+        new MaintenanceElementModel('BACK_BRAKE_FLUID', 'CHANGE_BACK_BRAKE_FLUID', false, 5, 10)
     ];
     static MaintenanceFreqs: MaintenanceFreqModel[] = [
         new MaintenanceFreqModel(Constants.MAINTENANCE_FREQ_ONCE_CODE, 'ONCE', 1),
@@ -34,7 +36,9 @@ export class MockData {
             MockData.MaintenanceElements[5]],
             MockData.MaintenanceFreqs[1], 26000, 0, false, false, 0, null, true, 5),
         new MaintenanceModel('CHANGE WHEELS', [MockData.MaintenanceElements[0], MockData.MaintenanceElements[1]],
-            MockData.MaintenanceFreqs[1], 18000, 48, false, true, 0, null, false, 6)
+            MockData.MaintenanceFreqs[1], 18000, 48, false, true, 0, null, false, 6),
+        new MaintenanceModel('REVIES BRAKES', [MockData.MaintenanceElements[8], MockData.MaintenanceElements[8]],
+            MockData.MaintenanceFreqs[1], 18000, 48, false, true, 0, null, false, 7)
     ];
     static SystemConfigurations: SystemConfigurationModel[] = [
         new SystemConfigurationModel(Constants.KEY_LAST_UPDATE_DB, 'v3.1.0', new Date(), 1),
@@ -45,7 +49,9 @@ export class MockData {
     static Configurations: ConfigurationModel[] = [
         new ConfigurationModel('PRODUCTION', 'PRODUCTION SETUP', true, [MockData.Maintenances[0],
             MockData.Maintenances[1], MockData.Maintenances[4], MockData.Maintenances[5]], 1),
-        new ConfigurationModel('HYOSUNG', 'PRODUCTION SETUP HYOSUNG', true, MockData.Maintenances, 2)
+        new ConfigurationModel('HYOSUNG', 'PRODUCTION SETUP HYOSUNG', true, MockData.Maintenances, 2),
+        new ConfigurationModel('KAWASAKI', 'PRODUCTION SETUP KAWASAKI', true, [MockData.Maintenances[1],
+            MockData.Maintenances[3], MockData.Maintenances[6]], 3)
     ];
     static VehicleTypes: VehicleTypeModel[] = [
         new VehicleTypeModel(Constants.VEHICLE_TYPE_CODE_MOTO, 'MOTORBIKE', 1),
@@ -54,9 +60,11 @@ export class MockData {
     ];
     static Vehicles: VehicleModel[] = [
         new VehicleModel('R6', 'Yamaha', 2005, 100200, MockData.Configurations[0], MockData.VehicleTypes[0],
-            600, new Date(2021, 6, 2), new Date(2006, 9, 19), true, 1),
+            600, new Date(2021, 6, 2), new Date(2006, 3, 27), true, 1),
         new VehicleModel('gt125r', 'Hyosung', 2006, 76750, MockData.Configurations[1], MockData.VehicleTypes[0],
-            40, new Date(2021, 6, 2), new Date(2006, 9, 12), true, 2)
+            50, new Date(2021, 6, 2), new Date(2006, 9, 12), true, 2),
+        new VehicleModel('Ninja 1000sx', 'Kawasaki', 2021, 12000, MockData.Configurations[2], MockData.VehicleTypes[0],
+            600, new Date(2021, 6, 2), new Date(2021, 3, 5), true, 3),
     ];
     static OperationTypes: OperationTypeModel[] = [
         new OperationTypeModel(Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP, 'MAINTENANCE_WORKSHOP', 1),

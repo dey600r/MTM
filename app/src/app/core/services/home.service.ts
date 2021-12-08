@@ -34,7 +34,7 @@ export class HomeService {
         if (!!vehicles && vehicles.length > 0) {
             vehicles.forEach(vehicle => { // Replacement per vehicle
                 const config: ConfigurationModel = configurations.find(x => x.id === vehicle.configuration.id);
-                if (config.listMaintenance.length > 0) {
+                if (config.listMaintenance && config.listMaintenance.length > 0) {
                     let wearMaintenance: WearMaintenanceProgressBarViewModel[] = [];
                     const maintenancesVehicle: MaintenanceModel[] =
                         maintenances.filter(x => config.listMaintenance.some(y => y.id === x.id));
@@ -157,18 +157,22 @@ export class HomeService {
     getPercentVehicle(wearMaintenance: WearMaintenanceProgressBarViewModel[], kmVehicle: number): WarningWearEnum {
         let warninSuccess: WarningWearEnum = WarningWearEnum.SUCCESS;
         if (wearMaintenance.some(x =>
-            (x.fromKmMaintenance <= kmVehicle && (x.toKmMaintenance === null || x.toKmMaintenance >= kmVehicle)) &&
+            this.validateKmIntoMaintenance(kmVehicle, x.fromKmMaintenance, x.toKmMaintenance) &&
             x.listWearReplacement.some(y =>
                 (y.warningKms === WarningWearEnum.DANGER || y.warningMonths === WarningWearEnum.DANGER ||
                 y.warningKms === WarningWearEnum.SKULL || y.warningMonths === WarningWearEnum.SKULL)))) {
             warninSuccess = WarningWearEnum.DANGER;
-        } else if (wearMaintenance.some(x => (x.fromKmMaintenance <= kmVehicle &&
-            (x.toKmMaintenance === null || x.toKmMaintenance >= kmVehicle)) &&
+        } else if (wearMaintenance.some(x =>
+            this.validateKmIntoMaintenance(kmVehicle, x.fromKmMaintenance, x.toKmMaintenance) &&
             x.listWearReplacement.some(y => (y.warningKms === WarningWearEnum.WARNING ||
             y.warningMonths === WarningWearEnum.WARNING)))) {
             warninSuccess = WarningWearEnum.WARNING;
         }
         return warninSuccess;
+    }
+
+    validateKmIntoMaintenance(kmVehicle: number, fromKm: number, toKm: number): boolean {
+        return (fromKm <= kmVehicle && (toKm === null || toKm >= kmVehicle));
     }
 
     calculateReplacement(vehicle: VehicleModel, operations: OperationModel[],
@@ -352,7 +356,8 @@ export class HomeService {
 
     /* INFO NOTIFICATIONS */
 
-    getWearReplacement(vehicleWear: WearVehicleProgressBarViewModel, operations: OperationModel[]): WearVehicleProgressBarViewModel {
+    getWearReplacement(strict: boolean, vehicleWear: WearVehicleProgressBarViewModel,
+                       operations: OperationModel[]): WearVehicleProgressBarViewModel {
         let result: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
 
         if (vehicleWear.listWearMaintenance.length > 0) {
@@ -382,9 +387,15 @@ export class HomeService {
                     timeCalculate = this.getInitTime(wearMain, vehicle, operationsVehicle, timeCalculate);
                     let opLast = new OperationModel();
                     for (let kmCalculate = this.getInitKm(wearMain); kmCalculate < max; kmCalculate += wearMain.kmMaintenance) {
-                        const calcKm: number = (kmCalculate + wearMain.kmMaintenance); // km should maintenance
+                        let calcKm: number = (kmCalculate + wearMain.kmMaintenance); // km should maintenance
+                        let calcTime: number = (timeCalculate + wearMain.timeMaintenance); // time should maintenance
+                        if (!strict && opLast && opLast.km != null) { // Calculate flexible
+                            kmCalculate = opLast.km;
+                            calcKm = (kmCalculate + wearMain.kmMaintenance);
+                            calcTime = (this.calendarService.monthDiff(vehicleWear.datePurchaseVehicle, new Date(opLast.date))
+                                + wearMain.timeMaintenance);
+                        }
                         const calcCompKm: number = (calcKm + estimatedKmOperation); // km max should maintenance
-                        const calcTime: number = (timeCalculate + wearMain.timeMaintenance); // time should maintenance
                         // OPERATIONS: km and time aprox to maintenance
                         const ops: OperationModel[] = this.getOperationsFilteredKmTime(operationsVehicle, wearMaintenance, kmCalculate,
                             calcCompKm, calcTime, opLast, vehicleWear.datePurchaseVehicle);
@@ -410,9 +421,13 @@ export class HomeService {
                         } else {
                             calculateKmEstimate = -estimatedKmOperation;
                             calculateTimeEstimate = calcTime - diffDateToday;
+                            opLast = null;
                         }
                         if ((wearMain.toKmMaintenance === null || wearMain.toKmMaintenance >= calcKm) &&
-                            (calcKm < kmVehicle || (!!op && op.id !== null))) {
+                            (calcKm < kmVehicle || (!!op && op.id !== null)) &&
+                            (strict || !wearMaintenance.some(wm => wm.listWearReplacement.some(wmr =>
+                                wmr.kmAcumulateMaintenance === calcKm && wmr.timeAcumulateMaintenance === calcTime &&
+                                wmr.calculateKms === calculateKmEstimate && wmr.calculateMonths === calculateTimeEstimate)))) {
                             wearMaintenance = [... wearMaintenance, {
                                 codeMaintenanceFreq: wearMain.codeMaintenanceFreq,
                                 idMaintenance: wearMain.idMaintenance,
@@ -495,7 +510,7 @@ export class HomeService {
         return operationsVehicle.filter(x =>
                 !wearMaintenance.some(main => main.listWearReplacement[0].idOperation === x.id) &&
                 ((x.km >= kmCalculate && x.km < calcCompKm) ||
-                ((opLast.id === null ? 0 : opLast.km) <= x.km && x.km < calcCompKm &&
+                ((opLast === null || opLast.id === null ? 0 : opLast.km) <= x.km && x.km < calcCompKm &&
                 this.calendarService.monthDiff(datePurchaseVehicle, new Date(x.date)) <= calcTime)));
     }
 

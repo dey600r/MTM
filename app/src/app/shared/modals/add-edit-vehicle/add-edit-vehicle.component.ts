@@ -16,7 +16,7 @@ import {
 @Component({
   selector: 'app-add-edit-vehicle',
   templateUrl: 'add-edit-vehicle.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
 export class AddEditVehicleComponent implements OnInit, OnDestroy {
 

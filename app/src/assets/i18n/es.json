@@ -57,6 +57,7 @@
         "SHOW_DOGHNUT": "Modo Donut",
         "SHOW_MY_DATA": "Mostrar mis datos",
         "CALCULATE_PER_MONTH": "Cálculo por mes",
+        "STRICT_CALCULATION": "Cálculo estricto",
         "DATE_OPERATION": "Fecha operación",
         "RECORDS": "Registro",
         "SUMMARY": "Resumen",
@@ -87,7 +88,14 @@
         "MODE": "Modo",
         "LIGHT": "Claro",
         "DARK": "Oscuro",
-        "SKY": "Cielo"
+        "SKY": "Cielo",
+        "SUMMARY_VEHICLES": "Resumen de vehículos",
+        "SUCCESS": "Correcto",
+        "WARNING": "Aviso",
+        "DANGER": "Peligro",
+        "UNUSABLE": "Inservible",
+        "INFORMATION_VEHICLE": "Información del vehículo",
+        "REPLACEMENT_HISTORY": "Historico de piezas"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -95,6 +103,7 @@
         "VehicleKm": "La distancia recorrida del vehículo es {{km}} {{measure}}.",
         "VehicleEstimatedKm": "La distancia estimada es {{km}} {{measure}}.",
         "RELIABILITY": "Fiabilidad",
+        "RELIABILITY_VEHICLE": "Fiabilidad del vehículo",
         "NextChangeKm": "El próximo cambio de {{maintenance}} es a los {{km}} {{measure}} en la fecha prevista {{date}}",
         "NextChangeTime": " o por el paso del tiempo en {{time}}",
         "NotExistRecords": "No existen registros para {{maintenance}}. Necesitas conducir mas el vehículo",

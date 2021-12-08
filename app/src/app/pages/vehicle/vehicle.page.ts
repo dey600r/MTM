@@ -12,11 +12,12 @@ import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from 
 // COMPONENTS
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
 import { DashboardComponent } from '@modals/dashboard/dashboard.component';
+import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 
 @Component({
   selector: 'app-vehicle',
   templateUrl: 'vehicle.page.html',
-  styleUrls: ['vehicle.page.scss', '../../app.component.scss']
+  styleUrls: ['vehicle.page.scss']
 })
 export class VehiclePage implements OnInit {
 
@@ -91,6 +92,11 @@ export class VehiclePage implements OnInit {
     this.rowSelected = row;
     this.controlService.openModal(PageEnum.VEHICLE,
       AddEditVehicleComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.VEHICLE));
+  }
+
+  openInfoVehicle() {
+    this.controlService.openModal(PageEnum.VEHICLE,
+        InfoVehicleComponent, new ModalInputModel(true, null, this.vehicles, PageEnum.VEHICLE));
   }
 
   deleteVehicle(row: VehicleModel) {

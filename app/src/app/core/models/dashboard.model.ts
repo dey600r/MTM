@@ -24,7 +24,7 @@ export class DashboardModel {
                 legPos: string = '', dataLabel: boolean = false, barPad: number = 2, groupPad: number = 4) {
         this.view = v;
         this.data = d;
-        this.colorScheme = (!color ? this.getColorSchemeDefault() : color);
+        this.colorScheme = (!color ? this.getColorSchemeDefault() : this.mapColorScheme(color));
         this.showXAxis = x;
         this.showYAxis = y;
         this.gradient = grad;
@@ -43,7 +43,7 @@ export class DashboardModel {
     }
 
     getColorSchemeDefault(): any {
-        return { domain: [
+        return this.mapColorScheme([
             'var(--ion-color-chart-first)',
             'var(--ion-color-chart-second)',
             'var(--ion-color-chart-third)',
@@ -55,6 +55,10 @@ export class DashboardModel {
             'var(--ion-color-chart-nine)',
             'var(--ion-color-chart-ten)',
             'var(--ion-color-chart-eleventh)',
-            'var(--ion-color-chart-twelve)']};
+            'var(--ion-color-chart-twelve)']);
+    }
+
+    mapColorScheme(colors: any[]): any {
+        return { domain: colors };
     }
 }

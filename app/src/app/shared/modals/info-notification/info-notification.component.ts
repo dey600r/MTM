@@ -4,27 +4,28 @@ import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { TranslateService } from '@ngx-translate/core';
 import * as shape from 'd3-shape';
 
 // UTILS
 import {
   ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel, InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel
+  MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel,
+  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel
 } from '@models/index';
 import {
   DashboardService, ConfigurationService, ControlService, CalendarService,
-  SettingsService, DataBaseService, HomeService
+  SettingsService, DataBaseService, HomeService, InfoVehicleService
 } from '@services/index';
 import { WarningWearEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'info-notification',
   templateUrl: 'info-notification.component.html',
-  styleUrls: ['info-notification.component.scss', '../../../app.component.scss']
+  styleUrls: ['info-notification.component.scss']
 })
 export class InfoNotificationComponent implements OnInit, OnDestroy {
 
@@ -57,7 +58,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   measure: any = {};
 
   // SUBSCRIPTION
-  searchSubscription: Subscription = new Subscription();
+  searchDashboardSubscription: Subscription = new Subscription();
+  searchDashboardRecordsSubscription: Subscription = new Subscription();
   screenSubscription: Subscription = new Subscription();
   settingsSubscription: Subscription = new Subscription();
 
@@ -73,7 +75,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
               private translator: TranslateService,
               private settingsService: SettingsService,
               private dbService: DataBaseService,
-              private homeService: HomeService) {
+              private homeService: HomeService,
+              private infoVehicleService: InfoVehicleService) {
   }
 
   ngOnInit() {
@@ -90,18 +93,20 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.searchSubscription.unsubscribe();
+    this.searchDashboardSubscription.unsubscribe();
+    this.searchDashboardRecordsSubscription.unsubscribe();
     this.screenSubscription.unsubscribe();
     this.settingsSubscription.unsubscribe();
   }
 
   initInfoNotifications() {
-    this.wear = this.homeService.getWearReplacement(this.modalInputModel.data, this.modalInputModel.dataList);
+    this.wear = this.homeService.getWearReplacement(true, this.modalInputModel.data, this.modalInputModel.dataList);
 
     if (this.wear.listWearMaintenance.length > 0) {
       this.labelPercent = this.wear.percent;
       this.getObserverSearchDashboard();
       this.getObserverOrientationChange();
+      this.getObserverSearchDashboardRecords();
     } else {
       const wear: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
       this.isCalendar = false;
@@ -115,18 +120,36 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getObserverSearchDashboard() {
-    this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
-      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-      if (!this.hideGraph) {
-        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,
-          this.modalInputModel.dataList.filter(x =>
-            this.wear.listWearMaintenance.some(y => y.listWearReplacement[0].idOperation === x.id)), filter);
-      }
-      if (!this.hideRecords) {
-        this.dashboardRecordsMaintenance =
-          this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter, this.measure);
-      }
+    this.searchDashboardSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
+      this.calculateDashboardExpenses(filter);
+      this.calculateDashboad(false, filter);
     });
+  }
+
+  getObserverSearchDashboardRecords() {
+    this.searchDashboardRecordsSubscription = this.dashboardService.getObserverSearchDashboardRecords().subscribe(filter => {
+      this.calculateDashboad(true, filter);
+    });
+  }
+
+  calculateDashboardExpenses(filter: SearchDashboardModel) {
+    if (!this.hideGraph) {
+      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+      this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,
+        this.modalInputModel.dataList.filter(x =>
+          this.wear.listWearMaintenance.some(y => y.listWearReplacement[0].idOperation === x.id)), filter);
+    }
+  }
+
+  calculateDashboad(all: boolean, filter: SearchDashboardModel) {
+    if (!this.hideRecords) {
+      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+      if (all) {
+        this.wear = this.homeService.getWearReplacement(filter.showStrict, this.modalInputModel.data, this.modalInputModel.dataList);
+      }
+      this.dashboardRecordsMaintenance =
+        this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter, this.measure);
+    }
   }
 
   getObserverOrientationChange() {
@@ -163,12 +186,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.labelNameVehicle = this.dataMaintenance.nameVehicle;
     this.nameMaintenance = wearMain.descriptionMaintenance;
     this.nameMaintenanceElement = wearRep.nameMaintenanceElement;
-    this.labelVehicleKm = this.translator.instant('PAGE_HOME.VehicleKm',
-      { km: this.dataMaintenance.kmVehicle, measure: this.measure.value });
-    if (this.dataMaintenance.kmVehicle !== this.vehicleKmEstimated) {
-      this.labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.VehicleEstimatedKm',
-        { km: this.vehicleKmEstimated, measure: this.measure.value  });
-    }
+    this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.dataMaintenance.kmVehicle, this.vehicleKmEstimated, this.measure);
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
     let kmLife = this.vehicleKmEstimated;
     const today: Date = new Date();
@@ -206,7 +224,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   refreshChart() {
     this.hideRecords = !this.hideRecords;
     if (!this.hideRecords) {
-      this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
+      const search: SearchDashboardModel = this.dashboardService.getSearchDashboard();
+      this.dashboardService.setSearchDashboardRecords(search.filterKmTime, search.showStrict);
     }
   }
 
@@ -256,18 +275,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getIconPercent(type: string): string {
-    if (this.labelPercent < 25) {
-      return (type === 'color' ?
-        this.homeService.getClassIcon(WarningWearEnum.SKULL, '') : this.getIconKms(WarningWearEnum.SKULL));
-    } else if (this.labelPercent >= 25 && this.labelPercent < 50) {
-      return (type === 'color' ?
-        this.homeService.getClassIcon(WarningWearEnum.DANGER, '') : this.getIconKms(WarningWearEnum.DANGER));
-    } else if (this.labelPercent >= 50 && this.labelPercent < 75) {
-      return (type === 'color' ?
-        this.homeService.getClassIcon(WarningWearEnum.WARNING, '') : this.getIconKms(WarningWearEnum.WARNING));
-    } else {
-      return (type === 'color' ? this.homeService.getClassIcon(WarningWearEnum.SUCCESS, '') : 'checkmark-done-circle');
-    }
+    return this.infoVehicleService.getIconPercent(this.labelPercent, type);
   }
 
   // MODALS
@@ -298,9 +306,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   showInfoVehicle() {
-    const msg = this.translator.instant('ALERT.LastUpdateVehicleKm',
-      { date: this.calendarService.getDateString(new Date(this.dataMaintenance.dateKmsVehicle)), measurelarge: this.measure.valueLarge });
-    this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
+    this.infoVehicleService.showInfoVehicle(this.dataMaintenance.dateKmsVehicle, this.measure);
   }
 
   showInfoReliability() {

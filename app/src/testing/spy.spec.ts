@@ -48,9 +48,11 @@ export class SpyMockConfig {
             dataDirectory: ConstantsTest.PATH_DATA_DIRECTORY
         },
         dbService: jasmine.createSpyObj('DataBaseService',
-            ['initDB', 'getSystemConfiguration', 'getConfigurations', 'getVehicles', 'getOperations', 'getMaintenance',
+            ['initDB', 'getSystemConfiguration', 'getSystemConfigurationData',
+            'getConfigurations', 'getConfigurationsData', 'getVehicles', 'getVehiclesData',
+            'getOperations', 'getOperationsData', 'getMaintenance', 'getMaintenanceData',
             'getMaintenanceElement', 'getVehicleType', 'getOperationType', 'getMaintenanceFreq']),
-        controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree']),
+        controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree', 'activeSegmentScroll']),
         settingsService: jasmine.createSpyObj('SettingsService', ['createOutputDirectory']),
         sqliteObject: jasmine.createSpyObj('SQLiteObject', ['executeSql']),
         sqlitePorter: jasmine.createSpyObj('SQLitePorter', ['importSqlToDb']),
@@ -93,12 +95,17 @@ export class SpyMockConfig {
     static SpyMockDataBaseService() {
         const spy = SpyMockConfig.SpyConfig.dbService;
         spy.getSystemConfiguration.and.returnValue(of(MockData.SystemConfigurations));
+        spy.getSystemConfigurationData.and.returnValue(MockData.SystemConfigurations);
         spy.getConfigurations.and.returnValue(of(MockData.Configurations));
+        spy.getConfigurationsData.and.returnValue(MockData.Configurations);
         spy.getVehicleType.and.returnValue(of(MockData.VehicleTypes));
         spy.getVehicles.and.returnValue(of(MockData.Vehicles));
+        spy.getVehiclesData.and.returnValue(MockData.Vehicles);
         spy.getOperationType.and.returnValue(of(MockData.OperationTypes));
         spy.getOperations.and.returnValue(of(MockData.Operations));
+        spy.getOperationsData.and.returnValue(MockData.Operations);
         spy.getMaintenance.and.returnValue(of(MockData.Maintenances));
+        spy.getMaintenanceData.and.returnValue(MockData.Maintenances);
         spy.getMaintenanceElement.and.returnValue(of(MockData.MaintenanceElements));
         spy.getMaintenanceFreq.and.returnValue(of(MockData.MaintenanceFreqs));
         return spy;

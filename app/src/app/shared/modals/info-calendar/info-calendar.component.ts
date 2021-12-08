@@ -24,7 +24,7 @@ import { Constants, ConstantsColumns, WarningWearEnum, PageEnum, ToastTypeEnum }
 @Component({
   selector: 'info-calendar',
   templateUrl: 'info-calendar.component.html',
-  styleUrls: ['info-calendar.component.scss', '../../../app.component.scss']
+  styleUrls: ['info-calendar.component.scss']
 })
 export class InfoCalendarComponent implements OnInit, OnDestroy {
 

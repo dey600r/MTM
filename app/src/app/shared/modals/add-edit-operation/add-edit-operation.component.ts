@@ -19,7 +19,7 @@ import {
 @Component({
   selector: 'app-add-edit-operation',
   templateUrl: 'add-edit-operation.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
 export class AddEditOperationComponent implements OnInit, OnDestroy {
 

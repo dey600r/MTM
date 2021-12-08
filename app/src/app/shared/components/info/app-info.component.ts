@@ -9,7 +9,7 @@ import { Constants, PageEnum } from '@utils/index';
 @Component({
   selector: 'app-info',
   templateUrl: 'app-info.component.html',
-  styleUrls: ['app-info.component.scss', '../../../app.component.scss']
+  styleUrls: ['app-info.component.scss']
 })
 export class AppInfoComponent {
 

@@ -12,7 +12,8 @@ import {
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel, ConfigurationModel, WearReplacementProgressBarViewModel, MaintenanceElementModel
+  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel,
+  ConfigurationModel, WearReplacementProgressBarViewModel, MaintenanceElementModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 
@@ -27,7 +28,7 @@ import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-o
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss', '../../app.component.scss']
+  styleUrls: ['home.page.scss']
 })
 export class HomePage implements OnInit {
 
@@ -169,7 +170,7 @@ export class HomePage implements OnInit {
     if (this.controlService.getDateLastUse().toDateString() !== new Date().toDateString()) {
       this.loadedHeader = false;
       this.loadedBody = false;
-      this.dbService.vehicles.next(this.dbService.vehiclesData);
+      this.dbService.setVehicles(this.dbService.getVehiclesData());
       this.controlService.setDateLastUse();
     }
     this.timeOutLoader();
@@ -240,7 +241,7 @@ export class HomePage implements OnInit {
   }
 
   activeSegmentScroll(): boolean {
-    return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && this.wears.length > 2) || this.wears.length > 10;
+    return this.controlService.activeSegmentScroll(this.wears.length);
   }
 
   // MODALS

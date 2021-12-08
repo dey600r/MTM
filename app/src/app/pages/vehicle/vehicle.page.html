@@ -1,17 +1,19 @@
 <ion-header [hidden]="!loaded">
   <ion-toolbar>
     <!-- Button chart -->
-    <ion-button class="btn-width-header position-fixed margin-top0 index-top"
-      *ngIf="this.vehicles.length > 0" slot="start" fill="clear" (click)="openDashboardVehicle()">
+    <ion-button class="btn-width-header" *ngIf="this.vehicles.length > 0" slot="start" fill="clear" (click)="openDashboardVehicle()">
       <ion-icon size="large" name="bar-chart"></ion-icon>
     </ion-button>
     <!-- Button info -->
-    <ion-button class="btn-width-header position-fixed margin-top-5 index-top"
-      *ngIf="this.vehicles.length === 0" fill="clear" (click)="showModalInfo()">
+    <ion-button class="btn-width-header" *ngIf="this.vehicles.length === 0" fill="clear" (click)="showModalInfo()">
       <ion-icon size="large" class="btn-color" name="information-circle"></ion-icon>
     </ion-button>
     <!-- Tittle -->
     <ion-title color="text-header" class="align-center">{{ 'COMMON.GARAGE' | translate }}</ion-title>
+    <!-- Button filter -->
+    <ion-button slot="end" fill="clear" *ngIf="this.vehicles.length > 0" (click)="openInfoVehicle()" class="btn-width-header">
+      <ion-icon size="large" name="analytics"></ion-icon>
+    </ion-button>
   </ion-toolbar>
   <!-- SEGMENT -->
   <ion-segment class="segment-button-fixed" [value]="1">

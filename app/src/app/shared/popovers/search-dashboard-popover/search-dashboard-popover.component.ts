@@ -13,7 +13,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
 @Component({
     selector: 'app-search-dashboard-popover',
     templateUrl: 'search-dashboard-popover.component.html',
-    styleUrls: ['../../../app.component.scss']
+    styleUrls: []
   })
   export class SearchDashboardPopOverComponent implements OnInit, OnDestroy {
 
@@ -101,6 +101,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     onChangeFilterGrouper() {
         this.onChangeFilterOperationGrouper();
         this.onChangeFilterDashboardGrouper();
+        this.onChangeFilterDashboardRecordsGrouper();
     }
 
     onChangeFilterOperationGrouper() {
@@ -129,7 +130,14 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
                                         this.searchDashboard.doghnut,
                                         this.searchDashboard.showMyData,
                                         this.searchDashboard.filterKmTime,
-                                        this.searchDashboard.expensePerKm));
+                                        this.searchDashboard.expensePerKm,
+                                        this.searchDashboard.showStrict));
+        }
+    }
+
+    onChangeFilterDashboardRecordsGrouper() {
+        if (this.refresh) {
+            this.dashboardService.setSearchDashboardRecords(this.searchDashboard.filterKmTime, this.searchDashboard.showStrict);
         }
     }
 

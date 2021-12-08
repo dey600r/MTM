@@ -23,7 +23,7 @@ import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.compo
 @Component({
   selector: 'app-operation',
   templateUrl: 'operation.page.html',
-  styleUrls: ['operation.page.scss', '../../app.component.scss']
+  styleUrls: ['operation.page.scss']
 })
 export class OperationPage {
 
@@ -180,9 +180,9 @@ export class OperationPage {
       new ModalInputModel(true, null, [], PageEnum.OPERATION));
   }
 
-  closePopover() {
-    this.controlService.closePopover();
-  }
+  // closePopover() {
+  //   this.controlService.closePopover();
+  // }
 
   /** METHODS */
 
@@ -208,7 +208,7 @@ export class OperationPage {
   }
 
   activeSegmentScroll(): boolean {
-    return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && this.vehicles.length > 2) || this.vehicles.length > 10;
+    return this.controlService.activeSegmentScroll(this.vehicles.length);
   }
 
   filterOperations(filter: SearchDashboardModel, operations: OperationModel[]): OperationModel[] {
