@@ -1,6 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 
 // LIBRARY ANGULAR
 import { TranslateService } from '@ngx-translate/core';
@@ -15,7 +14,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
     templateUrl: 'search-dashboard-popover.component.html',
     styleUrls: []
   })
-  export class SearchDashboardPopOverComponent implements OnInit, OnDestroy {
+  export class SearchDashboardPopOverComponent implements OnInit {
 
     // MODAL MODELS
     modalInputModel: ModalInputModel = new ModalInputModel();
@@ -43,11 +42,6 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
         name: `12 ${this.translator.instant('COMMON.MONTHS')}`
     }];
 
-    // SUSCRIPTION
-    operationTypeSubscription: Subscription = new Subscription();
-    maintenanceElementSubscription: Subscription = new Subscription();
-    settingsSubscription: Subscription = new Subscription();
-
     // TRANSLATE
     translateAccept = '';
     translateCancel = '';
@@ -72,30 +66,24 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
         this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
             this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
-        this.operationTypeSubscription = this.dbService.getOperationType().subscribe(data => {
-            this.filterOpType = [];
-            this.operationTypes = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
-            this.searchDashboard.searchOperationType.forEach(x => this.filterOpType = [...this.filterOpType, x.id]);
-        });
+        // FILTER OPERATION TYPE
+        this.filterOpType = [];
+        this.operationTypes = this.commonService.orderBy(
+            this.dbService.getOperationTypeData(), ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
+        this.searchDashboard.searchOperationType.forEach(x => this.filterOpType = [...this.filterOpType, x.id]);
 
-        this.maintenanceElementSubscription = this.dbService.getMaintenanceElement().subscribe(data => {
-            this.filterMaintElement = [];
-            this.maintenanceElements = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
-            this.searchDashboard.searchMaintenanceElement.forEach(x => this.filterMaintElement = [...this.filterMaintElement, x.id]);
-        });
+        // FILTER MAINTENANCE ELEMENT
+        this.filterMaintElement = [];
+        this.maintenanceElements = this.commonService.orderBy(
+            this.dbService.getMaintenanceElementData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
+        this.searchDashboard.searchMaintenanceElement.forEach(x => this.filterMaintElement = [...this.filterMaintElement, x.id]);
 
-        this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-            if (!!settings && settings.length > 0) {
-                this.measure = this.settingsService.getDistanceSelected(settings);
-                this.coin = this.settingsService.getMoneySelected(settings);
-                this.translateExpensePerKM = `${this.coin.value}/${this.measure.value}`;
-            }
-          });
-    }
-
-    ngOnDestroy() {
-        this.operationTypeSubscription.unsubscribe();
-        this.maintenanceElementSubscription.unsubscribe();
+        const settings = this.dbService.getSystemConfigurationData();
+        if (!!settings && settings.length > 0) {
+            this.measure = this.settingsService.getDistanceSelected(settings);
+            this.coin = this.settingsService.getMoneySelected(settings);
+            this.translateExpensePerKM = `${this.coin.value}/${this.measure.value}`;
+        }
     }
 
     onChangeFilterGrouper() {

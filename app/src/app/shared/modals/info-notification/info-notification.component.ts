@@ -61,7 +61,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   searchDashboardSubscription: Subscription = new Subscription();
   searchDashboardRecordsSubscription: Subscription = new Subscription();
   screenSubscription: Subscription = new Subscription();
-  settingsSubscription: Subscription = new Subscription();
 
   constructor(private platform: Platform,
               public navParams: NavParams,
@@ -96,7 +95,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.searchDashboardSubscription.unsubscribe();
     this.searchDashboardRecordsSubscription.unsubscribe();
     this.screenSubscription.unsubscribe();
-    this.settingsSubscription.unsubscribe();
   }
 
   initInfoNotifications() {
@@ -169,11 +167,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getSettings() {
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.measure = this.settingsService.getDistanceSelected(settings);
-      }
-    });
+    const settings = this.dbService.getSystemConfigurationData();
+    if (!!settings && settings.length > 0) {
+      this.measure = this.settingsService.getDistanceSelected(settings);
+    }
   }
 
   configureResume() {

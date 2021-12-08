@@ -1,6 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
@@ -21,7 +20,7 @@ import { SettingsService, DataBaseService, ControlService, ThemeService } from '
   templateUrl: 'settings.component.html',
   styleUrls: ['settings.component.scss']
 })
-export class SettingsComponent implements OnInit, OnDestroy {
+export class SettingsComponent implements OnInit {
 
     // MODAL MODELS
     modalInputModel: ModalInputModel = new ModalInputModel();
@@ -44,9 +43,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     lastExport = '';
     pathExports = '';
     pathImports = '';
-
-    // SUBSCRIPTION
-    settingsSubscription: Subscription = new Subscription();
 
     constructor(private navParams: NavParams,
                 private changeDetector: ChangeDetectorRef,
@@ -71,24 +67,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.listMoney = this.settingsService.getListMoney();
     this.listThemes = this.settingsService.getListThemes();
 
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.distanceSelected = this.settingsService.getDistanceSelected(settings);
-        this.moneySelected = this.settingsService.getMoneySelected(settings);
-        this.themeSelected = this.settingsService.getThemeSelected(settings);
-      }
-    });
+    const settings = this.dbService.getSystemConfigurationData();
+    if (!!settings && settings.length > 0) {
+      this.distanceSelected = this.settingsService.getDistanceSelected(settings);
+      this.moneySelected = this.settingsService.getMoneySelected(settings);
+      this.themeSelected = this.settingsService.getThemeSelected(settings);
+    }
 
     // EXPORTS AND IMPORTS
-
     this.pathExports = this.settingsService.getRootRelativePath(Constants.EXPORT_DIR_NAME);
     this.pathImports = this.translator.instant('COMMON.SELECT_FILE');
 
     this.getLastExportFile();
-  }
-
-  ngOnDestroy() {
-    this.settingsSubscription.unsubscribe();
   }
 
   async closeModal() {

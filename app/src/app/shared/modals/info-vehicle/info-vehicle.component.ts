@@ -82,8 +82,9 @@ export class InfoVehicleComponent implements OnInit {
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
-    this.measure = this.settingsService.getDistanceSelected(this.dbService.getSystemConfigurationData());
-    this.coin = this.settingsService.getMoneySelected(this.dbService.getSystemConfigurationData());
+    const settings = this.dbService.getSystemConfigurationData();
+    this.measure = this.settingsService.getDistanceSelected(settings);
+    this.coin = this.settingsService.getMoneySelected(settings);
 
     if (this.modalInputModel.dataList !== null && this.modalInputModel.dataList.length > 0) {
       this.initConfigurationSummary();
