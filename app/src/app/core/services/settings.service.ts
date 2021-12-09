@@ -83,9 +83,12 @@ export class SettingsService {
     }
 
     insertSystemConfiguration() {
-        this.dbService.executeScriptDataBase(
-            this.sqlService.insertSqlSystemConfiguration(
-                [new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_LIGHT, new Date(), 4)]));
+        const data = this.dbService.getSystemConfigurationData();
+        if (!data.some(x => x.key === Constants.KEY_CONFIG_THEME)) {
+            this.dbService.executeScriptDataBase(
+                this.sqlService.insertSqlSystemConfiguration(
+                    [new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_LIGHT, new Date(), 4)]));
+        }
     }
 
     mapToAnyCustomSetting(c: string, v: string, vl: string): any {

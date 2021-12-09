@@ -346,26 +346,35 @@ export class DashboardService {
 
     // CHART INFO VEHICLE
     getDashboardInfoVehicle(view: any[], data: InfoVehicleConfigurationModel): DashboardModel {
-        return new DashboardModel(view, this.mapInfoVehicleToDashboardInfo(data), [
-            'rgba(var(--ion-color-progressbar-success-progress), 0.7)',
-            'rgba(var(--ion-color-progressbar-warning-progress), 0.7)',
-            'rgba(var(--ion-color-progressbar-danger-progress), 0.5)',
-            'rgba(var(--ion-color-progressbar-danger-progress), 1)'
-        ]);
-    }
-
-    mapInfoVehicleToDashboardInfo(data: InfoVehicleConfigurationModel): any[] {
+        let result: any[] = [];
+        let colors: string[] = [];
         const dataFiltered = data.listMaintenance.filter(x => x.active);
-        return [
-            this.getDataDashboard(this.translator.instant('COMMON.SUCCESS'),
-                dataFiltered.filter(x => x.warning === WarningWearEnum.SUCCESS).length),
-            this.getDataDashboard(this.translator.instant('COMMON.WARNING'),
-                dataFiltered.filter(x => x.warning === WarningWearEnum.WARNING).length),
-            this.getDataDashboard(this.translator.instant('COMMON.DANGER'),
-                dataFiltered.filter(x => x.warning === WarningWearEnum.DANGER).length),
-            this.getDataDashboard(this.translator.instant('COMMON.UNUSABLE'),
-                dataFiltered.filter(x => x.warning === WarningWearEnum.SKULL).length)
-        ];
+        const numSuccess = dataFiltered.filter(x => x.warning === WarningWearEnum.SUCCESS).length;
+        if (numSuccess > 0) {
+            result = [...result, this.getDataDashboard(this.translator.instant('COMMON.SUCCESS'), numSuccess)];
+            colors = [...colors, 'rgba(var(--ion-color-progressbar-success-progress), 0.7)'];
+        }
+        const numWarning = dataFiltered.filter(x => x.warning === WarningWearEnum.WARNING).length;
+        if (numWarning > 0) {
+            result = [...result, this.getDataDashboard(this.translator.instant('COMMON.WARNING'), numWarning)];
+            colors = [...colors, 'rgba(var(--ion-color-progressbar-warning-progress), 0.7)'];
+        }
+        const numDanger = dataFiltered.filter(x => x.warning === WarningWearEnum.DANGER).length;
+        if (numDanger > 0) {
+            result = [...result, this.getDataDashboard(this.translator.instant('COMMON.DANGER'), numDanger)];
+            colors = [...colors, 'rgba(var(--ion-color-progressbar-danger-progress), 0.5)'];
+        }
+        const numUnusable = dataFiltered.filter(x => x.warning === WarningWearEnum.SKULL).length;
+        if (numUnusable > 0) {
+            result = [...result, this.getDataDashboard(this.translator.instant('COMMON.UNUSABLE'), numUnusable)];
+            colors = [...colors, 'rgba(var(--ion-color-progressbar-danger-progress), 1)'];
+        }
+        const numInactive = data.listMaintenance.filter(x => !x.active).length;
+        if (numInactive > 0) {
+            result = [...result, this.getDataDashboard(this.translator.instant('COMMON.INACTIVE'), numInactive)];
+            colors = [...colors, '#7D7D7D'];
+        }
+        return new DashboardModel(view, result, colors);
     }
 
     // SEARCHER DASHBOARD

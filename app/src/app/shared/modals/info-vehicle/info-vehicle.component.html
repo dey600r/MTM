@@ -19,10 +19,9 @@
   </ion-segment>
 </ion-header>
 
-
 <ion-content fullscreen>
   <!-- CHART -->
-  <ngx-charts-pie-grid class="justify-center"
+  <ngx-charts-pie-grid *ngIf="vehicles.length > 0" class="justify-center"
     [view]="dashboard.view"
     [scheme]="dashboard.colorScheme"
     [results]="dashboard.data">
@@ -159,7 +158,8 @@
           </div>
           <div class="table-row" [hidden]="showInfoReplacement[i]">
             <ion-list class="second-item-div">
-              <ion-item *ngFor="let subRep of rep.listReplacements">
+              <ion-item *ngFor="let subRep of rep.listReplacements" button
+                (click)="showInfoReplacement[i] = !showInfoReplacement[i]; showToastInfoReplacement(rep, subRep)">
                 <div class="table-row auto-width">
                   <div style="width: 50px;">
                     <!-- Icons -->

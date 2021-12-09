@@ -94,6 +94,7 @@
         "WARNING": "Warning",
         "DANGER": "Danger",
         "UNUSABLE": "Unusable",
+        "INACTIVE": "Inactive",
         "INFORMATION_VEHICLE": "Vehicle information",
         "REPLACEMENT_HISTORY": "Replacement history"
     },
@@ -261,7 +262,8 @@
         "NoDataFound": "No data found",
         "PayForMTM": "To use this functionality you can buy the MtM application",
         "InfoCalendarKm": "You should check the {{replacement}} at {{km}}{{measure}} on the estimated date {{date}}",
-        "InfoCalendarTime": "You should check the {{replacement}} on the date {{date}}"
+        "InfoCalendarTime": "You should check the {{replacement}} on the date {{date}}",
+        "InfoVehicleReplacement": "You changed the {{replacement}} in the {{operation}} operation on {{date}} with a labor cost of {{priceOp}}{{coin}}. The {{replacement}} cost {{price}}{{coin}} and had a life of {{km}}{{measure}} in {{time}} months."
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

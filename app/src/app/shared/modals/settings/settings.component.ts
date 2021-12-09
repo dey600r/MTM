@@ -204,8 +204,8 @@ export class SettingsComponent implements OnInit {
         JSON.stringify(json), { replace : true}).then(() => {
             // IMPORT DB
             this.sqlitePorter.importJsonToDb(this.dbService.getDB(), JSON.parse(contentFile)).then((ok: any) => {
-              this.settingsService.insertSystemConfiguration();
               this.dbService.loadAllTables();
+              setTimeout(() => { this.settingsService.insertSystemConfiguration(); }, 500);
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
             }).catch(e => {
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB');

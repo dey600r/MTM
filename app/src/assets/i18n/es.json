@@ -94,6 +94,7 @@
         "WARNING": "Aviso",
         "DANGER": "Peligro",
         "UNUSABLE": "Inservible",
+        "INACTIVE": "Inactivo",
         "INFORMATION_VEHICLE": "Información del vehículo",
         "REPLACEMENT_HISTORY": "Historico de piezas"
     },
@@ -261,7 +262,8 @@
         "NoDataFound": "No se encuentran datos",
         "PayForMTM": "Para usar esta funcionalidad debes pagar la aplicación MtM completa",
         "InfoCalendarKm": "Deberías revisar {{replacement}} a los {{km}}{{measure}} en la fecha estimada {{date}}",
-        "InfoCalendarTime": "Deberías revisar {{replacement}} en la fecha {{date}}"
+        "InfoCalendarTime": "Deberías revisar {{replacement}} en la fecha {{date}}",
+        "InfoVehicleReplacement": "Se cambió el {{replacement}} en la operación {{operation}} el {{date}} con un coste de mano de obra de {{priceOp}}{{coin}}. El {{replacement}} costó {{price}}{{coin}} y tenía una vída de {{km}}{{measure}} en {{time}} meses."
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",

@@ -82,8 +82,12 @@ export class OperationPage {
     this.dbService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
-        this.vehicleSelected = (this.vehicleSelected === -1 ?
-          this.vehicles[0].id : this.vehicles.find(x => x.id === this.vehicleSelected).id);
+        if (this.vehicleSelected === -1) {
+          this.vehicleSelected = this.vehicles[0].id;
+        } else {
+          const vehicle = this.vehicles.find(x => x.id === this.vehicleSelected);
+          this.vehicleSelected = (vehicle ? vehicle.id : this.vehicles[0].id);
+        }
       } else {
         this.vehicles = [];
         this.vehicleSelected = -1;

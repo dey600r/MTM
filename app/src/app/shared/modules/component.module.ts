@@ -70,8 +70,7 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
     SettingsComponent,
     InfoCalendarComponent,
     SearchDashboardPopOverComponent,
-    ListDataToUpdateComponent,
-    InfoVehicleComponent
+    ListDataToUpdateComponent
   ],
   providers: [
     File,

@@ -16,7 +16,7 @@ import {
   ConfigurationModel,
   DashboardModel, InfoVehicleHistoricModel, InfoVehicleConfigurationMaintenanceModel,
   InfoVehicleConfigurationModel, InfoVehicleHistoricReplacementModel, MaintenanceElementModel,
-  MaintenanceFreqModel, MaintenanceModel, ModalInputModel, OperationModel, VehicleModel
+  MaintenanceFreqModel, MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel
 } from '@models/index';
 
 // UTILS
@@ -94,9 +94,11 @@ export class InfoVehicleComponent implements OnInit {
   }
 
   initVehicleSummary() {
-    const data = this.listInfoVehicleConfiguration.find(x => x.idVehicle === this.vehicleSelected.id);
-    this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.vehicleSelected.km, data.kmEstimated, this.measure);
-    this.labelPercent = this.infoVehicleService.getPercentKmVehicle(this.selectedInfoVehicleConfiguration);
+    if (this.listInfoVehicleConfiguration && this.listInfoVehicleConfiguration.length > 0) {
+      const data = this.listInfoVehicleConfiguration.find(x => x.idVehicle === this.vehicleSelected.id);
+      this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.vehicleSelected.km, data.kmEstimated, this.measure);
+      this.labelPercent = this.infoVehicleService.getPercentKmVehicle(this.selectedInfoVehicleConfiguration);
+    }
   }
 
   initConfigurationSummary() {
@@ -108,16 +110,19 @@ export class InfoVehicleComponent implements OnInit {
     const operations: OperationModel[] = this.dbService.getOperationsData();
     this.vehicles = this.modalInputModel.dataList.filter(v =>
       configurations.find(c => c.id === v.configuration.id).listMaintenance.length > 0);
-    this.vehicleSelected = this.vehicles[0];
 
-    this.listInfoVehicleConfiguration = this.infoVehicleService.calculateInfoVehicleConfiguration(
-      operations, this.vehicles, configurations, maintenances);
+    if (this.vehicles && this.vehicles.length > 0) {
+      this.vehicleSelected = this.vehicles[0];
 
-    // INFO VEHICLE REPLACEMENTS
-    this.listInfoVehicleReplacement = this.infoVehicleService.calculateInfoReplacementHistoric(
-      this.vehicles, maintenances, operations, configurations);
+      this.listInfoVehicleConfiguration = this.infoVehicleService.calculateInfoVehicleConfiguration(
+        operations, this.vehicles, configurations, maintenances);
 
-    this.initShowInfo();
+      // INFO VEHICLE REPLACEMENTS
+      this.listInfoVehicleReplacement = this.infoVehicleService.calculateInfoReplacementHistoric(
+        this.vehicles, maintenances, operations, configurations);
+
+      this.initShowInfo();
+    }
   }
 
   initChartSummary() {
@@ -141,6 +146,12 @@ export class InfoVehicleComponent implements OnInit {
     this.initShowInfoReplacement();
   }
 
+  resetList() {
+    this.hideVehicleSummary = true;
+    this.hideConfigurationSummary = true;
+    this.hideReplacementSummary = true;
+  }
+
   initShowInfoMaintenance() {
     this.showInfoMaintenance = [];
     if (this.vehicleSelected) {
@@ -158,10 +169,12 @@ export class InfoVehicleComponent implements OnInit {
   }
 
   initDataSelected(idVehicle: number) {
-    this.vehicleSelected = this.vehicles.find(x => x.id === idVehicle);
-    this.selectedInfoVehicleConfiguration = this.listInfoVehicleConfiguration.find(x => x.idVehicle === idVehicle);
-    this.selectedInfoReplacement = this.listInfoVehicleReplacement.find(x => x.id === idVehicle).listHistoricReplacements;
-    this.dashboard = this.dataDashboard.find(x => x.id === this.selectedInfoVehicleConfiguration.idVehicle).data;
+    if (this.vehicles && this.vehicles.length > 0) {
+      this.vehicleSelected = this.vehicles.find(x => x.id === idVehicle);
+      this.selectedInfoVehicleConfiguration = this.listInfoVehicleConfiguration.find(x => x.idVehicle === idVehicle);
+      this.selectedInfoReplacement = this.listInfoVehicleReplacement.find(x => x.id === idVehicle).listHistoricReplacements;
+      this.dashboard = this.dataDashboard.find(x => x.id === this.selectedInfoVehicleConfiguration.idVehicle).data;
+    }
   }
 
   // METHODS
@@ -176,6 +189,10 @@ export class InfoVehicleComponent implements OnInit {
 
   showInfoVehicle() {
     this.infoVehicleService.showInfoVehicle(this.vehicleSelected.dateKms, this.measure);
+  }
+
+  showToastInfoReplacement(rep: InfoVehicleHistoricReplacementModel, subRep: InfoVehicleReplacementModel) {
+    this.infoVehicleService.showToastInfoReplacement(rep, subRep, this.measure, this.coin);
   }
 
   getIconReplacement(replacementId: number): string {
@@ -200,6 +217,7 @@ export class InfoVehicleComponent implements OnInit {
     this.initDataSelected(Number(event.detail.value));
     this.initShowInfo();
     this.initVehicleSummary();
+    this.resetList();
   }
 
   activeSegmentScroll(): boolean {

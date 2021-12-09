@@ -4,10 +4,11 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { 
+import {
     ConfigurationModel, MaintenanceModel, InfoVehicleConfigurationModel, InfoVehicleConfigurationMaintenanceModel,
     InfoVehicleConfigurationMaintenanceElementModel, VehicleModel, OperationModel, WearVehicleProgressBarViewModel,
-    WearMaintenanceProgressBarViewModel, WearReplacementProgressBarViewModel, InfoVehicleHistoricModel, InfoVehicleHistoricReplacementModel, InfoVehicleReplacementModel
+    WearMaintenanceProgressBarViewModel, WearReplacementProgressBarViewModel, InfoVehicleHistoricModel,
+    InfoVehicleHistoricReplacementModel, InfoVehicleReplacementModel
 } from '@models/index';
 
 // SERVICES
@@ -126,6 +127,21 @@ export class InfoVehicleService {
         this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
     }
 
+    showToastInfoReplacement(rep: InfoVehicleHistoricReplacementModel, subRep: InfoVehicleReplacementModel, measure: any, coin: any) {
+        const msg = this.translator.instant('ALERT.InfoVehicleReplacement', {
+                replacement: rep.name,
+                operation: subRep.opName,
+                date: this.calendarService.getDateString(new Date(subRep.date)),
+                priceOp: subRep.priceOp,
+                coin: coin.value,
+                price: subRep.price,
+                km: subRep.km,
+                measure: measure.value,
+                time: subRep.time
+            });
+        this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGHER);
+      }
+
     // INFO REPLACEMENT HISTORIC
 
     calculateInfoReplacementHistoric(vehicles: VehicleModel[], maintenances: MaintenanceModel[], operations: OperationModel[],
@@ -134,7 +150,8 @@ export class InfoVehicleService {
 
         vehicles.forEach(vehicle => {
             const kmVehicleEstimated: number = this.calendarService.calculateKmVehicleEstimated(vehicle);
-            const timeDiffVehicle: number = this.calendarService.monthDiff(new Date(vehicle.datePurchase), new Date());
+            const timeDiffVehicle: number = this.calendarService.monthDiff(new Date(vehicle.datePurchase),
+                (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
             const maintenancesOfVehicle: number[] = configurations.find(c => c.id === vehicle.configuration.id)
                 .listMaintenance.map(x => x.id);
             let listReplacements: InfoVehicleHistoricReplacementModel[] = [];
@@ -162,10 +179,13 @@ export class InfoVehicleService {
                                 }
                             });
                             info.km = kmVehicleEstimated - operationsVehicle[0].km;
-                            info.time = this.calendarService.monthDiff(new Date(operationsVehicle[0].date), new Date());
+                            info.time = this.calendarService.monthDiff(new Date(operationsVehicle[0].date),
+                                (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
                             info.kmAverage = Math.round(this.commonService.sum(info.listReplacements, 'km') / info.listReplacements.length);
-                            info.timeAverage = Math.round(this.commonService.sum(info.listReplacements, 'time') / info.listReplacements.length);
-                            info.priceAverage = Math.round(this.commonService.sum(info.listReplacements, 'price') / info.listReplacements.length);
+                            info.timeAverage = Math.round(this.commonService.sum(info.listReplacements, 'time') /
+                                info.listReplacements.length);
+                            info.priceAverage = Math.round(this.commonService.sum(info.listReplacements, 'price') /
+                                info.listReplacements.length);
                         } else {
                             info = new InfoVehicleHistoricReplacementModel(replacement.name, kmVehicleEstimated, timeDiffVehicle,
                                 kmVehicleEstimated, timeDiffVehicle, 0, [], replacement.id);
