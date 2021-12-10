@@ -47,7 +47,9 @@ export class InfoVehicleComponent implements OnInit {
   selectedInfoReplacement: InfoVehicleHistoricReplacementModel[] = [];
   hideVehicleSummary = true;
   hideConfigurationSummary = true;
+  loadedBodyConfigurationSummary = true;
   hideReplacementSummary = true;
+  loadedBodyReplacementSummary = true;
   dashboard: DashboardModel = new DashboardModel([], []);
   windowsSize: any[] = [];
   dataDashboard: any[] = [];
@@ -108,6 +110,7 @@ export class InfoVehicleComponent implements OnInit {
     const maintenances: MaintenanceModel[] = this.commonService.orderBy(
       this.dbService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
     const operations: OperationModel[] = this.dbService.getOperationsData();
+    const maintenanceElements: MaintenanceElementModel[] = this.dbService.getMaintenanceElementData();
     this.vehicles = this.modalInputModel.dataList.filter(v =>
       configurations.find(c => c.id === v.configuration.id).listMaintenance.length > 0);
 
@@ -119,7 +122,7 @@ export class InfoVehicleComponent implements OnInit {
 
       // INFO VEHICLE REPLACEMENTS
       this.listInfoVehicleReplacement = this.infoVehicleService.calculateInfoReplacementHistoric(
-        this.vehicles, maintenances, operations, configurations);
+        this.vehicles, maintenances, operations, configurations, maintenanceElements);
 
       this.initShowInfo();
     }
@@ -194,6 +197,32 @@ export class InfoVehicleComponent implements OnInit {
   showToastInfoReplacement(rep: InfoVehicleHistoricReplacementModel, subRep: InfoVehicleReplacementModel) {
     this.infoVehicleService.showToastInfoReplacement(rep, subRep, this.measure, this.coin);
   }
+
+  showInfoReplacementLoad() {
+    if (this.hideReplacementSummary) {
+      this.loadedBodyReplacementSummary = false;
+      setTimeout(() => {
+        this.loadedBodyReplacementSummary = true;
+        this.hideReplacementSummary = false;
+      }, 400);
+    } else {
+      this.hideReplacementSummary = true;
+    }
+  }
+
+  showInfoConfigurationLoad() {
+    if (this.hideConfigurationSummary) {
+      this.loadedBodyConfigurationSummary = false;
+      setTimeout(() => {
+        this.loadedBodyConfigurationSummary = true;
+        this.hideConfigurationSummary = false;
+      }, 400);
+    } else {
+      this.hideConfigurationSummary = true;
+    }
+  }
+
+  // ICONS
 
   getIconReplacement(replacementId: number): string {
     return this.configurationService.getIconReplacement(new MaintenanceElementModel(null, null, false, 0, replacementId));

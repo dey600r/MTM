@@ -47,7 +47,7 @@
   </ion-list>
   <!-- CONFIGURATION SUMMARY -->
   <ion-list>
-    <ion-list-header (click)="hideConfigurationSummary = !hideConfigurationSummary" class="padding-list-header">
+    <ion-list-header (click)="showInfoConfigurationLoad()" class="padding-list-header">
       <ion-icon size="large" name="cog"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.CONFIGURATION' | translate }} {{ selectedInfoVehicleConfiguration.nameConfiguration }}</h3>
       <ion-button fill="clear">
@@ -109,10 +109,22 @@
         </div>
       </ion-item>
     </div>
+    <div *ngIf="!loadedBodyConfigurationSummary">
+      <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]">
+        <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
+        <ion-label>
+          <h3 class="main-item-div"><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></h3>
+          <div class="table-row" style="width: 60%;">
+            <p class="main-item-div"><ion-skeleton-text animated style="width: 35%"></ion-skeleton-text></p>
+            <p class="main-item-div"><ion-skeleton-text animated style="width: 35%"></ion-skeleton-text></p>
+          </div>
+        </ion-label>
+      </ion-item>
+    </div>
   </ion-list>
   <!-- REPLACEMENT SUMMARY -->
   <ion-list>
-    <ion-list-header (click)="hideReplacementSummary = !hideReplacementSummary" class="padding-list-header">
+    <ion-list-header (click)="showInfoReplacementLoad()" class="padding-list-header">
       <ion-icon size="large" name="repeat"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.REPLACEMENT_HISTORY' | translate }}</h3>
       <ion-button fill="clear">
@@ -121,8 +133,7 @@
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideReplacementSummary">
-      <ion-item *ngFor="let rep of selectedInfoReplacement; let i = index;" button
-        (click)="showInfoReplacement[i] = !showInfoReplacement[i]">
+      <ion-item *ngFor="let rep of selectedInfoReplacement; let i = index;" button (click)="hideReplacementSummary = !hideReplacementSummary">
         <div class="main-item-div">
           <div class="table-row">
             <div>
@@ -196,6 +207,24 @@
             </ion-list>
           </div>
         </div>
+      </ion-item>
+    </div>
+    <div *ngIf="!loadedBodyReplacementSummary">
+      <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]">
+        <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
+        <ion-label>
+          <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+          <div class="table-row" style="width: 75%;">
+            <p class="main-item-div"><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
+            <p class="main-item-div"><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
+          </div>
+        </ion-label>
+        <ion-label></ion-label>
+        <ion-label>
+          <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
+          <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
+          <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
+        </ion-label>
       </ion-item>
     </div>
   </ion-list>

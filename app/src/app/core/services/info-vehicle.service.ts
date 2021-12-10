@@ -8,7 +8,7 @@ import {
     ConfigurationModel, MaintenanceModel, InfoVehicleConfigurationModel, InfoVehicleConfigurationMaintenanceModel,
     InfoVehicleConfigurationMaintenanceElementModel, VehicleModel, OperationModel, WearVehicleProgressBarViewModel,
     WearMaintenanceProgressBarViewModel, WearReplacementProgressBarViewModel, InfoVehicleHistoricModel,
-    InfoVehicleHistoricReplacementModel, InfoVehicleReplacementModel
+    InfoVehicleHistoricReplacementModel, InfoVehicleReplacementModel, MaintenanceElementModel
 } from '@models/index';
 
 // SERVICES
@@ -145,56 +145,58 @@ export class InfoVehicleService {
     // INFO REPLACEMENT HISTORIC
 
     calculateInfoReplacementHistoric(vehicles: VehicleModel[], maintenances: MaintenanceModel[], operations: OperationModel[],
-                                     configurations: ConfigurationModel[]): InfoVehicleHistoricModel[] {
+                                     configurations: ConfigurationModel[], maintenanceElements: MaintenanceElementModel[]):
+                                     InfoVehicleHistoricModel[] {
         let result: InfoVehicleHistoricModel[] = [];
 
         vehicles.forEach(vehicle => {
             const kmVehicleEstimated: number = this.calendarService.calculateKmVehicleEstimated(vehicle);
             const timeDiffVehicle: number = this.calendarService.monthDiff(new Date(vehicle.datePurchase),
                 (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
-            const maintenancesOfVehicle: number[] = configurations.find(c => c.id === vehicle.configuration.id)
+            const idMaintenancesOfVehicle: number[] = configurations.find(c => c.id === vehicle.configuration.id)
                 .listMaintenance.map(x => x.id);
+            const maintenancesOfVehicle: MaintenanceModel[] = maintenances.filter(x => idMaintenancesOfVehicle.some(y => x.id === y));
+            const operationsVehicle: OperationModel[] = this.commonService.orderBy(
+                    operations.filter(op => vehicle.id === op.vehicle.id), ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
+            const maintenanceElementsVehicle: MaintenanceElementModel[] = maintenanceElements.filter(x =>
+                operationsVehicle.some(op => op.listMaintenanceElement.some(rep => rep.id === x.id)) ||
+                maintenancesOfVehicle.some(main => main.listMaintenanceElement.some(rep => rep.id === x.id)));
+
             let listReplacements: InfoVehicleHistoricReplacementModel[] = [];
-            maintenances.filter(x => maintenancesOfVehicle.some(y => x.id === y)).forEach(maintenance => {
-                maintenance.listMaintenanceElement.forEach(replacement => {
-                    if (!listReplacements.some(x => x.id === replacement.id)) {
-                        const operationsVehicle: OperationModel[] = this.commonService.orderBy(
-                            operations.filter(op => vehicle.id === op.vehicle.id &&
-                                op.listMaintenanceElement.some(x => x.id === replacement.id)),
-                            ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
-                        let info: InfoVehicleHistoricReplacementModel = new InfoVehicleHistoricReplacementModel();
-                        if (operationsVehicle && operationsVehicle.length > 0) {
-                            info = new InfoVehicleHistoricReplacementModel(replacement.name, 0, 0, 0, 0, 0, [], replacement.id);
-                            operationsVehicle.forEach((op, index) => {
-                                if (index === (operationsVehicle.length - 1)) {
-                                    info.listReplacements = [...info.listReplacements, new InfoVehicleReplacementModel(
-                                        op.description, op.km,
-                                        this.calendarService.monthDiff(new Date(vehicle.datePurchase), new Date(op.date)),
-                                        op.date, op.listMaintenanceElement.find(x => x.id === replacement.id).price, op.price, op.id)];
-                                } else {
-                                    info.listReplacements = [...info.listReplacements, new InfoVehicleReplacementModel(
-                                        op.description, (op.km - operationsVehicle[index + 1].km),
-                                        this.calendarService.monthDiff(new Date(operationsVehicle[index + 1].date), new Date(op.date)),
-                                        op.date, op.listMaintenanceElement.find(x => x.id === replacement.id).price, op.price, op.id)];
-                                }
-                            });
-                            info.km = kmVehicleEstimated - operationsVehicle[0].km;
-                            info.time = this.calendarService.monthDiff(new Date(operationsVehicle[0].date),
-                                (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
-                            info.kmAverage = Math.round(this.commonService.sum(info.listReplacements, 'km') / info.listReplacements.length);
-                            info.timeAverage = Math.round(this.commonService.sum(info.listReplacements, 'time') /
-                                info.listReplacements.length);
-                            info.priceAverage = Math.round(this.commonService.sum(info.listReplacements, 'price') /
-                                info.listReplacements.length);
+            maintenanceElementsVehicle.forEach(replacement => {
+                const opWithReplacement: OperationModel[] = operationsVehicle.filter(op =>
+                    op.listMaintenanceElement.some(x => x.id === replacement.id));
+                let info: InfoVehicleHistoricReplacementModel = new InfoVehicleHistoricReplacementModel();
+                if (opWithReplacement && opWithReplacement.length > 0) {
+                    info = new InfoVehicleHistoricReplacementModel(replacement.name, 0, 0, 0, 0, 0, [], replacement.id);
+                    opWithReplacement.forEach((op, index) => {
+                        if (index === (opWithReplacement.length - 1)) {
+                            info.listReplacements = [...info.listReplacements, new InfoVehicleReplacementModel(
+                                op.description, op.km,
+                                this.calendarService.monthDiff(new Date(vehicle.datePurchase), new Date(op.date)),
+                                op.date, op.listMaintenanceElement.find(x => x.id === replacement.id).price, op.price, op.id)];
                         } else {
-                            info = new InfoVehicleHistoricReplacementModel(replacement.name, kmVehicleEstimated, timeDiffVehicle,
-                                kmVehicleEstimated, timeDiffVehicle, 0, [], replacement.id);
+                            info.listReplacements = [...info.listReplacements, new InfoVehicleReplacementModel(
+                                op.description, (op.km - opWithReplacement[index + 1].km),
+                                this.calendarService.monthDiff(new Date(opWithReplacement[index + 1].date), new Date(op.date)),
+                                op.date, op.listMaintenanceElement.find(x => x.id === replacement.id).price, op.price, op.id)];
                         }
-                        listReplacements = [...listReplacements, info];
-                    }
-                });
+                    });
+                    info.km = kmVehicleEstimated - opWithReplacement[0].km;
+                    info.time = this.calendarService.monthDiff(new Date(opWithReplacement[0].date),
+                        (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
+                    info.kmAverage = Math.round(this.commonService.sum(info.listReplacements, 'km') / info.listReplacements.length);
+                    info.timeAverage = Math.round(this.commonService.sum(info.listReplacements, 'time') /
+                        info.listReplacements.length);
+                    info.priceAverage = Math.round(this.commonService.sum(info.listReplacements, 'price') /
+                        info.listReplacements.length);
+                } else {
+                    info = new InfoVehicleHistoricReplacementModel(replacement.name, kmVehicleEstimated, timeDiffVehicle,
+                        kmVehicleEstimated, timeDiffVehicle, 0, [], replacement.id);
+                }
+                listReplacements = [...listReplacements, info];
             });
-            result = [...result, new InfoVehicleHistoricModel(vehicle.id, listReplacements)];
+            result = [...result, new InfoVehicleHistoricModel(vehicle.id, this.commonService.orderBy(listReplacements, 'kmAverage'))];
         });
 
         return result;
