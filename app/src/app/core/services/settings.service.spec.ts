@@ -120,27 +120,47 @@ describe('SettingsService', () => {
     });
 
     it('should save system configuration key', () => {
+        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
         const spyDBService = spyOn(dbService, 'executeScriptDataBase');
         const spySqlService = spyOn(sqlService, 'updateSqlSystemConfiguration');
+        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
         service.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_DARK);
         expect(spyDBService).toHaveBeenCalledTimes(1);
         expect(spySqlService).toHaveBeenCalledTimes(1);
     });
 
     it('should not save system configuration key', () => {
+        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
         const spyDBService = spyOn(dbService, 'executeScriptDataBase');
         const spySqlService = spyOn(sqlService, 'updateSqlSystemConfiguration');
+        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
         service.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, null);
         expect(spyDBService).toHaveBeenCalledTimes(0);
         expect(spySqlService).toHaveBeenCalledTimes(0);
     });
 
-    it('should save system configuration key', () => {
+    it('should insert system configuration key', () => {
+        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
+        const spyDBServiceSystem = spyOn(dbService, 'getSystemConfigurationData').and.returnValue([]);
         const spyDBService = spyOn(dbService, 'executeScriptDataBase');
-        const spySqlService = spyOn(sqlService, 'insertSqlSystemConfiguration');
+        const spySqlService = spyOn(sqlService, 'insertSqlSystemConfiguration').and.returnValue('sql');
+        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
         service.insertSystemConfiguration();
+        expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
         expect(spyDBService).toHaveBeenCalledTimes(1);
-        expect(spySqlService).toHaveBeenCalledTimes(1);
+        expect(spySqlService).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not insert system configuration key', () => {
+        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
+        const spyDBServiceSystem = spyOn(dbService, 'getSystemConfigurationData').and.returnValue(MockData.SystemConfigurations);
+        const spyDBService = spyOn(dbService, 'executeScriptDataBase');
+        const spySqlService = spyOn(sqlService, 'insertSqlSystemConfiguration').and.returnValue('sql');
+        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
+        service.insertSystemConfiguration();
+        expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
+        expect(spyDBService).toHaveBeenCalledTimes(0);
+        expect(spySqlService).toHaveBeenCalledTimes(0);
     });
 
     it('should get data directory', () => {

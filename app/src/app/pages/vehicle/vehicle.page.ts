@@ -33,6 +33,7 @@ export class VehiclePage implements OnInit {
   operations: OperationModel[] = [];
   loaded = false;
   measure: any = {};
+  iconNameHeaderLeft = '';
 
   constructor(private platform: Platform,
               private dbService: DataBaseService,
@@ -67,6 +68,7 @@ export class VehiclePage implements OnInit {
         this.dashboardService.setSearchOperation();
       }
       this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
+      this.loadIconDashboard();
       this.detector.detectChanges();
     });
 
@@ -95,8 +97,13 @@ export class VehiclePage implements OnInit {
   }
 
   openInfoVehicle() {
-    this.controlService.openModal(PageEnum.VEHICLE,
-        InfoVehicleComponent, new ModalInputModel(true, null, this.vehicles, PageEnum.VEHICLE));
+    if (this.vehicles.length === 0) {
+      this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToInfo', Constants.DELAY_TOAST_NORMAL);
+    }
+    else {
+      this.controlService.openModal(PageEnum.VEHICLE,
+          InfoVehicleComponent, new ModalInputModel(true, null, this.vehicles, PageEnum.VEHICLE));
+    }
   }
 
   deleteVehicle(row: VehicleModel) {
@@ -105,12 +112,12 @@ export class VehiclePage implements OnInit {
   }
 
   openDashboardVehicle() {
-    this.controlService.openModal(PageEnum.VEHICLE,
-      DashboardComponent, new ModalInputModel(false, null, this.operations, PageEnum.VEHICLE));
-  }
-
-  showModalInfo() {
-    this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
+    if (this.vehicles.length === 0) {
+      this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
+    } else {
+      this.controlService.openModal(PageEnum.VEHICLE,
+        DashboardComponent, new ModalInputModel(false, null, this.operations, PageEnum.VEHICLE));
+    }
   }
 
   showConfirmDelete() {
@@ -160,6 +167,10 @@ export class VehiclePage implements OnInit {
       }
     );
     if (itemSliding) { itemSliding.close(); }
+  }
+
+  loadIconDashboard(): void {
+    this.iconNameHeaderLeft = this.vehicleService.loadIconDashboard<VehicleModel>(this.vehicles);
   }
 
 }

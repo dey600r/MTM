@@ -72,22 +72,34 @@ export class SettingsService {
         return this.mapToAnyCustomSetting(select.code, select.value, select.valueLarge);
     }
 
+    getPrivacySelected(settings: SystemConfigurationModel[]): boolean {
+        return settings.find(y => y.key === Constants.KEY_CONFIG_PRIVACY).value === Constants.DATABASE_YES;
+    }
+
     // SAVE DATA
 
-    saveSystemConfiguration(key: string, value: string) {
+    saveSystemConfiguration(key: string, value: string): Promise<any> {
         if (!!value) {
-            this.dbService.executeScriptDataBase(
-                this.sqlService.updateSqlSystemConfiguration(key, value, this.calendarService.getDateStringToDB(new Date())),
-                [ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
+             return this.dbService.executeScriptDataBase(
+                        this.sqlService.updateSqlSystemConfiguration(key, value,
+                            this.calendarService.getDateStringToDB(new Date())), [ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
         }
+        return null;
     }
 
     insertSystemConfiguration() {
         const data = this.dbService.getSystemConfigurationData();
+        let sql = '';
         if (!data.some(x => x.key === Constants.KEY_CONFIG_THEME)) {
-            this.dbService.executeScriptDataBase(
-                this.sqlService.insertSqlSystemConfiguration(
-                    [new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_LIGHT, new Date(), 4)]));
+            sql = this.sqlService.insertSqlSystemConfiguration(
+                    [new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_LIGHT, new Date(), 4)]);
+        }
+        if (!data.some(x => x.key === Constants.KEY_CONFIG_PRIVACY)) {
+            sql += this.sqlService.insertSqlSystemConfiguration(
+                    [new SystemConfigurationModel(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_NO, new Date(), 5)]);
+        }
+        if (sql) {
+            this.dbService.executeScriptDataBase(sql);
         }
     }
 

@@ -317,12 +317,12 @@
 }
 
 .auto-width {
-    flex: 1 1 auto;
+    flex: 1 1 auto !important;  // Bug windows
 }
 
 .fix-width69 {
-    width: 69px;
-    flex: none;
+    width: 69px !important; // Bug windows
+    flex: none !important; // Bug windows
 }
 
 .padding-list-header {

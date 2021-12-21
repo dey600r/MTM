@@ -29,8 +29,8 @@ export class InfoVehicleConfigurationMaintenanceModel extends BaseMaintenanceMod
     constructor(d: string = null, lr: InfoVehicleConfigurationMaintenanceElementModel[] = [],
                 cf: string = null, df: string = null, k: number = null, t: number = null, i: boolean = false,
                 w: boolean = false, fr: number = 0, to: number = null, warn: WarningWearEnum = WarningWearEnum.SUCCESS,
-                act: boolean = true) {
-        super(d, k, t, i, w, fr, to, -1);
+                act: boolean = true, id: number = -1) {
+        super(d, k, t, i, w, fr, to, id);
         this.codeFrequency = cf;
         this.descFrequency = df;
         this.listReplacement = lr;
@@ -61,9 +61,10 @@ export class InfoVehicleHistoricReplacementModel extends BaseNameModel {
     kmAverage: number;
     timeAverage: number;
     priceAverage: number;
+    planned: boolean;
     listReplacements: InfoVehicleReplacementModel[];
     constructor(n: string = '', k: number = 0, t: number = 0,
-                ka: number = 0, ta: number = 0, pa: number = 0,
+                ka: number = 0, ta: number = 0, pa: number = 0, plan: boolean = false,
                 list: InfoVehicleReplacementModel[] = [], id: number = -1) {
         super(n, id);
         this.km = k;
@@ -71,6 +72,7 @@ export class InfoVehicleHistoricReplacementModel extends BaseNameModel {
         this.kmAverage = ka;
         this.timeAverage = ta;
         this.priceAverage = pa;
+        this.planned = plan;
         this.listReplacements = list;
     }
 }

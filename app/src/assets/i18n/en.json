@@ -96,7 +96,10 @@
         "UNUSABLE": "Unusable",
         "INACTIVE": "Inactive",
         "INFORMATION_VEHICLE": "Vehicle information",
-        "REPLACEMENT_HISTORY": "Replacement history"
+        "REPLACEMENT_HISTORY": "Replacement history",
+        "PRIVACY_POLICY": "Privacy policy",
+        "ACCEPT_POLICY": "Accept privacy policy",
+        "REJECT": "Reject"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -235,6 +238,7 @@
         "VehicleEmpty": "There isn't vehicles",
         "AddMustVehicle": "You must add vehicles",
         "AddVehicleToExpenses": "You must add motorbikes to see the expenses",
+        "AddVehicleToInfo": "You must add motorbikes to see the summary details",
         "OperationEmpty": "There isn't operation",
         "AddOperation": "You must add operation",
         "AddOperationToExpenses": "You must add operations or clean the filter to see the expenses",
@@ -263,7 +267,11 @@
         "PayForMTM": "To use this functionality you can buy the MtM application",
         "InfoCalendarKm": "You should check the {{replacement}} at {{km}}{{measure}} on the estimated date {{date}}",
         "InfoCalendarTime": "You should check the {{replacement}} on the date {{date}}",
-        "InfoVehicleReplacement": "You changed the {{replacement}} in the {{operation}} operation on {{date}} with a labor cost of {{priceOp}}{{coin}}. The {{replacement}} cost {{price}}{{coin}} and had a life of {{km}}{{measure}} in {{time}} months."
+        "InfoVehicleReplacement": "You changed/reviewed the {{replacement}} in the {{operation}} operation on {{date}} with a labor cost of {{priceOp}}{{coin}}. The {{replacement}} cost {{price}}{{coin}} and had a life of {{km}}{{measure}} in {{time}} months.",
+        "InfoAcceptPrivacyPolicy": "Privacy policy has been accepted succesfully",
+        "InfoRejectPrivacyPolicy": "Privacy policy has been rejected succesfully",
+        "InfoErrorSaveSettings": "There was an error saving data",
+        "InfoHavetoAcceptPrivaciyPolicy": "The MtM application will not collect personal data nor will it be automatically forwarded for processing by external services. The entered data is stored on the device and is manually shared by the user with his other devices. You can read all the details in the 'Privacy Policy' button or in the settings section. To use the MtM application you must read and accept the privacy policies."
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

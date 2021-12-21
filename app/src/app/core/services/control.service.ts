@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 // LIBRARY ANGULAR
 import { TranslateService } from '@ngx-translate/core';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
@@ -27,7 +28,8 @@ export class ControlService {
                 private modalController: ModalController,
                 private popoverController: PopoverController,
                 private loadingController: LoadingController,
-                private platform: Platform) {
+                private platform: Platform,
+                private iab: InAppBrowser) {
     }
 
     getDateLastUse(): Date {
@@ -63,11 +65,15 @@ export class ControlService {
                     {
                         text: this.translator.instant('COMMON.ACCEPT'),
                         handler: () => {
-                        navigator[Constants.IONIC_APP].exitApp();
+                            this.closeApp();
                         }
                     });
             });
         }
+    }
+
+    closeApp() {
+        navigator[Constants.IONIC_APP].exitApp();
     }
 
     desactivateButtonExist() {
@@ -150,12 +156,16 @@ export class ControlService {
     }
 
     async alert(parent: PageEnum, header: string, msg: string) {
+        await this.alertCustom(parent, header, msg, [this.translator.instant(`COMMON.ACCEPT`)]);
+    }
+
+    async alertCustom(parent: PageEnum, header: string, msg: string, btns: any[]) {
         this.desactivateButtonExist();
         const alert = await this.alertController.create({
             header: this.translator.instant(header),
             subHeader: '',
             message: this.translator.instant(msg),
-            buttons: [this.translator.instant(`COMMON.ACCEPT`)]
+            buttons: btns
         });
         alert.onDidDismiss().then((dataReturned) => {
             this.activateButtonExist(parent);
@@ -206,5 +216,10 @@ export class ControlService {
 
     activeSegmentScroll(length: number): boolean {
         return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && length > 2) || length > 10;
+    }
+
+    // APP BROWSER
+    showPrivacyPolicy() {
+        this.iab.create(encodeURI(Constants.MTM_URL_PRIVACY_POLICY), (this.platform.is('desktop') ? '_system' : '_self'));
     }
 }

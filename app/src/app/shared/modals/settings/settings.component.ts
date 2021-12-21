@@ -44,6 +44,9 @@ export class SettingsComponent implements OnInit {
     pathExports = '';
     pathImports = '';
 
+    // DATA PRIVACY POLICY
+    acceptPrivacyPolicy: boolean;
+
     constructor(private navParams: NavParams,
                 private changeDetector: ChangeDetectorRef,
                 private modalController: ModalController,
@@ -72,6 +75,7 @@ export class SettingsComponent implements OnInit {
       this.distanceSelected = this.settingsService.getDistanceSelected(settings);
       this.moneySelected = this.settingsService.getMoneySelected(settings);
       this.themeSelected = this.settingsService.getThemeSelected(settings);
+      this.acceptPrivacyPolicy = this.settingsService.getPrivacySelected(settings);
     }
 
     // EXPORTS AND IMPORTS
@@ -98,6 +102,20 @@ export class SettingsComponent implements OnInit {
   changeTheme() {
     this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, this.themeSelected.code);
     this.themeService.changeTheme(this.themeSelected.code);
+  }
+
+  changePrivacy() {
+    const settings = this.dbService.getSystemConfigurationData();
+    const policyDB = this.settingsService.getPrivacySelected(settings);
+    if (policyDB !== this.acceptPrivacyPolicy) {
+      this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_PRIVACY,
+        (this.acceptPrivacyPolicy ? Constants.DATABASE_YES : Constants.DATABASE_NO)).then(x => {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS,
+          (this.acceptPrivacyPolicy ? 'ALERT.InfoAcceptPrivacyPolicy' : 'ALERT.InfoRejectPrivacyPolicy'));
+      }).catch(e => {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings');
+      });
+    }
   }
 
   /** EXPORTS AND IMPORTS */
@@ -286,5 +304,10 @@ export class SettingsComponent implements OnInit {
     }).catch(err => {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles');
     });
+  }
+
+  // PRIVACY POLICY
+  showPrivacyPolicy() {
+    this.controlService.showPrivacyPolicy();
   }
 }

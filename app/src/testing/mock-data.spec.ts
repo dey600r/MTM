@@ -16,7 +16,8 @@ export class MockData {
         new MaintenanceElementModel('SPARK_PLUG', 'CHANGE_SPARK_PLUG', false, 34, 7),
         new MaintenanceElementModel('ENGINE_OIL', 'CHANGE_ENGINE_OIL', false, 38, 8),
         new MaintenanceElementModel('FRONT_BRAKE_FLUID', 'CHANGE_FRONT_BRAKE_FLUID', false, 5, 9),
-        new MaintenanceElementModel('BACK_BRAKE_FLUID', 'CHANGE_BACK_BRAKE_FLUID', false, 5, 10)
+        new MaintenanceElementModel('BACK_BRAKE_FLUID', 'CHANGE_BACK_BRAKE_FLUID', false, 5, 10),
+        new MaintenanceElementModel('OIL_FILTER2', 'CHANGE_OIL_FILTER2', true, 11, 11),
     ];
     static MaintenanceFreqs: MaintenanceFreqModel[] = [
         new MaintenanceFreqModel(Constants.MAINTENANCE_FREQ_ONCE_CODE, 'ONCE', 1),
@@ -44,7 +45,8 @@ export class MockData {
         new SystemConfigurationModel(Constants.KEY_LAST_UPDATE_DB, 'v3.1.0', new Date(), 1),
         new SystemConfigurationModel(Constants.KEY_CONFIG_DISTANCE, Constants.SETTING_DISTANCE_KM, new Date(), 2),
         new SystemConfigurationModel(Constants.KEY_CONFIG_MONEY, Constants.SETTING_MONEY_EURO, new Date(), 3),
-        new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_DARK, new Date(), 4)
+        new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_DARK, new Date(), 4),
+        new SystemConfigurationModel(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_NO, new Date(), 5)
     ];
     static Configurations: ConfigurationModel[] = [
         new ConfigurationModel('PRODUCTION', 'PRODUCTION SETUP', true, [MockData.Maintenances[0],
@@ -80,24 +82,35 @@ export class MockData {
     static Operations: OperationModel[] = [
         new OperationModel('Compra moto', 'Compra hyosung GT125r 2006', MockData.OperationTypes[5], MockData.Vehicles[1],
             0, new Date(2006, 9, 12), 'Motos real (Ciudad Real)', 'Yo', 3500, '', 1, []),
-        new OperationModel('Revision', 'Aceite motor, filtro aceite, pastillas de freno', MockData.OperationTypes[0], MockData.Vehicles[1],
-            4000, new Date(2006, 11, 15), 'Motos real (Ciudad Real)', 'Yo', 40, '', 2,
-            [MockData.MaintenanceElements[0], MockData.MaintenanceElements[2], MockData.MaintenanceElements[3]]),
+        new OperationModel('Revision1', 'Aceite motor, filtro aceite, pastillas de freno', MockData.OperationTypes[0], MockData.Vehicles[1],
+            4000, new Date(2006, 11, 15), 'Motos real (Ciudad Real)', 'Yo', 40, '', 2, [MockData.MaintenanceElements[0],
+            MockData.MaintenanceElements[2], MockData.MaintenanceElements[3], MockData.MaintenanceElements[4]]),
         new OperationModel('Comprar Moto', 'Yamaha R6 2005', MockData.OperationTypes[5], MockData.Vehicles[0],
             0, new Date(2006, 9, 19), 'Madrid (Motos Cortes)', 'Otro', 8155.35, '', 3, []),
         new OperationModel('Primera Revisión', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[0], MockData.Vehicles[1],
             988, new Date(2006, 11, 21), 'Madrid (Motos Cortes)', 'Otro', 100, '', 4,
             [MockData.MaintenanceElements[1], MockData.MaintenanceElements[4], MockData.MaintenanceElements[5],
             MockData.MaintenanceElements[6]]),
-        new OperationModel('Revisión', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[0], MockData.Vehicles[1],
-            68770, new Date(2021, 2, 11), 'Ciudad Real (Motos Real)', 'Yo', 300, '', 5,
+        new OperationModel('Revisión3', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[6], MockData.Vehicles[1],
+            4200, new Date(2008, 2, 10), 'Ciudad Real (Motos Real)', 'Yo', 200, '', 5, [MockData.MaintenanceElements[8],
+            MockData.MaintenanceElements[5], MockData.MaintenanceElements[6], MockData.MaintenanceElements[10]]),
+        new OperationModel('Revisión4', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[0], MockData.Vehicles[1],
+            68770, new Date(2021, 2, 11), 'Ciudad Real (Motos Real)', 'Yo', 300, '', 6,
             [MockData.MaintenanceElements[1], MockData.MaintenanceElements[7]]),
-        new OperationModel('Revisión', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[0], MockData.Vehicles[0],
-            100000, new Date(2018, 2, 11), 'Madrid (Motos Cortes)', 'Yo', 300, '', 6,
-            [MockData.MaintenanceElements[1], MockData.MaintenanceElements[4], MockData.MaintenanceElements[5],
+        new OperationModel('Revisión5', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[6], MockData.Vehicles[0],
+            55000, new Date(2016, 1, 29), 'Madrid (Motos Cortes)', 'Yo', 650, '', 7, [MockData.MaintenanceElements[0],
+            MockData.MaintenanceElements[1], MockData.MaintenanceElements[4], MockData.MaintenanceElements[5],
             MockData.MaintenanceElements[6]]),
-        new OperationModel('Revisión', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[0], MockData.Vehicles[1],
-            72000, new Date(2021, 5, 21), 'Ciudad Real (Motos Real)', 'Yo', 400, '', 7,
+        new OperationModel('Revisión6', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[6], MockData.Vehicles[0],
+            67000, new Date(2017, 7, 23), 'Madrid (Motos Cortes)', 'Yo', 333, '', 8, [MockData.MaintenanceElements[0],
+            MockData.MaintenanceElements[3], MockData.MaintenanceElements[4], MockData.MaintenanceElements[5],
+            MockData.MaintenanceElements[10]]),
+        new OperationModel('Revisión7', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[0], MockData.Vehicles[0],
+            100000, new Date(2018, 2, 11), 'Madrid (Motos Cortes)', 'Yo', 300, '', 9,
+            [MockData.MaintenanceElements[2], MockData.MaintenanceElements[4], MockData.MaintenanceElements[5],
+            MockData.MaintenanceElements[6]]),
+        new OperationModel('Revisión8', 'Filtro aceite, aceite motor, residuos', MockData.OperationTypes[0], MockData.Vehicles[1],
+            72000, new Date(2021, 5, 21), 'Ciudad Real (Motos Real)', 'Yo', 400, '', 10,
             [MockData.MaintenanceElements[4], MockData.MaintenanceElements[5], MockData.MaintenanceElements[6]])
     ];
 }

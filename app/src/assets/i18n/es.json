@@ -96,7 +96,10 @@
         "UNUSABLE": "Inservible",
         "INACTIVE": "Inactivo",
         "INFORMATION_VEHICLE": "Información del vehículo",
-        "REPLACEMENT_HISTORY": "Historico de piezas"
+        "REPLACEMENT_HISTORY": "Historico de piezas",
+        "PRIVACY_POLICY": "Políticas de privacidad",
+        "ACCEPT_POLICY": "Aceptar políticas de privacidad",
+        "REJECT": "Rechazar"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -235,6 +238,7 @@
         "VehicleEmpty": "No se encuentran vehículos",
         "AddMustVehicle": "Añada vehículos",
         "AddVehicleToExpenses": "Añada vehículos para ver los gastos",
+        "AddVehicleToInfo": "Añada vehículos para ver los detalles del resumen",
         "OperationEmpty": "No se encuentran operaciones",
         "AddOperation": "Añada operaciones",
         "AddOperationToExpenses": "Añada operaciones o limpia el filtro para ver los gastos",
@@ -263,7 +267,11 @@
         "PayForMTM": "Para usar esta funcionalidad debes pagar la aplicación MtM completa",
         "InfoCalendarKm": "Deberías revisar {{replacement}} a los {{km}}{{measure}} en la fecha estimada {{date}}",
         "InfoCalendarTime": "Deberías revisar {{replacement}} en la fecha {{date}}",
-        "InfoVehicleReplacement": "Se cambió el {{replacement}} en la operación {{operation}} el {{date}} con un coste de mano de obra de {{priceOp}}{{coin}}. El {{replacement}} costó {{price}}{{coin}} y tenía una vída de {{km}}{{measure}} en {{time}} meses."
+        "InfoVehicleReplacement": "Se cambió/revisó el {{replacement}} en la operación {{operation}} el {{date}} con un coste de mano de obra de {{priceOp}}{{coin}}. El {{replacement}} costó {{price}}{{coin}} y tenía una vída de {{km}}{{measure}} en {{time}} meses.",
+        "InfoAcceptPrivacyPolicy": "Las poliíticas de privacidad se han aceptado correctamente",
+        "InfoRejectPrivacyPolicy": "Las poliíticas de privacidad se han rechazado correctamente",
+        "InfoErrorSaveSettings": "Ha ocurrido un error guardando los datos",
+        "InfoHavetoAcceptPrivaciyPolicy": "La aplicación MtM no recopilará datos personales ni se reenviarán automáticamente para ser procesados por servicios externos. Los datos introducidos se guardan en el dispositivo y se comparten manualmente por el usuario con sus otros dispositivos. Usted puede leer todos los detalles en el botón de 'Politica de privacidad' o en la sección de ajustes. Para utilizar la aplicación MtM debe leer y aceptar las políticas de privacidad."
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",

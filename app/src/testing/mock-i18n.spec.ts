@@ -88,7 +88,18 @@ export class MockTranslate {
             MODE: 'Mode',
             LIGHT: 'Light',
             DARK: 'Dark',
-            SKY: 'Sky'
+            SKY: 'Sky',
+            SUMMARY_VEHICLES: 'Summary of vehicles',
+            SUCCESS: 'Success',
+            WARNING: 'Warning',
+            DANGER: 'Danger',
+            UNUSABLE: 'Unusable',
+            INACTIVE: 'Inactive',
+            INFORMATION_VEHICLE: 'Vehicle information',
+            REPLACEMENT_HISTORY: 'Replacement history',
+            PRIVACY_POLICY: 'Privacy policy',
+            ACCEPT_POLICY: 'Accept privacy policy',
+            REJECT: 'Reject'
         },
         PAGE_HOME: {
             HOME: 'Home',
@@ -226,6 +237,7 @@ export class MockTranslate {
             VehicleEmpty: 'There isn\'t vehicles',
             AddMustVehicle: 'You must add vehicles',
             AddVehicleToExpenses: 'You must add motorbikes to see the expenses',
+            AddVehicleToInfo: 'You must add motorbikes to see the summary details',
             OperationEmpty: 'There isn\'t operation',
             AddOperation: 'You must add operation',
             AddOperationToExpenses: 'You must add operations or clean the filter to see the expenses',
@@ -253,7 +265,12 @@ export class MockTranslate {
             NoDataFound: 'No data found',
             PayForMTM: 'To use this functionality you can buy the MtM application',
             InfoCalendarKm: 'You should check the {{replacement}} at {{km}}{{measure}} on the estimated date {{date}}',
-            InfoCalendarTime: 'You should check the {{replacement}} on the date {{date}}'
+            InfoCalendarTime: 'You should check the {{replacement}} on the date {{date}}',
+            InfoVehicleReplacement: 'You changed/reviewed the {{replacement}} in the {{operation}} operation on {{date}} with a labor cost of {{priceOp}}{{coin}}. The {{replacement}} cost {{price}}{{coin}} and had a life of {{km}}{{measure}} in {{time}} months.',
+            InfoAcceptPrivacyPolicy: 'Privacy policy has been accepted succesfully',
+            InfoRejectPrivacyPolicy: 'Privacy policy has been rejected succesfully',
+            InfoErrorSaveSettings: 'There was an error saving data',
+            InfoHavetoAcceptPrivaciyPolicy: 'The MtM application will not collect personal data nor will it be automatically forwarded for processing by external services. The entered data is stored on the device and is manually shared by the user with his other devices. You can read all the details in the \'Privacy Policy\' button or in the settings section. To use the MtM application you must read and accept the privacy policies.'
         },
         DB: {
             MAINTENANCE_WORKSHOP: 'Maintenance Workshop',
@@ -430,7 +447,18 @@ export class MockTranslate {
             MODE: 'Modo',
             LIGHT: 'Claro',
             DARK: 'Oscuro',
-            SKY: 'Cielo'
+            SKY: 'Cielo',
+            SUMMARY_VEHICLES: 'Resumen de vehículos',
+            SUCCESS: 'Correcto',
+            WARNING: 'Aviso',
+            DANGER: 'Peligro',
+            UNUSABLE: 'Inservible',
+            INACTIVE: 'Inactivo',
+            INFORMATION_VEHICLE: 'Información del vehículo',
+            REPLACEMENT_HISTORY: 'Historico de piezas',
+            PRIVACY_POLICY: 'Políticas de privacidad',
+            ACCEPT_POLICY: 'Aceptar políticas de privacidad',
+            REJECT: 'Rechazar'
         },
         PAGE_HOME: {
             HOME: 'Inicio',
@@ -568,6 +596,7 @@ export class MockTranslate {
             VehicleEmpty: 'No se encuentran vehículos',
             AddMustVehicle: 'Añada vehículos',
             AddVehicleToExpenses: 'Añada vehículos para ver los gastos',
+            AddVehicleToInfo: 'Añada vehículos para ver los detalles del resumen',
             OperationEmpty: 'No se encuentran operaciones',
             AddOperation: 'Añada operaciones',
             AddOperationToExpenses: 'Añada operaciones o limpia el filtro para ver los gastos',
@@ -595,7 +624,12 @@ export class MockTranslate {
             NoDataFound: 'No se encuentran datos',
             PayForMTM: 'Para usar esta funcionalidad debes pagar la aplicación MtM completa',
             InfoCalendarKm: 'Deberías revisar {{replacement}} a los {{km}}{{measure}} en la fecha estimada {{date}}',
-            InfoCalendarTime: 'Deberías revisar {{replacement}} en la fecha {{date}}'
+            InfoCalendarTime: 'Deberías revisar {{replacement}} en la fecha {{date}}',
+            InfoVehicleReplacement: 'Se cambió/revisó el {{replacement}} en la operación {{operation}} el {{date}} con un coste de mano de obra de {{priceOp}}{{coin}}. El {{replacement}} costó {{price}}{{coin}} y tenía una vída de {{km}}{{measure}} en {{time}} meses.',
+            InfoAcceptPrivacyPolicy: 'Las poliíticas de privacidad se han aceptado correctamente',
+            InfoRejectPrivacyPolicy: 'Las poliíticas de privacidad se han rechazado correctamente',
+            InfoErrorSaveSettings: 'Ha ocurrido un error guardando los datos',
+            InfoHavetoAcceptPrivaciyPolicy: 'La aplicación MtM no recopilará datos personales ni se reenviarán automáticamente para ser procesados por servicios externos. Los datos introducidos se guardan en el dispositivo y se comparten manualmente por el usuario con sus otros dispositivos. Usted puede leer todos los detalles en el botón de \'Politica de privacidad\' o en la sección de ajustes. Para utilizar la aplicación MtM debe leer y aceptar las políticas de privacidad.'
         },
         DB: {
             MAINTENANCE_WORKSHOP: 'Mantenimiento Taller',

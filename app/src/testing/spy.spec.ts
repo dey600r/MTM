@@ -8,6 +8,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -53,14 +54,14 @@ export class SpyMockConfig {
             'getOperations', 'getOperationsData', 'getOperationTypeData', 'getMaintenance', 'getMaintenanceData',
             'getMaintenanceElement', 'getMaintenanceElementData', 'getVehicleType', 'getOperationType',
             'getMaintenanceFreq', 'getMaintenanceFreqData']),
-        controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree', 'activeSegmentScroll']),
+        controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree', 'activeSegmentScroll', 'alertCustom']),
         settingsService: jasmine.createSpyObj('SettingsService', ['createOutputDirectory']),
         sqliteObject: jasmine.createSpyObj('SQLiteObject', ['executeSql']),
         sqlitePorter: jasmine.createSpyObj('SQLitePorter', ['importSqlToDb']),
         sqlService: jasmine.createSpyObj('SqlService',
             ['getSqlSystemConfiguration', 'updateSqlSystemConfiguration', 'getSql', 'mapVehicle', 'mapVehicleType',
             'mapConfiguration', 'mapOperation', 'mapOperationType', 'mapMaintenance', 'mapMaintenanceElement',
-            'mapMaintenanceFreq', 'mapSystemConfiguration'])
+            'mapMaintenanceFreq', 'mapSystemConfiguration', 'insertSqlSystemConfiguration'])
     };
 
     static Providers = [
@@ -70,6 +71,7 @@ export class SpyMockConfig {
         AngularDelegate,
         PopoverController,
         DateFormatCalendarPipe,
+        InAppBrowser,
         { provide: StatusBar, useValue: SpyMockConfig.SpyConfig.statusBar },
         { provide: SplashScreen, useValue: SpyMockConfig.SpyConfig.splashScreenSpy },
         { provide: Platform, useValue: SpyMockConfig.SpyConfig.platformSpy },
@@ -80,6 +82,7 @@ export class SpyMockConfig {
 
     static ProvidersServices = [
         SQLite,
+        InAppBrowser,
         { provide: File, useValue: SpyMockConfig.SpyConfig.file },
         { provide: SQLiteObject, useValue: SpyMockConfig.SpyConfig.sqliteObject },
         { provide: SQLitePorter, useValue: SpyMockConfig.SpyConfig.sqlitePorter }

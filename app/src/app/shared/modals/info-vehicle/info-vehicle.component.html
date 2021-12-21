@@ -19,7 +19,7 @@
   </ion-segment>
 </ion-header>
 
-<ion-content fullscreen>
+<ion-content>
   <!-- CHART -->
   <ngx-charts-pie-grid *ngIf="vehicles.length > 0" class="justify-center"
     [view]="dashboard.view"
@@ -133,7 +133,7 @@
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideReplacementSummary">
-      <ion-item *ngFor="let rep of selectedInfoReplacement; let i = index;" button (click)="hideReplacementSummary = !hideReplacementSummary">
+      <ion-item *ngFor="let rep of selectedInfoReplacement; let i = index;" button (click)="showInfoReplacement[i] = !showInfoReplacement[i];">
         <div class="main-item-div">
           <div class="table-row">
             <div>
@@ -147,7 +147,10 @@
                 <div class="table-row">
                   <div class="second-div">
                     <h2>{{ rep.name }}</h2>
-                    <p class="icon-color">{{ rep.km }}{{ measure.value }} / {{ rep.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+                    <div class="table-row">
+                      <ion-icon size="large" class="icon-color sub-main-icon" [name]="rep.planned ? 'build' : 'construct'"></ion-icon>
+                      <p class="icon-color">{{ rep.km }}{{ measure.value }} / {{ rep.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+                    </div>
                   </div>
                   <div *ngIf="rep.kmAverage !== -1" class="third-div">
                     <div class="table-row">

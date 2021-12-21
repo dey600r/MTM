@@ -190,6 +190,10 @@ export class InfoVehicleComponent implements OnInit {
     return this.infoVehicleService.getIconPercent(this.labelPercent, type);
   }
 
+  getIconPlanned(rep: InfoVehicleHistoricReplacementModel): string {
+    return rep.planned ? 'build' : 'construct';
+  }
+
   showInfoVehicle() {
     this.infoVehicleService.showInfoVehicle(this.vehicleSelected.dateKms, this.measure);
   }
@@ -204,7 +208,7 @@ export class InfoVehicleComponent implements OnInit {
       setTimeout(() => {
         this.loadedBodyReplacementSummary = true;
         this.hideReplacementSummary = false;
-      }, 400);
+      }, 350);
     } else {
       this.hideReplacementSummary = true;
     }
@@ -216,7 +220,7 @@ export class InfoVehicleComponent implements OnInit {
       setTimeout(() => {
         this.loadedBodyConfigurationSummary = true;
         this.hideConfigurationSummary = false;
-      }, 400);
+      }, 350);
     } else {
       this.hideConfigurationSummary = true;
     }

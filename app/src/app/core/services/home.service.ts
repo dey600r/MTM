@@ -483,7 +483,7 @@ export class HomeService {
                     warning: this.getPercentVehicle(wearMaintenance, kmVehicle),
                     idConfiguration: vehicleWear.idConfiguration,
                     nameConfiguration: vehicleWear.nameConfiguration,
-                    listWearMaintenance: this.commonService.orderBy(wearMaintenance, ConstantsColumns.COLUMN_MODEL_KM_ACUMULATE_MAINTENANCE)
+                    listWearMaintenance: wearMaintenance
                 };
             }
         }

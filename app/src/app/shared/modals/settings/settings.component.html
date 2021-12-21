@@ -9,8 +9,7 @@
     </ion-toolbar>
 </ion-header>
 
-
-<ion-content fullscreen>
+<ion-content>
   <!-- SETTINGS -->
   <ion-list>
     <ion-list-header class="padding-list-header">
@@ -60,48 +59,63 @@
         <ion-icon color="primary" size="large" name="information-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
+    <ion-item>
+      <div class="main-item">
+        <div>
+          <ion-label position="stacked">
+            <ion-text>{{ 'COMMON.EXPORT' | translate }}</ion-text>
+          </ion-label>
+          <div class="table-row">
+            <div class="min-width90" (click)="showRealExportPath()">
+              <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathExports"></ion-input>
+              <ion-input placeholder="--" type="text" disabled [(ngModel)]="lastExport"></ion-input>
+            </div>
+            <div class="max-width60">
+              <ion-button fill="clear" (click)="exportData()">
+                <ion-icon color="primary" name="exit"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" (click)="deleteExportFiles()">
+                <ion-icon color="primary" name="trash"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-item>
+    <ion-item>
+      <div class="main-item">
+        <div>
+          <ion-label position="stacked">
+            <ion-text>{{ 'COMMON.IMPORT' | translate }}</ion-text>
+          </ion-label>
+          <div class="table-row">
+            <div class="min-width90">
+              <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathImports"></ion-input>
+            </div>
+            <div class="max-width60">
+              <ion-button fill="clear" (click)="f.click()">
+                <ion-icon color="primary" name="enter"></ion-icon>
+              </ion-button>
+              <input id="file-input" class="ion-hide" #f type="file" (change)="validFileAndImport($event)">    
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-item>
   </ion-list>
-  <ion-item>
-    <div class="main-item">
-      <div>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.EXPORT' | translate }}</ion-text>
-        </ion-label>
-        <div class="table-row">
-          <div class="min-width90" (click)="showRealExportPath()">
-            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathExports"></ion-input>
-            <ion-input placeholder="--" type="text" disabled [(ngModel)]="lastExport"></ion-input>
-          </div>
-          <div class="max-width60">
-            <ion-button fill="clear" (click)="exportData()">
-              <ion-icon color="primary" name="exit"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" (click)="deleteExportFiles()">
-              <ion-icon color="primary" name="trash"></ion-icon>
-            </ion-button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ion-item>
-  <ion-item>
-    <div class="main-item">
-      <div>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.IMPORT' | translate }}</ion-text>
-        </ion-label>
-        <div class="table-row">
-          <div class="min-width90">
-            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathImports"></ion-input>
-          </div>
-          <div class="max-width60">
-            <ion-button fill="clear" (click)="f.click()">
-              <ion-icon color="primary" name="enter"></ion-icon>
-            </ion-button>
-            <input id="file-input" class="ion-hide" #f type="file" (change)="validFileAndImport($event)">    
-          </div>
-        </div>
-      </div>
-    </div>
-  </ion-item>
+
+  <!-- PRIVACY POLICY -->
+  <ion-list>
+    <ion-list-header class="padding-list-header">
+      <ion-icon size="large" name="lock-closed"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.PRIVACY_POLICY' | translate }}</h3>
+      <ion-button class="btn-width-list" fill="clear" (click)="showPrivacyPolicy()">
+        <ion-icon color="primary" size="large" name="document-lock"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <ion-item>
+      <ion-label>{{ 'COMMON.ACCEPT_POLICY' | translate }}</ion-label>
+      <ion-toggle color="primary" [(ngModel)]="acceptPrivacyPolicy" (ionChange)="changePrivacy()"></ion-toggle>
+    </ion-item>
+  </ion-list>
 </ion-content>

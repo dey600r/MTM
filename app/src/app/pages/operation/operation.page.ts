@@ -184,10 +184,6 @@ export class OperationPage {
       new ModalInputModel(true, null, [], PageEnum.OPERATION));
   }
 
-  // closePopover() {
-  //   this.controlService.closePopover();
-  // }
-
   /** METHODS */
 
   calculatePriceOperation(op: OperationModel): number {
@@ -233,11 +229,7 @@ export class OperationPage {
   /** ICONS */
 
   loadIconDashboard(operations: OperationModel[]): void {
-    if (operations.length === 0) {
-      this.iconNameHeaderLeft = 'information-circle';
-    } else {
-      this.iconNameHeaderLeft = 'bar-chart';
-    }
+    this.iconNameHeaderLeft = this.vehicleService.loadIconDashboard<OperationModel>(operations);
   }
 
   getIconInfoDashboard(): string {

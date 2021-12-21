@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -33,7 +34,8 @@ export class DashboardService {
 
     constructor(private commonService: CommonService,
                 private calendarService: CalendarService,
-                private translator: TranslateService) {
+                private translator: TranslateService,
+                private platform: Platform) {
     }
 
     getSizeWidthHeight(w: number, h: number): any[] {
@@ -349,25 +351,26 @@ export class DashboardService {
         let result: any[] = [];
         let colors: string[] = [];
         const dataFiltered = data.listMaintenance.filter(x => x.active);
+        const windows: boolean = this.platform.is('desktop');
         const numSuccess = dataFiltered.filter(x => x.warning === WarningWearEnum.SUCCESS).length;
         if (numSuccess > 0) {
             result = [...result, this.getDataDashboard(this.translator.instant('COMMON.SUCCESS'), numSuccess)];
-            colors = [...colors, 'rgba(var(--ion-color-progressbar-success-progress), 0.7)'];
+            colors = [...colors, (windows ? '#387F57' : 'rgba(var(--ion-color-progressbar-success-progress), 0.7)')];
         }
         const numWarning = dataFiltered.filter(x => x.warning === WarningWearEnum.WARNING).length;
         if (numWarning > 0) {
             result = [...result, this.getDataDashboard(this.translator.instant('COMMON.WARNING'), numWarning)];
-            colors = [...colors, 'rgba(var(--ion-color-progressbar-warning-progress), 0.7)'];
+            colors = [...colors, (windows ? '#B69B57' : 'rgba(var(--ion-color-progressbar-warning-progress), 0.7)')];
         }
         const numDanger = dataFiltered.filter(x => x.warning === WarningWearEnum.DANGER).length;
         if (numDanger > 0) {
             result = [...result, this.getDataDashboard(this.translator.instant('COMMON.DANGER'), numDanger)];
-            colors = [...colors, 'rgba(var(--ion-color-progressbar-danger-progress), 0.5)'];
+            colors = [...colors, (windows ? '#882B1C' : 'rgba(var(--ion-color-progressbar-danger-progress), 0.5)')];
         }
         const numUnusable = dataFiltered.filter(x => x.warning === WarningWearEnum.SKULL).length;
         if (numUnusable > 0) {
             result = [...result, this.getDataDashboard(this.translator.instant('COMMON.UNUSABLE'), numUnusable)];
-            colors = [...colors, 'rgba(var(--ion-color-progressbar-danger-progress), 1)'];
+            colors = [...colors, (windows ? '#7F4339' : 'rgba(var(--ion-color-progressbar-danger-progress), 1)')];
         }
         const numInactive = data.listMaintenance.filter(x => !x.active).length;
         if (numInactive > 0) {

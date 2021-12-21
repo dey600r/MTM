@@ -47,6 +47,7 @@ export class Constants {
     static KEY_CONFIG_DISTANCE = 'configDistance';
     static KEY_CONFIG_MONEY = 'configMoney';
     static KEY_LAST_UPDATE_DB = 'lastUpdate';
+    static KEY_CONFIG_PRIVACY = 'configPrivacy';
 
     static VEHICLE_TYPE_CODE_MOTO = 'M';
     static VEHICLE_TYPE_CODE_CAR = 'C';
@@ -83,4 +84,7 @@ export class Constants {
     static FORMAT_FILE_DB = 'json';
     static EXPORT_FILE_NAME = 'mtmDB';
     static BACKUP_FILE_NAME = 'mtmBackup';
+
+    // URLS
+    static MTM_URL_PRIVACY_POLICY = 'https://deyapps-a0de1.web.app/infomtm/privacypolicy';
 }

@@ -29,8 +29,16 @@
 }
 
 .sub-icon {
-    width: 19px;
-    margin-top: -2px;
-    margin-right: 2px;
-    height: 19px;
+    padding-right: 4px;
+    font-size: 17px !important; // Windows bugs
+    width: 18px;
+    margin-top: -1px;
+    height: 18px;
+}
+
+.sub-main-icon {
+    padding-right: 3px;
+    font-size: 15px !important; // Windows bugs
+    width: 15px;
+    height: 15px;
 }
