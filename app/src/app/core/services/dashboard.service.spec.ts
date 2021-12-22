@@ -13,7 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DashboardModel, SearchDashboardModel } from '@models/index';
 import { FilterMonthsEnum, FilterKmTimeEnum } from '@utils/index';
 
-fdescribe('DashboardService', () => {
+describe('DashboardService', () => {
     let service: DashboardService;
     let translate: TranslateService;
 
@@ -175,5 +175,47 @@ fdescribe('DashboardService', () => {
         expect(service.getRangeDates(2020, 10, FilterMonthsEnum.MONTH)).toEqual('11/2020');
         expect(service.getRangeDates(2020, 7, FilterMonthsEnum.QUARTER)).toEqual('08/20-11/20');
         expect(service.getRangeDates(2020, 10, FilterMonthsEnum.YEAR)).toEqual('2020');
+    });
+
+    it('should calculate operation type expenses dashboard - ES', () => {
+        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
+            false, false, false, false, false, false, FilterKmTimeEnum.KM, false, false);
+        const windows: any = service.getSizeWidthHeight(500, 900);
+        const dashboard: DashboardModel = service.getDashboardModelOpTypeExpenses(windows, MockData.Operations, filter);
+        expect(dashboard.isDoughnut).toBeFalsy();
+        expect(dashboard.showLegend).toBeFalsy();
+        expect(dashboard.data.length).toEqual(2);
+        expect(dashboard.legendTitle).toEqual(MockTranslate.ES.COMMON.OPERATION_TYPE);
+        expect(dashboard.xAxisLabel).toEqual(MockTranslate.ES.COMMON.OPERATION_TYPE);
+        expect(dashboard.yAxisLabel).toEqual(MockTranslate.ES.COMMON.EXPENSE);
+        const opt1: any = dashboard.data.find(x => x.id === MockData.OperationTypes[5].id);
+        expect(opt1.value).toEqual(8155.35);
+        expect(opt1.name).toEqual(MockData.OperationTypes[5].description);
+        const vehicle2: any = dashboard.data.find(x => x.id === MockData.OperationTypes[0].id);
+        expect(vehicle2.value).toEqual(352);
+        expect(vehicle2.name).toEqual(MockData.OperationTypes[0].description);
+    });
+
+    it('should calculate operation type expenses dashboard - EN', async () => {
+        await translate.use('en').toPromise();
+        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
+            false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
+        const windows: any = service.getSizeWidthHeight(500, 900);
+        const dashboard: DashboardModel = service.getDashboardModelOpTypeExpenses(windows, MockData.Operations, filter);
+        expect(dashboard.isDoughnut).toBeFalsy();
+        expect(dashboard.showLegend).toBeFalsy();
+        expect(dashboard.data.length).toEqual(3);
+        expect(dashboard.legendTitle).toEqual(MockTranslate.EN.COMMON.OPERATION_TYPE);
+        expect(dashboard.xAxisLabel).toEqual(MockTranslate.EN.COMMON.OPERATION_TYPE);
+        expect(dashboard.yAxisLabel).toEqual(MockTranslate.EN.COMMON.EXPENSE);
+        const opt1: any = dashboard.data.find(x => x.id === MockData.OperationTypes[5].id);
+        expect(opt1.value).toEqual(3500);
+        expect(opt1.name).toEqual(MockData.OperationTypes[5].description);
+        const opt2: any = dashboard.data.find(x => x.id === MockData.OperationTypes[0].id);
+        expect(opt2.value).toEqual(1642);
+        expect(opt2.name).toEqual(MockData.OperationTypes[0].description);
+        const opt3: any = dashboard.data.find(x => x.id === MockData.OperationTypes[6].id);
+        expect(opt3.value).toEqual(1820);
+        expect(opt3.name).toEqual(MockData.OperationTypes[6].description);
     });
 });

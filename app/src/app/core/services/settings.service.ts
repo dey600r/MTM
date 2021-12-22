@@ -176,7 +176,7 @@ export class SettingsService {
 
     generateNameExportFile(fileNameExport: string = Constants.EXPORT_FILE_NAME) {
         const today: Date = new Date();
-        const nameFile = `${fileNameExport}_${today.getFullYear()}${today.getMonth()}${today.getDate()}_` +
+        const nameFile = `${fileNameExport}_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}_` +
             `${today.getHours()}${today.getMinutes()}${today.getSeconds()}.${Constants.FORMAT_FILE_DB}`;
         return nameFile;
     }

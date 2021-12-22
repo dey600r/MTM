@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, OnInit } from '@angular/core';
 import { IonSelect, Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -17,13 +17,14 @@ import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/ad
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
+import { BasePage } from '@pages/base.page';
 
 @Component({
   selector: 'app-configuration',
   templateUrl: 'configuration.page.html',
   styleUrls: []
 })
-export class ConfigurationPage {
+export class ConfigurationPage extends BasePage implements OnInit {
 
   // MODAL
   dataReturned: ModalOutputModel;
@@ -48,22 +49,20 @@ export class ConfigurationPage {
 
   @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
-  constructor(private platform: Platform,
+  constructor(public platform: Platform,
               private dbService: DataBaseService,
-              private translator: TranslateService,
+              public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
               private configurationService: ConfigurationService,
               private settingsService: SettingsService,
               private vehicleService: VehicleService,
               private detector: ChangeDetectorRef) {
-    this.platform.ready().then(() => {
-      let userLang = navigator.language.split('-')[0];
-      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-      this.translator.use(userLang);
-    }).finally(() => {
+    super(platform, translator);
+  }
+
+  ngOnInit(): void {
       this.initPage();
-    });
   }
 
   initPage() {

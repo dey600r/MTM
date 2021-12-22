@@ -24,13 +24,14 @@ import { SettingsComponent } from '@modals/settings/settings.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
+import { BasePage } from '@pages/base.page';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss']
 })
-export class HomePage implements OnInit {
+export class HomePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
@@ -57,9 +58,9 @@ export class HomePage implements OnInit {
   vehicleSubscription: Subscription = new Subscription();
   maintenanceSubscription: Subscription = new Subscription();
 
-  constructor(private platform: Platform,
+  constructor(public platform: Platform,
               private dbService: DataBaseService,
-              private translator: TranslateService,
+              public translator: TranslateService,
               private dashboardService: DashboardService,
               private calendarService: CalendarService,
               private configurationService: ConfigurationService,
@@ -69,14 +70,16 @@ export class HomePage implements OnInit {
               private themeService: ThemeService,
               private homeService: HomeService,
               private modalController: ModalController) {
-    this.platform.ready().then(() => {
-      let userLang = navigator.language.split('-')[0];
-      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-      this.translator.use(userLang);
-    });
+    super(platform, translator);
   }
 
   ngOnInit() {
+    this.initPage();
+  }
+
+  /** INIT */
+
+  initPage() {
     this.getSystemConfiguration();
     this.initDashboard();
   }
@@ -359,32 +362,34 @@ export class HomePage implements OnInit {
   // PRIVACY POLICY
   openPrivacyPolicy(settings: SystemConfigurationModel[]) {
     if (!this.settingsService.getPrivacySelected(settings)) {
-      if (this.modalSettings) {
-        this.controlService.closeModal(this.modalController);
-      }
-      this.controlService.alertCustom(PageEnum.HOME, 'COMMON.PRIVACY_POLICY', 'ALERT.InfoHavetoAcceptPrivaciyPolicy', [{
-        text: this.translator.instant('COMMON.PRIVACY_POLICY'),
-        handler: () => {
-          this.controlService.showPrivacyPolicy();
-          return false;
+      setTimeout(() => {
+        if (this.modalSettings) {
+          this.controlService.closeModal(this.modalController);
+        }
+        this.controlService.alertCustom(PageEnum.HOME, 'COMMON.PRIVACY_POLICY', 'ALERT.InfoHavetoAcceptPrivaciyPolicy', [{
+          text: this.translator.instant('COMMON.PRIVACY_POLICY'),
+          handler: () => {
+            this.controlService.showPrivacyPolicy();
+            return false;
+          },
         },
-      },
-      {
-        text: this.translator.instant('COMMON.REJECT'),
-        handler: () => {
-          this.controlService.closeApp();
+        {
+          text: this.translator.instant('COMMON.REJECT'),
+          handler: () => {
+            this.controlService.closeApp();
+          },
         },
-      },
-      {
-        text: this.translator.instant('COMMON.ACCEPT'),
-        handler: () => {
-          this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_YES).then(x => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'ALERT.InfoAcceptPrivacyPolicy');
-          }).catch(e => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings');
-          });
-        },
-      }]);
+        {
+          text: this.translator.instant('COMMON.ACCEPT'),
+          handler: () => {
+            this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_YES).then(x => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'ALERT.InfoAcceptPrivacyPolicy');
+            }).catch(e => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings');
+            });
+          },
+        }]);
+      }, 1000);
     }
   }
 

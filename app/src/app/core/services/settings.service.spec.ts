@@ -259,10 +259,10 @@ describe('SettingsService', () => {
     it('should generate name export file', () => {
         const today = new Date();
         expect(service.generateNameExportFile())
-            .toEqual(`${Constants.EXPORT_FILE_NAME}_${today.getFullYear()}${today.getMonth()}${today.getDate()}_` +
+            .toEqual(`${Constants.EXPORT_FILE_NAME}_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}_` +
             `${today.getHours()}${today.getMinutes()}${today.getSeconds()}.${Constants.FORMAT_FILE_DB}`);
         expect(service.generateNameExportFile('test'))
-            .toEqual(`test_${today.getFullYear()}${today.getMonth()}${today.getDate()}_` +
+            .toEqual(`test_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}_` +
             `${today.getHours()}${today.getMinutes()}${today.getSeconds()}.${Constants.FORMAT_FILE_DB}`);
     });
 });

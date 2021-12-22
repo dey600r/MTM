@@ -89,7 +89,7 @@ describe('CalendarService', () => {
 
         const result: number = service.calculateWearKmVehicleEstimated(data);
         expect(result).toBeLessThanOrEqual(80419);
-        expect(result).toBeGreaterThanOrEqual(80360);
+        expect(result).toBeGreaterThanOrEqual(80356);
     });
 
     it('should calculate kilometer vehicle estimated without km per month and new motorbike', () => {
@@ -122,7 +122,7 @@ describe('CalendarService', () => {
         expect(result[0].nameVehicle).toEqual(`${MockData.Vehicles[1].brand} ${MockData.Vehicles[1].model}`);
         expect(result[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement.length).toEqual(2);
         expect(result[1].nameVehicle).toEqual(`${MockData.Vehicles[0].brand} ${MockData.Vehicles[0].model}`);
-        expect(result[1].listInfoCalendarMaintenance[0].listInfoCalendarReplacement.length).toEqual(4);
+        expect(result[1].listInfoCalendarMaintenance[0].listInfoCalendarReplacement.length).toEqual(2);
         expect(service.getInfoCalendarReplacementDate([], [])).toEqual([]);
     });
 

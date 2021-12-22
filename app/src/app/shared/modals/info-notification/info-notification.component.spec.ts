@@ -7,7 +7,7 @@ import { InfoNotificationComponent } from './info-notification.component';
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { HomeService } from '@services/index';
+import { HomeService, SettingsService } from '@services/index';
 
 // CONFIGURATION
 import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
@@ -24,7 +24,7 @@ describe('InfoNotificationComponent', () => {
 
   beforeEach(waitForAsync(async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService,
+    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));
     await TestBed.configureTestingModule(config).compileComponents();
     homeService = TestBed.inject(HomeService);

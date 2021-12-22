@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -19,13 +19,14 @@ import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum } fr
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
+import { BasePage } from '@pages/base.page';
 
 @Component({
   selector: 'app-operation',
   templateUrl: 'operation.page.html',
   styleUrls: ['operation.page.scss']
 })
-export class OperationPage {
+export class OperationPage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
@@ -47,9 +48,9 @@ export class OperationPage {
   measure: any = {};
   coin: any = {};
 
-  constructor(private platform: Platform,
+  constructor(public platform: Platform,
               private dbService: DataBaseService,
-              private translator: TranslateService,
+              public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
               private vehicleService: VehicleService,
@@ -57,13 +58,11 @@ export class OperationPage {
               private dashboardService: DashboardService,
               private settingsService: SettingsService,
               private detector: ChangeDetectorRef) {
-    this.platform.ready().then(() => {
-      let userLang = navigator.language.split('-')[0];
-      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-      this.translator.use(userLang);
-    }).finally(() => {
+    super(platform, translator);
+  }
+
+  ngOnInit(): void {
       this.initPage();
-    });
   }
 
   /** INIT */
