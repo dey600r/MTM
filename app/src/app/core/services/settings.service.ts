@@ -180,4 +180,42 @@ export class SettingsService {
             `${today.getHours()}${today.getMinutes()}${today.getSeconds()}.${Constants.FORMAT_FILE_DB}`;
         return nameFile;
     }
+
+
+    // Set the configuration for your app
+// TODO: Replace with your project's config object
+// const firebaseConfig = {
+//     //apiKey: "apiKey",
+//     //authDomain: "projectId.firebaseapp.com",
+//     // For databases not in the us-central1 location, databaseURL will be of the
+//     // form https://[databaseName].[region].firebasedatabase.app.
+//     // For example, https://your-database-123.europe-west1.firebasedatabase.app
+//     databaseURL: "https://mtmionicdey125r.firebaseio.com/",
+//     //storageBucket: "bucket.appspot.com"
+//   };
+  
+//   const app = initializeApp(firebaseConfig);
+  
+//   // Get a reference to the database service
+//   const database = getDatabase(app);
+//     //const data = firebase.database();
+//     // let data = {
+//     //   "Moscow": {
+//     //     country: "Russia"
+//     //   },
+//     //   "Berlin": {
+//     //     name: "Germany"
+//     //   }
+//     // }
+//     //let dataRef = database.app('cities');
+//     //let dataPush = dataRef.push(data);
+//     // dataRef.once('value', snapshot => {
+//     //   console.log(snapshot.val());
+//     // });
+//     set(ref(database, 'users/'), {
+//       username: 'hola',
+//       email: 'email',
+//       profile_picture : 'imageUrl'
+//     });
+    
 }

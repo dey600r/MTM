@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
 import { DashboardModel, SearchDashboardModel } from '@models/index';
-import { FilterMonthsEnum, FilterKmTimeEnum } from '@utils/index';
+import { FilterMonthsEnum, FilterKmTimeEnum, Constants } from '@utils/index';
 
 describe('DashboardService', () => {
     let service: DashboardService;
@@ -217,5 +217,18 @@ describe('DashboardService', () => {
         const opt3: any = dashboard.data.find(x => x.id === MockData.OperationTypes[6].id);
         expect(opt3.value).toEqual(1820);
         expect(opt3.name).toEqual(MockData.OperationTypes[6].description);
+    });
+
+    fit('should prefilter operations', () => {
+        const op1 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel(FilterMonthsEnum.MONTH, '',
+        [MockData.OperationTypes[0]], [], false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false));
+        expect(op1.some(x => x.operationType.id !== MockData.OperationTypes[0].id)).toBeFalsy();
+        const op2 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel(FilterMonthsEnum.MONTH, '',
+        [], [MockData.MaintenanceElements[0]], false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false));
+        expect(op2.every(x => x.listMaintenanceElement.some(y => y.id === MockData.MaintenanceElements[0].id))).toBeTruthy();
+        const op3 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel(FilterMonthsEnum.MONTH, '',
+        [], [], false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false));
+        expect(op3.some(x => x.owner !== null && x.owner !== '' && x.owner.toLowerCase() !== Constants.OWNER_ME &&
+            x.owner.toLowerCase() !== Constants.OWNER_YO)).toBeFalsy();
     });
 });

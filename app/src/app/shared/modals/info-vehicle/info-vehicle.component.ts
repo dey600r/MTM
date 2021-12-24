@@ -93,6 +93,8 @@ export class InfoVehicleComponent implements OnInit {
       this.initChartSummary();
       this.changeDetector.detectChanges();
     }
+
+    this.controlService.isAppFree(this.modalController);
   }
 
   initVehicleSummary() {
