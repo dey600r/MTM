@@ -11,3 +11,4 @@ export * from './settings.service';
 export * from './theme.service';
 export * from './home.service';
 export * from './info-vehicle.service';
+export * from './sync.service';

@@ -18,4 +18,8 @@
 .inputFile {
     width: 0;
     height: 0;
-  }
+}
+
+ion-item .main-item div ion-label {
+    opacity: 1 !important;
+}

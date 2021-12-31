@@ -46,7 +46,8 @@ export class MockData {
         new SystemConfigurationModel(Constants.KEY_CONFIG_DISTANCE, Constants.SETTING_DISTANCE_KM, new Date(), 2),
         new SystemConfigurationModel(Constants.KEY_CONFIG_MONEY, Constants.SETTING_MONEY_EURO, new Date(), 3),
         new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_DARK, new Date(), 4),
-        new SystemConfigurationModel(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_NO, new Date(), 5)
+        new SystemConfigurationModel(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_NO, new Date(), 5),
+        new SystemConfigurationModel(Constants.KEY_CONFIG_SYNC_EMAIL, 'USER_TEST@gmail.com', new Date(), 6),
     ];
     static Configurations: ConfigurationModel[] = [
         new ConfigurationModel('PRODUCTION', 'PRODUCTION SETUP', true, [MockData.Maintenances[0],

@@ -99,7 +99,12 @@
         "REPLACEMENT_HISTORY": "Historico de piezas",
         "PRIVACY_POLICY": "Políticas de privacidad",
         "ACCEPT_POLICY": "Aceptar políticas de privacidad",
-        "REJECT": "Rechazar"
+        "REJECT": "Rechazar",
+        "SYNCHRONIZE": "Sincronizar",
+        "DOWNLOAD": "Descargar",
+        "UPLOAD": "Actualizar",
+        "EMAIL": "Correo",
+        "PASSWORD": "Contraseña"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -136,7 +141,11 @@
         "InfoNotExistsImportFile": "No hay seleccionado ningun archivo. Este archivo debe ser una exportación de otra aplicacion MtM",
         "InfoNotExistsFilesToDelete": "No existen archivos para borrar",
         "FileMandatoryJSON": "El formato del fichero tiene que ser un JSON",
-        "ErrorFormatDB": "El contenido del fichero no es el correcto. Este archivo debe ser una exportación de otra aplicacion MtM"
+        "ErrorFormatDB": "El contenido del fichero no es el correcto. Este archivo debe ser una exportación de otra aplicacion MtM",
+        "ConfirmSyncDownload": "Los datos de {{email}} se van a descargar de la nube y se van a sobrescribir en la aplicación. ¿Desea continuar?",
+        "ConfirmSyncUpload": "Los datos de {{email}} se van a actualizar en la nube. ¿Desea continuar?",
+        "SyncDownload": "Se descargó de la nube correctamente",
+        "SyncUpload": "Se actualizó en la nube correctamente"
     },
     "PAGE_VEHICLE": {
         "YOURS_VEHICLES": "Tus Vehículos",
@@ -271,7 +280,14 @@
         "InfoAcceptPrivacyPolicy": "Las poliíticas de privacidad se han aceptado correctamente",
         "InfoRejectPrivacyPolicy": "Las poliíticas de privacidad se han rechazado correctamente",
         "InfoErrorSaveSettings": "Ha ocurrido un error guardando los datos",
-        "InfoHavetoAcceptPrivaciyPolicy": "La aplicación MtM no recopilará datos personales ni se reenviarán automáticamente para ser procesados por servicios externos. Los datos introducidos se guardan en el dispositivo y se comparten manualmente por el usuario con sus otros dispositivos. Usted puede leer todos los detalles en el botón de 'Politica de privacidad' o en la sección de ajustes. Para utilizar la aplicación MtM debe leer y aceptar las políticas de privacidad."
+        "InfoHavetoAcceptPrivaciyPolicy": "La aplicación MtM no recopilará datos personales ni se reenviarán automáticamente para ser procesados por servicios externos. Los datos introducidos se guardan en el dispositivo y se comparten manualmente por el usuario con sus otros dispositivos. Usted puede leer todos los detalles en el botón de 'Politica de privacidad' o en la sección de ajustes. Para utilizar la aplicación MtM debe leer y aceptar las políticas de privacidad.",
+        "InfoSync": "Puedes sincronizar tus datos en la nube para descargarlos en otro dispositivo. Sólo se enviarán los datos introducidos en la aplicación y no se utilzarán para ser analizados por terceros. Antes de sincronizar los datos se debe enviar un correo al administrador para darte de alta en el sistema.",
+        "ErrorSyncLogin": "Ha ocurrido un error de login: {{error}}",
+        "ErrorSyncLogout": "Ha ocurrido un error de logout: {{error}}",
+        "ErrorSyncDownload": "Ha ocurrido un error en la descarga: {{error}}",
+        "ErrorSyncUpload": "Ha ocurrido un error en la subida: {{error}}",
+        "ErrorSyncDataNotFound": "No se encuentran datos en la nube. Primero debería actualizarlos.",
+        "ErrorSyncVersion": "La version de MtM debería ser {{version}} pero está instalada {{versionNow}}. Deberias actualizar los datos en la nube o descargar la nueva versión."
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",

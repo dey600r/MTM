@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "mtmSystemConfiguration" (
 CREATE TABLE IF NOT EXISTS "mtmMaintenance" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"description"	TEXT NOT NULL,
-	"idMaintenanceFrec"	BLOB NOT NULL,
+	"idMaintenanceFrec"	INTEGER NOT NULL,
 	"km"	INTEGER NOT NULL,
 	"time"	INTEGER,
 	"init"	TEXT NOT NULL,
@@ -104,6 +104,7 @@ INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (2,'configDistance','KM','
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (3,'configMoney','EURO','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (4,'configTheme','L','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (5,'configPrivacy','N','2006-09-12 12:32:00');
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (6,'configSyncEmail','','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (1,'FIRST_REVIEW','1',1000,6,'Y','N',0,NULL,'Y');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (2,'BASIC_REVIEW','2',8000,12,'N','N',0,NULL,'Y');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (3,'CHANGE_AIR_FILTER','2',16000,24,'N','N',0,NULL,'Y');

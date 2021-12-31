@@ -36,6 +36,7 @@ export class AddEditOperationComponent implements OnInit {
   maintenanceElement: MaintenanceElementModel[] = [];
   maintenanceElementSelect: MaintenanceElementModel[] = [];
   idMaintenanceElementSelect: number[] = [];
+  owners: any [] = [];
   formatDate = this.calendarService.getFormatCalendar();
   measure: any = {};
   coin: any = {};
@@ -104,6 +105,9 @@ export class AddEditOperationComponent implements OnInit {
 
     // GET OPERATIONS
     this.operations = this.dbService.getOperationsData();
+
+    // OWNERS
+    this.loadOwner();
   }
 
   saveData(f: Form) {
@@ -385,5 +389,26 @@ export class AddEditOperationComponent implements OnInit {
     }
 
     return resultDate;
+  }
+
+  loadOwner() {
+    if (this.operation.owner) {
+      if (this.operation.owner.toLowerCase() === Constants.OWNER_ME ||
+          this.operation.owner.toLowerCase() === Constants.OWNER_YO) {
+        this.operation.owner = Constants.OWNER_YO;
+      } else if (this.operation.owner.toLowerCase() === Constants.OWNER_OTHER ||
+                  this.operation.owner.toLowerCase() === Constants.OWNER_OTRO) {
+        this.operation.owner = Constants.OWNER_OTRO;
+      } else {
+        this.operation.owner = Constants.OWNER_YO;
+      }
+    } else {
+      this.operation.owner = Constants.OWNER_YO;
+    }
+    this.operation.owner = (this.operation.owner ? this.operation.owner.toLowerCase() : Constants.OWNER_YO);
+    this.owners = [
+      { id: Constants.OWNER_YO, value: 'COMMON.ME' },
+      { id: Constants.OWNER_OTRO, value: 'DB.OTHER' }
+    ];
   }
  }

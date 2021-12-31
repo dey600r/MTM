@@ -94,6 +94,9 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <allow-navigation href="http://localhost:8100" sessionid="700af186" />
     <platform name="windows">
+        <Capability Name="internetClientServer" />
+        <Capability Name="internetClient" />
+        <allow-navigation href="https://*" sessionid="700af186" />
         <icon src="resources/windows/icon/Square44x44Logo.png" target="Square44x44Logo" />
         <icon src="resources/windows/icon/SmallTile.png" target="Square71x71Logo" />
         <icon src="resources/windows/icon/Square150x150Logo.png" target="Square150x150Logo" />

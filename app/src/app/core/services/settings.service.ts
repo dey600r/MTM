@@ -76,6 +76,14 @@ export class SettingsService {
         return settings.find(y => y.key === Constants.KEY_CONFIG_PRIVACY).value === Constants.DATABASE_YES;
     }
 
+    getSyncEmailSelected(settings: SystemConfigurationModel[]): string {
+        return settings.find(y => y.key === Constants.KEY_CONFIG_SYNC_EMAIL).value;
+    }
+
+    getVersionSelected(settings: SystemConfigurationModel[]): SystemConfigurationModel {
+        return settings.find(y => y.key === Constants.KEY_LAST_UPDATE_DB);
+    }
+
     // SAVE DATA
 
     saveSystemConfiguration(key: string, value: string): Promise<any> {
@@ -98,6 +106,10 @@ export class SettingsService {
             sql += this.sqlService.insertSqlSystemConfiguration(
                     [new SystemConfigurationModel(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_NO, new Date(), 5)]);
         }
+        if (!data.some(x => x.key === Constants.KEY_CONFIG_SYNC_EMAIL)) {
+            sql += this.sqlService.insertSqlSystemConfiguration(
+                    [new SystemConfigurationModel(Constants.KEY_CONFIG_SYNC_EMAIL, '', new Date(), 6)]);
+        }
         if (sql) {
             this.dbService.executeScriptDataBase(sql);
         }
@@ -106,7 +118,6 @@ export class SettingsService {
     mapToAnyCustomSetting(c: string, v: string, vl: string): any {
         return { code: c, value: v, valueLarge: vl };
     }
-
 
     /** EXPORTS AND IMPORTS */
 
@@ -181,41 +192,23 @@ export class SettingsService {
         return nameFile;
     }
 
+    finishImportLoad() {
+        this.dbService.loadAllTables();
+        setTimeout(() => { this.insertSystemConfiguration(); }, 500);
+    }
 
-    // Set the configuration for your app
-// TODO: Replace with your project's config object
-// const firebaseConfig = {
-//     //apiKey: "apiKey",
-//     //authDomain: "projectId.firebaseapp.com",
-//     // For databases not in the us-central1 location, databaseURL will be of the
-//     // form https://[databaseName].[region].firebasedatabase.app.
-//     // For example, https://your-database-123.europe-west1.firebasedatabase.app
-//     databaseURL: "https://mtmionicdey125r.firebaseio.com/",
-//     //storageBucket: "bucket.appspot.com"
-//   };
-  
-//   const app = initializeApp(firebaseConfig);
-  
-//   // Get a reference to the database service
-//   const database = getDatabase(app);
-//     //const data = firebase.database();
-//     // let data = {
-//     //   "Moscow": {
-//     //     country: "Russia"
-//     //   },
-//     //   "Berlin": {
-//     //     name: "Germany"
-//     //   }
-//     // }
-//     //let dataRef = database.app('cities');
-//     //let dataPush = dataRef.push(data);
-//     // dataRef.once('value', snapshot => {
-//     //   console.log(snapshot.val());
-//     // });
-//     set(ref(database, 'users/'), {
-//       username: 'hola',
-//       email: 'email',
-//       profile_picture : 'imageUrl'
-//     });
-    
+    validateStructureJsonDB(contentFile: string): boolean {
+        return contentFile.includes(ConstantsTable.TABLE_MTM_CONFIGURATION) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_CONFIG_MAINT) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_OPERATION) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_OPERATION_TYPE) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_VEHICLE) &&
+        contentFile.includes(ConstantsTable.TABLE_MTM_VEHICLE_TYPE);
+      }
 }

@@ -116,7 +116,11 @@
         <ion-label position="stacked">
           <ion-text>{{ 'COMMON.OWNER' | translate }}</ion-text>
         </ion-label>
-        <ion-input #opOwner name="opOwner" [placeholder]="translateMe" autocapitalize type="text" [(ngModel)]="operation.owner"></ion-input>
+        <!-- <ion-input #opOwner name="opOwner" [placeholder]="translateMe" autocapitalize type="text" [(ngModel)]="operation.owner"></ion-input> -->
+        <ion-select #opOwner name="opOwner" [placeholder]="this.translateSelect" interface="popover" 
+           [(ngModel)]="operation.owner">
+          <ion-select-option [(value)]="owner.id" *ngFor="let owner of owners">{{ owner.value | translate }}</ion-select-option>
+        </ion-select>
       </ion-item>
       <ion-item *ngIf="false">
         <ion-label position="stacked">

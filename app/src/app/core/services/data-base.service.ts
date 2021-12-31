@@ -256,7 +256,11 @@ export class DataBaseService {
   }
 
   loadAllTables() {
-    this.loadListTables([
+    this.loadListTables(this.getListTables());
+  }
+
+  getListTables(): string[] {
+    return [
       ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
       ConstantsTable.TABLE_MTM_VEHICLE,
       ConstantsTable.TABLE_MTM_VEHICLE_TYPE,
@@ -266,7 +270,15 @@ export class DataBaseService {
       ConstantsTable.TABLE_MTM_MAINTENANCE,
       ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT,
       ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ
-    ]);
+    ];
+  }
+
+  getAllTalbles(): string[] {
+    return [...this.getListTables(), ...[
+      ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
+      ConstantsTable.TABLE_MTM_CONFIG_MAINT,
+      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL
+    ]];
   }
 
   loadListTables(list: string []) {
