@@ -289,7 +289,7 @@
         "ErrorSyncDataNotFound": "No data found in cloud. You should upload first",
         "ErrorSyncVersion": "The version of MTM should be {{version}} but it is installed {{versionNow}}. You should upload first in cloud or the new version should be installed."
     },
-    "   ": {
+    "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",
         "FAILURE_WORKSHOP": "Failure Workshop",
         "CLOTHES": "Clothes",

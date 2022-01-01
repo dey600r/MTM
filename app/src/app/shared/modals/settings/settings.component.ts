@@ -10,7 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ModalInputModel, SystemConfigurationModel } from '@models/index';
 
 // UTILS
-import { Constants, PageEnum, ConstantsTable, ToastTypeEnum } from '@utils/index';
+import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // SERVICES
 import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService } from '@services/index';
@@ -184,7 +184,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const contentFile: string = e.target.result;
-      if (this.settingsService.validateStructureJsonDB(contentFile)) {
+      if (this.settingsService.validateStructureJsonDB(contentFile, this.dbService.getAllTables())) {
         this.pathImports = file.name;
         this.importData(contentFile, event);
       } else {

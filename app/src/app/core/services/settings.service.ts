@@ -197,18 +197,7 @@ export class SettingsService {
         setTimeout(() => { this.insertSystemConfiguration(); }, 500);
     }
 
-    validateStructureJsonDB(contentFile: string): boolean {
-        return contentFile.includes(ConstantsTable.TABLE_MTM_CONFIGURATION) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_CONFIG_MAINT) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_OPERATION) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_OPERATION_TYPE) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_VEHICLE) &&
-        contentFile.includes(ConstantsTable.TABLE_MTM_VEHICLE_TYPE);
+    validateStructureJsonDB(contentFile: string, listTables: string[]): boolean {
+        return listTables.every(x => contentFile.includes(x));
       }
 }

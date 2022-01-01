@@ -7,7 +7,7 @@ export class BasePage {
     this.platform.ready().then(async () => {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-      await this.translator.use(userLang);
+      await this.translator.use(userLang).toPromise();
     });
   }
 }

@@ -87,7 +87,7 @@ export class SyncService {
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
           });
           const dataImport: any = json;
-          this.dbService.getAllTalbles().forEach(x => {
+          this.dbService.getSyncTables().forEach(x => {
               dataImport.data.inserts[x] = JSON.parse(data[x]);
           });
           // IMPORT DB
@@ -126,7 +126,7 @@ export class SyncService {
     // EXPORT DB
     await this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then(async (json: any) => {
       const syncdata: any = {};
-      this.dbService.getAllTalbles().forEach(x => {
+      this.dbService.getSyncTables().forEach(x => {
           syncdata[x] = JSON.stringify(json.data.inserts[x]);
       });
       // SAVE DATA
@@ -150,7 +150,8 @@ export class SyncService {
   validSyncDownloadData(data: any): boolean {
     if (data) {
       const settings: SystemConfigurationModel[] = JSON.parse(data[ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
-      if (settings && settings.length >= 6 && this.settingsService.validateStructureJsonDB(JSON.stringify(data))) {
+      if (settings && settings.length >= 6 &&
+          this.settingsService.validateStructureJsonDB(JSON.stringify(data), this.dbService.getSyncTables())) {
         const syncVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(settings);
         const appVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(this.dbService.getSystemConfigurationData());
         if (syncVersion && syncVersion.value === appVersion.value) {

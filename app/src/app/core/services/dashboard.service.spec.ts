@@ -219,7 +219,7 @@ describe('DashboardService', () => {
         expect(opt3.name).toEqual(MockData.OperationTypes[6].description);
     });
 
-    fit('should prefilter operations', () => {
+    it('should prefilter operations', () => {
         const op1 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel(FilterMonthsEnum.MONTH, '',
         [MockData.OperationTypes[0]], [], false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false));
         expect(op1.some(x => x.operationType.id !== MockData.OperationTypes[0].id)).toBeFalsy();

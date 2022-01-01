@@ -256,29 +256,46 @@ export class DataBaseService {
   }
 
   loadAllTables() {
-    this.loadListTables(this.getListTables());
+    this.loadListTables(this.getTablesLoadInit());
   }
 
-  getListTables(): string[] {
+  private getTablesMaster(): string[] {
     return [
-      ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
-      ConstantsTable.TABLE_MTM_VEHICLE,
       ConstantsTable.TABLE_MTM_VEHICLE_TYPE,
-      ConstantsTable.TABLE_MTM_CONFIGURATION,
-      ConstantsTable.TABLE_MTM_OPERATION,
       ConstantsTable.TABLE_MTM_OPERATION_TYPE,
-      ConstantsTable.TABLE_MTM_MAINTENANCE,
-      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT,
       ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ
     ];
   }
 
-  getAllTalbles(): string[] {
-    return [...this.getListTables(), ...[
+  private getTablesData(): string[] {
+    return [
+      ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
+      ConstantsTable.TABLE_MTM_VEHICLE,
+      ConstantsTable.TABLE_MTM_CONFIGURATION,
+      ConstantsTable.TABLE_MTM_OPERATION,
+      ConstantsTable.TABLE_MTM_MAINTENANCE,
+      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT
+    ];
+  }
+
+  private getTablesRef(): string[] {
+    return [
       ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
       ConstantsTable.TABLE_MTM_CONFIG_MAINT,
       ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL
-    ]];
+    ];
+  }
+
+  getTablesLoadInit(): string[] {
+    return [...this.getTablesMaster(), ...this.getTablesData()];
+  }
+
+  getAllTables(): string[] {
+    return [...this.getTablesLoadInit(), ...this.getTablesRef()];
+  }
+
+  getSyncTables(): string[] {
+    return [...this.getTablesData(), ...this.getTablesRef()];
   }
 
   loadListTables(list: string []) {

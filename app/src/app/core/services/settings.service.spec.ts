@@ -148,7 +148,7 @@ describe('SettingsService', () => {
         service.insertSystemConfiguration();
         expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
         expect(spyDBService).toHaveBeenCalledTimes(1);
-        expect(spySqlService).toHaveBeenCalledTimes(2);
+        expect(spySqlService).toHaveBeenCalledTimes(3);
     });
 
     it('should not insert system configuration key', () => {
