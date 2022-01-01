@@ -11,6 +11,7 @@ import { ModalInputModel, SystemConfigurationModel } from '@models/index';
 
 // UTILS
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { environment } from '@environment/environment';
 
 // SERVICES
 import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService } from '@services/index';
@@ -311,11 +312,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   // SYNCHRONIZE
   unlockSync(order: number, num: number) {
-    if ((order === 1 && this.pwdSync === 0) ||
+    if (!environment.isFree &&
+        ((order === 1 && this.pwdSync === 0) ||
         (order === 3 && this.pwdSync === 2) ||
         (order === 2 && this.pwdSync === 7) ||
         (order === 4 && this.pwdSync === 15) ||
-        (order === 3 && this.pwdSync === 24)) {
+        (order === 3 && this.pwdSync === 24))) {
       this.pwdSync += num;
     } else {
       this.pwdSync = 0;
