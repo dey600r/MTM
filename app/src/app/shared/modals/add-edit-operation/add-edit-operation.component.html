@@ -41,7 +41,7 @@
           <ion-icon *ngIf="this.submited && !isValidVehicle(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidVehicle(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddVehicle' | translate }}</ion-text>
         </ion-label>
-        <ion-select #opVehicle name="opVehicle" [placeholder]="this.translateSelect" required interface="popover" 
+        <ion-select #opVehicle name="opVehicle" [placeholder]="this.translateSelect" required 
           [(ngModel)]="operation.vehicle.id" disabled="true">
           <ion-select-option [(value)]="m.id" *ngFor="let m of vehicles">{{ m.brand + ' ' + m.model }}</ion-select-option>
         </ion-select>
@@ -53,7 +53,7 @@
           <ion-icon *ngIf="this.submited && !isValidOperationType(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidOperationType(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddOperationType' | translate }}</ion-text>
         </ion-label>
-        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="required" interface="popover" 
+        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="required" 
            required [(ngModel)]="operation.operationType.id">
           <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationType">{{ ot.description }}</ion-select-option>
         </ion-select>
@@ -117,7 +117,7 @@
           <ion-text>{{ 'COMMON.OWNER' | translate }}</ion-text>
         </ion-label>
         <!-- <ion-input #opOwner name="opOwner" [placeholder]="translateMe" autocapitalize type="text" [(ngModel)]="operation.owner"></ion-input> -->
-        <ion-select #opOwner name="opOwner" [placeholder]="this.translateSelect" interface="popover" 
+        <ion-select #opOwner name="opOwner" [placeholder]="this.translateSelect" 
            [(ngModel)]="operation.owner">
           <ion-select-option [(value)]="owner.id" *ngFor="let owner of owners">{{ owner.value | translate }}</ion-select-option>
         </ion-select>

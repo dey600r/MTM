@@ -127,7 +127,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -156,7 +155,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -194,7 +192,6 @@
               "browserTarget": "app:build:production-free"
             },
             "ci": {
-              "progress": false
             }
           }
         },

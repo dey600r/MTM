@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 // LIBRARIES IONIC
 import { IonicModule } from '@ionic/angular';
-import { SQLite } from '@ionic-native/sqlite/ngx';
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { CalendarModule } from 'ion5-calendar';
-import { File } from '@ionic-native/file/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // LIBRARIES ANGULAR
 import { TranslateModule } from '@ngx-translate/core';

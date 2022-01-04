@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { SyncService } from './sync.service';
@@ -20,7 +21,7 @@ describe('SyncService', () => {
       }).compileComponents();
       service = TestBed.inject(SyncService);
       translate = TestBed.inject(TranslateService);
-      await translate.use('es').toPromise();
+      await firstValueFrom(translate.use('es'));
   });
 
   it('should be created', () => {

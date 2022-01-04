@@ -3,7 +3,7 @@ import { Platform, ModalController, NavParams } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 
 // UTILS
 import { DashboardService, ControlService, VehicleService } from '@services/index';

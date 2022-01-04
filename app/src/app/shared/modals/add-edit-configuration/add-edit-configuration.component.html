@@ -60,10 +60,10 @@
             </div>
           </ion-label>
           <!-- Toggle -->
-          <ion-toggle *ngIf="m.master" [name]="'configurationMaintenance' + i" color="primary" 
-            [(ngModel)]="toggleMaintenaces[i]"></ion-toggle>
-          <ion-toggle *ngIf="!m.master" [name]="'configurationMaintenance' + i" color="secondary" 
-            [(ngModel)]="toggleMaintenaces[i]"></ion-toggle>
+          <ion-checkbox *ngIf="m.master" [name]="'configurationMaintenance' + i" color="primary" 
+            [(ngModel)]="toggleMaintenaces[i]"></ion-checkbox>
+          <ion-checkbox *ngIf="!m.master" [name]="'configurationMaintenance' + i" color="secondary" 
+            [(ngModel)]="toggleMaintenaces[i]"></ion-checkbox>
         </ion-item>
       </ion-list>
       <!-- Buton Save -->

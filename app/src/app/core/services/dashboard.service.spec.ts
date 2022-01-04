@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { DashboardService } from './dashboard.service';
@@ -24,7 +25,7 @@ describe('DashboardService', () => {
         }).compileComponents();
         service = TestBed.inject(DashboardService);
         translate = TestBed.inject(TranslateService);
-        await translate.use('es').toPromise();
+        await firstValueFrom(translate.use('es'));
     });
 
     it('should be created', () => {
@@ -53,7 +54,7 @@ describe('DashboardService', () => {
     });
 
     it('should calculate other vehicle expenses dashboard - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
             false, false, false, false, false, false, FilterKmTimeEnum.KM, false, false);
         const windows: any = service.getSizeWidthHeight(500, 900);
@@ -159,7 +160,7 @@ describe('DashboardService', () => {
     });
 
     it('should calculate other vehicle per month expenses dashboard - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
             false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
         const windows: any = service.getSizeWidthHeight(500, 900);
@@ -197,7 +198,7 @@ describe('DashboardService', () => {
     });
 
     it('should calculate operation type expenses dashboard - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
             false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
         const windows: any = service.getSizeWidthHeight(500, 900);

@@ -69,7 +69,7 @@
           <ion-icon *ngIf="this.submited && !isValidConfiguration(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidConfiguration(formAddVehicle)" color="danger">{{ 'PAGE_VEHICLE.AddConfiguration' | translate }}</ion-text>
         </ion-label>
-        <ion-select #vehicleConfiguration name="vehicleConfiguration" interface="popover" [(ngModel)]="vehicle.configuration.id">
+        <ion-select #vehicleConfiguration name="vehicleConfiguration" [(ngModel)]="vehicle.configuration.id">
           <ion-select-option [(value)]="c.id" *ngFor="let c of configurations">{{c.name}}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -80,7 +80,7 @@
           <ion-icon *ngIf="this.submited && !isValidVehicleType(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidVehicleType(formAddVehicle)" color="danger">{{ 'PAGE_VEHICLE.AddVehicleType' | translate }}</ion-text>
         </ion-label>
-        <ion-select #vehicleType name="vehicleType" interface="popover" [(ngModel)]="vehicle.vehicleType.id">
+        <ion-select #vehicleType name="vehicleType" [(ngModel)]="vehicle.vehicleType.id">
           <ion-select-option [(value)]="vt.id" *ngFor="let vt of vehicleTypes">{{ vt.description }}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -95,7 +95,7 @@
         <ion-label>
           <h2>{{ 'COMMON.NOTIFY_MAINTENANCE' | translate }}</h2>
         </ion-label>
-        <ion-toggle #vehicleActive name="vehicleActive" color="primary" [(ngModel)]="vehicle.active"></ion-toggle>
+        <ion-checkbox #vehicleActive name="vehicleActive" color="primary" [(ngModel)]="vehicle.active"></ion-checkbox>
       </ion-item>
     </ion-list>
     <!-- Button Save -->

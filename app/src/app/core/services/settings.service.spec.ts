@@ -1,4 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { SettingsService } from './settings.service';
@@ -11,7 +12,7 @@ import { Constants } from '@utils/index';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
-import { File } from '@ionic-native/file/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 describe('SettingsService', () => {
     let service: SettingsService;
@@ -30,7 +31,7 @@ describe('SettingsService', () => {
         dbService = TestBed.inject(DataBaseService);
         sqlService = TestBed.inject(SqlService);
         file = TestBed.inject(File);
-        await translate.use('es').toPromise();
+        await firstValueFrom(translate.use('es'));
     });
 
     it('should be created', () => {
@@ -48,7 +49,7 @@ describe('SettingsService', () => {
     });
 
     it('should get list distance - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const result = service.getListDistance();
         expect(result[0].value).toEqual(MockTranslate.EN.COMMON.KM);
         expect(result[0].valueLarge).toEqual(MockTranslate.EN.COMMON.KILOMETERS);
@@ -70,7 +71,7 @@ describe('SettingsService', () => {
     });
 
     it('should get list money - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const result = service.getListMoney();
         expect(result[0].valueLarge).toEqual(MockTranslate.EN.COMMON.EURO);
         expect(result[1].valueLarge).toEqual(MockTranslate.EN.COMMON.DOLLAR);
@@ -91,7 +92,7 @@ describe('SettingsService', () => {
     });
 
     it('should get list theme - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const result = service.getListThemes();
         expect(result[0].value).toEqual(MockTranslate.EN.COMMON.LIGHT);
         expect(result[1].value).toEqual(MockTranslate.EN.COMMON.DARK);

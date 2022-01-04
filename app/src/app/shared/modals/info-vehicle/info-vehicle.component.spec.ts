@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // COMPONENTS
 import { InfoVehicleComponent } from './info-vehicle.component';
@@ -27,7 +28,7 @@ describe('InfoVehicleComponent', () => {
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
-    await translate.use('es').toPromise();
+    await firstValueFrom(translate.use('es'));
   }));
 
   beforeEach(() => {

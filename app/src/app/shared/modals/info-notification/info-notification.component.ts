@@ -3,7 +3,7 @@ import { ModalController, NavParams, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { TranslateService } from '@ngx-translate/core';
 import * as shape from 'd3-shape';
 

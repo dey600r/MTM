@@ -20,15 +20,15 @@
       <ion-label position="stacked">
         <ion-text>{{ 'COMMON.MEASURING' | translate }}</ion-text>
       </ion-label>
-      <ion-select interface="popover" [(ngModel)]="distanceSelected.code" (ionChange)="changeDistance()">
-        <ion-select-option [(value)]="d.code" *ngFor="let d of listDistances">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
+      <ion-select [(ngModel)]="distanceSelected.code" (ionChange)="changeDistance()">
+        <ion-select-option *ngFor="let d of listDistances" [(value)]="d.code">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">
         <ion-text>{{ 'COMMON.COIN' | translate }}</ion-text>
       </ion-label>
-      <ion-select interface="popover" [(ngModel)]="moneySelected.code" (ionChange)="changeMoney()">
+      <ion-select [(ngModel)]="moneySelected.code" (ionChange)="changeMoney()">
         <ion-select-option [(value)]="m.code" *ngFor="let m of listMoney" >{{m.valueLarge + ' - ' + m.value}}</ion-select-option>
       </ion-select>
     </ion-item>
@@ -44,7 +44,7 @@
       <ion-label position="stacked">
         <ion-text>{{ 'COMMON.MODE' | translate }}</ion-text>
       </ion-label>
-      <ion-select interface="popover" [(ngModel)]="themeSelected.code" (ionChange)="changeTheme()">
+      <ion-select [(ngModel)]="themeSelected.code" (ionChange)="changeTheme()">
         <ion-select-option [(value)]="t.code" *ngFor="let t of listThemes">{{t.value}}</ion-select-option>
       </ion-select>
     </ion-item>
@@ -114,8 +114,8 @@
       </ion-button>
     </ion-list-header>
     <ion-item>
-      <ion-label>{{ 'COMMON.ACCEPT_POLICY' | translate }}</ion-label>
-      <ion-toggle color="primary" [(ngModel)]="acceptPrivacyPolicy" (ionChange)="changePrivacy()"></ion-toggle>
+      <ion-label class="min-width94">{{ 'COMMON.ACCEPT_POLICY' | translate }}</ion-label>
+      <ion-checkbox color="primary" [(ngModel)]="acceptPrivacyPolicy" (ionChange)="changePrivacy()"></ion-checkbox>
     </ion-item>
   </ion-list>
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 // LIBRARIES
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { File } from '@ionic-native/file/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 import { getDatabase, set, ref, get, child } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';

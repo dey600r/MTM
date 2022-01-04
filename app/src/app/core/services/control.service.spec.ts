@@ -12,6 +12,7 @@ import { ModalInputModel } from '@models/index';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
 describe('ControlService', () => {
     let service: ControlService;
@@ -37,7 +38,7 @@ describe('ControlService', () => {
         platform = TestBed.inject(Platform);
         translate = TestBed.inject(TranslateService);
 
-        await translate.use('es').toPromise();
+        await firstValueFrom(translate.use('es'));
     });
 
     it('should be created', () => {
@@ -161,7 +162,7 @@ describe('ControlService', () => {
     });
 
     it('should show confirm alert - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const platformIs = spyOn(platform, 'is').and.returnValue(true);
         const acceptTranslate = translate.instant('COMMON.ACCEPT');
         const titleTranslate = translate.instant('PAGE_HOME.HOME');

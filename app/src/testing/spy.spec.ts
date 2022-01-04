@@ -2,12 +2,12 @@ import { AngularDelegate, ModalController, NavParams, Platform, PopoverControlle
 import { Observable, of } from 'rxjs';
 
 // PLUGINS
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { File } from '@ionic-native/file/ngx';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
+import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 // LIBRARIES

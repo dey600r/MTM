@@ -46,42 +46,42 @@
     </ion-item>
     <ion-item *ngIf="isParentPageHome() || isParentPageDashboardOperation()">
         <ion-label>{{ 'COMMON.CALCULATE_PER_MONTH' | translate }}</ion-label>
-        <ion-select [placeholder]="this.translateSelect" interface="popover"
+        <ion-select [placeholder]="this.translateSelect"
             [(ngModel)]="this.filterMonth" (ionChange)="onChangeFilterDashboardGrouper()">
             <ion-select-option [(value)]="m.id" *ngFor="let m of months">{{ m.name }}</ion-select-option>
         </ion-select>
     </ion-item>
     <ion-item *ngIf="isParentPageHome()">
         <ion-label>{{ 'COMMON.STRICT_CALCULATION' | translate }}</ion-label>
-        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showStrict" (ionChange)="onChangeFilterDashboardRecordsGrouper()"></ion-toggle>
+        <ion-checkbox color="primary" [(ngModel)]="searchDashboard.showStrict" (ionChange)="onChangeFilterDashboardRecordsGrouper()"></ion-checkbox>
     </ion-item>
     <ion-item *ngIf="isParentPageDashboardVehicle() || isParentPageDashboardOperation()">
         <ion-label>{{ this.translateExpensePerKM }}</ion-label>
-        <ion-toggle color="primary" [(ngModel)]="searchDashboard.expensePerKm" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>
+        <ion-checkbox color="primary" [(ngModel)]="searchDashboard.expensePerKm" (ionChange)="onChangeFilterDashboardGrouper()"></ion-checkbox>
     </ion-item>
     <ion-item *ngIf="!isParentPageOperation()">
         <ion-label>{{ 'COMMON.SHOW_AXIS' | translate }}</ion-label>
-        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showAxis" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>
+        <ion-checkbox color="primary" [(ngModel)]="searchDashboard.showAxis" (ionChange)="onChangeFilterDashboardGrouper()"></ion-checkbox>
     </ion-item>
     <ion-item *ngIf="!isParentPageOperation()">
         <ion-label>{{ 'COMMON.SHOW_LEGEND' | translate }}</ion-label>
-        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showLegend" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>
+        <ion-checkbox color="primary" [(ngModel)]="searchDashboard.showLegend" (ionChange)="onChangeFilterDashboardGrouper()"></ion-checkbox>
     </ion-item>
     <ion-item *ngIf="!isParentPageOperation()">
         <ion-label>{{ 'COMMON.SHOW_AXIS_LABELS' | translate }}</ion-label>
-        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showAxisLabel" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>
+        <ion-checkbox color="primary" [(ngModel)]="searchDashboard.showAxisLabel" (ionChange)="onChangeFilterDashboardGrouper()"></ion-checkbox>
     </ion-item>
     <ion-item *ngIf="!isParentPageOperation()">
         <ion-label>{{ 'COMMON.SHOW_DATA_LABELS' | translate }}</ion-label>
-        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showDataLabel" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>
+        <ion-checkbox color="primary" [(ngModel)]="searchDashboard.showDataLabel" (ionChange)="onChangeFilterDashboardGrouper()"></ion-checkbox>
     </ion-item>
     <ion-item *ngIf="!isParentPageHome() && !isParentPageOperation()">
         <ion-label>{{ 'COMMON.SHOW_DOGHNUT' | translate }}</ion-label>
-        <ion-toggle color="primary" [(ngModel)]="searchDashboard.doghnut" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>
+        <ion-checkbox color="primary" [(ngModel)]="searchDashboard.doghnut" (ionChange)="onChangeFilterDashboardGrouper()"></ion-checkbox>
     </ion-item>
     <ion-item *ngIf="!isParentPageOperation()">
         <ion-label>{{ 'COMMON.SHOW_MY_DATA' | translate }}</ion-label>
-        <ion-toggle color="primary" [(ngModel)]="searchDashboard.showMyData" (ionChange)="onChangeFilterDashboardGrouper()"></ion-toggle>
+        <ion-checkbox color="primary" [(ngModel)]="searchDashboard.showMyData" (ionChange)="onChangeFilterDashboardGrouper()"></ion-checkbox>
     </ion-item>
     <!-- Clear -->
     <ion-item>

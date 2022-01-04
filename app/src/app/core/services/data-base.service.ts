@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 // LIBRARIES IONIC
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 
 // UTILS
 import {

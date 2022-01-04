@@ -35,6 +35,12 @@
   padding-top: 10px;
 }
 
+/* CHECKBOX */
+
+ion-checkbox {
+  --border-radius: 50% !important;
+}
+
 /* SELECT */
 
 .alert-wrapper.sc-ion-alert-md {

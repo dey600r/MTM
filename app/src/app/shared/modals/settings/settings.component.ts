@@ -2,8 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 
 // LIBRARIES
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { File, Entry } from '@ionic-native/file/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
@@ -66,7 +66,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 private controlService: ControlService,
                 private translator: TranslateService,
                 private themeService: ThemeService,
-                private syncService: SyncService) {
+                private syncService: SyncService
+      ) {
   }
 
   ngOnInit() {
@@ -97,7 +98,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.syncService.syncSignOut();
+     this.syncService.syncSignOut();
   }
 
   async closeModal() {

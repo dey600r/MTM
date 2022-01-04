@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // COMPONENTS
 import { HomePage } from './home.page';
@@ -31,7 +32,7 @@ describe('HomePage', () => {
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
-    await translate.use('es').toPromise();
+    await firstValueFrom(translate.use('es'));
   }));
 
   beforeEach(() => {
@@ -39,7 +40,7 @@ describe('HomePage', () => {
     component = fixture.componentInstance;
     component.loadedHeader = true;
     component.loadedBody = true;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {
