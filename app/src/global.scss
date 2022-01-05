@@ -39,6 +39,7 @@
 
 ion-checkbox {
   --border-radius: 50% !important;
+  --size: 20px !important;
 }
 
 /* SELECT */
@@ -57,13 +58,13 @@ ion-checkbox {
   left: 0;
   z-index: 100000;
   width:100%;
-  background-color: #ffffff;
+  background-color: #2A2A2A;
   animation: pulse 5400ms linear forwards;
   animation-delay: 600ms;
 }
 
 .flb {
-  background-color: #ffffff;
+  background-color: #2A2A2A;
   height:100%;
   width:100%;
   display: flex;
@@ -100,8 +101,8 @@ ion-checkbox {
 }
 
 .custom-overlay-img-size {
-  width: 165px;
-  height: 165px;
+  width: 170px;
+  height: 170px;
 }
 
 .custom-overlay-title-animation {
@@ -110,20 +111,20 @@ ion-checkbox {
 }
 
 .custom-overlay-title-size {
-  width: 175px;
-  height: 40px;
+  width: 176px;
+  height: 45px;
 }
 
 @media (min-width: 768px) and (min-height: 550px) {
 
   .custom-overlay-img-size {
-    width: 210px;
-    height: 210px;
+    width: 215px;
+    height: 215px;
   }
 
   .custom-overlay-title-size {
-    width: 213px;
-    height: 45px;
+    width: 215px;
+    height: 50px;
   }
 }
 

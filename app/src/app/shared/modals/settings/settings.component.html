@@ -66,9 +66,9 @@
             <ion-text>{{ 'COMMON.EXPORT' | translate }}</ion-text>
           </ion-label>
           <div class="table-row">
-            <div class="min-width90" (click)="showRealExportPath()">
-              <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathExports"></ion-input>
-              <ion-input placeholder="--" type="text" disabled [(ngModel)]="lastExport"></ion-input>
+            <div class="min-width90 align-grid" (click)="showRealExportPath()">
+              <ion-text class="text-opacity">{{ pathExports }}</ion-text>
+              <ion-text class="text-opacity">{{ lastExport }}</ion-text>
             </div>
             <div class="max-width60">
               <ion-button fill="clear" (click)="exportData()">
@@ -89,8 +89,8 @@
             <ion-text>{{ 'COMMON.IMPORT' | translate }}</ion-text>
           </ion-label>
           <div class="table-row">
-            <div class="min-width90">
-              <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathImports"></ion-input>
+            <div class="min-width90 align-center">
+              <ion-text class="text-opacity">{{ pathImports }}</ion-text>
             </div>
             <div class="max-width60">
               <ion-button fill="clear" (click)="f.click()">

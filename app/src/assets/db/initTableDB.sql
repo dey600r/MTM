@@ -102,7 +102,7 @@ INSERT OR IGNORE INTO "mtmVehicleType" VALUES (3,'O','OTHER');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v3.3.0','2022-01-01 19:00:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (2,'configDistance','KM','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (3,'configMoney','EURO','2006-09-12 12:32:00');
-INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (4,'configTheme','L','2006-09-12 12:32:00');
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (4,'configTheme','D','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (5,'configPrivacy','N','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (6,'configSyncEmail','','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmMaintenance" VALUES (1,'FIRST_REVIEW','1',1000,6,'Y','N',0,NULL,'Y');

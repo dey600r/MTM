@@ -20,6 +20,12 @@
 </ion-header>
 
 <ion-content>
+  <div class="info-main padding-info" *ngIf="vehicles.length === 0">
+    <div class="p-color">
+        <ion-icon class="font-size26" name="analytics"></ion-icon>
+        <h3 class="info-text-notification-empty padding-info-title">{{ 'ALERT.NoDataFound' | translate }}</h3>
+    </div>
+  </div>
   <!-- CHART -->
   <ngx-charts-pie-grid *ngIf="vehicles.length > 0" class="justify-center"
     [view]="dashboard.view"
@@ -27,7 +33,7 @@
     [results]="dashboard.data">
   </ngx-charts-pie-grid>
   <!-- VEHICLE SUMMARY -->
-  <ion-list>
+  <ion-list *ngIf="vehicles.length > 0">
     <ion-list-header (click)="hideVehicleSummary = !hideVehicleSummary" class="padding-list-header">
       <ion-icon size="large" name="analytics"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.INFORMATION_VEHICLE' | translate }}</h3>
@@ -46,7 +52,7 @@
     </ion-item>
   </ion-list>
   <!-- CONFIGURATION SUMMARY -->
-  <ion-list>
+  <ion-list *ngIf="vehicles.length > 0">
     <ion-list-header (click)="showInfoConfigurationLoad()" class="padding-list-header">
       <ion-icon size="large" name="cog"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.CONFIGURATION' | translate }} {{ selectedInfoVehicleConfiguration.nameConfiguration }}</h3>
@@ -123,7 +129,7 @@
     </div>
   </ion-list>
   <!-- REPLACEMENT SUMMARY -->
-  <ion-list>
+  <ion-list *ngIf="vehicles.length > 0">
     <ion-list-header (click)="showInfoReplacementLoad()" class="padding-list-header">
       <ion-icon size="large" name="repeat"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.REPLACEMENT_HISTORY' | translate }}</h3>
