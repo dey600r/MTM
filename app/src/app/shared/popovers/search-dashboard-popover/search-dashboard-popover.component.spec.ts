@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from './search-dashboard-popover.component';
@@ -28,7 +29,7 @@ describe('SearchDashboardPopOverComponent', () => {
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
-    await translate.use('es').toPromise();
+    await firstValueFrom(translate.use('es'));
   });
 
   beforeEach(() => {

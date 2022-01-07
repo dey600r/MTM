@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -10,15 +9,15 @@ import { TranslateService } from '@ngx-translate/core';
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel } from '@models/index';
 import {
-  DataBaseService, VehicleService, CommonService, CalendarService, ControlService, DashboardService, SettingsService
+  DataBaseService, VehicleService, CommonService, CalendarService, ControlService, SettingsService
 } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-vehicle',
   templateUrl: 'add-edit-vehicle.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
-export class AddEditVehicleComponent implements OnInit, OnDestroy {
+export class AddEditVehicleComponent implements OnInit {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
@@ -34,12 +33,6 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
   formatDate = this.calendarService.getFormatCalendar();
   measure: any = {};
 
-  // SUBSCRIPTION
-  operationSubscription: Subscription = new Subscription();
-  configurationSubscription: Subscription = new Subscription();
-  vehicleTypeSubscription: Subscription = new Subscription();
-  settingsSubscription: Subscription = new Subscription();
-
   // TRANSLATE
   translateYearBetween = '';
   translateSelect = '';
@@ -53,7 +46,6 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private calendarService: CalendarService,
     private controlService: ControlService,
-    private dashboardService: DashboardService,
     private settingsService: SettingsService
   ) {
     this.translateYearBetween = this.translator.instant('PAGE_VEHICLE.AddYearBetween', { year: new Date().getFullYear()});
@@ -70,34 +62,26 @@ export class AddEditVehicleComponent implements OnInit, OnDestroy {
       this.vehicle.datePurchase = this.calendarService.getDateStringToDB(new Date());
     }
 
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.measure = this.settingsService.getDistanceSelected(settings);
-      }
-    });
+    // GET SETTINGS
+    const settings = this.dbService.getSystemConfigurationData();
+    if (!!settings && settings.length > 0) {
+      this.measure = this.settingsService.getDistanceSelected(settings);
+    }
 
-    this.configurationSubscription = this.dbService.getConfigurations().subscribe(data => {
-      this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
-    });
+    // GET CONFIGURATIONS
+    this.configurations = this.commonService.orderBy(
+      this.dbService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
 
-    this.vehicleTypeSubscription = this.dbService.getVehicleType().subscribe(data => {
-      if (!!data && data.length > 0 && this.modalInputModel.isCreate) {
-        this.vehicle.vehicleType = new VehicleTypeModel(data[0].code, data[0].description, data[0].id);
-      }
-      this.vehicleTypes = data;
-    });
+    // GET VEHICLE TYPE
+    const dataVehicleType = this.dbService.getVehicleTypeData();
+    if (!!dataVehicleType && dataVehicleType.length > 0 && this.modalInputModel.isCreate) {
+      this.vehicle.vehicleType = new VehicleTypeModel(dataVehicleType[0].code, dataVehicleType[0].description, dataVehicleType[0].id);
+    }
+    this.vehicleTypes = dataVehicleType;
 
-    this.operationSubscription = this.dbService.getOperations().subscribe(data => {
-      // Filter to get less elemnts to better perfomance
-      this.operations = data.filter(x => x.vehicle.id === this.vehicle.id);
-    });
-  }
-
-  ngOnDestroy() {
-    this.configurationSubscription.unsubscribe();
-    this.operationSubscription.unsubscribe();
-    this.vehicleTypeSubscription.unsubscribe();
-    this.settingsSubscription.unsubscribe();
+    // GET OPERATIONS
+    // Filter to get less elemnts to better perfomance
+    this.operations = this.dbService.getOperationsData().filter(x => x.vehicle.id === this.vehicle.id);
   }
 
   saveData(f: Form) {

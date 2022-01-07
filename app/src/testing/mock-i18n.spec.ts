@@ -88,7 +88,23 @@ export class MockTranslate {
             MODE: 'Mode',
             LIGHT: 'Light',
             DARK: 'Dark',
-            SKY: 'Sky'
+            SKY: 'Sky',
+            SUMMARY_VEHICLES: 'Summary of vehicles',
+            SUCCESS: 'Success',
+            WARNING: 'Warning',
+            DANGER: 'Danger',
+            UNUSABLE: 'Unusable',
+            INACTIVE: 'Inactive',
+            INFORMATION_VEHICLE: 'Vehicle information',
+            REPLACEMENT_HISTORY: 'Replacement history',
+            PRIVACY_POLICY: 'Privacy policy',
+            ACCEPT_POLICY: 'Accept privacy policy',
+            REJECT: 'Reject',
+            SYNCHRONIZE: 'Synchronize',
+            DOWNLOAD: 'Download',
+            UPLOAD: 'Upload',
+            EMAIL: 'Email',
+            PASSWORD: 'Password'
         },
         PAGE_HOME: {
             HOME: 'Home',
@@ -124,7 +140,11 @@ export class MockTranslate {
             InfoNotExistsImportFile: 'You didnt select any file to import. This file has to be a export from another MtM application',
             InfoNotExistsFilesToDelete: 'There are not files to delete',
             FileMandatoryJSON: 'The file format has to be a JSON',
-            ErrorFormatDB: 'The content of the file is not correct. This file has to be a export from another MtM application'
+            ErrorFormatDB: 'The content of the file is not correct. This file has to be a export from another MtM application',
+            ConfirmSyncDownload: 'The {{email}} data will be downloaded from the cloud and overwritten in the application. Do you wish to continue?',
+            ConfirmSyncUpload: 'The {{email}} data will be upload in the cloud. Do you wish to continue?',
+            SyncDownload: 'Downloaded from the cloud successfully',
+            SyncUpload: 'Upgraded to cloud successfully'
         },
         PAGE_VEHICLE: {
             YOURS_VEHICLES: 'Your vehicles',
@@ -226,6 +246,7 @@ export class MockTranslate {
             VehicleEmpty: 'There isn\'t vehicles',
             AddMustVehicle: 'You must add vehicles',
             AddVehicleToExpenses: 'You must add motorbikes to see the expenses',
+            AddVehicleToInfo: 'You must add motorbikes to see the summary details',
             OperationEmpty: 'There isn\'t operation',
             AddOperation: 'You must add operation',
             AddOperationToExpenses: 'You must add operations or clean the filter to see the expenses',
@@ -253,7 +274,19 @@ export class MockTranslate {
             NoDataFound: 'No data found',
             PayForMTM: 'To use this functionality you can buy the MtM application',
             InfoCalendarKm: 'You should check the {{replacement}} at {{km}}{{measure}} on the estimated date {{date}}',
-            InfoCalendarTime: 'You should check the {{replacement}} on the date {{date}}'
+            InfoCalendarTime: 'You should check the {{replacement}} on the date {{date}}',
+            InfoVehicleReplacement: 'You changed/reviewed the {{replacement}} in the {{operation}} operation on {{date}} with a labor cost of {{priceOp}}{{coin}}. The {{replacement}} cost {{price}}{{coin}} and had a life of {{km}}{{measure}} in {{time}} months.',
+            InfoAcceptPrivacyPolicy: 'Privacy policy has been accepted succesfully',
+            InfoRejectPrivacyPolicy: 'Privacy policy has been rejected succesfully',
+            InfoErrorSaveSettings: 'There was an error saving data',
+            InfoHavetoAcceptPrivaciyPolicy: 'The MtM application will not collect personal data nor will it be automatically forwarded for processing by external services. The entered data is stored on the device and is manually shared by the user with his other devices. You can read all the details in the \'Privacy Policy\' button or in the settings section. To use the MtM application you must read and accept the privacy policies.',
+            InfoSync: 'You can synchronize your data in the cloud to download it to another device. Only data entered in the application will be sent and will not be used for analysis by third parties. Before synchronizing the data, you must send an e-mail (deyhome.mtm@gmail.com) to the administrator to register in the system.',
+            ErrorSyncLogin: 'There was a login error: {{error}}',
+            ErrorSyncLogout: 'There was a logout error: {{error}}',
+            ErrorSyncDownload: 'There was a download error: {{error}}',
+            ErrorSyncUpload: 'There was a upload error: {{error}}',
+            ErrorSyncDataNotFound: 'No data found in cloud. You should upload first',
+            ErrorSyncVersion: 'The version of MTM should be {{version}} but it is installed {{versionNow}}. You should upload first in cloud or the new version should be installed.'
         },
         DB: {
             MAINTENANCE_WORKSHOP: 'Maintenance Workshop',
@@ -430,7 +463,23 @@ export class MockTranslate {
             MODE: 'Modo',
             LIGHT: 'Claro',
             DARK: 'Oscuro',
-            SKY: 'Cielo'
+            SKY: 'Cielo',
+            SUMMARY_VEHICLES: 'Resumen de vehículos',
+            SUCCESS: 'Correcto',
+            WARNING: 'Aviso',
+            DANGER: 'Peligro',
+            UNUSABLE: 'Inservible',
+            INACTIVE: 'Inactivo',
+            INFORMATION_VEHICLE: 'Información del vehículo',
+            REPLACEMENT_HISTORY: 'Historico de piezas',
+            PRIVACY_POLICY: 'Políticas de privacidad',
+            ACCEPT_POLICY: 'Aceptar políticas de privacidad',
+            REJECT: 'Rechazar',
+            SYNCHRONIZE: 'Sincronizar',
+            DOWNLOAD: 'Descargar',
+            UPLOAD: 'Actualizar',
+            EMAIL: 'Correo',
+            PASSWORD: 'Contraseña'
         },
         PAGE_HOME: {
             HOME: 'Inicio',
@@ -466,7 +515,11 @@ export class MockTranslate {
             InfoNotExistsImportFile: 'No hay seleccionado ningun archivo. Este archivo debe ser una exportación de otra aplicacion MtM',
             InfoNotExistsFilesToDelete: 'No existen archivos para borrar',
             FileMandatoryJSON: 'El formato del fichero tiene que ser un JSON',
-            ErrorFormatDB: 'El contenido del fichero no es el correcto. Este archivo debe ser una exportación de otra aplicacion MtM'
+            ErrorFormatDB: 'El contenido del fichero no es el correcto. Este archivo debe ser una exportación de otra aplicacion MtM',
+            ConfirmSyncDownload: 'Los datos de {{email}} se van a descargar de la nube y se van a sobrescribir en la aplicación. ¿Desea continuar?',
+            ConfirmSyncUpload: 'Los datos de {{email}} se van a actualizar en la nube. ¿Desea continuar?',
+            SyncDownload: 'Se descargó de la nube correctamente',
+            SyncUpload: 'Se actualizó en la nube correctamente'
         },
         PAGE_VEHICLE: {
             YOURS_VEHICLES: 'Tus Vehículos',
@@ -568,6 +621,7 @@ export class MockTranslate {
             VehicleEmpty: 'No se encuentran vehículos',
             AddMustVehicle: 'Añada vehículos',
             AddVehicleToExpenses: 'Añada vehículos para ver los gastos',
+            AddVehicleToInfo: 'Añada vehículos para ver los detalles del resumen',
             OperationEmpty: 'No se encuentran operaciones',
             AddOperation: 'Añada operaciones',
             AddOperationToExpenses: 'Añada operaciones o limpia el filtro para ver los gastos',
@@ -595,7 +649,19 @@ export class MockTranslate {
             NoDataFound: 'No se encuentran datos',
             PayForMTM: 'Para usar esta funcionalidad debes pagar la aplicación MtM completa',
             InfoCalendarKm: 'Deberías revisar {{replacement}} a los {{km}}{{measure}} en la fecha estimada {{date}}',
-            InfoCalendarTime: 'Deberías revisar {{replacement}} en la fecha {{date}}'
+            InfoCalendarTime: 'Deberías revisar {{replacement}} en la fecha {{date}}',
+            InfoVehicleReplacement: 'Se cambió/revisó el {{replacement}} en la operación {{operation}} el {{date}} con un coste de mano de obra de {{priceOp}}{{coin}}. El {{replacement}} costó {{price}}{{coin}} y tenía una vída de {{km}}{{measure}} en {{time}} meses.',
+            InfoAcceptPrivacyPolicy: 'Las poliíticas de privacidad se han aceptado correctamente',
+            InfoRejectPrivacyPolicy: 'Las poliíticas de privacidad se han rechazado correctamente',
+            InfoErrorSaveSettings: 'Ha ocurrido un error guardando los datos',
+            InfoHavetoAcceptPrivaciyPolicy: 'La aplicación MtM no recopilará datos personales ni se reenviarán automáticamente para ser procesados por servicios externos. Los datos introducidos se guardan en el dispositivo y se comparten manualmente por el usuario con sus otros dispositivos. Usted puede leer todos los detalles en el botón de \'Politica de privacidad\' o en la sección de ajustes. Para utilizar la aplicación MtM debe leer y aceptar las políticas de privacidad.',
+            InfoSync: 'Puedes sincronizar tus datos en la nube para descargarlos en otro dispositivo. Sólo se enviarán los datos introducidos en la aplicación y no se utilzarán para ser analizados por terceros. Antes de sincronizar los datos se debe enviar un correo al administrador para darte de alta en el sistema.',
+            ErrorSyncLogin: 'Ha ocurrido un error de login: {{error}}',
+            ErrorSyncLogout: 'Ha ocurrido un error de logout: {{error}}',
+            ErrorSyncDownload: 'Ha ocurrido un error en la descarga: {{error}}',
+            ErrorSyncUpload: 'Ha ocurrido un error en la subida: {{error}}',
+            ErrorSyncDataNotFound: 'No se encuentran datos en la nube. Primero debería actualizarlos.',
+            ErrorSyncVersion: 'La version de MtM debería ser {{version}} pero está instalada {{versionNow}}. Deberias actualizar los datos en la nube o descargar la nueva versión.'
         },
         DB: {
             MAINTENANCE_WORKSHOP: 'Mantenimiento Taller',

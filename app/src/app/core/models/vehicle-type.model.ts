@@ -1,11 +1,7 @@
-import { BaseModel } from './common.model';
+import { BaseCodeDescriptionModel } from './common.model';
 
-export class VehicleTypeModel extends BaseModel {
-    code: string;
-    description: string;
+export class VehicleTypeModel extends BaseCodeDescriptionModel {
     constructor(c: string = '', d: string = '', id: number = -1) {
-        super(id);
-        this.code = c;
-        this.description = d;
+        super(c, d, id);
     }
 }

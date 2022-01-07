@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 // LIBRARIES IONIC
 import { IonicModule } from '@ionic/angular';
-import { SQLite } from '@ionic-native/sqlite/ngx';
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { CalendarModule } from 'ion5-calendar';
-import { File } from '@ionic-native/file/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // LIBRARIES ANGULAR
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,6 +17,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
 import { DataBaseService, CommonService } from '@services/index';
+import { PipeModule } from '@app/shared/modules/pipes.module';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
@@ -30,6 +31,7 @@ import { SettingsComponent } from '@modals/settings/settings.component';
 import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
+import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data
     SettingsComponent,
     InfoCalendarComponent,
     SearchDashboardPopOverComponent,
-    ListDataToUpdateComponent
+    ListDataToUpdateComponent,
+    InfoVehicleComponent
   ],
   entryComponents: [],
   imports: [
@@ -53,6 +56,7 @@ import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data
     HttpClientModule,
     CalendarModule,
     NgxChartsModule,
+    PipeModule,
     TranslateModule.forChild()
   ],
   exports: [

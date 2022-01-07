@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // COMPONENTS
 import { InfoCalendarComponent } from './info-calendar.component';
@@ -29,7 +30,7 @@ describe('InfoCalendarComponent', () => {
     await TestBed.configureTestingModule(config).compileComponents();
     homeService = TestBed.inject(HomeService);
     translate = TestBed.inject(TranslateService);
-    await translate.use('es').toPromise();
+    await firstValueFrom(translate.use('es'));
   }));
 
   beforeEach(() => {

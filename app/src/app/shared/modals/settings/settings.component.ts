@@ -1,25 +1,25 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 
 // LIBRARIES
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { File, Entry } from '@ionic-native/file/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { ModalInputModel } from '@models/index';
+import { ModalInputModel, SystemConfigurationModel } from '@models/index';
 
 // UTILS
-import { Constants, PageEnum, ConstantsTable, ToastTypeEnum } from '@utils/index';
+import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { environment } from '@environment/environment';
 
 // SERVICES
-import { SettingsService, DataBaseService, ControlService, ThemeService } from '@services/index';
+import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService } from '@services/index';
 
 @Component({
   selector: 'settings',
   templateUrl: 'settings.component.html',
-  styleUrls: ['settings.component.scss', '../../../app.component.scss']
+  styleUrls: ['settings.component.scss']
 })
 export class SettingsComponent implements OnInit, OnDestroy {
 
@@ -29,6 +29,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     // MODEL FORM
 
     // DATA SETTINGS
+    listSettings: SystemConfigurationModel[] = [];
     listDistances: any[] = [];
     distanceSelected: any = {};
     listMoney: any[] = [];
@@ -45,8 +46,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
     pathExports = '';
     pathImports = '';
 
-    // SUBSCRIPTION
-    settingsSubscription: Subscription = new Subscription();
+    // DATA PRIVACY POLICY
+    acceptPrivacyPolicy: boolean;
+
+    // SYNC
+    syncEmail = '';
+    syncCode = '';
+    synchronizingDownload = false;
+    synchronizingUpload = false;
+    pwdSync = 0;
 
     constructor(private navParams: NavParams,
                 private changeDetector: ChangeDetectorRef,
@@ -57,7 +65,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 private sqlitePorter: SQLitePorter,
                 private controlService: ControlService,
                 private translator: TranslateService,
-                private themeService: ThemeService) {
+                private themeService: ThemeService,
+                private syncService: SyncService
+      ) {
   }
 
   ngOnInit() {
@@ -71,24 +81,24 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.listMoney = this.settingsService.getListMoney();
     this.listThemes = this.settingsService.getListThemes();
 
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.distanceSelected = this.settingsService.getDistanceSelected(settings);
-        this.moneySelected = this.settingsService.getMoneySelected(settings);
-        this.themeSelected = this.settingsService.getThemeSelected(settings);
-      }
-    });
+    this.listSettings = this.dbService.getSystemConfigurationData();
+    if (!!this.listSettings && this.listSettings.length > 0) {
+      this.distanceSelected = this.settingsService.getDistanceSelected(this.listSettings);
+      this.moneySelected = this.settingsService.getMoneySelected(this.listSettings);
+      this.themeSelected = this.settingsService.getThemeSelected(this.listSettings);
+      this.acceptPrivacyPolicy = this.settingsService.getPrivacySelected(this.listSettings);
+      this.syncEmail = this.settingsService.getSyncEmailSelected(this.listSettings);
+    }
 
     // EXPORTS AND IMPORTS
-
     this.pathExports = this.settingsService.getRootRelativePath(Constants.EXPORT_DIR_NAME);
     this.pathImports = this.translator.instant('COMMON.SELECT_FILE');
 
     this.getLastExportFile();
   }
 
-  ngOnDestroy() {
-    this.settingsSubscription.unsubscribe();
+  ngOnDestroy(): void {
+     this.syncService.syncSignOut();
   }
 
   async closeModal() {
@@ -108,6 +118,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
   changeTheme() {
     this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, this.themeSelected.code);
     this.themeService.changeTheme(this.themeSelected.code);
+  }
+
+  changePrivacy() {
+    const settings = this.dbService.getSystemConfigurationData();
+    const policyDB = this.settingsService.getPrivacySelected(settings);
+    if (policyDB !== this.acceptPrivacyPolicy) {
+      this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_PRIVACY,
+        (this.acceptPrivacyPolicy ? Constants.DATABASE_YES : Constants.DATABASE_NO)).then(x => {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS,
+          (this.acceptPrivacyPolicy ? 'ALERT.InfoAcceptPrivacyPolicy' : 'ALERT.InfoRejectPrivacyPolicy'));
+      }).catch(e => {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings');
+      });
+    }
   }
 
   /** EXPORTS AND IMPORTS */
@@ -162,7 +186,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const contentFile: string = e.target.result;
-      if (this.validateStructureJsonDB(contentFile)) {
+      if (this.settingsService.validateStructureJsonDB(contentFile, this.dbService.getAllTables())) {
         this.pathImports = file.name;
         this.importData(contentFile, event);
       } else {
@@ -178,7 +202,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   importData(contentFile: string, event: any) {
-      this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.MANAGE_DATA'),
+    this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.MANAGE_DATA'),
       this.translator.instant('PAGE_HOME.ConfirmImportDB'),
         {
           text: this.translator.instant('COMMON.ACCEPT'),
@@ -187,22 +211,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           }
         },
         () => { this.clearInputFile(event); }
-      );
-  }
-
-  validateStructureJsonDB(contentFile: string): boolean {
-    return contentFile.includes(ConstantsTable.TABLE_MTM_CONFIGURATION) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_CONFIG_MAINT) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_OPERATION) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_OPERATION_TYPE) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_VEHICLE) &&
-    contentFile.includes(ConstantsTable.TABLE_MTM_VEHICLE_TYPE);
+    );
   }
 
   importJsonToDB(contentFile: string, event: any) {
@@ -213,9 +222,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.file.writeFile(this.settingsService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
         JSON.stringify(json), { replace : true}).then(() => {
             // IMPORT DB
-            this.sqlitePorter.importJsonToDb(this.dbService.getDB(), JSON.parse(contentFile)).then((ok: any) => {
-              this.settingsService.insertSystemConfiguration();
-              this.dbService.loadAllTables();
+            this.sqlitePorter.importJsonToDb(this.dbService.getDB(), JSON.parse(contentFile)).then(() => {
+              this.settingsService.finishImportLoad();
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
             }).catch(e => {
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB');
@@ -296,5 +304,60 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }).catch(err => {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles');
     });
+  }
+
+  // PRIVACY POLICY
+  showPrivacyPolicy() {
+    this.controlService.showPrivacyPolicy();
+  }
+
+  // SYNCHRONIZE
+  unlockSync(order: number, num: number) {
+    if (!environment.isFree &&
+        ((order === 1 && this.pwdSync === 0) ||
+        (order === 3 && this.pwdSync === 2) ||
+        (order === 2 && this.pwdSync === 7) ||
+        (order === 4 && this.pwdSync === 15) ||
+        (order === 3 && this.pwdSync === 24))) {
+      this.pwdSync += num;
+    } else {
+      this.pwdSync = 0;
+    }
+  }
+
+  showInfoSynchronize() {
+    this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.INFO, 'ALERT.InfoSync', null, Constants.DELAY_TOAST_HIGH);
+  }
+
+  syncDownload() {
+    this.saveSyncData();
+    this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.SYNCHRONIZE'),
+      this.translator.instant('PAGE_HOME.ConfirmSyncDownload', { email: this.syncEmail }),
+        {
+          text: this.translator.instant('COMMON.ACCEPT'),
+          handler: () => {
+            this.synchronizingDownload = true;
+            this.syncService.syncDownload(this.syncEmail, this.syncCode).then(() => { this.synchronizingDownload = false; });
+          }
+        });
+  }
+
+  syncUpload() {
+    this.saveSyncData();
+    this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.SYNCHRONIZE'),
+      this.translator.instant('PAGE_HOME.ConfirmSyncUpload', { email: this.syncEmail }),
+        {
+          text: this.translator.instant('COMMON.ACCEPT'),
+          handler: () => {
+            this.synchronizingUpload = true;
+            this.syncService.syncUpload(this.syncEmail, this.syncCode).then(() => { this.synchronizingUpload = false; });
+          }
+        });
+  }
+
+  saveSyncData() {
+    if (this.settingsService.getSyncEmailSelected(this.listSettings) !== this.syncEmail) {
+      this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_SYNC_EMAIL, this.syncEmail);
+    }
   }
 }

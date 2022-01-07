@@ -83,7 +83,7 @@ export class CalendarService {
     calculateKmVehicleEstimated(vehicle: VehicleModel): number {
         const kmPerM: number = this.calculateKmsPerMonth(vehicle);
         const dateKm: Date = new Date(vehicle.dateKms);
-        return vehicle.km + (Math.round((kmPerM / 30) * this.dayDiff(dateKm, new Date())));
+        return vehicle.km + (vehicle.active ? (Math.round((kmPerM / 30) * this.dayDiff(dateKm, new Date()))) : 0 );
     }
 
     calculateKmsPerMonth(vehicle: VehicleModel): number {
@@ -209,9 +209,9 @@ export class CalendarService {
 
     calculateKmInfoNotification(vehicle: VehicleModel, kmInit: number, km: number): Date {
         const kmPerM: number = this.calculateKmsPerMonth(vehicle);
-        const diff: number = Math.round((km - kmInit) / kmPerM);
+        const diffInDays: number = Math.round((km - kmInit) / (kmPerM / 30));
         const date: Date = new Date(vehicle.dateKms);
-        date.setMonth(date.getMonth() + diff);
+        date.setDate(date.getDate() + diffInDays);
         return date;
     }
 

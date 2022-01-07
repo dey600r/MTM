@@ -4,17 +4,19 @@ import { HttpClient } from '@angular/common/http';
 import { Platform } from '@ionic/angular';
 
 // PLUGINS
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
 
 // SERVICES
 import { DataBaseService } from './data-base.service';
+import { SqlService } from './sql.service';
 
 // CONFIGURATIONS
 import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { SqlService } from './sql.service';
-import { Constants, ConstantsTable } from '../utils';
-import { SystemConfigurationModel } from '../models';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+
+// UTILS
+import { Constants, ConstantsTable } from '@utils/index';
+import { SystemConfigurationModel } from '@models/index';
 
 describe('DataBaseService', () => {
     let service: DataBaseService;

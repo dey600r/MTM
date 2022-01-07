@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
@@ -11,9 +10,9 @@ import { DataBaseService, CommonService, ConfigurationService, ControlService, S
 @Component({
   selector: 'app-add-edit-configuration',
   templateUrl: 'add-edit-configuration.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
-export class AddEditConfigurationComponent implements OnInit, OnDestroy {
+export class AddEditConfigurationComponent implements OnInit {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
@@ -26,10 +25,6 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
   maintenances: MaintenanceModel[] = [];
   toggleMaintenaces: boolean[] = [];
   measure: any = {};
-
-  // SUBSCRIPTION
-  maintenanceSubscription: Subscription = new Subscription();
-  settingsSubscription: Subscription = new Subscription();
 
   constructor(
     private modalController: ModalController,
@@ -44,11 +39,10 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.measure = this.settingsService.getDistanceSelected(settings);
-      }
-    });
+    const settings = this.dbService.getSystemConfigurationData();
+    if (!!settings && settings.length > 0) {
+      this.measure = this.settingsService.getDistanceSelected(settings);
+    }
 
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
@@ -57,21 +51,14 @@ export class AddEditConfigurationComponent implements OnInit, OnDestroy {
       this.configuration.id = -1;
     }
 
-    this.maintenanceSubscription = this.dbService.getMaintenance().subscribe(data => {
-      this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
-      if (this.modalInputModel.isCreate) {
-        this.maintenances.forEach(x => this.toggleMaintenaces = [...this.toggleMaintenaces, false]);
-      } else {
-        this.maintenances.forEach(x => {
-          this.toggleMaintenaces = [...this.toggleMaintenaces, this.configuration.listMaintenance.some(y => y.id === x.id)];
-        });
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.maintenanceSubscription.unsubscribe();
-    this.settingsSubscription.unsubscribe();
+    this.maintenances = this.commonService.orderBy(this.dbService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+    if (this.modalInputModel.isCreate) {
+      this.maintenances.forEach(x => this.toggleMaintenaces = [...this.toggleMaintenaces, false]);
+    } else {
+      this.maintenances.forEach(x => {
+        this.toggleMaintenaces = [...this.toggleMaintenaces, this.configuration.listMaintenance.some(y => y.id === x.id)];
+      });
+    }
   }
 
   saveData(f: Form) {

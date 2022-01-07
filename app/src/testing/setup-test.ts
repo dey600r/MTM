@@ -37,6 +37,7 @@ import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-ed
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
 import { DashboardComponent } from '@modals/dashboard/dashboard.component';
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
+import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 import { SettingsComponent } from '@modals/settings/settings.component';
 import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
@@ -78,6 +79,7 @@ export class SetupTest {
       InfoNotificationComponent,
       SettingsComponent,
       InfoCalendarComponent,
+      InfoVehicleComponent,
       SearchDashboardPopOverComponent,
       ListDataToUpdateComponent
     ],

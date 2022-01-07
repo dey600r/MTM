@@ -9,8 +9,9 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 // LIBRARIES IONIC
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
+import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 // LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
@@ -55,6 +56,7 @@ import { PipeModule } from '@modules/pipes.module';
     StatusBar,
     SplashScreen,
     TranslateStore,
+    InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

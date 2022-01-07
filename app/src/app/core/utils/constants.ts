@@ -32,6 +32,8 @@ export class Constants {
 
     static OWNER_YO = 'yo';
     static OWNER_ME = 'me';
+    static OWNER_OTHER = 'other';
+    static OWNER_OTRO = 'otro';
 
     static STATE_INFO_OPERATION_EMPTY = 'operation_empty';
     static STATE_INFO_VEHICLE_EMPTY = 'vehicle_empty';
@@ -47,6 +49,8 @@ export class Constants {
     static KEY_CONFIG_DISTANCE = 'configDistance';
     static KEY_CONFIG_MONEY = 'configMoney';
     static KEY_LAST_UPDATE_DB = 'lastUpdate';
+    static KEY_CONFIG_PRIVACY = 'configPrivacy';
+    static KEY_CONFIG_SYNC_EMAIL = 'configSyncEmail';
 
     static VEHICLE_TYPE_CODE_MOTO = 'M';
     static VEHICLE_TYPE_CODE_CAR = 'C';
@@ -83,4 +87,11 @@ export class Constants {
     static FORMAT_FILE_DB = 'json';
     static EXPORT_FILE_NAME = 'mtmDB';
     static BACKUP_FILE_NAME = 'mtmBackup';
+    static BACKUP_SYNC_FILE_NAME = 'mtmSyncBackup';
+
+    // URLS
+    static MTM_URL_PRIVACY_POLICY = 'https://deyapps-a0de1.web.app/infomtm/privacypolicy';
+
+    // SYNC
+    static SYNC_PATH_USERS = 'users';
 }

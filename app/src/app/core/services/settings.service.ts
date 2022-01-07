@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
-import { File } from '@ionic-native/file/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // UTILS
 import { Constants, ConstantsTable } from '@utils/index';
@@ -72,26 +72,52 @@ export class SettingsService {
         return this.mapToAnyCustomSetting(select.code, select.value, select.valueLarge);
     }
 
+    getPrivacySelected(settings: SystemConfigurationModel[]): boolean {
+        return settings.find(y => y.key === Constants.KEY_CONFIG_PRIVACY).value === Constants.DATABASE_YES;
+    }
+
+    getSyncEmailSelected(settings: SystemConfigurationModel[]): string {
+        return settings.find(y => y.key === Constants.KEY_CONFIG_SYNC_EMAIL).value;
+    }
+
+    getVersionSelected(settings: SystemConfigurationModel[]): SystemConfigurationModel {
+        return settings.find(y => y.key === Constants.KEY_LAST_UPDATE_DB);
+    }
+
     // SAVE DATA
 
-    saveSystemConfiguration(key: string, value: string) {
+    saveSystemConfiguration(key: string, value: string): Promise<any> {
         if (!!value) {
-            this.dbService.executeScriptDataBase(
-                this.sqlService.updateSqlSystemConfiguration(key, value, this.calendarService.getDateStringToDB(new Date())),
-                [ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
+             return this.dbService.executeScriptDataBase(
+                        this.sqlService.updateSqlSystemConfiguration(key, value,
+                            this.calendarService.getDateStringToDB(new Date())), [ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
         }
+        return null;
     }
 
     insertSystemConfiguration() {
-        this.dbService.executeScriptDataBase(
-            this.sqlService.insertSqlSystemConfiguration(
-                [new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_LIGHT, new Date(), 4)]));
+        const data = this.dbService.getSystemConfigurationData();
+        let sql = '';
+        if (!data.some(x => x.key === Constants.KEY_CONFIG_THEME)) {
+            sql = this.sqlService.insertSqlSystemConfiguration(
+                    [new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_LIGHT, new Date(), 4)]);
+        }
+        if (!data.some(x => x.key === Constants.KEY_CONFIG_PRIVACY)) {
+            sql += this.sqlService.insertSqlSystemConfiguration(
+                    [new SystemConfigurationModel(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_NO, new Date(), 5)]);
+        }
+        if (!data.some(x => x.key === Constants.KEY_CONFIG_SYNC_EMAIL)) {
+            sql += this.sqlService.insertSqlSystemConfiguration(
+                    [new SystemConfigurationModel(Constants.KEY_CONFIG_SYNC_EMAIL, '', new Date(), 6)]);
+        }
+        if (sql) {
+            this.dbService.executeScriptDataBase(sql);
+        }
     }
 
     mapToAnyCustomSetting(c: string, v: string, vl: string): any {
         return { code: c, value: v, valueLarge: vl };
     }
-
 
     /** EXPORTS AND IMPORTS */
 
@@ -161,8 +187,17 @@ export class SettingsService {
 
     generateNameExportFile(fileNameExport: string = Constants.EXPORT_FILE_NAME) {
         const today: Date = new Date();
-        const nameFile = `${fileNameExport}_${today.getFullYear()}${today.getMonth()}${today.getDate()}_` +
+        const nameFile = `${fileNameExport}_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}_` +
             `${today.getHours()}${today.getMinutes()}${today.getSeconds()}.${Constants.FORMAT_FILE_DB}`;
         return nameFile;
     }
+
+    finishImportLoad() {
+        this.dbService.loadAllTables();
+        setTimeout(() => { this.insertSystemConfiguration(); }, 500);
+    }
+
+    validateStructureJsonDB(contentFile: string, listTables: string[]): boolean {
+        return listTables.every(x => contentFile.includes(x));
+      }
 }

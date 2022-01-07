@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -19,13 +19,14 @@ import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum } fr
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
+import { BasePage } from '@pages/base.page';
 
 @Component({
   selector: 'app-operation',
   templateUrl: 'operation.page.html',
-  styleUrls: ['operation.page.scss', '../../app.component.scss']
+  styleUrls: ['operation.page.scss']
 })
-export class OperationPage {
+export class OperationPage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
@@ -47,9 +48,9 @@ export class OperationPage {
   measure: any = {};
   coin: any = {};
 
-  constructor(private platform: Platform,
+  constructor(public platform: Platform,
               private dbService: DataBaseService,
-              private translator: TranslateService,
+              public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
               private vehicleService: VehicleService,
@@ -57,13 +58,11 @@ export class OperationPage {
               private dashboardService: DashboardService,
               private settingsService: SettingsService,
               private detector: ChangeDetectorRef) {
-    this.platform.ready().then(() => {
-      let userLang = navigator.language.split('-')[0];
-      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-      this.translator.use(userLang);
-    }).finally(() => {
+    super(platform, translator);
+  }
+
+  ngOnInit(): void {
       this.initPage();
-    });
   }
 
   /** INIT */
@@ -82,8 +81,12 @@ export class OperationPage {
     this.dbService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
-        this.vehicleSelected = (this.vehicleSelected === -1 ?
-          this.vehicles[0].id : this.vehicles.find(x => x.id === this.vehicleSelected).id);
+        if (this.vehicleSelected === -1) {
+          this.vehicleSelected = this.vehicles[0].id;
+        } else {
+          const vehicle = this.vehicles.find(x => x.id === this.vehicleSelected);
+          this.vehicleSelected = (vehicle ? vehicle.id : this.vehicles[0].id);
+        }
       } else {
         this.vehicles = [];
         this.vehicleSelected = -1;
@@ -180,10 +183,6 @@ export class OperationPage {
       new ModalInputModel(true, null, [], PageEnum.OPERATION));
   }
 
-  closePopover() {
-    this.controlService.closePopover();
-  }
-
   /** METHODS */
 
   calculatePriceOperation(op: OperationModel): number {
@@ -208,7 +207,7 @@ export class OperationPage {
   }
 
   activeSegmentScroll(): boolean {
-    return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && this.vehicles.length > 2) || this.vehicles.length > 10;
+    return this.controlService.activeSegmentScroll(this.vehicles.length);
   }
 
   filterOperations(filter: SearchDashboardModel, operations: OperationModel[]): OperationModel[] {
@@ -229,11 +228,7 @@ export class OperationPage {
   /** ICONS */
 
   loadIconDashboard(operations: OperationModel[]): void {
-    if (operations.length === 0) {
-      this.iconNameHeaderLeft = 'information-circle';
-    } else {
-      this.iconNameHeaderLeft = 'bar-chart';
-    }
+    this.iconNameHeaderLeft = this.vehicleService.loadIconDashboard<OperationModel>(operations);
   }
 
   getIconInfoDashboard(): string {

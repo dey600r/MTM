@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { SqlService } from './sql.service';
@@ -20,7 +21,7 @@ describe('SqlService', () => {
         }).compileComponents();
         service = TestBed.inject(SqlService);
         translate = TestBed.inject(TranslateService);
-        await translate.use('es').toPromise();
+        await firstValueFrom(translate.use('es'));
     });
 
     it('should be created', () => {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -12,7 +12,8 @@ import {
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel, ConfigurationModel, WearReplacementProgressBarViewModel, MaintenanceElementModel
+  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel,
+  ConfigurationModel, WearReplacementProgressBarViewModel, MaintenanceElementModel, SystemConfigurationModel
 } from '@models/index';
 import { WarningWearEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 
@@ -23,13 +24,14 @@ import { SettingsComponent } from '@modals/settings/settings.component';
 import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-edit-maintenance.component';
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
+import { BasePage } from '@pages/base.page';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss', '../../app.component.scss']
+  styleUrls: ['home.page.scss']
 })
-export class HomePage implements OnInit {
+export class HomePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
@@ -47,6 +49,7 @@ export class HomePage implements OnInit {
   hideOpButton = false;
   hideFabButton = false;
   measure: any = {};
+  modalSettings: any = null;
 
   showInfoMaintenance: boolean[] = [];
 
@@ -55,9 +58,9 @@ export class HomePage implements OnInit {
   vehicleSubscription: Subscription = new Subscription();
   maintenanceSubscription: Subscription = new Subscription();
 
-  constructor(private platform: Platform,
+  constructor(public platform: Platform,
               private dbService: DataBaseService,
-              private translator: TranslateService,
+              public translator: TranslateService,
               private dashboardService: DashboardService,
               private calendarService: CalendarService,
               private configurationService: ConfigurationService,
@@ -65,15 +68,18 @@ export class HomePage implements OnInit {
               private vehicleService: VehicleService,
               private settingsService: SettingsService,
               private themeService: ThemeService,
-              private homeService: HomeService) {
-    this.platform.ready().then(() => {
-      let userLang = navigator.language.split('-')[0];
-      userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-      this.translator.use(userLang);
-    });
+              private homeService: HomeService,
+              private modalController: ModalController) {
+    super(platform, translator);
   }
 
   ngOnInit() {
+    this.initPage();
+  }
+
+  /** INIT */
+
+  initPage() {
     this.getSystemConfiguration();
     this.initDashboard();
   }
@@ -84,6 +90,7 @@ export class HomePage implements OnInit {
         this.measure = this.settingsService.getDistanceSelected(settings);
         const theme = this.settingsService.getThemeSelected(settings);
         this.themeService.changeTheme(theme.code);
+        this.openPrivacyPolicy(settings);
       }
     });
   }
@@ -169,7 +176,7 @@ export class HomePage implements OnInit {
     if (this.controlService.getDateLastUse().toDateString() !== new Date().toDateString()) {
       this.loadedHeader = false;
       this.loadedBody = false;
-      this.dbService.vehicles.next(this.dbService.vehiclesData);
+      this.dbService.setVehicles(this.dbService.getVehiclesData());
       this.controlService.setDateLastUse();
     }
     this.timeOutLoader();
@@ -240,7 +247,7 @@ export class HomePage implements OnInit {
   }
 
   activeSegmentScroll(): boolean {
-    return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && this.wears.length > 2) || this.wears.length > 10;
+    return this.controlService.activeSegmentScroll(this.wears.length);
   }
 
   // MODALS
@@ -285,8 +292,8 @@ export class HomePage implements OnInit {
     }
   }
 
-  openSettings() {
-    this.controlService.openModal(PageEnum.HOME,
+  async openSettings() {
+    this.modalSettings = await this.controlService.openModal(PageEnum.HOME,
       SettingsComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
   }
 
@@ -350,6 +357,40 @@ export class HomePage implements OnInit {
   getTimePercent(wearMain: WearMaintenanceProgressBarViewModel, wearRep: WearReplacementProgressBarViewModel): string {
     return `${this.homeService.getDateCalculateMonths(wearMain.timeMaintenance - wearRep.calculateMonths)} /` +
       ` ${this.homeService.getDateCalculateMonths(wearMain.timeMaintenance)}`;
+  }
+
+  // PRIVACY POLICY
+  openPrivacyPolicy(settings: SystemConfigurationModel[]) {
+    if (!this.settingsService.getPrivacySelected(settings)) {
+      setTimeout(() => {
+        if (this.modalSettings) {
+          this.controlService.closeModal(this.modalController);
+        }
+        this.controlService.alertCustom(PageEnum.HOME, 'COMMON.PRIVACY_POLICY', 'ALERT.InfoHavetoAcceptPrivaciyPolicy', [{
+          text: this.translator.instant('COMMON.PRIVACY_POLICY'),
+          handler: () => {
+            this.controlService.showPrivacyPolicy();
+            return false;
+          },
+        },
+        {
+          text: this.translator.instant('COMMON.REJECT'),
+          handler: () => {
+            this.controlService.closeApp();
+          },
+        },
+        {
+          text: this.translator.instant('COMMON.ACCEPT'),
+          handler: () => {
+            this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_YES).then(x => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'ALERT.InfoAcceptPrivacyPolicy');
+            }).catch(e => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings');
+            });
+          },
+        }]);
+      }, 1000);
+    }
   }
 
 }

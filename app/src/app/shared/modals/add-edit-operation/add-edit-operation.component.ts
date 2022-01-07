@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -19,9 +18,9 @@ import {
 @Component({
   selector: 'app-add-edit-operation',
   templateUrl: 'add-edit-operation.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
-export class AddEditOperationComponent implements OnInit, OnDestroy {
+export class AddEditOperationComponent implements OnInit {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
@@ -37,16 +36,10 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
   maintenanceElement: MaintenanceElementModel[] = [];
   maintenanceElementSelect: MaintenanceElementModel[] = [];
   idMaintenanceElementSelect: number[] = [];
+  owners: any [] = [];
   formatDate = this.calendarService.getFormatCalendar();
   measure: any = {};
   coin: any = {};
-
-  // SUBSCRIPTION
-  operationSubscription: Subscription = new Subscription();
-  operationTypeSubscription: Subscription = new Subscription();
-  vehicleSubscription: Subscription = new Subscription();
-  maintenanceElementSubscription: Subscription = new Subscription();
-  settingsSubscription: Subscription = new Subscription();
 
   // Translate
   translateWorkshop = '';
@@ -87,42 +80,34 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
       this.operation.operationType.id = null;
     }
 
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.measure = this.settingsService.getDistanceSelected(settings);
-        this.coin = this.settingsService.getMoneySelected(settings);
-      }
-    });
+    // GET SETTINGS
+    const settings = this.dbService.getSystemConfigurationData();
+    if (!!settings && settings.length > 0) {
+      this.measure = this.settingsService.getDistanceSelected(settings);
+      this.coin = this.settingsService.getMoneySelected(settings);
+    }
 
-    this.vehicleSubscription = this.dbService.getVehicles().subscribe(data => {
-      this.vehicles = data;
-    });
+    // GET VEHICLES
+    this.vehicles = this.dbService.getVehiclesData();
 
-    this.operationTypeSubscription = this.dbService.getOperationType().subscribe(data => {
-      this.operationType = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
-    });
+    // GET OPERATION TYPE
+    this.operationType = this.commonService.orderBy(
+      this.dbService.getOperationTypeData(), ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
 
-    this.maintenanceElementSubscription = this.dbService.getMaintenanceElement().subscribe(data => {
-      this.maintenanceElement = this.configurationService.orderMaintenanceElement(data);
-      this.idMaintenanceElementSelect = [];
-      this.maintenanceElementSelect = [];
-      if (!!this.operation.listMaintenanceElement && this.operation.listMaintenanceElement.length > 0) {
-        this.maintenanceElementSelect = this.operation.listMaintenanceElement;
-        this.idMaintenanceElementSelect = this.operation.listMaintenanceElement.map(x => x.id);
-      }
-    });
+    // GET MAINTENANCE ELEMENT
+    this.maintenanceElement = this.configurationService.orderMaintenanceElement(this.dbService.getMaintenanceElementData());
+    this.idMaintenanceElementSelect = [];
+    this.maintenanceElementSelect = [];
+    if (!!this.operation.listMaintenanceElement && this.operation.listMaintenanceElement.length > 0) {
+      this.maintenanceElementSelect = this.operation.listMaintenanceElement;
+      this.idMaintenanceElementSelect = this.operation.listMaintenanceElement.map(x => x.id);
+    }
 
-    this.operationSubscription = this.dbService.getOperations().subscribe(data => {
-      this.operations = data;
-    });
-  }
+    // GET OPERATIONS
+    this.operations = this.dbService.getOperationsData();
 
-  ngOnDestroy() {
-    this.operationSubscription.unsubscribe();
-    this.vehicleSubscription.unsubscribe();
-    this.operationTypeSubscription.unsubscribe();
-    this.maintenanceElementSubscription.unsubscribe();
-    this.settingsSubscription.unsubscribe();
+    // OWNERS
+    this.loadOwner();
   }
 
   saveData(f: Form) {
@@ -404,5 +389,26 @@ export class AddEditOperationComponent implements OnInit, OnDestroy {
     }
 
     return resultDate;
+  }
+
+  loadOwner() {
+    if (this.operation.owner) {
+      if (this.operation.owner.toLowerCase() === Constants.OWNER_ME ||
+          this.operation.owner.toLowerCase() === Constants.OWNER_YO) {
+        this.operation.owner = Constants.OWNER_YO;
+      } else if (this.operation.owner.toLowerCase() === Constants.OWNER_OTHER ||
+                  this.operation.owner.toLowerCase() === Constants.OWNER_OTRO) {
+        this.operation.owner = Constants.OWNER_OTRO;
+      } else {
+        this.operation.owner = Constants.OWNER_YO;
+      }
+    } else {
+      this.operation.owner = Constants.OWNER_YO;
+    }
+    this.operation.owner = (this.operation.owner ? this.operation.owner.toLowerCase() : Constants.OWNER_YO);
+    this.owners = [
+      { id: Constants.OWNER_YO, value: 'COMMON.ME' },
+      { id: Constants.OWNER_OTRO, value: 'DB.OTHER' }
+    ];
   }
  }

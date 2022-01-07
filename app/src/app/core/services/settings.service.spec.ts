@@ -1,4 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { SettingsService } from './settings.service';
@@ -11,7 +12,7 @@ import { Constants } from '@utils/index';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
-import { File } from '@ionic-native/file/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 describe('SettingsService', () => {
     let service: SettingsService;
@@ -30,7 +31,7 @@ describe('SettingsService', () => {
         dbService = TestBed.inject(DataBaseService);
         sqlService = TestBed.inject(SqlService);
         file = TestBed.inject(File);
-        await translate.use('es').toPromise();
+        await firstValueFrom(translate.use('es'));
     });
 
     it('should be created', () => {
@@ -48,7 +49,7 @@ describe('SettingsService', () => {
     });
 
     it('should get list distance - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const result = service.getListDistance();
         expect(result[0].value).toEqual(MockTranslate.EN.COMMON.KM);
         expect(result[0].valueLarge).toEqual(MockTranslate.EN.COMMON.KILOMETERS);
@@ -70,7 +71,7 @@ describe('SettingsService', () => {
     });
 
     it('should get list money - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const result = service.getListMoney();
         expect(result[0].valueLarge).toEqual(MockTranslate.EN.COMMON.EURO);
         expect(result[1].valueLarge).toEqual(MockTranslate.EN.COMMON.DOLLAR);
@@ -91,7 +92,7 @@ describe('SettingsService', () => {
     });
 
     it('should get list theme - EN', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         const result = service.getListThemes();
         expect(result[0].value).toEqual(MockTranslate.EN.COMMON.LIGHT);
         expect(result[1].value).toEqual(MockTranslate.EN.COMMON.DARK);
@@ -120,27 +121,47 @@ describe('SettingsService', () => {
     });
 
     it('should save system configuration key', () => {
+        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
         const spyDBService = spyOn(dbService, 'executeScriptDataBase');
         const spySqlService = spyOn(sqlService, 'updateSqlSystemConfiguration');
+        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
         service.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_DARK);
         expect(spyDBService).toHaveBeenCalledTimes(1);
         expect(spySqlService).toHaveBeenCalledTimes(1);
     });
 
     it('should not save system configuration key', () => {
+        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
         const spyDBService = spyOn(dbService, 'executeScriptDataBase');
         const spySqlService = spyOn(sqlService, 'updateSqlSystemConfiguration');
+        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
         service.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, null);
         expect(spyDBService).toHaveBeenCalledTimes(0);
         expect(spySqlService).toHaveBeenCalledTimes(0);
     });
 
-    it('should save system configuration key', () => {
+    it('should insert system configuration key', () => {
+        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
+        const spyDBServiceSystem = spyOn(dbService, 'getSystemConfigurationData').and.returnValue([]);
         const spyDBService = spyOn(dbService, 'executeScriptDataBase');
-        const spySqlService = spyOn(sqlService, 'insertSqlSystemConfiguration');
+        const spySqlService = spyOn(sqlService, 'insertSqlSystemConfiguration').and.returnValue('sql');
+        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
         service.insertSystemConfiguration();
+        expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
         expect(spyDBService).toHaveBeenCalledTimes(1);
-        expect(spySqlService).toHaveBeenCalledTimes(1);
+        expect(spySqlService).toHaveBeenCalledTimes(3);
+    });
+
+    it('should not insert system configuration key', () => {
+        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
+        const spyDBServiceSystem = spyOn(dbService, 'getSystemConfigurationData').and.returnValue(MockData.SystemConfigurations);
+        const spyDBService = spyOn(dbService, 'executeScriptDataBase');
+        const spySqlService = spyOn(sqlService, 'insertSqlSystemConfiguration').and.returnValue('sql');
+        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
+        service.insertSystemConfiguration();
+        expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
+        expect(spyDBService).toHaveBeenCalledTimes(0);
+        expect(spySqlService).toHaveBeenCalledTimes(0);
     });
 
     it('should get data directory', () => {
@@ -239,10 +260,10 @@ describe('SettingsService', () => {
     it('should generate name export file', () => {
         const today = new Date();
         expect(service.generateNameExportFile())
-            .toEqual(`${Constants.EXPORT_FILE_NAME}_${today.getFullYear()}${today.getMonth()}${today.getDate()}_` +
+            .toEqual(`${Constants.EXPORT_FILE_NAME}_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}_` +
             `${today.getHours()}${today.getMinutes()}${today.getSeconds()}.${Constants.FORMAT_FILE_DB}`);
         expect(service.generateNameExportFile('test'))
-            .toEqual(`test_${today.getFullYear()}${today.getMonth()}${today.getDate()}_` +
+            .toEqual(`test_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}_` +
             `${today.getHours()}${today.getMinutes()}${today.getSeconds()}.${Constants.FORMAT_FILE_DB}`);
     });
 });

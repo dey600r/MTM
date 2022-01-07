@@ -10,7 +10,7 @@ import { ConfigurationService, ControlService } from '@services/index';
 @Component({
   selector: 'app-add-edit-maintenance-element',
   templateUrl: 'add-edit-maintenance-element.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
 export class AddEditMaintenanceElementComponent implements OnInit {
 

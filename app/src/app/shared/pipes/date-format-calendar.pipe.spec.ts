@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 // LIBRARIES
 import * as Moment from 'moment';
@@ -21,7 +22,7 @@ describe('DateFormatCalendarPipe', () => {
         TestBed.configureTestingModule(SetupTest.config);
         pipe = new DateFormatCalendarPipe(TestBed.inject(CalendarService));
         translate = TestBed.inject(TranslateService);
-        await translate.use('es').toPromise();
+        await firstValueFrom(translate.use('es'));
     });
 
     it('should be created', () => {
@@ -37,7 +38,7 @@ describe('DateFormatCalendarPipe', () => {
     });
 
     it('should be transform date to format MM/DD/YYYY', async () => {
-        await translate.use('en').toPromise();
+        await firstValueFrom(translate.use('en'));
         expect(pipe.transform(new Date(2020, 2, 5, 1, 1, 1))).toEqual('03/05/2020');
     });
 });

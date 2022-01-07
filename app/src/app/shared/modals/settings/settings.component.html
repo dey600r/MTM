@@ -9,27 +9,26 @@
     </ion-toolbar>
 </ion-header>
 
-
-<ion-content fullscreen>
+<ion-content>
   <!-- SETTINGS -->
   <ion-list>
     <ion-list-header class="padding-list-header">
-      <ion-icon size="large" name="settings"></ion-icon>
+      <ion-icon size="large" name="settings" (click)="unlockSync(1, 2)"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.CUSTOM_SETTINGS' | translate }}</h3>
     </ion-list-header>
     <ion-item>
       <ion-label position="stacked">
         <ion-text>{{ 'COMMON.MEASURING' | translate }}</ion-text>
       </ion-label>
-      <ion-select interface="popover" [(ngModel)]="distanceSelected.code" (ionChange)="changeDistance()">
-        <ion-select-option [(value)]="d.code" *ngFor="let d of listDistances">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
+      <ion-select [(ngModel)]="distanceSelected.code" (ionChange)="changeDistance()">
+        <ion-select-option *ngFor="let d of listDistances" [(value)]="d.code">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">
         <ion-text>{{ 'COMMON.COIN' | translate }}</ion-text>
       </ion-label>
-      <ion-select interface="popover" [(ngModel)]="moneySelected.code" (ionChange)="changeMoney()">
+      <ion-select [(ngModel)]="moneySelected.code" (ionChange)="changeMoney()">
         <ion-select-option [(value)]="m.code" *ngFor="let m of listMoney" >{{m.valueLarge + ' - ' + m.value}}</ion-select-option>
       </ion-select>
     </ion-item>
@@ -38,14 +37,14 @@
   <!-- THEME -->
   <ion-list>
     <ion-list-header class="padding-list-header">
-      <ion-icon size="large" name="color-palette"></ion-icon>
+      <ion-icon size="large" name="color-palette" (click)="unlockSync(2, 8)"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.THEMES' | translate }}</h3>
     </ion-list-header>
     <ion-item>
       <ion-label position="stacked">
         <ion-text>{{ 'COMMON.MODE' | translate }}</ion-text>
       </ion-label>
-      <ion-select interface="popover" [(ngModel)]="themeSelected.code" (ionChange)="changeTheme()">
+      <ion-select [(ngModel)]="themeSelected.code" (ionChange)="changeTheme()">
         <ion-select-option [(value)]="t.code" *ngFor="let t of listThemes">{{t.value}}</ion-select-option>
       </ion-select>
     </ion-item>
@@ -54,54 +53,108 @@
   <!-- EXPORTS / IMPORTS -->
   <ion-list>
     <ion-list-header class="padding-list-header">
-      <ion-icon size="large" name="download"></ion-icon>
+      <ion-icon size="large" name="download" (click)="unlockSync(3, 5)"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.MANAGE_DATA' | translate }}</h3>
       <ion-button class="btn-width-list" fill="clear" (click)="showGuideExportImport()">
         <ion-icon color="primary" size="large" name="information-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
+    <ion-item>
+      <div class="main-item">
+        <div>
+          <ion-label position="stacked">
+            <ion-text>{{ 'COMMON.EXPORT' | translate }}</ion-text>
+          </ion-label>
+          <div class="table-row">
+            <div class="min-width90 align-grid" (click)="showRealExportPath()">
+              <ion-text class="text-opacity">{{ pathExports }}</ion-text>
+              <ion-text class="text-opacity">{{ lastExport }}</ion-text>
+            </div>
+            <div class="max-width60">
+              <ion-button fill="clear" (click)="exportData()">
+                <ion-icon color="primary" name="exit"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" (click)="deleteExportFiles()">
+                <ion-icon color="primary" name="trash"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-item>
+    <ion-item>
+      <div class="main-item">
+        <div>
+          <ion-label position="stacked">
+            <ion-text>{{ 'COMMON.IMPORT' | translate }}</ion-text>
+          </ion-label>
+          <div class="table-row">
+            <div class="min-width90 align-center">
+              <ion-text class="text-opacity">{{ pathImports }}</ion-text>
+            </div>
+            <div class="max-width60">
+              <ion-button fill="clear" (click)="f.click()">
+                <ion-icon color="primary" name="enter"></ion-icon>
+              </ion-button>
+              <input id="file-input" class="ion-hide" #f type="file" (change)="validFileAndImport($event)">    
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-item>
   </ion-list>
-  <ion-item>
-    <div class="main-item">
-      <div>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.EXPORT' | translate }}</ion-text>
-        </ion-label>
-        <div class="table-row">
-          <div class="min-width90" (click)="showRealExportPath()">
-            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathExports"></ion-input>
-            <ion-input placeholder="--" type="text" disabled [(ngModel)]="lastExport"></ion-input>
-          </div>
-          <div class="max-width60">
-            <ion-button fill="clear" (click)="exportData()">
-              <ion-icon color="primary" name="exit"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" (click)="deleteExportFiles()">
-              <ion-icon color="primary" name="trash"></ion-icon>
-            </ion-button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ion-item>
-  <ion-item>
-    <div class="main-item">
-      <div>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.IMPORT' | translate }}</ion-text>
-        </ion-label>
-        <div class="table-row">
-          <div class="min-width90">
-            <ion-input placeholder="--" type="text" disabled [(ngModel)]="pathImports"></ion-input>
-          </div>
-          <div class="max-width60">
-            <ion-button fill="clear" (click)="f.click()">
-              <ion-icon color="primary" name="enter"></ion-icon>
-            </ion-button>
-            <input id="file-input" class="ion-hide" #f type="file" (change)="validFileAndImport($event)">    
-          </div>
-        </div>
-      </div>
-    </div>
-  </ion-item>
+
+  <!-- PRIVACY POLICY -->
+  <ion-list>
+    <ion-list-header class="padding-list-header">
+      <ion-icon size="large" name="lock-closed" (click)="unlockSync(4, 9)"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.PRIVACY_POLICY' | translate }}</h3>
+      <ion-button class="btn-width-list" fill="clear" (click)="showPrivacyPolicy()">
+        <ion-icon color="primary" size="large" name="document-lock"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <ion-item>
+      <ion-label class="min-width94">{{ 'COMMON.ACCEPT_POLICY' | translate }}</ion-label>
+      <ion-checkbox color="primary" [(ngModel)]="acceptPrivacyPolicy" (ionChange)="changePrivacy()"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <!-- SYNCRONIZED -->
+  <ion-list *ngIf="pwdSync === 29">
+    <ion-list-header class="padding-list-header">
+      <ion-icon size="large" name="sync"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.SYNCHRONIZE' | translate }}</h3>
+      <ion-button class="btn-width-list" fill="clear" (click)="showInfoSynchronize()">
+        <ion-icon color="primary" size="large" name="information-circle"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <ion-item>
+      <ion-label position="stacked">
+        <ion-text>{{ 'COMMON.EMAIL' | translate }}</ion-text>
+        <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="email" placeholder="example@gmail.com" [(ngModel)]="syncEmail"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">
+        <ion-text>{{ 'COMMON.PASSWORD' | translate }}</ion-text>
+        <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input type="password" placeholder="****" [(ngModel)]="syncCode"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label class="min-width90">{{ 'COMMON.DOWNLOAD' | translate }}</ion-label>
+      <ion-spinner *ngIf="synchronizingDownload" name="lines-small" color="medium"></ion-spinner>
+      <ion-button *ngIf="!synchronizingDownload" class="btn-width-list" fill="clear" (click)="syncDownload()">
+        <ion-icon color="primary" size="small" name="cloud-download"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label class="min-width90">{{ 'COMMON.UPLOAD' | translate }}</ion-label>
+      <ion-spinner *ngIf="synchronizingUpload" name="lines-small" color="medium"></ion-spinner>
+      <ion-button *ngIf="!synchronizingUpload" class="btn-width-list" fill="clear" (click)="syncUpload()">
+        <ion-icon color="primary" size="small" name="cloud-upload"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

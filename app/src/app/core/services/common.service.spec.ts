@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
+// MODELS
+import { VehicleModel } from '@models/index';
+
 import { CommonService } from './common.service';
 
 describe('CommonService', () => {
@@ -151,5 +154,9 @@ describe('CommonService', () => {
         const minMock2: number = service.min(undefined, 'value');
         expect(minMock1).toEqual(null);
         expect(minMock2).toEqual(null);
+    });
+
+    it('should get name of class', () => {
+        expect(service.nameOf(() => new VehicleModel().km)).toEqual('km');
     });
 });

@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 // LIBRARIES IONIC
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 
 // UTILS
 import {
@@ -24,16 +24,15 @@ export class DataBaseService {
   private database: SQLiteObject;
   private dbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  vehicles = new BehaviorSubject([]);
-  vehiclesData: VehicleModel[] = [];
-  vehicleType = new BehaviorSubject([]);
-  configuration = new BehaviorSubject([]);
-  operation = new BehaviorSubject([]);
-  operationType = new BehaviorSubject([]);
-  maintenance = new BehaviorSubject([]);
-  maintenanceElement = new BehaviorSubject([]);
-  maintenanceFreq = new BehaviorSubject([]);
-  systemConfiguration = new BehaviorSubject([]);
+  private vehicles = new BehaviorSubject([]);
+  private vehicleType = new BehaviorSubject([]);
+  private configuration = new BehaviorSubject([]);
+  private operation = new BehaviorSubject([]);
+  private operationType = new BehaviorSubject([]);
+  private maintenance = new BehaviorSubject([]);
+  private maintenanceElement = new BehaviorSubject([]);
+  private maintenanceFreq = new BehaviorSubject([]);
+  private systemConfiguration = new BehaviorSubject([]);
 
   constructor(private plt: Platform,
               private sqlitePorter: SQLitePorter,
@@ -135,6 +134,8 @@ export class DataBaseService {
     }
   }
 
+  // GETS
+
   getDatabaseState() {
     return this.dbReady.asObservable();
   }
@@ -175,18 +176,126 @@ export class DataBaseService {
     return this.systemConfiguration.asObservable();
   }
 
+  // SETS
+
+  setVehicles(vehicles: VehicleModel[]): void {
+    return this.vehicles.next(vehicles);
+  }
+
+  setVehicleType(vehicleTypes: VehicleTypeModel[]): void {
+    this.vehicles.next(vehicleTypes);
+  }
+
+  setConfigurations(configurations: ConfigurationModel[]): void {
+    this.configuration.next(configurations);
+  }
+
+  setOperations(operations: OperationModel[]): void {
+    this.operation.next(operations);
+  }
+
+  setOperationType(operationTypes: OperationTypeModel[]): void {
+    this.operationType.next(operationTypes);
+  }
+
+  setMaintenance(maintenances: MaintenanceModel[]): void {
+    this.maintenance.next(maintenances);
+  }
+
+  setMaintenanceElement(maintenanceElements: MaintenanceElementModel[]): void {
+    this.maintenanceElement.next(maintenanceElements);
+  }
+
+  setMaintenanceFreq(maintenanceFreq: MaintenanceFreqModel[]): void {
+    this.maintenanceFreq.next(maintenanceFreq);
+  }
+
+  setSystemConfiguration(systemConfigurations: SystemConfigurationModel[]): void {
+    this.systemConfiguration.next(systemConfigurations);
+  }
+
+  // GETS DATA
+  getVehiclesData(): VehicleModel[] {
+    return this.filterNull<VehicleModel>(this.vehicles);
+  }
+
+  getVehicleTypeData(): VehicleTypeModel[] {
+    return this.filterNull<VehicleTypeModel>(this.vehicleType);
+  }
+
+  getConfigurationsData(): ConfigurationModel[] {
+    return this.filterNull<ConfigurationModel>(this.configuration);
+  }
+
+  getOperationsData(): OperationModel[] {
+    return this.filterNull<OperationModel>(this.operation);
+  }
+
+  getOperationTypeData(): OperationTypeModel[] {
+    return this.filterNull<OperationTypeModel>(this.operationType);
+  }
+
+  getMaintenanceData(): MaintenanceModel[] {
+    return this.filterNull<MaintenanceModel>(this.maintenance);
+  }
+
+  getMaintenanceElementData(): MaintenanceElementModel[] {
+    return this.filterNull<MaintenanceElementModel>(this.maintenanceElement);
+  }
+
+  getMaintenanceFreqData(): MaintenanceFreqModel[] {
+    return this.filterNull<MaintenanceFreqModel>(this.maintenanceFreq);
+  }
+
+  getSystemConfigurationData(): SystemConfigurationModel[] {
+    return this.filterNull<SystemConfigurationModel>(this.systemConfiguration);
+  }
+
+  private filterNull<T>(behaviour: BehaviorSubject<T[]>): T[] {
+    return behaviour.value ? behaviour.value : [];
+  }
+
   loadAllTables() {
-    this.loadListTables([
+    this.loadListTables(this.getTablesLoadInit());
+  }
+
+  private getTablesMaster(): string[] {
+    return [
+      ConstantsTable.TABLE_MTM_VEHICLE_TYPE,
+      ConstantsTable.TABLE_MTM_OPERATION_TYPE,
+      ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ
+    ];
+  }
+
+  private getTablesData(): string[] {
+    return [
       ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
       ConstantsTable.TABLE_MTM_VEHICLE,
-      ConstantsTable.TABLE_MTM_VEHICLE_TYPE,
       ConstantsTable.TABLE_MTM_CONFIGURATION,
       ConstantsTable.TABLE_MTM_OPERATION,
-      ConstantsTable.TABLE_MTM_OPERATION_TYPE,
       ConstantsTable.TABLE_MTM_MAINTENANCE,
-      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT,
-      ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ
-    ]);
+      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT
+    ];
+  }
+
+  private getTablesRef(): string[] {
+    return [
+      ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
+      ConstantsTable.TABLE_MTM_CONFIG_MAINT,
+      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL
+    ];
+  }
+
+  getTablesLoadInit(): string[] {
+    return [...this.getTablesMaster(), ...this.getTablesData()];
+  }
+
+  getAllTables(): string[] {
+    return [...this.getTablesLoadInit(), ...this.getTablesRef()];
+  }
+
+  getSyncTables(): string[] {
+    return [...this.getTablesData(), ...this.getTablesRef()];
   }
 
   loadListTables(list: string []) {
@@ -210,8 +319,7 @@ export class DataBaseService {
   loadDataOnObserver(table: string, data: any[]) {
     switch (table) {
       case ConstantsTable.TABLE_MTM_VEHICLE:
-        this.vehiclesData = this.sqlService.mapVehicle(data);
-        this.vehicles.next(this.vehiclesData);
+        this.vehicles.next(this.sqlService.mapVehicle(data));
         break;
       case ConstantsTable.TABLE_MTM_VEHICLE_TYPE:
         this.vehicleType.next(this.sqlService.mapVehicleType(data));

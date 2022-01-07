@@ -50,4 +50,12 @@ export class VehicleService {
                 return 'car';
         }
     }
+
+    loadIconDashboard<T>(data: T[]): string {
+        if (data.length === 0) {
+          return 'information-circle';
+        } else {
+          return 'bar-chart';
+        }
+      }
 }

@@ -85,4 +85,16 @@ export class CommonService {
         }
         return listData;
     }
+
+    /** NAME OF */
+    nameOf(selector: () => any): string {
+        const s: string = '' + selector;
+        const auxArray: string[] = s.split('.');
+        let result: string = (auxArray.length > 0 ? auxArray[auxArray.length - 1].split(';')[0] : '-1');
+        if (result.includes('}')) {
+            result = result.substring(0, result.length - 1);
+        }
+        return result;
+
+    }
 }

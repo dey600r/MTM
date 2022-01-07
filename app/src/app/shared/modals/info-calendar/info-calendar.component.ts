@@ -1,6 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { CalendarComponentOptions, DayConfig } from 'ion5-calendar';
@@ -24,9 +23,9 @@ import { Constants, ConstantsColumns, WarningWearEnum, PageEnum, ToastTypeEnum }
 @Component({
   selector: 'info-calendar',
   templateUrl: 'info-calendar.component.html',
-  styleUrls: ['info-calendar.component.scss', '../../../app.component.scss']
+  styleUrls: ['info-calendar.component.scss']
 })
-export class InfoCalendarComponent implements OnInit, OnDestroy {
+export class InfoCalendarComponent implements OnInit {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
@@ -47,9 +46,6 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
   hideVehicles: boolean[] = [];
   measure: any = {};
   coin: any = {};
-
-  // SUBSCRIPTION
-  settingsSubscription: Subscription = new Subscription();
 
   // TRANSLATE
   notificationEmpty = '';
@@ -72,22 +68,18 @@ export class InfoCalendarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.activeSpinner = true;
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-        this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
 
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.measure = this.settingsService.getDistanceSelected(settings);
-        this.coin = this.settingsService.getMoneySelected(settings);
-      }
-    });
+    // GET SETTINGS
+    const settings = this.dbService.getSystemConfigurationData();
+    if (!!settings && settings.length > 0) {
+      this.measure = this.settingsService.getDistanceSelected(settings);
+      this.coin = this.settingsService.getMoneySelected(settings);
+    }
 
     this.initCalendar();
 
     this.controlService.isAppFree(this.modalController);
-  }
-
-  ngOnDestroy() {
-    this.settingsSubscription.unsubscribe();
   }
 
   initCalendar() {

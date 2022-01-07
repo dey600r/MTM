@@ -13,7 +13,7 @@ import { ModalOutputEnum } from '@utils/index';
 @Component({
   selector: 'app-list-data-to-update',
   templateUrl: './list-data-to-update.component.html',
-  styleUrls: ['./list-data-to-update.component.scss', '../../../app.component.scss'],
+  styleUrls: [],
 })
 export class ListDataToUpdateComponent {
 

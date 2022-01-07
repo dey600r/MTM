@@ -7,6 +7,11 @@
     max-width: 90%;
 }
 
+.min-width94 {
+    min-width: 94%;
+    max-width: 94%;
+}
+
 .min-width100 {
     min-width: 100%;
 }
@@ -18,4 +23,22 @@
 .inputFile {
     width: 0;
     height: 0;
-  }
+}
+
+ion-item .main-item div ion-label {
+    opacity: 1 !important;
+}
+
+.align-center {
+    display: flex;
+    align-items: center;
+}
+
+.align-grid {
+    display: grid;
+    align-items: center;
+}
+
+.text-opacity {
+    opacity: 0.4;
+}

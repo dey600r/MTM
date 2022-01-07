@@ -2,12 +2,14 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
+    "resolveJsonModule": true,
     "types": []
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
+    "src/environments/*",
     "src/test.ts",
     "src/**/*.spec.ts",
     "src/testing/*"

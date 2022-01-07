@@ -12,13 +12,15 @@ import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from 
 // COMPONENTS
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
 import { DashboardComponent } from '@modals/dashboard/dashboard.component';
+import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
+import { BasePage } from '@pages/base.page';
 
 @Component({
   selector: 'app-vehicle',
   templateUrl: 'vehicle.page.html',
-  styleUrls: ['vehicle.page.scss', '../../app.component.scss']
+  styleUrls: ['vehicle.page.scss']
 })
-export class VehiclePage implements OnInit {
+export class VehiclePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
@@ -32,27 +34,38 @@ export class VehiclePage implements OnInit {
   operations: OperationModel[] = [];
   loaded = false;
   measure: any = {};
+  iconNameHeaderLeft = '';
 
-  constructor(private platform: Platform,
+  constructor(public platform: Platform,
               private dbService: DataBaseService,
-              private translator: TranslateService,
+              public translator: TranslateService,
               private vehicleService: VehicleService,
               private commonService: CommonService,
               private controlService: ControlService,
               private dashboardService: DashboardService,
               private settingsService: SettingsService,
               private detector: ChangeDetectorRef) {
-      this.platform.ready().then(() => {
-        let userLang = navigator.language.split('-')[0];
-        userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
-        this.translator.use(userLang);
-      });
+      super(platform, translator);
   }
 
   /** INIT */
 
   ngOnInit() {
+    this.initPage();
+  }
 
+  ionViewDidEnter() {
+    if (document.getElementById('custom-overlay').style.display === 'flex' ||
+    document.getElementById('custom-overlay').style.display === '') {
+      document.getElementById('custom-overlay').style.display = 'none';
+    }
+    if (!this.loaded) {
+      setTimeout(() => { this.loaded = true; }, 1000);
+    }
+  }
+
+  /** INIT */
+  initPage() {
     this.input = new ModalInputModel(false, null, [], PageEnum.HOME, Constants.STATE_INFO_VEHICLE_EMPTY);
 
     this.dbService.getSystemConfiguration().subscribe(settings => {
@@ -66,23 +79,13 @@ export class VehiclePage implements OnInit {
         this.dashboardService.setSearchOperation();
       }
       this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
+      this.loadIconDashboard();
       this.detector.detectChanges();
     });
 
     this.dbService.getOperations().subscribe(op => {
       this.operations = op;
     });
-
-  }
-
-  ionViewDidEnter() {
-    if (document.getElementById('custom-overlay').style.display === 'flex' ||
-    document.getElementById('custom-overlay').style.display === '') {
-      document.getElementById('custom-overlay').style.display = 'none';
-    }
-    if (!this.loaded) {
-      setTimeout(() => { this.loaded = true; }, 1000);
-    }
   }
 
   /** MODALS */
@@ -93,18 +96,28 @@ export class VehiclePage implements OnInit {
       AddEditVehicleComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.VEHICLE));
   }
 
+  openInfoVehicle() {
+    if (this.vehicles.length === 0) {
+      this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToInfo', Constants.DELAY_TOAST_NORMAL);
+    }
+    else {
+      this.controlService.openModal(PageEnum.VEHICLE,
+          InfoVehicleComponent, new ModalInputModel(true, null, this.vehicles, PageEnum.VEHICLE));
+    }
+  }
+
   deleteVehicle(row: VehicleModel) {
     this.rowSelected = row;
     this.showConfirmDelete();
   }
 
   openDashboardVehicle() {
-    this.controlService.openModal(PageEnum.VEHICLE,
-      DashboardComponent, new ModalInputModel(false, null, this.operations, PageEnum.VEHICLE));
-  }
-
-  showModalInfo() {
-    this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
+    if (this.vehicles.length === 0) {
+      this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
+    } else {
+      this.controlService.openModal(PageEnum.VEHICLE,
+        DashboardComponent, new ModalInputModel(false, null, this.operations, PageEnum.VEHICLE));
+    }
   }
 
   showConfirmDelete() {
@@ -154,6 +167,10 @@ export class VehiclePage implements OnInit {
       }
     );
     if (itemSliding) { itemSliding.close(); }
+  }
+
+  loadIconDashboard(): void {
+    this.iconNameHeaderLeft = this.vehicleService.loadIconDashboard<VehicleModel>(this.vehicles);
   }
 
 }

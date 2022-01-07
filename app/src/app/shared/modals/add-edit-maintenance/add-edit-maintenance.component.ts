@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -17,9 +16,9 @@ import { DataBaseService, ConfigurationService, ControlService, SettingsService 
 @Component({
   selector: 'app-add-edit-maintenance',
   templateUrl: 'add-edit-maintenance.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
-export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
+export class AddEditMaintenanceComponent implements OnInit {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel = new ModalInputModel();
@@ -36,11 +35,6 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
   showRange = '';
   maintenanceElementSelect: number[] = [];
   measure: any = {};
-
-  // SUBSCRIPTION
-  maintenanceElmentSubscription: Subscription = new Subscription();
-  maintenanceFreqSubscription: Subscription = new Subscription();
-  settingsSubscription: Subscription = new Subscription();
 
   // TRANSLATE
   translateSelect = '';
@@ -66,11 +60,10 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.settingsSubscription = this.dbService.getSystemConfiguration().subscribe(settings => {
-      if (!!settings && settings.length > 0) {
-        this.measure = this.settingsService.getDistanceSelected(settings);
-      }
-    });
+    const settings = this.dbService.getSystemConfigurationData();
+    if (!!settings && settings.length > 0) {
+      this.measure = this.settingsService.getDistanceSelected(settings);
+    }
 
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
       this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
@@ -84,23 +77,15 @@ export class AddEditMaintenanceComponent implements OnInit, OnDestroy {
       this.maintenance.maintenanceFreq.id = null;
     }
 
-    this.maintenanceElmentSubscription = this.dbService.getMaintenanceElement().subscribe(data => {
-      this.maintenanceElements = this.configurationService.orderMaintenanceElement(data);
-      this.maintenanceElementSelect = [];
-      if (!!this.maintenance.listMaintenanceElement && this.maintenance.listMaintenanceElement.length > 0) {
-        this.maintenanceElementSelect = this.maintenance.listMaintenanceElement.map(x => x.id);
-      }
-    });
+    // MAINTENANCE ELEMENTS
+    this.maintenanceElements = this.configurationService.orderMaintenanceElement(this.dbService.getMaintenanceElementData());
+    this.maintenanceElementSelect = [];
+    if (!!this.maintenance.listMaintenanceElement && this.maintenance.listMaintenanceElement.length > 0) {
+      this.maintenanceElementSelect = this.maintenance.listMaintenanceElement.map(x => x.id);
+    }
 
-    this.maintenanceFreqSubscription = this.dbService.getMaintenanceFreq().subscribe(data => {
-      this.maintenanceFreqs = data;
-    });
-  }
-
-  ngOnDestroy() {
-    this.maintenanceElmentSubscription.unsubscribe();
-    this.maintenanceFreqSubscription.unsubscribe();
-    this.settingsSubscription.unsubscribe();
+    // MAINTENANCE FREQ
+    this.maintenanceFreqs = this.dbService.getMaintenanceFreqData();
   }
 
   saveData(f: Form) {

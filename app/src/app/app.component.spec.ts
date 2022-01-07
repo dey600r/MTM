@@ -1,11 +1,12 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Platform } from '@ionic/angular';
+import { firstValueFrom } from 'rxjs';
 
 import { AppComponent } from './app.component';
 
 // PLUGINS
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
+import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -35,7 +36,7 @@ describe('AppComponent', () => {
       SpyMockConfig.ProviderSettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
-    await translate.use('es').toPromise();
+    await firstValueFrom(translate.use('es'));
   });
 
   beforeEach(() => {
@@ -74,7 +75,7 @@ describe('AppComponent', () => {
   });
 
   it('should translate app - EN', async () => {
-    await translate.use('en').toPromise();
+    await firstValueFrom(translate.use('en'));
     expect(translate.instant('COMMON.SAVE')).toEqual(MockTranslate.EN.COMMON.SAVE);
   });
 

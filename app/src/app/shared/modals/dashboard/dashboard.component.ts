@@ -3,7 +3,7 @@ import { Platform, ModalController, NavParams } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 
 // UTILS
 import { DashboardService, ControlService, VehicleService } from '@services/index';
@@ -16,7 +16,7 @@ import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popo
 @Component({
   selector: 'dashboard',
   templateUrl: 'dashboard.component.html',
-  styleUrls: ['../../../app.component.scss']
+  styleUrls: []
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 

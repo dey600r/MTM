@@ -2,12 +2,13 @@ import { AngularDelegate, ModalController, NavParams, Platform, PopoverControlle
 import { Observable, of } from 'rxjs';
 
 // PLUGINS
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { File } from '@ionic-native/file/ngx';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
+import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
+import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
+import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -48,16 +49,19 @@ export class SpyMockConfig {
             dataDirectory: ConstantsTest.PATH_DATA_DIRECTORY
         },
         dbService: jasmine.createSpyObj('DataBaseService',
-            ['initDB', 'getSystemConfiguration', 'getConfigurations', 'getVehicles', 'getOperations', 'getMaintenance',
-            'getMaintenanceElement', 'getVehicleType', 'getOperationType', 'getMaintenanceFreq']),
-        controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree']),
+            ['initDB', 'getSystemConfiguration', 'getSystemConfigurationData',
+            'getConfigurations', 'getConfigurationsData', 'getVehicles', 'getVehiclesData', 'getVehicleTypeData',
+            'getOperations', 'getOperationsData', 'getOperationTypeData', 'getMaintenance', 'getMaintenanceData',
+            'getMaintenanceElement', 'getMaintenanceElementData', 'getVehicleType', 'getOperationType',
+            'getMaintenanceFreq', 'getMaintenanceFreqData']),
+        controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree', 'activeSegmentScroll', 'alertCustom']),
         settingsService: jasmine.createSpyObj('SettingsService', ['createOutputDirectory']),
         sqliteObject: jasmine.createSpyObj('SQLiteObject', ['executeSql']),
         sqlitePorter: jasmine.createSpyObj('SQLitePorter', ['importSqlToDb']),
         sqlService: jasmine.createSpyObj('SqlService',
             ['getSqlSystemConfiguration', 'updateSqlSystemConfiguration', 'getSql', 'mapVehicle', 'mapVehicleType',
             'mapConfiguration', 'mapOperation', 'mapOperationType', 'mapMaintenance', 'mapMaintenanceElement',
-            'mapMaintenanceFreq', 'mapSystemConfiguration'])
+            'mapMaintenanceFreq', 'mapSystemConfiguration', 'insertSqlSystemConfiguration'])
     };
 
     static Providers = [
@@ -67,6 +71,7 @@ export class SpyMockConfig {
         AngularDelegate,
         PopoverController,
         DateFormatCalendarPipe,
+        InAppBrowser,
         { provide: StatusBar, useValue: SpyMockConfig.SpyConfig.statusBar },
         { provide: SplashScreen, useValue: SpyMockConfig.SpyConfig.splashScreenSpy },
         { provide: Platform, useValue: SpyMockConfig.SpyConfig.platformSpy },
@@ -77,6 +82,7 @@ export class SpyMockConfig {
 
     static ProvidersServices = [
         SQLite,
+        InAppBrowser,
         { provide: File, useValue: SpyMockConfig.SpyConfig.file },
         { provide: SQLiteObject, useValue: SpyMockConfig.SpyConfig.sqliteObject },
         { provide: SQLitePorter, useValue: SpyMockConfig.SpyConfig.sqlitePorter }
@@ -93,14 +99,23 @@ export class SpyMockConfig {
     static SpyMockDataBaseService() {
         const spy = SpyMockConfig.SpyConfig.dbService;
         spy.getSystemConfiguration.and.returnValue(of(MockData.SystemConfigurations));
+        spy.getSystemConfigurationData.and.returnValue(MockData.SystemConfigurations);
         spy.getConfigurations.and.returnValue(of(MockData.Configurations));
+        spy.getConfigurationsData.and.returnValue(MockData.Configurations);
         spy.getVehicleType.and.returnValue(of(MockData.VehicleTypes));
+        spy.getVehicleTypeData.and.returnValue(MockData.VehicleTypes);
         spy.getVehicles.and.returnValue(of(MockData.Vehicles));
+        spy.getVehiclesData.and.returnValue(MockData.Vehicles);
         spy.getOperationType.and.returnValue(of(MockData.OperationTypes));
+        spy.getOperationTypeData.and.returnValue(MockData.OperationTypes);
         spy.getOperations.and.returnValue(of(MockData.Operations));
+        spy.getOperationsData.and.returnValue(MockData.Operations);
         spy.getMaintenance.and.returnValue(of(MockData.Maintenances));
+        spy.getMaintenanceData.and.returnValue(MockData.Maintenances);
         spy.getMaintenanceElement.and.returnValue(of(MockData.MaintenanceElements));
+        spy.getMaintenanceElementData.and.returnValue(MockData.MaintenanceElements);
         spy.getMaintenanceFreq.and.returnValue(of(MockData.MaintenanceFreqs));
+        spy.getMaintenanceFreqData.and.returnValue(MockData.MaintenanceFreqs);
         return spy;
     }
 
