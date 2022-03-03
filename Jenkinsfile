@@ -3,7 +3,7 @@ node {
     checkout scm
   }
   stage('Install and Test') { 
-    nodejs(nodeJSInstallationName: 'NodeJS') {
+    nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
       dir('./app') {
         sh 'npm install'
         sh 'ng test --code-coverage --watch=false'
