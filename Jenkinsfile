@@ -4,15 +4,12 @@ node {
   }
   stage('Install and Test') { 
     nodejs(nodeJSInstallationName: 'NodeJS') {
-      //ws('app') {
-        sh 'echo $env.WORKSPACE'
-        sh 'echo $WORKSPACE'
-        sh 'echo $PWD'
+      ws('$WORKSPACE/app') {
         sh 'ls -la'
         sh 'npm install'
         sh 'ng test --code-coverage --watch=false'
       }
-    //}
+    }
   }
   stage('SonarQube Analysis') {
     def scannerHome = tool 'SonarScanner';
