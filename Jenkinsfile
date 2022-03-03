@@ -4,12 +4,7 @@ node {
   }
   stage('Install and Test') { 
     nodejs(nodeJSInstallationName: 'NodeJS') {
-      dir('$WORKSPACE/app') {
-        sh '''
-          cd $WORKSPACE/app
-          ls -la
-          npm install
-        '''
+      dir('./app') {
         sh 'npm install'
         sh 'ng test --code-coverage --watch=false'
       }
