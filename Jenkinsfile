@@ -4,15 +4,15 @@ node {
   }
   stage('Install and Test') { 
     nodejs(nodeJSInstallationName: 'NodeJS') {
-      //ws('$WORKSPACE/app') {
+      dir('$WORKSPACE/app') {
         sh '''
           cd $WORKSPACE/app
           ls -la
+          npm install
         '''
-        sh 'ls -la'
         sh 'npm install'
         sh 'ng test --code-coverage --watch=false'
-      //}
+      }
     }
   }
   stage('SonarQube Analysis') {
