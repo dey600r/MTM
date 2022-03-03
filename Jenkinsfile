@@ -5,7 +5,9 @@ node {
   stage('Install and Test') { 
     nodejs(nodeJSInstallationName: 'NodeJS') {
       //ws('app') {
-        echo '${env.WORKSPACE}'
+        sh 'echo $env.WORKSPACE'
+        sh 'echo $WORKSPACE'
+        sh 'echo $PWD'
         sh 'ls -la'
         sh 'npm install'
         sh 'ng test --code-coverage --watch=false'
