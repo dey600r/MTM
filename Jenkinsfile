@@ -3,7 +3,7 @@ node {
     checkout scm
   }
   stage('Install and Test') { 
-    ws('./app') {
+    ws('${WORKSPACE}/app') {
       nodejs(nodeJSInstallationName: 'NodeJS') {
         sh 'npm install'
         sh 'ng test --code-coverage --watch=false'
