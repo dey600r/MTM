@@ -43,12 +43,12 @@ module.exports = function (config) {
     autoWatch: true,
     //browsers: ['Chrome'],
     browsers: ['ChromeHeadless'],
-    // customLaunchers: {
-    //   ChromeHeadlessNoSandbox: {
-    //     base: 'ChromeHeadless',
-    //     flags: ['--no-sandbox']
-    //   }
-    // },
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     //singleRun: false,
   });
 };
