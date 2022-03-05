@@ -8,7 +8,7 @@ import { InfoVehicleComponent } from './info-vehicle.component';
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { ControlService } from '@services/index';
+import { ControlService, SettingsService } from '@services/index';
 
 // CONFIGURATION
 import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
@@ -24,7 +24,7 @@ describe('InfoVehicleComponent', () => {
 
   beforeEach(waitForAsync(async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, ControlService,
+    config.providers.push(SpyMockConfig.ProviderDataBaseService, ControlService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);

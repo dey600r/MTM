@@ -103,7 +103,7 @@ describe('InfoVehicleService', () => {
         const confKawa: InfoVehicleConfigurationModel = data.find(x => x.idConfiguration === MockData.Configurations[2].id);
         validateInfoVehicleConfiguration(confKawa, 2);
         expect(confKawa.listMaintenance[0].warning).toEqual(WarningWearEnum.SKULL);
-        expect(confKawa.listMaintenance[1].warning).toEqual(WarningWearEnum.SUCCESS);
+        expect(confKawa.listMaintenance[1].warning).toEqual(WarningWearEnum.WARNING);
         expect(confKawa.listMaintenance[2].warning).toEqual(WarningWearEnum.SUCCESS);
     });
 
