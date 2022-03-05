@@ -13,7 +13,15 @@ node {
   stage('SonarQube Analysis') {
     def scannerHome = tool 'SonarScanner';
     withSonarQubeEnv() {
-      sh "${scannerHome}/bin/sonar-scanner"
+      dir('./app') {
+        sh "${scannerHome}/bin/sonar-scanner"
+      }
+    }
+  }
+  stage('Save Test Result') {
+    dir('./app') {
+      junit 'coverage/junit/**/*.xml'
+      cobertura coberturaReportFile: 'coverage/*coverage.xml'
     }
   }
 }
