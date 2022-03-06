@@ -22,7 +22,8 @@ module.exports = function (config) {
       type : 'html',
       dir : 'coverage/',
       reporters: [
-        { type: 'lcov', subdir: '.' }
+        { type: 'lcov', subdir: '.' },
+        { type: 'cobertura', subdir: '.'}
       ]
     },
     sonarqubeReporter: {
