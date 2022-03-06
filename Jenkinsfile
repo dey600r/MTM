@@ -26,11 +26,13 @@ node {
   // }
   stage('Build Android') {
     dir('./app') {
-      nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
-        // sh 'ionic cordova platform ls'
-        // sh 'ionic cordova platform add android@8.1.0'
-        // sh 'ionic cordova platform add windows@6.0.1'
-        sh 'ionic cordova build android --debug'
+      withGradle {
+        nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
+          // sh 'ionic cordova platform ls'
+          // sh 'ionic cordova platform add android@8.1.0'
+          // sh 'ionic cordova platform add windows@6.0.1'
+          sh 'ionic cordova build android --debug'
+        }
       }
     }
   }
