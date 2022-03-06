@@ -26,7 +26,7 @@ node {
   // }
   stage('Build Android') {
     dir('./app') {
-      withGradle {
+      nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
         sh 'ionic cordova build android --debug'
       }
     }
