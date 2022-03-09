@@ -29,10 +29,9 @@ node {
       withGradle {
         nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
           // sh 'ionic cordova platform ls'
-          // sh 'ionic cordova platform add android@8.1.0'
+          sh 'ionic cordova platform add android@8.1.0'
           // sh 'ionic cordova platform add windows@6.0.1'
           sh 'java --version'
-          sh 'adb'
           // sh 'apt-get install openjdk-8-jdk'
           // sh 'apt install android-sdk android-sdk-platform-23'
           sh 'ionic cordova build android --debug'
