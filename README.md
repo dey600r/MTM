@@ -28,19 +28,16 @@ Proyect is created with:
 
 <table>
   <tr>
-    <td>Splasscreen</td>
-  </tr>
-  <tr>
     <td><img src="./app/images-readme/PantallaInicio.png"></td>
   </tr>
  </table>
 
 <table>
-  <tr>
+  <!-- <tr>
     <td>Board</td>
     <td>Home</td>
     <td>Calendar</td>
-  </tr>
+  </tr> -->
   <tr>
     <td><img src="./app/images-readme/Capture1.png" width=270 height=480></td>
     <td><img src="./app/images-readme/Capture2.png" width=270 height=480></td>
