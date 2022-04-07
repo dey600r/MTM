@@ -6,12 +6,12 @@ It helps you to know at any time when you should pass the next review and the li
 ## Links
 
 **MTM:**
-* Android: https://play.google.com/store/apps/details?id=mtm.ionic.dey125r&hl=en_419
-* Windows: https://www.microsoft.com/en-us/p/motor-track-manager/9nzcmw19fh21?activetab=pivot:overviewtab
+* [Android](https://play.google.com/store/apps/details?id=mtm.ionic.dey125r&hl=en_419)
+* [Windows](https://www.microsoft.com/en-us/p/motor-track-manager/9nzcmw19fh21?activetab=pivot:overviewtab)
 
 **MTM Free:**
-* Android: https://play.google.com/store/apps/details?id=mtm.free.ionic.dey125r&hl=en_419
-* Windows: https://www.microsoft.com/en-us/p/motor-track-manager-free/9pcbjjbqkj59?activetab=pivot:overviewtab
+* [Android](https://play.google.com/store/apps/details?id=mtm.free.ionic.dey125r&hl=en_419)
+* [Windows](https://www.microsoft.com/en-us/p/motor-track-manager-free/9pcbjjbqkj59?activetab=pivot:overviewtab)
 
 ## Tutorial
    1. "Vehicles" tab: Add your vehicles.
