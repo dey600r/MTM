@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Platform } from '@ionic/angular';
@@ -240,6 +240,7 @@ describe('DataBaseService', () => {
             expect(console.error).toHaveBeenCalledWith(messageError);
             expect(e.message).toContain(messageError);
         }
+        flush();
     }));
 
 });

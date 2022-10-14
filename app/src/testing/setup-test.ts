@@ -27,7 +27,7 @@ import { ConfigurationPage } from '@pages/configuration/configuration.page';
 import { HomePage } from '@pages/home/home.page';
 import { OperationPage } from '@pages/operation/operation.page';
 import { VehiclePage } from '@pages/vehicle/vehicle.page';
-import { TabsPage } from '@shared/tabs/tabs.page';
+import { TabsPage } from '@pages/tabs/tabs.page';
 import { DateFormatCalendarPipe } from '@pipes/date-format-calendar.pipe';
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';

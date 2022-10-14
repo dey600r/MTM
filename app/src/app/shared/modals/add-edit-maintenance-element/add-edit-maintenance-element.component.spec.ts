@@ -22,7 +22,7 @@ describe('AddEditMaintenanceElementComponent', () => {
   let fixture: ComponentFixture<AddEditMaintenanceElementComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel(true, MockData.MaintenanceElements[0], [], PageEnum.CONFIGURATION)));

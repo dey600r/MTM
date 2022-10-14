@@ -13,7 +13,7 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('../../pages/home/home.module').then(m => m.HomePageModule)
+              import('../home/home.module').then(m => m.HomePageModule)
           }
         ]
       },
@@ -23,7 +23,7 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('../../pages/vehicle/vehicle.module').then(m => m.VehiclePageModule)
+              import('../vehicle/vehicle.module').then(m => m.VehiclePageModule)
           }
         ]
       },
@@ -33,7 +33,7 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('../../pages/operation/operation.module').then(m => m.OperationPageModule)
+              import('../operation/operation.module').then(m => m.OperationPageModule)
           }
         ]
       },
@@ -43,7 +43,7 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('../../pages/configuration/configuration.module').then(m => m.ConfigurationPageModule)
+              import('../configuration/configuration.module').then(m => m.ConfigurationPageModule)
           }
         ]
       },

@@ -22,7 +22,7 @@ describe('InfoVehicleComponent', () => {
   let fixture: ComponentFixture<InfoVehicleComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, ControlService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));

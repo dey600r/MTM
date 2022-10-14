@@ -23,7 +23,9 @@ describe('InfoNotificationComponent', () => {
   let translate: TranslateService;
   let homeService: HomeService;
 
-  beforeEach(waitForAsync(async () => {
+  //jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));

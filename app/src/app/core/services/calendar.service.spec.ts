@@ -90,7 +90,7 @@ describe('CalendarService', () => {
 
         const result: number = service.calculateWearKmVehicleEstimated(data);
         expect(result).toBeLessThanOrEqual(80419);
-        expect(result).toBeGreaterThanOrEqual(80346);
+        expect(result).toBeGreaterThanOrEqual(80340);
     });
 
     it('should calculate kilometer vehicle estimated without km per month and new motorbike', () => {

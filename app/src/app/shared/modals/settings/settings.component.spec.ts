@@ -22,7 +22,7 @@ describe('SettingsComponent', () => {
   let fixture: ComponentFixture<SettingsComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel(true, null, [], PageEnum.HOME)));

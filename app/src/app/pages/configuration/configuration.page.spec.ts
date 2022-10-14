@@ -18,7 +18,7 @@ describe('ConfigurationPage', () => {
   let fixture: ComponentFixture<ConfigurationPage>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async() => {
+  beforeEach((async() => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();

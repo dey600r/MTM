@@ -22,7 +22,7 @@ describe('AddEditVehicleComponent', () => {
   let fixture: ComponentFixture<AddEditVehicleComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel(true, MockData.Vehicles[0], [], PageEnum.VEHICLE)));

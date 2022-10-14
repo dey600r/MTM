@@ -15,7 +15,7 @@ describe('AppInfoComponent', () => {
   let fixture: ComponentFixture<AppInfoComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     TestBed.configureTestingModule(SetupTest.config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await firstValueFrom(translate.use('es'));

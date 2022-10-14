@@ -22,7 +22,7 @@ describe('ListDataToUpdateComponent', () => {
   let fixture: ComponentFixture<ListDataToUpdateComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     let listDataModel: ListDataModalModel[] = [];
 
     MockData.Configurations.forEach(x => {

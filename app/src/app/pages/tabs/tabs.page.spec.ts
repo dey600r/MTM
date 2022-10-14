@@ -11,7 +11,7 @@ describe('TabsPage', () => {
   let fixture: ComponentFixture<TabsPage>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     await TestBed.configureTestingModule(SetupTest.config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await firstValueFrom(translate.use('es'));
