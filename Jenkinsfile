@@ -27,8 +27,10 @@ node {
   stage('Build Android') {
     dir('./app') {
       withGradle {
+        sh './gradlew build'
         nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
-          sh 'npm i'
+          sh 'npm install'
+          sh 'ng build'
           sh 'ionic cordova platform ls'
           sh 'ionic cordova platform add android@8.1.0'
           // sh 'ionic cordova platform add windows@6.0.1'
