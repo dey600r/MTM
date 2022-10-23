@@ -13,9 +13,11 @@ node {
   // stage('SonarQube Analysis') {
   //   def scannerHome = tool 'SonarScanner';
   //   withSonarQubeEnv() {
-  //     dir('./app') {
-  //       sh "${scannerHome}/bin/sonar-scanner"
-  //     }
+  //     nodejs(nodeJSInstallationName: 'NodeJS') {
+  //       dir('./app') {
+  //         sh "${scannerHome}/bin/sonar-scanner"
+  //       }
+  //     } 
   //   }
   // }
   // stage('Save Test Result') {
