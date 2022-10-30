@@ -3,9 +3,11 @@ node {
     checkout scm
   }
   stage('Install and Test') { 
-    sh 'npm install'
-    sh 'ionic cordova platform add android@8.1.0'
-    sh 'ionic cordova build android'
+    dir('./app') {
+      sh 'npm install'
+      sh 'ionic cordova platform add android@8.1.0'
+      sh 'ionic cordova build android'
+    }
   }
   // stage('Install and Test') { 
   //   nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
