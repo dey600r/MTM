@@ -32,7 +32,6 @@ package-lock.json
 /app/platforms
 /app/plugins
 /app/www
-/app/resources
 /app/build.json
 /app/build-demo.json
 
