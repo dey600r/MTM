@@ -6,8 +6,10 @@ node {
     dir('./app') {
       sh 'npm install'
       sh 'ionic cordova platform add android@8.1.0'
-      sh 'PATH=$JAVA_HOME:$(echo $PATH | cut -f2-100 -d:)'
-      sh 'ionic cordova build android'
+      sh '''
+          PATH=$JAVA_HOME:$(echo $PATH | cut -f2-100 -d:)
+          ionic cordova build android --debug
+        '''
     }
   }
   // stage('Install and Test') { 
