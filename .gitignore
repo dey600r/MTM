@@ -35,7 +35,10 @@ package-lock.json
 /app/build.json
 /app/build-demo.json
 
-/Utils
+/Docker
+/Utils/Versions/Android
+/Utils/Versions/Windows
+/Utils/*.txt
 
 /DB/backup
 

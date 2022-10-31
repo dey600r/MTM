@@ -5,6 +5,7 @@ node {
   stage('Install and Test') { 
     dir('./app') {
       sh 'npm install'
+      sh 'ng test --code-coverage --watch=false'
       sh 'ionic cordova platform rm android'
       sh 'ionic cordova platform add android@9.0.0'
       sh '''
