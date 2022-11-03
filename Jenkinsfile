@@ -21,8 +21,8 @@ node {
   //   }
   // }
   stage('Android - Install') {
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd /var/jenkins_home/workspace/deyapps-mtm-build/app && ionic cordova platform rm android"'
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd /var/jenkins_home/workspace/deyapps-mtm-build/app && ionic cordova platform add android@9.0.0"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd workspace/deyapps-mtm-build/app && ionic cordova platform rm android"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd workspace/deyapps-mtm-build/app && ionic cordova platform add android@9.0.0"'
   }
   stage('Android - Build') {
     //sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd /var/jenkins_home/workspace/deyapps-mtm-build/app && ionic cordova build android --debug"'
