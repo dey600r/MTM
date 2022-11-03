@@ -26,7 +26,7 @@ node {
   }
   stage('Android - Build') {
     //sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd /var/jenkins_home/workspace/deyapps-mtm-build/app && ionic cordova build android --debug"'
-    sh 'docker wait node-android'
+    sh 'docker wait node-android-build'
   }
   // stage('Save Test Result') {
   //   dir('./app') {
