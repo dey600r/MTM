@@ -3,6 +3,7 @@ path=$1
 free=$2
 version=$3
 prod=$4
+echo "Building windows appx on version $version using $prod";
 cd $path/App;
 rm -f -r $path/Utils/Versions/Windows/MtM$free$version;
 mkdir $path/Utils/Versions/Windows/MtM$free$version;

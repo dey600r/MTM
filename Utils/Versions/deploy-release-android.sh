@@ -5,6 +5,7 @@ version=$3
 prod=$4
 pass=$5
 alias=$6
+echo "Building android apk on version $version using $prod";
 cd $path/App;
 rm -f -r $path/Utils/Versions/Android/MtM$free$version;
 mkdir $path/Utils/Versions/Android/MtM$free$version;
