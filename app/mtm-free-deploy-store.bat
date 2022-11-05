@@ -1,1 +1,0 @@
-%1\Utils\Versions\deploy-release-android.bat %1 _Free_ %2 production-free %PASS_MTM% %ALIAS_MTM% && %1\Utils\Versions\deploy-release-android-bundle.bat %1 _Free_ %2 %PASS_MTM% %ALIAS_MTM% && %1\Utils\Versions\deploy-release-windows.bat %1 _Free_ %1 production-free
