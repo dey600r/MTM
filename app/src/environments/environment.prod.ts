@@ -1,9 +1,9 @@
-import { version, dateVersion } from '../../package.json';
+import packageInfo from '../../package.json';
 
 export const environment = {
   production: true,
-  lastVersion: version,
-  lastUpdate: dateVersion,
+  lastVersion: packageInfo.version,
+  lastUpdate: packageInfo.dateVersion,
   isFree: false,
   pathTranslate: './assets/i18n/'
 };

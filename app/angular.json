@@ -371,13 +371,13 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/angular-toolkit"
+    "defaultCollection": "@ionic/cordova-builders"
   },
   "schematics": {
-    "@ionic/angular-toolkit:component": {
+    "@ionic/cordova-builders:component": {
       "styleext": "scss"
     },
-    "@ionic/angular-toolkit:page": {
+    "@ionic/cordova-builders:page": {
       "styleext": "scss"
     }
   }
