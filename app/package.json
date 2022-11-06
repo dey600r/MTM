@@ -12,7 +12,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:release-prod": "sh mtm-deploy-store.sh C:\\Proyectos\\MtM %npm_package_version%",
-    "build:release-jenkins": "sh mtm-deploy-jenkins.sh .\\workspace\\deyapps-mtm-build $npm_package_version",
+    "build:release-jenkins": "sh mtm-deploy-jenkins.sh .\\\\workspace\\\\deyapps-mtm-build $npm_package_version",
     "build:release-free": "sh mtm-free-deploy-store.sh C:\\Proyectos\\MtM %npm_package_version%",
     "build:release-free-jenkins": "sh mtm-free-deploy-jenkins.sh ./workspace/deyapps-mtm-build $npm_package_version",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
