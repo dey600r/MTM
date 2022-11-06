@@ -1,6 +1,9 @@
 #!/bin/bash
 path=$1
 version=$2
-sh $1/Utils/Versions/deploy-release-android.sh $path _ $version production $PASS_MTM $ALIAS_MTM &&
-sh $1/Utils/Versions/deploy-release-android-bundle.sh $1 _ $2 $PASS_MTM $ALIAS_MTM;
-#sh $1/Utils/Versions/deploy-release-windows.sh $1 _ $2 production;
+echo "START BUILD MTM $version on $path"
+cd $path/Utils/Versions/;
+sh deploy-release-android.sh $path _ $version production $PASS_MTM $ALIAS_MTM &&
+sh deploy-release-android-bundle.sh $path _ $version $PASS_MTM $ALIAS_MTM;
+#sh deploy-release-windows.sh $path _ $version production;
+echo "END BUILD MTM"
