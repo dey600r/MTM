@@ -27,10 +27,11 @@ node {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-jenkins"'
     //sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd /var/jenkins_home/workspace/deyapps-mtm-build/app && ionic cordova build android --debug"'
   }
-  // stage('Save Test Result') {
-  //   dir('./app') {
-  //     junit 'coverage/junit/**/*.xml'
-  //     cobertura coberturaReportFile: 'coverage/*coverage.xml'
-  //   }
-  // }
+  stage('Save Test Result') {
+    dir('./app') {
+      archiveArtifacts artifacts: 'Utils/Versions/**/*.apk', 'Utils/Versions/**/*.aab'
+      // junit 'coverage/junit/**/*.xml'
+      // cobertura coberturaReportFile: 'coverage/*coverage.xml'
+    }
+  }
 }
