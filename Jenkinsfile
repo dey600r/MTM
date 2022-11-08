@@ -21,10 +21,10 @@ node {
   //   }
   // }
   // stage('Android - Install') {
-  //   sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd workspace/deyapps-mtm-build/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
+  //   sh 'docker run --rm -v docker_jenkins_data:/home node-android bash -c "cd workspace/deyapps-mtm-build/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
   // }
   stage('Android - Build') {
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-jenkins"'
+    sh 'docker run --rm -v docker_jenkins_data:/home node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-jenkins"'
     //sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd /var/jenkins_home/workspace/deyapps-mtm-build/app && ionic cordova build android --debug"'
   }
   // stage('Save Test Result') {
