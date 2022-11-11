@@ -16,6 +16,6 @@ node {
   //   sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-jenkins"'
   // }
   stage('Save Artifacts') {
-    archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk', 'Utils/Versions/Android/**/*.aab'
+    archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
   }
 }
