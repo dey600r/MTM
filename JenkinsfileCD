@@ -2,13 +2,6 @@ node {
   stage('SCM') {
     checkout scm
   }
-  stage('Angular - Install') { 
-    nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
-      dir('./app') {
-        sh 'npm install'
-      }
-    }
-  }
   stage('Android - Install') {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd workspace/deyapps-mtm-build/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
   }
@@ -16,8 +9,6 @@ node {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-free-jenkins"'
   }
   stage('Save Test Result') {
-    dir('./app') {
-      archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk', 'Utils/Versions/Android/**/*.aab'
-    }
+    archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
   }
 }
