@@ -22,15 +22,18 @@ node {
   //   archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
   // }
   stage('DEVELOP') {
-    when { anyOf { branch 'develop' } }
-    sh 'echo develop'
+    if (env.BRANCH_NAME == 'develop') {
+      sh 'echo develop'
+    }
   }
   stage('DEVELOP-FRE') {
-    when { anyOf { branch 'develop-free' } }
-    sh 'echo develop free'
+    if (env.BRANCH_NAME == 'develop-free') {
+      sh 'echo develop-free'
+    }
   }
   stage('DEVELOP y FREE') {
-    when { anyOf { branch 'develop'; branch 'develop-free' } }
-    sh 'echo develop y free'
+    if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'develop-freed') {
+      sh 'echo todo'
+    }
   }
 }
