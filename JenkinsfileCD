@@ -2,38 +2,27 @@ node {
   stage('SCM') {
     checkout scm
   }
-  // stage('Angular - Install') { 
-  //   nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
-  //     dir('./app') {
-  //       sh 'npm install'
-  //     }
-  //   }
-  // }
-  // stage('Android - Install') {
-  //   sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd workspace/deyapps-mtm-build/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
-  // }
-  // stage('Android - Build') {
-  //   sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-jenkins"'
-  // }
-  // stage('Android - Build MtM Free') {
-  //    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-free-jenkins"'
-  // }
-  // stage('Save Artifacts') {
-  //   archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
-  // }
-  stage('DEVELOP') {
+  stage('Angular - Install') { 
+    nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
+      dir('./app') {
+        sh 'npm install'
+      }
+    }
+  }
+  stage('Android - Install') {
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd workspace/deyapps-mtm-build/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
+  }
+  stage('Android - Build MtM') {
     if (env.BRANCH_NAME == 'develop') {
-      sh 'echo develop'
+      sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-jenkins"'
     }
   }
-  stage('DEVELOP-FRE') {
+  stage('Android - Build MtM Free') {
     if (env.BRANCH_NAME == 'develop-free') {
-      sh 'echo develop-free'
+      sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-free-jenkins"'
     }
   }
-  stage('DEVELOP y FREE') {
-    if (env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'develop-freed') {
-      sh 'echo todo'
-    }
+  stage('Save Artifacts') {
+    archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
   }
 }
