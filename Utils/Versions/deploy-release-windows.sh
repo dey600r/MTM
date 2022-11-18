@@ -1,7 +1,7 @@
 #!/bin/bash
 path=$1
 version=$2
-prod=$3
+prod=$3-windows
 free="_"
 if [[ "$prod" == *"free"* ]]; then
   free="_Free_"
