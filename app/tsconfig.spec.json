@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "types": [
       "jasmine",
       "node"
