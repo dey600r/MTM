@@ -20,6 +20,13 @@ node {
       } 
     }
   }
+  stage('Angular - Build Prod') { 
+    nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
+      dir('./app') {
+        sh 'ng build --configuration=production-android'
+      }
+    }
+  }
   stage('Save Test Result') {
     dir('./app') {
       junit 'coverage/junit/**/*.xml'
