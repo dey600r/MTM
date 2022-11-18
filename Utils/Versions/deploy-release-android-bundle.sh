@@ -1,7 +1,7 @@
 #!/bin/bash
 path=$1
 version=$2
-prod=$3
+prod=$3-android
 pass=$4
 alias=$5
 free="_"
