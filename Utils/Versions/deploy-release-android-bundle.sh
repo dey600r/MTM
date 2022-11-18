@@ -1,9 +1,13 @@
 #!/bin/bash
 path=$1
-free=$2
-version=$3
+version=$2
+prod=$3
 pass=$4
 alias=$5
+free="_"
+if [[ "$prod" == *"free"* ]]; then
+  free="_Free_"
+fi
 echo "---> BUILDING ANDROID BUNDLE ON VERSION $version USING $prod <----";
 cd $path/app/platforms/android;
 ./gradlew bundle &&
