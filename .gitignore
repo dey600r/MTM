@@ -42,13 +42,13 @@ package-lock.json
 
 /DB/backup
 
-App/.gradle/
-App/gradle/
-App/gradlew
-App/gradlew.bat
-App/.scannerwork
-App/src/app/.scannerwork
-App/src/assets/data
-App/.angular/
-App/.firebase/
+app/.gradle/
+app/gradle/
+app/gradlew
+app/gradlew.bat
+app/.scannerwork
+app/src/app/.scannerwork
+app/src/assets/data
+app/.angular/
+app/.firebase/
 app/config.xml
