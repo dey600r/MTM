@@ -1,5 +1,6 @@
 node {
   def workspace = WORKSPACE
+  workspace = env.WORKSPACE
   stage('GIT - develop') {
     checkout scm
   }
@@ -11,8 +12,9 @@ node {
     }
   }
   stage('Android - Install') {
-    sh 'echo "WORKSPAce ${env.WORKSPACE}"'
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ${env.WORKSPACE}/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
+    echo "WORKSPAce ${env.WORKSPACE}"
+    sh 'echo "WORKSPAce $workspace"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd $workspace/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
   }
   stage('Android - Build MtM') {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ${env.WORKSPACE}/app && npm run build:release-jenkins"'
