@@ -1,5 +1,6 @@
 node {
   def workspace = WORKSPACE
+  def branchname = BRANCH_NAME
   stage('GIT - develop') {
     checkout scm
   }
@@ -19,6 +20,7 @@ node {
   stage('GIT - develop-free') {
     echo "Current workspace is ${env.WORKSPACE}"
     echo "Current branch is ${env.BRANCH_NAME}"
+    echo "Current branch is ${env.BRANCHNAME}"
     sh 'git restore ./app/config.xml'
     sh 'git checkout develop-free'
   }
