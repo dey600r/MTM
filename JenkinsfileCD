@@ -22,7 +22,7 @@ node {
     }
   }
   stage('Change branch') {
-    sh 'git restore ./config.xml'
+    sh 'git restore ./app/config.xml'
     sh 'git checkout develop-free'
   }
   stage('Android - Build MtM Free') {
