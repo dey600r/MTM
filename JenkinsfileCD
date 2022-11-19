@@ -1,5 +1,7 @@
 node {
   stage('SCM') {
+    echo 'Pulling...' + env.BRANCH_NAME
+    echo 'Pulling...' + env.GIT_BRANCH
     checkout scm
   }
   // stage('Angular - Install') { 
@@ -13,7 +15,8 @@ node {
   //   sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd workspace/deyapps-mtm-build/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
   // }
   stage('Android - Build MtM') {
-    sh 'echo $env.BRANCH_NAME'
+    echo 'Pulling...' + env.BRANCH_NAME
+    echo 'Pulling...' + env.GIT_BRANCH
     if (env.BRANCH_NAME == 'origin/develop') {
       sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/deyapps-mtm-build/app && npm run build:release-jenkins"'
     }
