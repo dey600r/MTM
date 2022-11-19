@@ -22,6 +22,7 @@ node {
   stage('GIT - develop-free') {
     sh 'git restore .'
     sh 'git checkout develop-free'
+    sh 'git pull'
   }
   stage('Android - Build MtM Free') {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-free-jenkins"'
