@@ -3,6 +3,7 @@ node {
   def job_name = JOB_NAME
   stage('GIT - develop') {
     checkout scm
+    sh 'git checkout develop'
   }
   stage('Angular - Install') { 
     nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
@@ -19,13 +20,12 @@ node {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-jenkins"'
   }
   stage('GIT - develop-free') {
-    sh 'git restore ./app/config.xml'
+    sh 'git restore .'
     sh 'git checkout develop-free'
   }
   stage('Android - Build MtM Free') {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-free-jenkins"'
-    sh 'git restore ./app/config.xml'
-    sh 'git checkout develop'
+    sh 'git restore .'
   }
   stage('Save Artifacts') {
     archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
