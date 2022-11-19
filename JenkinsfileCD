@@ -4,6 +4,7 @@ node {
   stage('GIT - develop') {
     checkout scm
     sh 'git checkout develop'
+    sh 'git pull'
   }
   stage('Angular - Install') { 
     nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
@@ -30,5 +31,9 @@ node {
   }
   stage('Save Artifacts') {
     archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
+    dir('./app') {
+      junit 'coverage/junit/**/*.xml'
+      cobertura coberturaReportFile: 'coverage/*coverage.xml'
+    }
   }
 }
