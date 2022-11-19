@@ -3,10 +3,11 @@ path=$1
 version=$2
 prod=$3-windows
 free="_"
-if [[ "$prod" == *"free"* ]]; then
-  free="_Free_"
-fi
-echo "----> BUILDING WINDOWS APPX ON VERSION $version USING $prod <----";
+case $prod in
+  *free*)
+    free="_Free_";
+esac
+echo "----> BUILDING WINDOWS APPX ON VERSION $version USING $prod WITH PATH $path AND $free <----";
 cd $path/app;
 rm -f -r $path/Utils/Versions/Windows/MtM$free$version;
 mkdir $path/Utils/Versions/Windows/MtM$free$version;
