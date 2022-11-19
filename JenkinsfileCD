@@ -13,19 +13,17 @@ node {
   }
   stage('Android - Install') {
     sh 'echo "Running on $WORKSPACE"'
-    echo 'JOB ${env.JOB_NAME}'
-    sh 'echo "Running on $JOB_NAME"'
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd $WORKSPACE/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/$JOB_NAME/app && ionic cordova platform rm android && ionic cordova platform add android@9.0.0"'
   }
   stage('Android - Build MtM') {
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd $WORKSPACE/app && npm run build:release-jenkins"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-jenkins"'
   }
   stage('GIT - develop-free') {
     sh 'git restore ./app/config.xml'
     sh 'git checkout develop-free'
   }
   stage('Android - Build MtM Free') {
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd $WORKSPACE/app && npm run build:release-free-jenkins"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-free-jenkins"'
     sh 'git restore ./app/config.xml'
     sh 'git checkout develop'
   }
