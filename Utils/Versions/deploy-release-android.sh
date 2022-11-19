@@ -5,10 +5,11 @@ prod=$3-android
 pass=$4
 alias=$5
 free="_"
-if [[ "$prod" == *"free"* ]]; then
-  free="_Free_"
-fi
-echo "----> BUILDING ANDROID APK ON VERSION $version USING $prod <----";
+case $prod in
+  *free*)
+    free="_Free_";
+esac
+echo "----> BUILDING ANDROID APK ON VERSION $version USING $prod WITH PATH $path AND $free <----";
 cd $path/app;
 rm -f -r $path/Utils/Versions/Android/MtM$free$version;
 mkdir $path/Utils/Versions/Android/MtM$free$version;

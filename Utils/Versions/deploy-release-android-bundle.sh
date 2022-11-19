@@ -5,10 +5,11 @@ prod=$3-android
 pass=$4
 alias=$5
 free="_"
-if [[ "$prod" == *"free"* ]]; then
-  free="_Free_"
-fi
-echo "---> BUILDING ANDROID BUNDLE ON VERSION $version USING $prod <----";
+case $prod in
+  *free*)
+    free="_Free_";
+esac
+echo "---> BUILDING ANDROID BUNDLE ON VERSION $version USING $prod WITH PATH $path AND $free <----";
 cd $path/app/platforms/android;
 ./gradlew bundle &&
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass "$pass" -keystore $path/Utils/Versions/Android/mtm-release-prod-key.keystore $path/app/platforms/android/app/build/outputs/bundle/release/app-release.aab $alias &&
