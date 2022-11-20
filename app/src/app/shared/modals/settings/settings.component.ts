@@ -56,6 +56,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     synchronizingUpload = false;
     pwdSync = 0;
 
+    // VERSION
+    versionApp: string = `Version app: ${environment.lastVersion}`;
+    versionDateApp: string = `${environment.lastUpdate}`;
+
     constructor(private navParams: NavParams,
                 private changeDetector: ChangeDetectorRef,
                 private modalController: ModalController,

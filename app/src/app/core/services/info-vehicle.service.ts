@@ -83,8 +83,8 @@ export class InfoVehicleService {
         if (list.length === 1) {
             result = list[0].warning;
         } else {
-            for (let i = 0; i < list.length - 1; i++) {
-                result = this.homeService.calculateWearNotificationPriority(list[i].warning, list[i + 1].warning);
+            for (let item of list) {
+                result = this.homeService.calculateWearNotificationPriority(result, item.warning);
             }
         }
         return result;

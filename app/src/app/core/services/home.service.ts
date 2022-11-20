@@ -34,7 +34,7 @@ export class HomeService {
         if (!!vehicles && vehicles.length > 0) {
             vehicles.forEach(vehicle => { // Replacement per vehicle
                 const config: ConfigurationModel = configurations.find(x => x.id === vehicle.configuration.id);
-                if (config.listMaintenance && config.listMaintenance.length > 0) {
+                if (config && config.listMaintenance && config.listMaintenance.length > 0) {
                     let wearMaintenance: WearMaintenanceProgressBarViewModel[] = [];
                     const maintenancesVehicle: MaintenanceModel[] =
                         maintenances.filter(x => config.listMaintenance.some(y => y.id === x.id));

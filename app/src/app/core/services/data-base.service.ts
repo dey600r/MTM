@@ -66,9 +66,11 @@ export class DataBaseService {
 
   seedDatabase() {
     this.database.executeSql(this.sqlService.getSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB), []).then(data => {
+      console.log('Checking Database...');
       this.getNextDeployDB(this.sqlService.mapSystemConfiguration(data)[0]);
     }).catch(e => {
       this.http.get(`${Constants.PATH_FILE_DB}${Constants.FILE_NAME_INIT_DB}.sql`, { responseType: 'text'}).subscribe(sql => {
+        console.log(`Initializing Database to ${environment.lastVersion}...`);
         this.importSqlToDB(sql);
       });
     });
@@ -76,6 +78,8 @@ export class DataBaseService {
 
   getNextDeployDB(data: SystemConfigurationModel) {
     const dateLastUpdateApp: Date = new Date(environment.lastUpdate);
+    console.log(`Version App: ${environment.lastVersion} - ${environment.lastUpdate}`);
+    console.log(`Version DB: ${data.value} - ${data.updated.toLocaleString()}`);
     if (dateLastUpdateApp > data.updated) { // NEW VERSION - DB VERSION SHORTER THAN APP VERSION
       this.http.get(`${Constants.PATH_FILE_DB}${Constants.FILE_NAME_NEXT_DEPLOY_DB}.sql`, { responseType: 'text'}).subscribe(sql => {
         const sqlNextDeploy = this.getSqlNextVersion(sql, data);
@@ -99,7 +103,7 @@ export class DataBaseService {
       if (!!x) {
         const subSqlNextDeploy: string[] = x.split(Constants.NEXT_DEPLOY_SCRIPT_SEPARATOR);
         if (!!subSqlNextDeploy && subSqlNextDeploy.length > 1 && !!subSqlNextDeploy[1]) {
-          const numVesion: number = this.getVersion(subSqlNextDeploy[0].substr(13));
+          const numVesion: number = this.getVersion(subSqlNextDeploy[0].substring(13));
           if (numericVersionDB < numVesion && numericVersionApp >= numVesion) {
             sqlNextDeploy += subSqlNextDeploy[1].replace('\n', '');
           }
@@ -111,7 +115,7 @@ export class DataBaseService {
 
   getVersion(version: string): number {
     const nums: string[] = version.split('.');
-    const v1: number = (Number)(nums[0].substr(1, 1)) * 1000;
+    const v1: number = (Number)(nums[0].substring(1)) * 1000;
     const v2: number = (Number)(nums[1]) * 10;
     const v3: number = (Number)(nums[2]);
     return v1 + v2 + v3;
@@ -129,6 +133,7 @@ export class DataBaseService {
     this.loadAllTables();
     this.dbReady.next(true);
     if (updateVersion) {
+      console.log(`Upgrading Database to ${environment.lastVersion}...`);
       this.executeScriptDataBase(this.sqlService.updateSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB,
         environment.lastVersion, environment.lastUpdate), []);
     }

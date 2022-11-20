@@ -146,7 +146,6 @@ describe('CalendarService', () => {
                     if (!allColors.some(x => x === color)) {
                         allColors = [...allColors, color];
                     }
-                    console.log(color);
                 });
             });
         });
