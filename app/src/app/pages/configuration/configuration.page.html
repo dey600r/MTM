@@ -31,19 +31,15 @@
         </ion-label>
         <!-- Buttons edit / create -->
         <ion-label *ngIf="c.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-              <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-            </ion-button>
-          </ion-label>
+          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+          </ion-button>
         </ion-label>
-        <ion-label *ngIf="!c.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
-              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-            </ion-button>
-          </ion-label>
-        </ion-label>
+        <div *ngIf="!c.master" class="align-right fix-width69">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
+            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+          </ion-button>
+        </div>
       </ion-item>
     </ion-item-sliding>
   </ion-list>
@@ -78,19 +74,15 @@
         </ion-label>
         <!-- Buttons edit / delete -->
         <ion-label *ngIf="m.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-              <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-            </ion-button>
-          </ion-label>
+          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+          </ion-button>
         </ion-label>
-        <ion-label *ngIf="!m.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row" fill="clear" (click)="deleteMaintenance(m)">
-              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-            </ion-button>
-          </ion-label>
-        </ion-label>
+        <div *ngIf="!m.master" class="align-right fix-width69">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteMaintenance(m)">
+            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+          </ion-button>
+        </div>
       </ion-item>
     </ion-item-sliding>
   </ion-list>
@@ -108,19 +100,15 @@
       </ion-label>
       <!-- Buttons edit / delete -->
       <ion-label *ngIf="me.master" class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-          </ion-button>
-        </ion-label>
+        <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+          <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+        </ion-button>
       </ion-label>
-      <ion-label *ngIf="!me.master" class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row" fill="clear" (click)="deleteReplacement(me)" [disabled]="isNotValidToDeleteReplacement(me)">
-            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-          </ion-button>
-        </ion-label>
-      </ion-label>
+      <div *ngIf="!me.master" class="align-right fix-width69">
+        <ion-button class="btn-width-row" fill="clear" (click)="deleteReplacement(me)" [disabled]="isNotValidToDeleteReplacement(me)">
+          <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+        </ion-button>
+      </div>
     </ion-item>
   </ion-list>
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">

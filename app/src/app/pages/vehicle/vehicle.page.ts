@@ -26,9 +26,6 @@ export class VehiclePage extends BasePage implements OnInit {
   input: ModalInputModel = new ModalInputModel();
   dataReturned: ModalOutputModel;
 
-  // MODEL
-  rowSelected: VehicleModel = new VehicleModel();
-
   // DATA
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
@@ -91,9 +88,8 @@ export class VehiclePage extends BasePage implements OnInit {
   /** MODALS */
 
   openVehicleModal(row: VehicleModel = new VehicleModel(), create: boolean = true) {
-    this.rowSelected = row;
     this.controlService.openModal(PageEnum.VEHICLE,
-      AddEditVehicleComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.VEHICLE));
+      AddEditVehicleComponent, new ModalInputModel(create, row, [], PageEnum.VEHICLE));
   }
 
   openInfoVehicle() {
@@ -107,8 +103,7 @@ export class VehiclePage extends BasePage implements OnInit {
   }
 
   deleteVehicle(row: VehicleModel) {
-    this.rowSelected = row;
-    this.showConfirmDelete();
+    this.showConfirmDelete(row);
   }
 
   openDashboardVehicle() {
@@ -120,22 +115,22 @@ export class VehiclePage extends BasePage implements OnInit {
     }
   }
 
-  showConfirmDelete() {
+  showConfirmDelete(row: VehicleModel) {
     let ops: OperationModel[] = [];
     if (!!this.operations && this.operations.length > 0) {
-      ops = this.operations.filter(x => x.vehicle.id === this.rowSelected.id);
+      ops = this.operations.filter(x => x.vehicle.id === row.id);
     }
     const message: string = (!!ops && ops.length > 0 ?
       'PAGE_VEHICLE.ConfirmDeleteVehicleOperation' : 'PAGE_VEHICLE.ConfirmDeleteVehicle');
 
     this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.VEHICLES'),
-      this.translator.instant(message, {vehicle: `${this.rowSelected.brand} ${this.rowSelected.model}`}),
+      this.translator.instant(message, {vehicle: `${row.brand} ${row.model}`}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.vehicleService.saveVehicle([this.rowSelected], ActionDBEnum.DELETE, ops).then(x => {
+          this.vehicleService.saveVehicle([row], ActionDBEnum.DELETE, ops).then(x => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_VEHICLE.DeleteSaveVehicle',
-              { vehicle: `${this.rowSelected.brand} ${this.rowSelected.model}` });
+              { vehicle: `${row.brand} ${row.model}` });
           }).catch(e => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
           });
@@ -149,16 +144,16 @@ export class VehiclePage extends BasePage implements OnInit {
   }
 
   activateNotificationVehicle(itemSliding: any, vehicle: VehicleModel) {
-    this.rowSelected = vehicle;
-    const message: string = (this.rowSelected.active ? 'PAGE_VEHICLE.ConfirmDesactivateNotificationVehicle' : 'PAGE_VEHICLE.ConfirmActivateNotificationVehicle');
+    let vehicleToSave: VehicleModel = vehicle;
+    const message: string = (vehicleToSave.active ? 'PAGE_VEHICLE.ConfirmDesactivateNotificationVehicle' : 'PAGE_VEHICLE.ConfirmActivateNotificationVehicle');
     this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.VEHICLES'),
-      this.translator.instant(message, {vehicle: `${this.rowSelected.brand} ${this.rowSelected.model}`}),
+      this.translator.instant(message, {vehicle: `${vehicleToSave.brand} ${vehicleToSave.model}`}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          const resMsg: string = (this.rowSelected.active ? 'PAGE_VEHICLE.DesactivatedNotificationVehicle' : 'PAGE_VEHICLE.ActivatedNotificationVehicle');
-          this.rowSelected.active = !this.rowSelected.active;
-          this.vehicleService.saveVehicle([this.rowSelected], ActionDBEnum.UPDATE).then(x => {
+          const resMsg: string = (vehicleToSave.active ? 'PAGE_VEHICLE.DesactivatedNotificationVehicle' : 'PAGE_VEHICLE.ActivatedNotificationVehicle');
+          vehicleToSave.active = !vehicleToSave.active;
+          this.vehicleService.saveVehicle([vehicleToSave], ActionDBEnum.UPDATE).then(x => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, resMsg);
           }).catch(e => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');

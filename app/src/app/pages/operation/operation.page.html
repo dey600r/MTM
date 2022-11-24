@@ -43,13 +43,11 @@
         <p class="p-style">{{ this.calculatePriceOperation(op) }} {{coin.value}}</p>
       </ion-label>
       <!-- Buttons delete -->
-      <ion-label class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row" fill="clear" (click)="deleteOperation(op)">
-            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-          </ion-button>
-        </ion-label>
-      </ion-label>
+      <div class="align-right fix-width69">
+        <ion-button class="btn-width-row" fill="clear" (click)="deleteOperation(op)">
+          <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+        </ion-button>
+      </div>
     </ion-item>
   </ion-list>
   <ion-fab *ngIf="this.vehicles.length > 0" horizontal="end" vertical="bottom" slot="fixed">

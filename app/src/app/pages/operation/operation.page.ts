@@ -33,7 +33,6 @@ export class OperationPage extends BasePage implements OnInit {
   dataReturned: ModalOutputModel;
 
   // MODEL
-  rowSelected: OperationModel = new OperationModel();
   filterDashboard: SearchDashboardModel = new SearchDashboardModel();
 
   // DATA
@@ -134,9 +133,8 @@ export class OperationPage extends BasePage implements OnInit {
       row: OperationModel = new OperationModel(null, null, new OperationTypeModel(),
       this.vehicles.find(x => x.id === this.vehicleSelected)),
       create: boolean = true) {
-    this.rowSelected = row;
     this.controlService.openModal(PageEnum.OPERATION,
-      AddEditOperationComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.OPERATION));
+      AddEditOperationComponent, new ModalInputModel(create, row, [], PageEnum.OPERATION));
   }
 
   openDashboardOperation() {
@@ -149,8 +147,7 @@ export class OperationPage extends BasePage implements OnInit {
   }
 
   deleteOperation(row: OperationModel) {
-    this.rowSelected = row;
-    this.showConfirmDelete();
+    this.showConfirmDelete(row);
   }
 
   showModalInfoVehicle() {
@@ -161,15 +158,15 @@ export class OperationPage extends BasePage implements OnInit {
     this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.INFO, 'ALERT.AddOperationToExpenses', Constants.DELAY_TOAST_NORMAL);
   }
 
-  showConfirmDelete() {
+  showConfirmDelete(row: OperationModel) {
     this.controlService.showConfirm(PageEnum.OPERATION, this.translator.instant('COMMON.OPERATION'),
-      this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation', {operation: this.rowSelected.description}),
+      this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation', {operation: row.description}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.operationService.saveOperation(this.rowSelected, ActionDBEnum.DELETE).then(x => {
+          this.operationService.saveOperation(row, ActionDBEnum.DELETE).then(x => {
             this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.SUCCESS,
-              'PAGE_OPERATION.DeleteSaveOperation', {operation: this.rowSelected.description});
+              'PAGE_OPERATION.DeleteSaveOperation', {operation: row.description});
           }).catch(e => {
             this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
           });

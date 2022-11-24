@@ -29,11 +29,6 @@ export class ConfigurationPage extends BasePage implements OnInit {
   // MODAL
   dataReturned: ModalOutputModel;
 
-  // MODEL FORM
-  rowConfSelected: ConfigurationModel = new ConfigurationModel();
-  rowMainSelected: MaintenanceModel = new MaintenanceModel();
-  rowReplSelected: MaintenanceElementModel = new MaintenanceElementModel();
-
   // DATA
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
@@ -141,7 +136,6 @@ export class ConfigurationPage extends BasePage implements OnInit {
   }
 
   async openListModalConfiguration(itemSliding: any, configuration: ConfigurationModel) {
-    this.rowConfSelected = configuration;
     let listDataModel: ListDataModalModel[] = [];
     this.vehicles.forEach(x => {
       listDataModel = [...listDataModel,
@@ -162,14 +156,12 @@ export class ConfigurationPage extends BasePage implements OnInit {
     const { data } = await modal.onWillDismiss();
     if (itemSliding) { itemSliding.close(); }
     if (data && data.data && data.action === ModalOutputEnum.SAVE) {
-      this.showConfirmSaveVehiclesAssociatedToConfiguration(data.data);
+      this.showConfirmSaveVehiclesAssociatedToConfiguration(data.data, configuration);
     }
   }
 
   async openListModalMaintenance(itemSliding: any, maintenance: MaintenanceModel) {
-    this.rowMainSelected = maintenance;
     let listDataModel: ListDataModalModel[] = [];
-
     this.configurations.forEach(x => {
       listDataModel = [...listDataModel,
         new ListDataModalModel(
@@ -190,34 +182,32 @@ export class ConfigurationPage extends BasePage implements OnInit {
     const { data } = await modal.onWillDismiss();
     if (itemSliding) { itemSliding.close(); }
     if (data && data.data && data.action === ModalOutputEnum.SAVE) {
-      this.showConfirmSaveMaintenancesAssociatedToConfiguration(data.data);
+      this.showConfirmSaveMaintenancesAssociatedToConfiguration(data.data, maintenance);
     }
   }
 
   /** CONFIGURATION */
 
   openConfigurationModal(row: ConfigurationModel = new ConfigurationModel(), create: boolean = true) {
-    this.rowConfSelected = row;
     this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditConfigurationComponent, new ModalInputModel(create, this.rowConfSelected, [], PageEnum.CONFIGURATION));
+      AddEditConfigurationComponent, new ModalInputModel(create, row, [], PageEnum.CONFIGURATION));
   }
 
   deleteConfiguration(row: ConfigurationModel) {
-    this.rowConfSelected = row;
-    this.showConfirmDeleteConfiguration();
+    this.showConfirmDeleteConfiguration(row);
   }
 
-  showConfirmDeleteConfiguration() {
-    const vehiclesDeleteConfig: VehicleModel[] = this.vehicles.filter(x => x.configuration.id === this.rowConfSelected.id);
+  showConfirmDeleteConfiguration(row: ConfigurationModel) {
+    const vehiclesDeleteConfig: VehicleModel[] = this.vehicles.filter(x => x.configuration.id === row.id);
     let msg: string = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfiguration',
-      {configuration: this.rowConfSelected.name});
+      {configuration: row.name});
     if (!!vehiclesDeleteConfig && vehiclesDeleteConfig.length > 0) {
       let vehiclesName = '';
       vehiclesDeleteConfig.forEach((x, index) => {
         vehiclesName += x.model + ((index + 1) < vehiclesDeleteConfig.length ? ',' : '');
       });
       msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfigurationMoveVehicle',
-        { configuration: this.rowConfSelected.name, vehicle: vehiclesName });
+        { configuration: row.name, vehicle: vehiclesName });
     }
 
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,
@@ -227,9 +217,9 @@ export class ConfigurationPage extends BasePage implements OnInit {
           vehiclesDeleteConfig.forEach((x, index) => {
             x.configuration.id = 1;
           });
-          this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, vehiclesDeleteConfig).then(x => {
+          this.configurationService.saveConfiguration(row, ActionDBEnum.DELETE, vehiclesDeleteConfig).then(x => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
-               'PAGE_CONFIGURATION.DeleteSaveConfiguration', { configuration: this.rowConfSelected.name });
+               'PAGE_CONFIGURATION.DeleteSaveConfiguration', { configuration: row.name });
           }).catch(e => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
           });
@@ -238,21 +228,21 @@ export class ConfigurationPage extends BasePage implements OnInit {
     );
   }
 
-  showConfirmSaveVehiclesAssociatedToConfiguration(data: ListModalModel) {
+  showConfirmSaveVehiclesAssociatedToConfiguration(data: ListModalModel, configuration: ConfigurationModel) {
     const msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmSaveVehiclesAssociatedToConfiguration',
-      { configuration: this.rowConfSelected.name });
+      { configuration: configuration.name });
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,
     {
       text: this.translator.instant('COMMON.ACCEPT'),
       handler: () => {
-        this.saveVehiclesAssociatedToConfiguration(data);
+        this.saveVehiclesAssociatedToConfiguration(data, configuration);
       }
     });
   }
 
-  saveVehiclesAssociatedToConfiguration(data: ListModalModel) {
+  saveVehiclesAssociatedToConfiguration(data: ListModalModel, configuration: ConfigurationModel) {
     const vehiclesAssociatedToConfigurationSelected: VehicleModel[] =
-      this.vehicles.filter(x => x.configuration.id === this.rowConfSelected.id);
+      this.vehicles.filter(x => x.configuration.id === configuration.id);
     const vehiclesChangeToConfigurationDefault: VehicleModel[] = vehiclesAssociatedToConfigurationSelected.filter(x =>
       data.listData.some(y => y.id === x.id && !y.selected));
     const vehiclesChangeToConfigurationSelected: VehicleModel[] = this.vehicles.filter(x =>
@@ -266,7 +256,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
     }
     if (vehiclesChangeToConfigurationSelected.length > 0) {
       vehiclesChangeToConfigurationSelected.forEach(x => {
-        x.configuration.id = this.rowConfSelected.id;
+        x.configuration.id = configuration.id;
         vehiclesToSave = [...vehiclesToSave, x];
       });
     }
@@ -282,32 +272,30 @@ export class ConfigurationPage extends BasePage implements OnInit {
   /** MAINTENANCE */
 
   openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
-    this.rowMainSelected = row;
     this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditMaintenanceComponent, new ModalInputModel(create, this.rowMainSelected, [this.maxKm], PageEnum.CONFIGURATION));
+      AddEditMaintenanceComponent, new ModalInputModel(create, row, [this.maxKm], PageEnum.CONFIGURATION));
   }
 
   deleteMaintenance(row: MaintenanceModel) {
-    this.rowMainSelected = row;
-    this.showConfirmDeleteMaintenance();
+    this.showConfirmDeleteMaintenance(row);
   }
 
-  showConfirmDeleteMaintenance() {
+  showConfirmDeleteMaintenance(row: MaintenanceModel) {
     let msg = 'PAGE_CONFIGURATION.ConfirmDeleteMaintenance';
     const configurationWithMaintenance: ConfigurationModel[] =
-      this.configurations.filter(x => x.listMaintenance.some(y => y.id === this.rowMainSelected.id));
+      this.configurations.filter(x => x.listMaintenance.some(y => y.id === row.id));
     if (!!configurationWithMaintenance && configurationWithMaintenance.length > 0) {
       msg = 'PAGE_CONFIGURATION.ConfirmDeleteMaintenanceWithConfigururation';
     }
-    msg = this.translator.instant(msg, { maintenance: this.rowMainSelected.description });
+    msg = this.translator.instant(msg, { maintenance: row.description });
 
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.MAINTENANCE'), msg,
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.configurationService.saveMaintenance(this.rowMainSelected, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
+          this.configurationService.saveMaintenance(row, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
-              'PAGE_CONFIGURATION.DeleteSaveMaintenance', { maintenance: this.rowMainSelected.description });
+              'PAGE_CONFIGURATION.DeleteSaveMaintenance', { maintenance: row.description });
           }).catch(e => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
           });
@@ -324,33 +312,33 @@ export class ConfigurationPage extends BasePage implements OnInit {
     return this.configurationService.getReplacement(replacements);
   }
 
-  showConfirmSaveMaintenancesAssociatedToConfiguration(data: ListModalModel) {
+  showConfirmSaveMaintenancesAssociatedToConfiguration(data: ListModalModel, maintenance: MaintenanceModel) {
     const msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmSaveMaintenancesAssociatedToConfiguration',
-      { maintenance: this.rowMainSelected.description });
+      { maintenance: maintenance.description });
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.MAINTENANCE'), msg,
     {
       text: this.translator.instant('COMMON.ACCEPT'),
       handler: () => {
-        this.saveMaintenanceAssociatedToConfiguration(data);
+        this.saveMaintenanceAssociatedToConfiguration(data, maintenance);
       }
     });
   }
 
-  saveMaintenanceAssociatedToConfiguration(data: ListModalModel) {
+  saveMaintenanceAssociatedToConfiguration(data: ListModalModel, maintenance: MaintenanceModel) {
     let configurationSave: ConfigurationModel[] = [];
     let configurationDelete: ConfigurationModel[] = [];
     this.configurations.forEach(c => {
       if (c.listMaintenance && c.listMaintenance.length > 0) {
         c.listMaintenance.forEach(m => {
-          if (this.rowMainSelected.id === m.id && data.listData.some(x => x.id === c.id && !x.selected)) {
+          if (maintenance.id === m.id && data.listData.some(x => x.id === c.id && !x.selected)) {
             configurationDelete = [...configurationDelete, new ConfigurationModel(c.name, c.description, c.master, [m], c.id)];
           }
         });
       }
     });
     data.listData.forEach(x => {
-      if (x.selected && this.configurations.some(c => c.id === x.id && !c.listMaintenance.some(m => m.id === this.rowMainSelected.id))) {
-        configurationSave = [...configurationSave, new ConfigurationModel('', '', true, [this.rowMainSelected], x.id)];
+      if (x.selected && this.configurations.some(c => c.id === x.id && !c.listMaintenance.some(m => m.id === maintenance.id))) {
+        configurationSave = [...configurationSave, new ConfigurationModel('', '', true, [maintenance], x.id)];
       }
     });
     this.configurationService.saveConfigurationMaintenance(configurationSave, configurationDelete).then(res => {
@@ -364,32 +352,30 @@ export class ConfigurationPage extends BasePage implements OnInit {
   /** MAINTENANCE ELEMENTS / REPLACEMENT */
 
   openReplacementModal(row: MaintenanceElementModel = new MaintenanceElementModel(), create: boolean = true) {
-    this.rowReplSelected = row;
     this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditMaintenanceElementComponent, new ModalInputModel(create, this.rowReplSelected, [], PageEnum.CONFIGURATION));
+      AddEditMaintenanceElementComponent, new ModalInputModel(create, row, [], PageEnum.CONFIGURATION));
   }
 
   deleteReplacement(row: MaintenanceElementModel) {
-    this.rowReplSelected = row;
-    this.showConfirmDeleteReplacement();
+    this.showConfirmDeleteReplacement(row);
   }
 
-  showConfirmDeleteReplacement() {
+  showConfirmDeleteReplacement(row: MaintenanceElementModel) {
     let msg = 'PAGE_CONFIGURATION.ConfirmDeleteReplacement';
     const operationsWithReplacement: OperationModel[] =
-      this.operations.filter(x => x.listMaintenanceElement.some(y => y.id === this.rowReplSelected.id));
+      this.operations.filter(x => x.listMaintenanceElement.some(y => y.id ===row.id));
     if (!!operationsWithReplacement && operationsWithReplacement.length > 0) {
       msg = 'PAGE_CONFIGURATION.ConfirmDeleteReplacementWithOperations';
     }
-    msg = this.translator.instant(msg, {replacement: this.rowReplSelected.name});
+    msg = this.translator.instant(msg, {replacement: row.name});
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.REPLACEMENT'), msg,
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.configurationService.saveMaintenanceElement(this.rowReplSelected,
+          this.configurationService.saveMaintenanceElement(row,
               ActionDBEnum.DELETE, operationsWithReplacement).then(x => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
-              'PAGE_CONFIGURATION.DeleteSaveReplacement', { replacement: this.rowReplSelected.name });
+              'PAGE_CONFIGURATION.DeleteSaveReplacement', { replacement: row.name });
           }).catch(e => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
           });
