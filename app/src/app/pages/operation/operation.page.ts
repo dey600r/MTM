@@ -187,7 +187,7 @@ export class OperationPage extends BasePage implements OnInit {
     if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
       totalPrice += this.commonService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
     }
-    return Math.round(totalPrice * 100) / 100;
+    return this.commonService.round(totalPrice, 100);
   }
 
   segmentChanged(event: any): void {
