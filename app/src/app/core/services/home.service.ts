@@ -335,18 +335,22 @@ export class HomeService {
     }
 
     calculatePercent(total: number, value: number): number {
-        return (total === 0 || total === null ? 0 : (value >= 0 ? (total - value) / total : 1));
+        return (total === 0 || total === null ? 0 : this.formatPercent(value, (total - value), total));
     }
 
     calculatePercentNegative(total: number, value: number): number {
-        return (total === 0 || total === null ? 0 : (value >= 0 ? value / total : 1));
+        return (total === 0 || total === null ? 0 : this.formatPercent(value, value, total));
+    }
+
+    formatPercent(condition: number, value: number, total: number): number {
+        return (condition >= 0 ? value / total : 1);
     }
 
     getDateCalculateMonths(time: number): string {
         let date = '';
         const months: number = time * (time < 0 ? -1 : 1);
         if (months >= 12) {
-          const years: number = Math.round(months / 12);
+          const years: number = this.commonService.round((months / 12), 10);
           date = `${years} ${this.translator.instant(years > 1 ? 'COMMON.YEARS' : 'COMMON.YEAR')}`;
         } else {
           date = `${months} ${this.translator.instant(months > 1 ? 'COMMON.MONTHS' : 'COMMON.MONTH')}`;
@@ -461,8 +465,10 @@ export class HomeService {
                         }
 
                         if (!!op && op.id !== null) {
-                            percentVehicleKm += (calculateKmEstimate >= 0 ? 1 : 1 - (percentKm > 1 ? 1 : percentKm));
-                            percentVehicleTime += (calculateTimeEstimate >= 0 ? 1 : 1 - (percentTime > 1 ? 1 : percentTime));
+                            const valPercentKm: number = (percentKm > 1 ? 1 : percentKm);
+                            percentVehicleKm += (calculateKmEstimate >= 0 ? 1 : 1 - valPercentKm);
+                            const valPercentTime: number = (percentTime > 1 ? 1 : percentTime);
+                            percentVehicleTime += (calculateTimeEstimate >= 0 ? 1 : 1 - valPercentTime);
                         }
                         timeCalculate += wearMain.timeMaintenance;
                     }
@@ -541,8 +547,9 @@ export class HomeService {
     }
 
     getWarningRecord(wear: boolean, calculateEstimate: number, percent: number, km: number): WarningWearEnum {
-        return (wear ? this.getWarningWearRecordsMaintenance(percent * (calculateEstimate >= 0 ? 1 : -1), km === null) :
-            this.getWarningRecordsMaintenance(percent * (calculateEstimate >= 0 ? 1 : -1), km === null));
+        const estimate: number = (calculateEstimate >= 0 ? 1 : -1);
+        return (wear ? this.getWarningWearRecordsMaintenance(percent * estimate, km === null) :
+            this.getWarningRecordsMaintenance(percent * estimate, km === null));
     }
 
     getWarningRecordsMaintenance(percent: number, opNotFound: boolean): WarningWearEnum {

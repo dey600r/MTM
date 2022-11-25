@@ -5,8 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class CommonService {
 
-    constructor() {}
-
     /** ORDER BY */
     orderBy(data: any[], prop: string = null, asc: boolean = false): any[] {
         let listData = [];
@@ -32,7 +30,8 @@ export class CommonService {
         } else if (typeof value1 === 'string' && typeof value2 === 'string') {
             result = value1.localeCompare(value2);
         } else {
-            result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+            const compare: number = (value1 > value2) ? 1 : 0;
+            result = (value1 < value2) ? -1 : compare;
         }
         return (asc ? (result * -1) : result);
     }
@@ -96,5 +95,10 @@ export class CommonService {
         }
         return result;
 
+    }
+
+    /** ROUND DECIMAL */
+    round(value: number, decimal: number): number {
+        return Math.round((value + Number.EPSILON) * decimal) / decimal;
     }
 }
