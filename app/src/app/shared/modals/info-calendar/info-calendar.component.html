@@ -31,7 +31,7 @@
   </ion-label>
   <ion-list *ngFor="let vehicle of listInfoCalendarSelected; let i = index;" [hidden]="activeSpinner">
     <ion-list-header class="padding-list-header" (click)="hideVehicles[i] = !hideVehicles[i]">
-      <ion-icon class="icon-header" [name]="getIconVehicle(vehicle)"></ion-icon>
+      <ion-icon class="icon-header" [name]="vehicle.iconVehicle"></ion-icon>
       <h3 class="header-list header font-size20">{{ vehicle.nameVehicle }}</h3>
       <ion-button fill="clear">
         <ion-icon *ngIf="hideVehicles[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
@@ -41,7 +41,7 @@
     <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintenance" [hidden]="hideVehicles[i]">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width9 align-start">
-        <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(maint)"></ion-icon>
+        <ion-icon size="large" class="icon-color" [name]="maint.iconMaintenance"></ion-icon>
       </ion-avatar>
       <div class="main-item">
         <div>
@@ -62,12 +62,11 @@
           <ion-item button *ngFor="let repl of maint.listInfoCalendarReplacement" class="second-item" (click)="showInfo(repl)">
             <!-- Ivatar -->
             <ion-avatar slot="start" class="max-width9 align-start">
-              <ion-icon [class]="getClassIcon(repl.warning, 'second-icon-avatar')"
-                [color]="getClassIcon(repl.warning, '')" [name]="getIconReplacement(repl)"></ion-icon>
+              <ion-icon [class]="'second-icon-avatar' + repl.warningIconClass" [color]="repl.warningIconClass" [name]="repl.iconReplacement"></ion-icon>
             </ion-avatar>
             <div class="main-item-div">
               <div class="table-row margin-right5 table-row auto-width">
-                <ion-icon [class]="getClassIcon(repl.warning, 'icon-pos')" [color]="getClassIcon(repl.warning, '')" size="small"
+                <ion-icon [class]="'icon-pos' + repl.warningIconClass" [color]="repl.warningIconClass" size="small"
                   [name]="getIconKms(repl.warning)"></ion-icon>
                 <p class="p-color row-pos auto-width row-overflow-hiden font-size14">{{ repl.nameReplacement }}</p>
                 <p class="p-color row-pos align-right font-size14">{{ repl.dateFormat }}</p>

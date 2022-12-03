@@ -38,24 +38,4 @@ export class VehicleService {
         return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
     }
 
-    // ICONS
-
-    getIconVehicle(vehicle: VehicleModel): string {
-        switch (vehicle.vehicleType.code) {
-            case Constants.VEHICLE_TYPE_CODE_MOTO:
-                return 'bicycle';
-            case Constants.VEHICLE_TYPE_CODE_CAR:
-                return 'car-sport';
-            default:
-                return 'car';
-        }
-    }
-
-    loadIconDashboard<T>(data: T[]): string {
-        if (data.length === 0) {
-          return 'information-circle';
-        } else {
-          return 'bar-chart';
-        }
-      }
 }

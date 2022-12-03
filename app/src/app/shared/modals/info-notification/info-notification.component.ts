@@ -15,7 +15,7 @@ import {
 } from '@models/index';
 import {
   DashboardService, ConfigurationService, ControlService, CalendarService,
-  SettingsService, DataBaseService, HomeService, InfoVehicleService
+  SettingsService, DataBaseService, HomeService, InfoVehicleService, IconService
 } from '@services/index';
 import { WarningWearEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
@@ -45,7 +45,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // DATA
   dataMaintenance: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-  vehicleKmEstimated = 0;
   nameMaintenanceElement = '';
   nameMaintenance = '';
   labelNameVehicle = '';
@@ -56,6 +55,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   labelLifeReplacement = '';
   labelNotRecord = '';
   measure: any = {};
+  iconMaintenanceElement = '';
 
   // SUBSCRIPTION
   searchDashboardSubscription: Subscription = new Subscription();
@@ -75,7 +75,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
               private settingsService: SettingsService,
               private dbService: DataBaseService,
               private homeService: HomeService,
-              private infoVehicleService: InfoVehicleService) {
+              private infoVehicleService: InfoVehicleService,
+              private iconService: IconService) {
   }
 
   ngOnInit() {
@@ -105,9 +106,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       this.getObserverSearchDashboard();
       this.getObserverOrientationChange();
       this.getObserverSearchDashboardRecords();
+      this.iconMaintenanceElement = this.getMaintenanceNow(this.wear.listWearMaintenance).listWearReplacement[0].iconMaintenanceElement;
     } else {
       const wear: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
       this.isCalendar = false;
+      this.iconMaintenanceElement = '';
       this.labelPercent = Math.round((1 - (wear.timeMaintenance === 0 || wear.timeMaintenance === null ?
           wear.listWearReplacement[0].percentKms :
           (wear.listWearReplacement[0].percentKms + wear.listWearReplacement[0].percentMonths) / 2)) * 100);
@@ -175,17 +178,14 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   configureResume() {
     this.dataMaintenance = this.modalInputModel.data;
-    const vehicle: VehicleModel = new VehicleModel(null, null, 0, this.dataMaintenance.kmVehicle,
-      null, null, this.dataMaintenance.kmsPerMonthVehicle, this.dataMaintenance.dateKmsVehicle, this.dataMaintenance.datePurchaseVehicle);
-    this.vehicleKmEstimated = this.calendarService.calculateKmVehicleEstimated(vehicle);
     const wearMain: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
     const wearRep: WearReplacementProgressBarViewModel = wearMain.listWearReplacement[0];
     this.labelNameVehicle = this.dataMaintenance.nameVehicle;
     this.nameMaintenance = wearMain.descriptionMaintenance;
     this.nameMaintenanceElement = wearRep.nameMaintenanceElement;
-    this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.dataMaintenance.kmVehicle, this.vehicleKmEstimated, this.measure);
+    this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.dataMaintenance.kmVehicle, this.dataMaintenance.kmEstimatedVehicle, this.measure);
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
-    let kmLife = this.vehicleKmEstimated;
+    let kmLife = this.dataMaintenance.kmEstimatedVehicle;
     const today: Date = new Date();
     if (wearRep.kmOperation !== null) {
       kmLife -= wearRep.kmOperation;
@@ -193,7 +193,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     if (wearMain.timeMaintenance !== 0) {
       let timeLife = 0;
       if (wearRep.kmOperation === null) {
-        timeLife = this.calendarService.monthDiff(new Date(vehicle.datePurchase), today);
+        timeLife = this.calendarService.monthDiff(new Date(this.dataMaintenance.datePurchaseVehicle), today);
       } else {
         timeLife = this.calendarService.monthDiff(new Date(wearRep.dateOperation), today);
       }
@@ -212,7 +212,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
       {
         maintenance: this.nameMaintenanceElement,
-        km: (calendarKm.km > this.vehicleKmEstimated ? calendarKm.km : this.vehicleKmEstimated),
+        km: (calendarKm.km > this.dataMaintenance.kmEstimatedVehicle ? calendarKm.km : this.dataMaintenance.kmEstimatedVehicle),
         date: this.calendarService.getDateString(dateMaintenance),
         measure: this.measure.value
       });
@@ -233,27 +233,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  getClassProgressbar(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassProgressbar(warning, styles);
-  }
-
-  getClassIcon(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassIcon(warning, styles);
-  }
-
   getIconKms(warning: WarningWearEnum): string {
-    return this.homeService.getIconKms(warning);
-  }
-
-  getIconMaintenance(wear: WearMaintenanceProgressBarViewModel): string {
-    return this.configurationService.getIconMaintenance(
-      new MaintenanceModel(null, null, new MaintenanceFreqModel(wear.codeMaintenanceFreq)));
-  }
-
-  getIconReplacement(): string {
-    return (!!this.wear && this.wear.listWearMaintenance.length > 0 ? this.configurationService.getIconReplacement(
-      new MaintenanceElementModel(null, null, null, 0,
-        this.getMaintenanceNow(this.wear.listWearMaintenance).listWearReplacement[0].idMaintenanceElement)) : '');
+    return this.iconService.getIconKms(warning);
   }
 
   getKmPercent(wear: WearReplacementProgressBarViewModel): string {
@@ -375,8 +356,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getMaintenanceNow(wears: WearMaintenanceProgressBarViewModel[]): WearMaintenanceProgressBarViewModel {
-    let result: WearMaintenanceProgressBarViewModel = wears.find(x => x.fromKmMaintenance <= this.vehicleKmEstimated &&
-      (x.toKmMaintenance === null || x.toKmMaintenance >= this.vehicleKmEstimated));
+    let result: WearMaintenanceProgressBarViewModel = wears.find(x => x.fromKmMaintenance <= this.dataMaintenance.kmEstimatedVehicle &&
+      (x.toKmMaintenance === null || x.toKmMaintenance >= this.dataMaintenance.kmEstimatedVehicle));
     if (!!!result) {
       result = wears[wears.length - 1];
     }

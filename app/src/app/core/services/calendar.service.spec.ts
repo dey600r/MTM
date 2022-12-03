@@ -13,7 +13,7 @@ import { Constants } from '@utils/index';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { InfoCalendarVehicleViewModel, WearVehicleProgressBarViewModel } from '@models/index';
+import { InfoCalendarVehicleViewModel, VehicleModel, WearVehicleProgressBarViewModel } from '@models/index';
 
 describe('CalendarService', () => {
     let service: CalendarService;
@@ -74,33 +74,29 @@ describe('CalendarService', () => {
     it('should calculate kilometer vehicle estimated with km per month', () => {
         const today: Date = new Date();
         const date: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10);
-        const data: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel(1, '', 80000,
-            new Date(2015, 8, 1), 700, date);
+        const vehice = new VehicleModel(null, null, 0, 80000, null, null, 700, date, new Date(2015, 8, 1));
 
-        const result: number = service.calculateWearKmVehicleEstimated(data);
-        expect(result).toBeLessThanOrEqual(80419);
-        expect(result).toBeGreaterThanOrEqual(80233);
+        const result: number = service.calculateKmVehicleEstimated(vehice);
+        expect(result).toBeGreaterThanOrEqual(vehice.km);
     });
 
     it('should calculate kilometer vehicle estimated without km per month', () => {
         const today: Date = new Date();
         const date: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10);
-        const data: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel(1, '', 80000,
-            new Date(2015, 8, 1), null, date);
+        const vehice = new VehicleModel(null, null, 0, 80000, null, null, null, date, new Date(2015, 8, 1));
 
-        const result: number = service.calculateWearKmVehicleEstimated(data);
-        expect(result).toBeLessThanOrEqual(80419);
-        expect(result).toBeGreaterThanOrEqual(80340);
+        const result: number = service.calculateKmVehicleEstimated(vehice);
+        expect(result).toBeGreaterThanOrEqual(vehice.km);
     });
 
     it('should calculate kilometer vehicle estimated without km per month and new motorbike', () => {
         const today: Date = new Date();
         const date: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10);
         const datePurchase: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 15);
-        const data: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel(1, '', 0,
-            datePurchase, null, date);
+        const vehice = new VehicleModel(null, null, 0, 0, null, null, null, date, datePurchase);
 
-        expect(service.calculateWearKmVehicleEstimated(data)).toEqual(0);
+        const result: number = service.calculateKmVehicleEstimated(vehice);
+        expect(result).toEqual(0);
     });
 
     it('should map list wear notification to list info calendar vehicle view', () => {

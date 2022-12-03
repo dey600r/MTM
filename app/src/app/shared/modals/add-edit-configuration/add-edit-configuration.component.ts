@@ -102,8 +102,4 @@ export class AddEditConfigurationComponent implements OnInit {
   isValidDescription(f: any): boolean {
     return f.configurationDescription !== undefined && f.configurationDescription.validity.valid;
   }
-
-  getIconMaintenance(maintenance: MaintenanceModel): string {
-    return this.configurationService.getIconMaintenance(maintenance);
-  }
 }

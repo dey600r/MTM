@@ -2,11 +2,16 @@ import {
     ConfigurationModel, MaintenanceElementModel, MaintenanceFreqModel, MaintenanceModel, OperationModel,
     OperationTypeModel, SystemConfigurationModel, VehicleModel, VehicleTypeModel
 } from '@models/index';
+import { CalendarService, IconService } from '@services/index';
 
 import { Constants } from '@utils/index';
 
 export class MockData {
-    static MaintenanceElements: MaintenanceElementModel[] = [
+    static iconService: IconService = new IconService();
+    static calendarService: CalendarService = new CalendarService(null, this.iconService);
+
+    /* MAINTENANCE ELELEMTNS */
+    static MaintenanceElementsAux: MaintenanceElementModel[] = [
         new MaintenanceElementModel('FRONT_WHEEL', 'CHANGE_FRONT_WHEEL', true, 110, 1),
         new MaintenanceElementModel('BACK_WHEEL', 'CHANGE_BACK_WHEEL', true, 180, 2),
         new MaintenanceElementModel('ENGINE_OIL', 'CHANGE_ENGINE_OIL', true, 45, 3),
@@ -19,11 +24,21 @@ export class MockData {
         new MaintenanceElementModel('BACK_BRAKE_FLUID', 'CHANGE_BACK_BRAKE_FLUID', false, 5, 10),
         new MaintenanceElementModel('OIL_FILTER2', 'CHANGE_OIL_FILTER2', true, 11, 11),
     ];
-    static MaintenanceFreqs: MaintenanceFreqModel[] = [
+    public static MaintenanceElements: MaintenanceElementModel[] = MockData.MaintenanceElementsAux.map(x => {
+        return {...x, icon: this.iconService.getIconReplacement(x.id) };
+    });
+
+    /* MAINTENANCE FREQUENCIES */
+    public static MaintenanceFreqsAux: MaintenanceFreqModel[] = [
         new MaintenanceFreqModel(Constants.MAINTENANCE_FREQ_ONCE_CODE, 'ONCE', 1),
         new MaintenanceFreqModel(Constants.MAINTENANCE_FREQ_CALENDAR_CODE, 'CALENDAR', 2)
     ];
-    static Maintenances: MaintenanceModel[] = [
+    public static MaintenanceFreqs: MaintenanceFreqModel[] = MockData.MaintenanceFreqsAux.map(x => {
+        return {...x, icon: this.iconService.getIconMaintenance(x.code) };
+    });
+
+    /* MAINTENANCES */
+    public static Maintenances: MaintenanceModel[] = [
         new MaintenanceModel('FIRST_REVIEW', [MockData.MaintenanceElements[0], MockData.MaintenanceElements[2]],
             MockData.MaintenanceFreqs[0], 1000, 6, true, false, 0, null, true, 1),
         new MaintenanceModel('BASIC_REVIEW', [MockData.MaintenanceElements[1], MockData.MaintenanceElements[3],
@@ -41,7 +56,9 @@ export class MockData {
         new MaintenanceModel('REVIES BRAKES', [MockData.MaintenanceElements[8], MockData.MaintenanceElements[8]],
             MockData.MaintenanceFreqs[1], 18000, 48, false, true, 0, null, false, 7)
     ];
-    static SystemConfigurations: SystemConfigurationModel[] = [
+
+    /* SYSTEM CONFIGURATION */
+    public static SystemConfigurations: SystemConfigurationModel[] = [
         new SystemConfigurationModel(Constants.KEY_LAST_UPDATE_DB, 'v3.1.0', new Date(), 1),
         new SystemConfigurationModel(Constants.KEY_CONFIG_DISTANCE, Constants.SETTING_DISTANCE_KM, new Date(), 2),
         new SystemConfigurationModel(Constants.KEY_CONFIG_MONEY, Constants.SETTING_MONEY_EURO, new Date(), 3),
@@ -49,6 +66,8 @@ export class MockData {
         new SystemConfigurationModel(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_NO, new Date(), 5),
         new SystemConfigurationModel(Constants.KEY_CONFIG_SYNC_EMAIL, 'USER_TEST@gmail.com', new Date(), 6),
     ];
+
+    /* CONFIGURATION */
     static Configurations: ConfigurationModel[] = [
         new ConfigurationModel('PRODUCTION', 'PRODUCTION SETUP', true, [MockData.Maintenances[0],
             MockData.Maintenances[1], MockData.Maintenances[4], MockData.Maintenances[5]], 1),
@@ -56,20 +75,32 @@ export class MockData {
         new ConfigurationModel('KAWASAKI', 'PRODUCTION SETUP KAWASAKI', true, [MockData.Maintenances[1],
             MockData.Maintenances[3], MockData.Maintenances[6]], 3)
     ];
-    static VehicleTypes: VehicleTypeModel[] = [
+
+    /* VEHICLE TYPE */
+    public static VehicleTypesAux: VehicleTypeModel[] = [
         new VehicleTypeModel(Constants.VEHICLE_TYPE_CODE_MOTO, 'MOTORBIKE', 1),
         new VehicleTypeModel(Constants.VEHICLE_TYPE_CODE_CAR, 'CAR', 2),
         new VehicleTypeModel('O', 'OTHER', 3),
     ];
-    static Vehicles: VehicleModel[] = [
+    public static VehicleTypes: VehicleTypeModel[] = MockData.VehicleTypesAux.map(x => {
+        return {...x, icon: this.iconService.getIconVehicle(x.code) };
+    });
+
+    /* VEHICLES */
+    public static VehiclesAux: VehicleModel[] = [
         new VehicleModel('R6', 'Yamaha', 2005, 100200, MockData.Configurations[0], MockData.VehicleTypes[0],
-            600, new Date(2021, 6, 2), new Date(2006, 3, 27), true, 1),
+        600, new Date(2021, 6, 2), new Date(2006, 3, 27), true, 1),
         new VehicleModel('gt125r', 'Hyosung', 2006, 76750, MockData.Configurations[1], MockData.VehicleTypes[0],
-            50, new Date(2021, 6, 2), new Date(2006, 9, 12), true, 2),
+        50, new Date(2021, 6, 2), new Date(2006, 9, 12), true, 2),
         new VehicleModel('Ninja 1000sx', 'Kawasaki', 2021, 12000, MockData.Configurations[2], MockData.VehicleTypes[0],
-            600, new Date(2021, 6, 2), new Date(2021, 3, 5), true, 3),
+        600, new Date(2021, 6, 2), new Date(2021, 3, 5), true, 3),
     ];
-    static OperationTypes: OperationTypeModel[] = [
+    public static Vehicles: VehicleModel[] = MockData.VehiclesAux.map(x => {
+        return {...x, kmEstimated: this.calendarService.calculateKmVehicleEstimated(x) };
+    });
+
+    /* OPERATION TYPES */
+    public static OperationTypesAux: OperationTypeModel[] = [
         new OperationTypeModel(Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP, 'MAINTENANCE_WORKSHOP', 1),
         new OperationTypeModel(Constants.OPERATION_TYPE_FAILURE_WORKSHOP, 'FAILURE_WORKSHOP', 2),
         new OperationTypeModel(Constants.OPERATION_TYPE_CLOTHES, 'CLOTHES', 3),
@@ -80,6 +111,11 @@ export class MockData {
         new OperationTypeModel(Constants.OPERATION_TYPE_FAILURE_HOME, 'FAILURE_HOME', 8),
         new OperationTypeModel(Constants.OPERATION_TYPE_SPARE_PARTS, 'SPARE_PARTS', 9)
     ];
+    public static OperationTypes: OperationTypeModel[] = MockData.OperationTypesAux.map(x => {
+        return {...x, icon: this.iconService.getIconOperationType(x.code) };
+    });
+
+    /* OPERATIONS */
     static Operations: OperationModel[] = [
         new OperationModel('Compra moto', 'Compra hyosung GT125r 2006', MockData.OperationTypes[5], MockData.Vehicles[1],
             0, new Date(2006, 9, 12), 'Motos real (Ciudad Real)', 'Yo', 3500, '', 1, []),

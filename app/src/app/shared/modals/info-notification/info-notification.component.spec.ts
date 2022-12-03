@@ -21,9 +21,9 @@ describe('InfoNotificationComponent', () => {
   let component: InfoNotificationComponent;
   let fixture: ComponentFixture<InfoNotificationComponent>;
   let translate: TranslateService;
-  let homeService: HomeService;
+  let homeService: HomeService;  
 
-  //jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+  // jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
   beforeEach((async () => {
     const config: any = SetupTest.config;

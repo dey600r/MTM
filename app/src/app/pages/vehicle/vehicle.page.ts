@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
-import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService } from '@services/index';
+import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
 import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
 // COMPONENTS
@@ -41,7 +41,8 @@ export class VehiclePage extends BasePage implements OnInit {
               private controlService: ControlService,
               private dashboardService: DashboardService,
               private settingsService: SettingsService,
-              private detector: ChangeDetectorRef) {
+              private detector: ChangeDetectorRef,
+              private iconService: IconService) {
       super(platform, translator);
   }
 
@@ -139,10 +140,6 @@ export class VehiclePage extends BasePage implements OnInit {
     );
   }
 
-  getIconVehicle(vehicle: VehicleModel): string {
-    return this.vehicleService.getIconVehicle(vehicle);
-  }
-
   activateNotificationVehicle(itemSliding: any, vehicle: VehicleModel) {
     let vehicleToSave: VehicleModel = vehicle;
     const message: string = (vehicleToSave.active ? 'PAGE_VEHICLE.ConfirmDesactivateNotificationVehicle' : 'PAGE_VEHICLE.ConfirmActivateNotificationVehicle');
@@ -165,7 +162,7 @@ export class VehiclePage extends BasePage implements OnInit {
   }
 
   loadIconDashboard(): void {
-    this.iconNameHeaderLeft = this.vehicleService.loadIconDashboard<VehicleModel>(this.vehicles);
+    this.iconNameHeaderLeft = this.iconService.loadIconDashboard<VehicleModel>(this.vehicles);
   }
 
 }

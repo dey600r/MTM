@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService,
-  CalendarService, SettingsService, ThemeService, HomeService
+  CalendarService, SettingsService, ThemeService, HomeService, IconService
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
@@ -69,7 +69,8 @@ export class HomePage extends BasePage implements OnInit {
               private settingsService: SettingsService,
               private themeService: ThemeService,
               private homeService: HomeService,
-              private modalController: ModalController) {
+              private modalController: ModalController,
+              private iconService: IconService) {
     super(platform, translator);
   }
 
@@ -145,10 +146,9 @@ export class HomePage extends BasePage implements OnInit {
     this.allWears.forEach(x => {
       this.wears = [...this.wears, Object.assign({}, x)];
       let listWears: WearMaintenanceProgressBarViewModel[] = [];
-      const kmVehicle: number = this.calendarService.calculateWearKmVehicleEstimated(x);
       x.listWearMaintenance.forEach(z => {
       if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
-          z.fromKmMaintenance <= kmVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= kmVehicle)) {
+          z.fromKmMaintenance <= x.kmEstimatedVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= x.kmEstimatedVehicle)) {
           listWears = [...listWears, z];
         }
       });
@@ -211,29 +211,8 @@ export class HomePage extends BasePage implements OnInit {
     return result;
   }
 
-  getClassProgressbar(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassProgressbar(warning, styles);
-  }
-
-  getReplacementClassIcon(wearRep: WearReplacementProgressBarViewModel, styles: string): string {
-    return this.getClassIcon(this.homeService.calculateWearNotificationPriority(wearRep.warningKms, wearRep.warningMonths), styles);
-  }
-
-  getIconReplacement(wearRep: WearReplacementProgressBarViewModel): string {
-    return this.configurationService.getIconReplacement(new MaintenanceElementModel(null, null, null, 0, wearRep.idMaintenanceElement));
-  }
-
-  getClassIcon(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassIcon(warning, styles);
-  }
-
   getIconKms(warning: WarningWearEnum): string {
-    return this.homeService.getIconKms(warning);
-  }
-
-  getIconMaintenance(wear: WearMaintenanceProgressBarViewModel): string {
-    return this.configurationService.getIconMaintenance(
-      new MaintenanceModel(null, null, new MaintenanceFreqModel(wear.codeMaintenanceFreq)));
+    return this.iconService.getIconKms(warning);
   }
 
   segmentChanged(event: any): void {
@@ -269,14 +248,20 @@ export class HomePage extends BasePage implements OnInit {
           y.toKmMaintenance >= x.fromKmMaintenance - margenGrouper && y.toKmMaintenance <= x.fromKmMaintenance + margenGrouper)));
     }
     listGroupWearMaintenance = [...listGroupWearMaintenance, wm];
-    const groupWearVehicle: WearVehicleProgressBarViewModel =
-      new WearVehicleProgressBarViewModel(wv.idVehicle, wv.nameVehicle, wv.kmVehicle, wv.datePurchaseVehicle,
-      wv.kmsPerMonthVehicle, wv.dateKmsVehicle, wv.percent, wv.percentKm, wv.percentTime, wv.warning, []);
+    const groupWearVehicle: WearVehicleProgressBarViewModel = {
+      idVehicle: wv.idVehicle, nameVehicle: wv.nameVehicle, kmVehicle: wv.kmVehicle, kmEstimatedVehicle: wv.kmEstimatedVehicle, 
+      datePurchaseVehicle: wv.datePurchaseVehicle, kmsPerMonthVehicle: wv.kmsPerMonthVehicle, dateKmsVehicle: wv.dateKmsVehicle,
+      percent: wv.percent, percentKm: wv.percentKm, percentTime: wv.percentTime, warning: wv.warning, listWearMaintenance: [],
+      iconVehicle: wv.iconVehicle, idConfiguration: wv.idConfiguration, nameConfiguration: wv.nameConfiguration,
+      typeVehicle: wv.typeVehicle, warningProgressBarIcon: wv.warningProgressBarIcon
+    };
     listGroupWearMaintenance.forEach(x => {
-      groupWearVehicle.listWearMaintenance = [...groupWearVehicle.listWearMaintenance, new WearMaintenanceProgressBarViewModel(
-        x.codeMaintenanceFreq, x.idMaintenance, x.descriptionMaintenance, x.kmMaintenance, x.timeMaintenance,
-        x.fromKmMaintenance, x.toKmMaintenance, x.initMaintenance, x.wearMaintenance, [], [wr]
-      )];
+      groupWearVehicle.listWearMaintenance = [...groupWearVehicle.listWearMaintenance, {
+        codeMaintenanceFreq: x.codeMaintenanceFreq, idMaintenance: x.idMaintenance, descriptionMaintenance: x.descriptionMaintenance,
+        kmMaintenance: x.kmMaintenance, timeMaintenance: x.timeMaintenance, fromKmMaintenance: x.fromKmMaintenance,
+        toKmMaintenance: x.toKmMaintenance, initMaintenance: x.initMaintenance, wearMaintenance: x.wearMaintenance, 
+        listWearNotificationReplacement: [], listWearReplacement: [wr], iconMaintenance: x.iconMaintenance
+      }];
     });
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
       groupWearVehicle, this.operations, PageEnum.HOME));
@@ -343,11 +328,6 @@ export class HomePage extends BasePage implements OnInit {
       }
     );
     }
-  }
-
-  getIconVehicle(wear: WearVehicleProgressBarViewModel): string {
-    return this.vehicleService.getIconVehicle(new VehicleModel(null, null, null, null, null,
-      new VehicleTypeModel(wear.typeVehicle)));
   }
 
   getKmPercent(wearMain: WearMaintenanceProgressBarViewModel, wearRep: WearReplacementProgressBarViewModel): string {

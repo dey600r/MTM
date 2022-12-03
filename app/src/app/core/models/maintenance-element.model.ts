@@ -1,6 +1,6 @@
-import { BaseNameDescriptionModel } from './common.model';
+import { BaseIconNameDescriptionModel } from './common.model';
 
-export class MaintenanceElementModel extends BaseNameDescriptionModel {
+export class MaintenanceElementModel extends BaseIconNameDescriptionModel {
     master: boolean;
     price: number;
     constructor(n: string = null, desc: string = null, m: boolean = false, price: number = 0,  id: number = 1) {

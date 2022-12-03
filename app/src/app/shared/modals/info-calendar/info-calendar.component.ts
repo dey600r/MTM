@@ -14,7 +14,7 @@ import {
 // SERVICES
 import {
   CalendarService, CommonService, ConfigurationService, VehicleService,
-  ControlService, SettingsService, DataBaseService, HomeService
+  ControlService, SettingsService, DataBaseService, HomeService, IconService
 } from '@services/index';
 
 // UTILS
@@ -60,7 +60,8 @@ export class InfoCalendarComponent implements OnInit {
               private controlService: ControlService,
               private settingsService: SettingsService,
               private dbService: DataBaseService,
-              private homeService: HomeService) {
+              private homeService: HomeService,
+              private iconService: IconService) {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }
@@ -260,25 +261,7 @@ export class InfoCalendarComponent implements OnInit {
   // ICONS
 
   getIconKms(warning: WarningWearEnum): string {
-    return this.homeService.getIconKms(warning);
-  }
-
-  getClassIcon(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassIcon(warning, styles);
-  }
-
-  getIconMaintenance(maint: InfoCalendarMaintenanceViewModel): string {
-    return this.configurationService.getIconMaintenance(
-      new MaintenanceModel(null, null, new MaintenanceFreqModel(maint.codeMaintenanceFreq)));
-  }
-
-  getIconReplacement(rep: InfoCalendarReplacementViewModel): string {
-    return this.configurationService.getIconReplacement(new MaintenanceElementModel(null, null, null, 0, rep.idReplacement));
-  }
-
-  getIconVehicle(infoVehicle: InfoCalendarVehicleViewModel): string {
-    return this.vehicleService.getIconVehicle(new VehicleModel(null, null, null, null, null,
-      new VehicleTypeModel(infoVehicle.typeVehicle)));
+    return this.iconService.getIconKms(warning);
   }
 
   closeModal() {

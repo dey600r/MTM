@@ -4,19 +4,25 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import * as Moment from 'moment';
 
-// UTILS
-import { Constants, WarningWearEnum } from '@utils/index';
+// SERVICES
+import { IconService } from './icon.service';
+
+// MODELS
 import {
     WearVehicleProgressBarViewModel, InfoCalendarVehicleViewModel, InfoCalendarMaintenanceViewModel,
     InfoCalendarReplacementViewModel, WearMaintenanceProgressBarViewModel, VehicleModel, WearReplacementProgressBarViewModel
-} from '../models';
+} from '@models/index';
+
+// UTILS
+import { Constants, WarningWearEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CalendarService {
 
-    constructor(private translator: TranslateService) {
+    constructor(private translator: TranslateService,
+                private iconSercive: IconService) {
     }
 
     // COMMON UTILS METHODS STRINGS
@@ -75,11 +81,6 @@ export class CalendarService {
 
     // CALCULATE VEHICLE
 
-    calculateWearKmVehicleEstimated(wear: WearVehicleProgressBarViewModel): number {
-        return this.calculateKmVehicleEstimated(new VehicleModel(null, null, 0, wear.kmVehicle,
-            null, null, wear.kmsPerMonthVehicle, wear.dateKmsVehicle, wear.datePurchaseVehicle));
-    }
-
     calculateKmVehicleEstimated(vehicle: VehicleModel): number {
         const kmPerM: number = this.calculateKmsPerMonth(vehicle);
         const dateKm: Date = new Date(vehicle.dateKms);
@@ -112,6 +113,7 @@ export class CalendarService {
                             idMaintenance: wearMain.idMaintenance,
                             descriptionMaintenance: wearMain.descriptionMaintenance,
                             codeMaintenanceFreq: wearMain.codeMaintenanceFreq,
+                            iconMaintenance: wearMain.iconMaintenance,
                             fromKmMaintenance: wearMain.fromKmMaintenance,
                             toKmMaintenance: wearMain.toKmMaintenance,
                             initMaintenance: wearMain.initMaintenance,
@@ -134,6 +136,7 @@ export class CalendarService {
                     idVehicle: wear.idVehicle,
                     nameVehicle: wear.nameVehicle,
                     typeVehicle: wear.typeVehicle,
+                    iconVehicle: wear.iconVehicle,
                     listInfoCalendarMaintenance: calMain
                 }];
             });
@@ -149,10 +152,9 @@ export class CalendarService {
         let times = 0;
         let warnings: WarningWearEnum;
         if (km) {
-            const kmVehicle: number = this.calculateWearKmVehicleEstimated(wear);
-            kms = kmVehicle + wearRep.calculateKms;
+            kms = wear.kmEstimatedVehicle + wearRep.calculateKms;
             warnings = wearRep.warningKms;
-            dateResult = this.getDateCalculatingKm(wear, wearMain, wearRep, kmVehicle);
+            dateResult = this.getDateCalculatingKm(wear, wearMain, wearRep, wear.kmEstimatedVehicle);
         } else {
             times = wearRep.calculateMonths;
             warnings = wearRep.warningMonths;
@@ -161,10 +163,12 @@ export class CalendarService {
         return {
             idReplacement: wearRep.idMaintenanceElement,
             nameReplacement: wearRep.nameMaintenanceElement,
+            iconReplacement: wearRep.iconMaintenanceElement,
             price: (wearRep.priceOperation === null ? 0 : wearRep.priceOperation),
             km: kms,
             time: times,
             warning: warnings,
+            warningIconClass: this.iconSercive.getClassIcon(warnings),
             date: dateResult,
             dateFormat: this.getDateString(dateResult),
         };
@@ -232,6 +236,7 @@ export class CalendarService {
                         idVehicle: x.idVehicle,
                         nameVehicle: x.nameVehicle,
                         typeVehicle: x.typeVehicle,
+                        iconVehicle: x.iconVehicle,
                         listInfoCalendarMaintenance: rVehicle
                     }];
                 }
@@ -250,10 +255,12 @@ export class CalendarService {
                         rMaint = [...rMaint, {
                             idReplacement: z.idReplacement,
                             nameReplacement: z.nameReplacement,
+                            iconReplacement: z.iconReplacement,
                             price: z.price,
                             km: z.km,
                             time: z.time,
                             warning: z.warning,
+                            warningIconClass: this.iconSercive.getClassIcon(z.warning),
                             date: z.date,
                             dateFormat: z.dateFormat
                         }];
@@ -263,6 +270,7 @@ export class CalendarService {
                     idMaintenance: y.idMaintenance,
                     descriptionMaintenance: y.descriptionMaintenance,
                     codeMaintenanceFreq: y.codeMaintenanceFreq,
+                    iconMaintenance: y.iconMaintenance,
                     fromKmMaintenance: y.fromKmMaintenance,
                     toKmMaintenance: y.toKmMaintenance,
                     initMaintenance: y.initMaintenance,

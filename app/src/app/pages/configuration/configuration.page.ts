@@ -5,7 +5,7 @@ import { IonSelect, Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService } from '@services/index';
+import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService, IconService } from '@services/index';
 import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum } from '@utils/index';
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
@@ -52,6 +52,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
               private configurationService: ConfigurationService,
               private settingsService: SettingsService,
               private vehicleService: VehicleService,
+              private iconService: IconService,
               private detector: ChangeDetectorRef) {
     super(platform, translator);
   }
@@ -144,7 +145,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
           `${x.brand} ${x.model}`,
           x.configuration.name,
           `${x.km} ${this.measure.value}`,
-          this.vehicleService.getIconVehicle(x),
+          x.vehicleType.icon,
           (x.configuration.id === configuration.id)
         )];
     });
@@ -304,10 +305,6 @@ export class ConfigurationPage extends BasePage implements OnInit {
     );
   }
 
-  getIconMaintenance(maintenance: MaintenanceModel): string {
-    return this.configurationService.getIconMaintenance(maintenance);
-  }
-
   getReplacementCommas(replacements: MaintenanceElementModel[]): string {
     return this.configurationService.getReplacement(replacements);
   }
@@ -386,9 +383,5 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   isNotValidToDeleteReplacement(replacement: MaintenanceElementModel): boolean {
     return !replacement.master && this.maintenances.some(x => x.listMaintenanceElement.some(y => y.id === replacement.id));
-  }
-
-  getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
-    return this.configurationService.getIconReplacement(maintenanceElement);
   }
 }

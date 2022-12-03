@@ -9,7 +9,10 @@ import {
   MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel, SystemConfigurationModel
 } from '@models/index';
 import { ConstantsTable, ConstantsColumns, Constants } from '@utils/index';
+
+// SERVICES
 import { CalendarService } from './calendar.service';
+import { IconService } from './icon.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +20,8 @@ import { CalendarService } from './calendar.service';
 export class SqlService {
 
   constructor(private calendarService: CalendarService,
-              private translator: TranslateService) {
+              private translator: TranslateService,
+              private iconService: IconService) {
   }
 
   /* BUILDER SQL */
@@ -176,19 +180,22 @@ export class SqlService {
       let row: any = null;
       for (let i = 0; i < data.rows.length; i++) {
         row = data.rows.item(i);
-        vehiclesDB = [...vehiclesDB, {
+        let vehicleDB: VehicleModel = {
           id: Number(row[ConstantsColumns.COLUMN_MTM_ID]),
           model: row[ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL],
           brand: row[ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND],
           year: Number(row[ConstantsColumns.COLUMN_MTM_VEHICLE_YEAR]),
           km: Number(row[ConstantsColumns.COLUMN_MTM_VEHICLE_KM]),
+          kmEstimated: 0,
           configuration: this.getMapConfiguration(row, true),
           vehicleType: this.getMapVehicleType(row, true),
           kmsPerMonth: row[ConstantsColumns.COLUMN_MTM_VEHICLE_KMS_PER_MONTH],
           dateKms: new Date(row[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS]),
           datePurchase: row[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE],
           active: row[ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE] === Constants.DATABASE_YES
-        }];
+        };
+        vehicleDB.kmEstimated = this.calendarService.calculateKmVehicleEstimated(vehicleDB);
+        vehiclesDB = [...vehiclesDB, vehicleDB];
       }
     }
     return vehiclesDB;
@@ -208,11 +215,13 @@ export class SqlService {
     return (vehicle ? {
       id: Number(data.idVehicleType),
       code: data.codeVehicleType,
-      description: (!!data.descriptionVehicleType ? this.translator.instant(`DB.${data.descriptionVehicleType}`) : '')
+      description: (!!data.descriptionVehicleType ? this.translator.instant(`DB.${data.descriptionVehicleType}`) : ''),
+      icon: this.iconService.getIconVehicle(data.codeVehicleType)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE],
-      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_DESCRIPTION]}`)
+      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_DESCRIPTION]}`),
+      icon: this.iconService.getIconVehicle(data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE])
     });
   }
 
@@ -309,11 +318,13 @@ export class SqlService {
     return (op ? {
       id: Number(data.idOperationType),
       code: data.codeOperationType,
-      description: this.translator.instant(`DB.${data.descriptionOperationType}`)
+      description: this.translator.instant(`DB.${data.descriptionOperationType}`),
+      icon: this.iconService.getIconOperationType(data.codeOperationType)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE],
-      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION]}`)
+      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION]}`),
+      icon: this.iconService.getIconOperationType(data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE])
     });
   }
 
@@ -394,7 +405,8 @@ export class SqlService {
         this.translator.instant(`DB.${data.descriptionMaintenanceElement}`) :
         data.descriptionMaintenanceElement),
       master: (data.masterMaintenanceElement === Constants.DATABASE_YES),
-      price: (!!data.priceOpMaintenanceElement ? data.priceOpMaintenanceElement : 0)
+      price: (!!data.priceOpMaintenanceElement ? data.priceOpMaintenanceElement : 0),
+      icon: this.iconService.getIconReplacement(data.idMaintenanceElement)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       name: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES ?
@@ -404,7 +416,8 @@ export class SqlService {
         this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION]}`) :
         data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION]),
       master: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES),
-      price: 0
+      price: 0,
+      icon: this.iconService.getIconReplacement(data[ConstantsColumns.COLUMN_MTM_ID])
     });
   }
 
@@ -422,11 +435,13 @@ export class SqlService {
     return (man ? {
       id: Number(data.idMaintenanceFreq),
       code: data.codeMaintenanceFreq,
-      description: this.translator.instant(`DB.${data.descriptionMaintenanceFreq}`)
+      description: this.translator.instant(`DB.${data.descriptionMaintenanceFreq}`),
+      icon: this.iconService.getIconMaintenance(data.codeMaintenanceFreq)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE],
-      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION]}`)
+      description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION]}`),
+      icon: this.iconService.getIconMaintenance(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE])
     });
   }
 

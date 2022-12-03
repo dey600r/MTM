@@ -35,7 +35,7 @@
       <ion-item button [ngClass]="{ 'disable-item-color': !v.active }">
         <!-- Icons -->
         <ion-avatar slot="start" class="max-width10" (click)="openVehicleModal(v, false)">
-          <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !v.active, 'icon-color': v.active }" [name]="getIconVehicle(v)"></ion-icon>
+          <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !v.active, 'icon-color': v.active }" [name]="v.vehicleType.icon"></ion-icon>
         </ion-avatar>
         <!-- Labels -->
         <ion-label class="min-width40 label-event-force" (click)="openVehicleModal(v, false)">
@@ -45,9 +45,10 @@
         </ion-label>
         <ion-label class="padding-left10 label-event-force" (click)="openVehicleModal(v, false)">
           <h3>{{ v.km }} {{measure.value}}</h3>
+          <h4 *ngIf="v.km !== v.kmEstimated" class="disable-item-color">{{ v.kmEstimated }} {{measure.value}}</h4>
           <ion-label class="row-block flex-items-center">
             <ion-icon name="cog"></ion-icon>
-            <p [ngClass]="{ 'icon-label disable-item-color': !v.active, 'icon-label': v.active }">{{ v.configuration.name }}</p>
+            <p [ngClass]="{ 'icon-label margin-top-conf disable-item-color': !v.active, 'icon-label margin-top-conf': v.active }">{{ v.configuration.name }}</p>
           </ion-label>
         </ion-label>
         <!-- Buttons edit / delete -->

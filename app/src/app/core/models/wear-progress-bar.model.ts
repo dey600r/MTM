@@ -4,24 +4,28 @@ export class WearVehicleProgressBarViewModel {
     idVehicle = -1;
     nameVehicle = '';
     kmVehicle = 0;
+    kmEstimatedVehicle = 0;
     datePurchaseVehicle: Date = new Date();
     kmsPerMonthVehicle = 0;
     dateKmsVehicle: Date = new Date();
     typeVehicle = '';
+    iconVehicle = '';
     percent = 0;
     percentKm = 0;
     percentTime = 0;
     warning: WarningWearEnum = WarningWearEnum.SUCCESS;
+    warningProgressBarIcon = '';
     idConfiguration = -1;
     nameConfiguration = '';
     listWearMaintenance: WearMaintenanceProgressBarViewModel[] = [];
-    constructor(id: number = -1, name: string = '', km: number = 0, dateP: Date = new Date(),
+    constructor(id: number = -1, name: string = '', km: number = 0, kme: number = 0, dateP: Date = new Date(),
                 kmsM: number = 0, dateK: Date = new Date(), per: number = 0, perKm: number = 0, perTime: number = 0,
                 war: WarningWearEnum = WarningWearEnum.SUCCESS,
                 list: WearMaintenanceProgressBarViewModel[] = []) {
         this.idVehicle = id;
         this.nameVehicle = name;
         this.kmVehicle = km;
+        this.kmEstimatedVehicle = kme;
         this.datePurchaseVehicle = dateP;
         this.kmsPerMonthVehicle = kmsM;
         this.dateKmsVehicle = dateK;
@@ -35,9 +39,10 @@ export class WearVehicleProgressBarViewModel {
 
 export class WearMaintenanceProgressBarViewModel {
     codeMaintenanceFreq = '';
+    iconMaintenance = '';
     idMaintenance = -1;
     descriptionMaintenance = '';
-    kmMaintenance = 0; //
+    kmMaintenance = 0;
     timeMaintenance = 0;
     fromKmMaintenance = 0;
     toKmMaintenance = 0;
@@ -66,6 +71,7 @@ export class WearMaintenanceProgressBarViewModel {
 export class WearReplacementProgressBarViewModel {
     idMaintenanceElement = -1;
     nameMaintenanceElement = '';
+    iconMaintenanceElement = '';
     idOperation = -1;
     descriptionOperation = '';
     kmOperation = null;
@@ -76,13 +82,19 @@ export class WearReplacementProgressBarViewModel {
     calculateKms = 0;
     calculateMonths = 0;
     percentKms = 0;
+    warningIconClass = '';
     warningKms: WarningWearEnum = WarningWearEnum.SUCCESS;
+    warningKmsProgressBarIcon = '';
+    warningKmsIconClass = '';
     percentMonths = 0;
     warningMonths: WarningWearEnum = WarningWearEnum.SUCCESS;
+    warningMonthsProgressBarIcon = '';
+    warningMonthsIconClass = '';
 }
 
 export class WearNotificationReplacementProgressBarViewModel {
     warning: WarningWearEnum = WarningWearEnum.SUCCESS;
+    warningIconClass = '';
     numWarning = 0;
     totalWarning = 0;
 }

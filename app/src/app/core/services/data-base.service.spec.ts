@@ -91,6 +91,7 @@ describe('DataBaseService', () => {
         service.getVehicles().subscribe(data => {
             if (data !== undefined && data !== null && data.length > 0) {
                 expect(data).toEqual(MockData.Vehicles);
+                data.forEach(x => expect(x.kmEstimated).toBeGreaterThan(x.km));
             }
         });
         service.getVehicleType().subscribe(data => {
@@ -217,12 +218,14 @@ describe('DataBaseService', () => {
         try {
             service.executeScriptDataBase('');
             tick();
+            flush();
         }
         catch (e) {
             const messageError = 'Error executing script on DB: TESTING ERROR';
             expect(spySqlitePorter).toHaveBeenCalled();
             expect(console.error).toHaveBeenCalledWith(messageError);
             expect(e.message).toContain(messageError);
+            flush();
         }
     }));
 

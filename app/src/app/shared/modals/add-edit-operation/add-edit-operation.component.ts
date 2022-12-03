@@ -203,13 +203,15 @@ export class AddEditOperationComponent implements OnInit {
     this.maintenanceElementSelect = [];
     this.idMaintenanceElementSelect.forEach(x => {
       const replacement: MaintenanceElementModel = this.maintenanceElement.find(y => y.id === x);
-      this.maintenanceElementSelect = [...this.maintenanceElementSelect,
-        new MaintenanceElementModel(replacement.name, replacement.description, false, null, replacement.id)];
+      this.maintenanceElementSelect = [...this.maintenanceElementSelect, {
+        id: replacement.id,
+        name: replacement.name,
+        description: replacement.description,
+        master: replacement.master,
+        price: replacement.price,
+        icon: replacement.icon
+      }];
     });
-  }
-
-  getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
-    return this.configurationService.getIconReplacement(maintenanceElement);
   }
 
   showConfirmSaveWithDelete() {

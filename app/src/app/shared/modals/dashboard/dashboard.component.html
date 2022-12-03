@@ -25,7 +25,7 @@
         <ion-list-header class="padding-list-header">
             <ion-icon *ngIf="isParentPageVehicle()" size="large" name="home"></ion-icon>
             <h3 *ngIf="isParentPageVehicle()" class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerVehicle' | translate }}</h3>
-            <ion-icon *ngIf="isParentPageOperation()" size="large" [name]="getIconVehicle()"></ion-icon>
+            <ion-icon *ngIf="isParentPageOperation()" size="large" [name]="this.operations[0].vehicle.vehicleType.icon"></ion-icon>
             <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }} {{ vehicleModel }}</h3>
         </ion-list-header>
         <ngx-charts-bar-vertical class="justify-center"

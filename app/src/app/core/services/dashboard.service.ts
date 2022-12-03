@@ -275,25 +275,24 @@ export class DashboardService {
                 real.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
                 initKm = 0;
             }
-            const kmEstimated: number = this.calendarService.calculateWearKmVehicleEstimated(data);
             data.listWearMaintenance.forEach((main, index) => {
                 const rep: WearReplacementProgressBarViewModel = main.listWearReplacement[0];
                 estimated.series = [...estimated.series, this.getDataDashboard(`${rep.kmAcumulateMaintenance}${measure.value}`,
                     (initKm !== 0 && main.kmMaintenance > initKm && index === 0 ? initKm : main.kmMaintenance))];
                 const realSerie: number = (rep.kmOperation === null ?
-                    (rep.kmAcumulateMaintenance < kmEstimated ? 0 : kmEstimated % main.kmMaintenance) :
+                    (rep.kmAcumulateMaintenance < data.kmEstimatedVehicle ? 0 : data.kmEstimatedVehicle % main.kmMaintenance) :
                     (initKm !== 0 && main.kmMaintenance > initKm && index === 0 ? initKm : main.kmMaintenance) - rep.calculateKms);
                 real.series = [...real.series,
                     this.getDataDashboard(`${rep.kmAcumulateMaintenance}${measure.value}`, (realSerie < 0 ? 0 : realSerie))];
 
             });
-            if (firstMain.toKmMaintenance === null || lastMain.listWearReplacement[0].kmAcumulateMaintenance < kmEstimated) {
+            if (firstMain.toKmMaintenance === null || lastMain.listWearReplacement[0].kmAcumulateMaintenance < data.kmEstimatedVehicle) {
                 const kmMaintenance: number = lastMain.kmMaintenance;
                 const kmAcumMaintenance: number = lastMain.listWearReplacement[0].kmAcumulateMaintenance;
                 const lastMaintenance: number = kmAcumMaintenance + kmMaintenance;
                 estimated.series = [...estimated.series, this.getDataDashboard(`${lastMaintenance}${measure.value}`, kmMaintenance)];
                 real.series = [...real.series, this.getDataDashboard(`${lastMaintenance}${measure.value}`,
-                    (kmAcumMaintenance > kmEstimated ? 0 : kmEstimated % kmMaintenance))];
+                    (kmAcumMaintenance > data.kmEstimatedVehicle ? 0 : data.kmEstimatedVehicle % kmMaintenance))];
             }
             result = [estimated, real];
         }
@@ -312,18 +311,17 @@ export class DashboardService {
                 estimated.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
                 real.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
             }
-            const kmEstimated: number = this.calendarService.calculateWearKmVehicleEstimated(data);
             data.listWearMaintenance.forEach(main => {
                 const rep: WearReplacementProgressBarViewModel = main.listWearReplacement[0];
                 estimated.series = [...estimated.series,
                     this.getDataDashboard(`${rep.kmAcumulateMaintenance}${measure.value}`, rep.timeAcumulateMaintenance)];
                 const realSerie: number = (rep.kmOperation === null ?
-                    (main.kmMaintenance < kmEstimated ? 0 : this.calendarService.monthDiff(data.datePurchaseVehicle, new Date())) :
+                    (main.kmMaintenance < data.kmEstimatedVehicle ? 0 : this.calendarService.monthDiff(data.datePurchaseVehicle, new Date())) :
                     (rep.timeAcumulateMaintenance - rep.calculateMonths));
                 real.series = [...real.series,
                 this.getDataDashboard(`${rep.kmAcumulateMaintenance}${measure.value}`, (realSerie < 0 ? 0 : realSerie))];
             });
-            if (data.listWearMaintenance.length === 0 || lastMain.listWearReplacement[0].kmAcumulateMaintenance < kmEstimated) {
+            if (data.listWearMaintenance.length === 0 || lastMain.listWearReplacement[0].kmAcumulateMaintenance < data.kmEstimatedVehicle) {
                 const kmMaintenance: number = lastMain.kmMaintenance;
                 const timeMaintenance: number = lastMain.timeMaintenance;
                 const lastMaintenance: number = lastMain.listWearReplacement[0].kmAcumulateMaintenance + kmMaintenance;

@@ -14,7 +14,7 @@
       <ion-label>
         {{ v.brand + ' ' + v.model }}
       </ion-label>
-      <ion-icon size="small" [name]="getIconVehicle(v)"></ion-icon>
+      <ion-icon size="small" [name]="v.vehicleType.icon"></ion-icon>
     </ion-segment-button>
   </ion-segment>
 </ion-header>
@@ -70,7 +70,7 @@
               <!-- Icons -->
               <ion-avatar slot="start" class="main-avatar">
                 <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
-                  [name]="this.getIconMaintenance(m)"></ion-icon>
+                  [name]="m.iconMaintenance"></ion-icon>
               </ion-avatar>
             </div>
             <div class="main-div">
@@ -79,7 +79,7 @@
                 <div class="table-row">
                   <h2 class="text-overflow">{{ m.description }}</h2>
                   <div class="icon-notification">
-                    <ion-icon *ngIf="m.active" [class]="getClassIcon(m.warning, '')" [color]="getClassIcon(m.warning, '')"
+                    <ion-icon *ngIf="m.active" [class]="m.warningIconClass" [color]="m.warningIconClass"
                       size="small" [name]="getIconKms(m.warning)"></ion-icon>
                   </div>
                 </div>
@@ -104,10 +104,10 @@
             <ion-list class="second-item-div">
               <ion-item *ngFor="let r of m.listReplacement" [ngClass]="{ 'disable-item-color': !m.active }">
                 <ion-avatar slot="start" class="second-avatar">
-                  <ion-icon size="small" class="icon-color" [name]="getIconReplacement(r.id)"></ion-icon>
+                  <ion-icon size="small" class="icon-color" [name]="r.iconReplacement"></ion-icon>
                 </ion-avatar>
                 <ion-label [ngClass]="{ 'disable-item-color': !m.active }">{{ r.name }}</ion-label>
-                <ion-icon *ngIf="m.active" [class]="getClassIcon(r.warning, 'icon-row')" [color]="getClassIcon(r.warning, '')"
+                <ion-icon *ngIf="m.active" [class]="'icon-row' + r.warningIconClass" [color]="r.warningIconClass"
                   size="small" [name]="getIconKms(r.warning)"></ion-icon>
               </ion-item>
             </ion-list>
@@ -145,7 +145,7 @@
             <div>
               <!-- Icons -->
               <ion-avatar slot="start" class="main-avatar">
-                <ion-icon size="large" class="icon-color" [name]="this.getIconReplacement(rep.id)"></ion-icon>
+                <ion-icon size="large" class="icon-color" [name]="rep.iconReplacement"></ion-icon>
               </ion-avatar>
             </div>
             <div class="main-div">

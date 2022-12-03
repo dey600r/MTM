@@ -55,7 +55,7 @@
       <ion-item button>
         <!-- Icons -->
         <ion-avatar slot="start" class="max-width10" (click)="openMaintenanceModal(m, false)">
-          <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(m)"></ion-icon>
+          <ion-icon size="large" class="icon-color" [name]="m.maintenanceFreq.icon"></ion-icon>
         </ion-avatar>
         <!-- Labels -->
         <ion-label class="auto-width label-event-force" (click)="openMaintenanceModal(m, false)">
@@ -91,7 +91,7 @@
     <ion-item button *ngFor="let me of maintenanceElements">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10" (click)="openReplacementModal(me, false)">
-        <ion-icon size="large" class="icon-color" [name]="this.getIconReplacement(me)"></ion-icon>
+        <ion-icon size="large" class="icon-color" [name]="me.icon"></ion-icon>
       </ion-avatar>
       <!-- Labels -->
       <ion-label class="min-width70 label-event-force" (click)="openReplacementModal(me, false)">

@@ -18,7 +18,7 @@
       <ion-label>
         {{ v.brand + ' ' + v.model }}
       </ion-label>
-      <ion-icon size="small" [name]="getIconVehicle(v)"></ion-icon>
+      <ion-icon size="small" [name]="v.vehicleType.icon"></ion-icon>
     </ion-segment-button>
   </ion-segment>
 </ion-header>
@@ -31,7 +31,7 @@
     <ion-item button *ngFor="let op of operations">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10" (click)="openOperationModal(op, false)">
-        <ion-icon size="large" class="icon-color" [name]="this.getIconOperationType(op)"></ion-icon>
+        <ion-icon size="large" class="icon-color" [name]="op.operationType.icon"></ion-icon>
       </ion-avatar>
       <!-- Labels -->
       <ion-label class="min-width40 label-event-force" (click)="openOperationModal(op, false)">

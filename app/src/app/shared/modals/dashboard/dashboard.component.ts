@@ -112,8 +112,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isParentPageOperation() {
     return this.modalInputModel.parentPage === PageEnum.OPERATION;
   }
-
-  getIconVehicle(): string {
-    return this.vehicleService.getIconVehicle(this.operations[0].vehicle);
-  }
 }

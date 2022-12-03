@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   DataBaseService, CommonService, OperationService, ControlService,
-  DashboardService, SettingsService, VehicleService
+  DashboardService, SettingsService, VehicleService, IconService
 } from '@services/index';
 import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
@@ -56,7 +56,8 @@ export class OperationPage extends BasePage implements OnInit {
               private operationService: OperationService,
               private dashboardService: DashboardService,
               private settingsService: SettingsService,
-              private detector: ChangeDetectorRef) {
+              private detector: ChangeDetectorRef,
+              private iconService: IconService) {
     super(platform, translator);
   }
 
@@ -225,39 +226,6 @@ export class OperationPage extends BasePage implements OnInit {
   /** ICONS */
 
   loadIconDashboard(operations: OperationModel[]): void {
-    this.iconNameHeaderLeft = this.vehicleService.loadIconDashboard<OperationModel>(operations);
-  }
-
-  getIconInfoDashboard(): string {
-    return this.operationsVehicle.length > 0 ? 'bar-chart' : 'information-circle';
-  }
-
-  getIconVehicle(vehicle: VehicleModel): string {
-    return this.vehicleService.getIconVehicle(vehicle);
-  }
-
-  geClassIconOperationType(operation: OperationModel): string {
-    return `${Constants.CLASS_ION_ICON_OPERATION_TYPE}${operation.operationType.code}`;
-  }
-
-  getIconOperationType(operation: OperationModel): string {
-    switch (operation.operationType.code) {
-      case Constants.OPERATION_TYPE_MAINTENANCE_HOME:
-      case Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP:
-        return 'build';
-      case Constants.OPERATION_TYPE_FAILURE_HOME:
-      case Constants.OPERATION_TYPE_FAILURE_WORKSHOP:
-        return 'hammer';
-      case Constants.OPERATION_TYPE_CLOTHES:
-        return 'shirt';
-      case Constants.OPERATION_TYPE_ACCESSORIES:
-        return 'gift';
-      case Constants.OPERATION_TYPE_TOOLS:
-        return 'construct';
-      case Constants.OPERATION_TYPE_OTHER:
-        return 'body';
-      case Constants.OPERATION_TYPE_SPARE_PARTS:
-        return 'repeat';
-    }
+    this.iconNameHeaderLeft = this.iconService.loadIconDashboard<OperationModel>(operations);
   }
 }

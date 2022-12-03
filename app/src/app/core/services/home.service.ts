@@ -9,9 +9,12 @@ import {
     ConfigurationModel, VehicleModel, MaintenanceModel, WearVehicleProgressBarViewModel,
     WearMaintenanceProgressBarViewModel, WearReplacementProgressBarViewModel, WearNotificationReplacementProgressBarViewModel
 } from '@models/index';
+import { ConstantsColumns, WarningWearEnum, Constants } from '@utils/index';
+
+// SERVICES
 import { CommonService } from './common.service';
 import { CalendarService } from './calendar.service';
-import { ConstantsColumns, WarningWearEnum, Constants } from '../utils';
+import { IconService } from './icon.service';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +23,8 @@ export class HomeService {
 
     constructor(private commonService: CommonService,
                 private calendarService: CalendarService,
-                private translator: TranslateService) {
+                private translator: TranslateService,
+                private iconService: IconService) {
     }
 
     /** HOME NOTIFICATIONS */
@@ -38,13 +42,13 @@ export class HomeService {
                     let wearMaintenance: WearMaintenanceProgressBarViewModel[] = [];
                     const maintenancesVehicle: MaintenanceModel[] =
                         maintenances.filter(x => config.listMaintenance.some(y => y.id === x.id));
-                    const kmVehicleEstimated: number = this.calendarService.calculateKmVehicleEstimated(vehicle);
                     maintenancesVehicle.forEach(main => { // Maintenaces of vehicle
                         const listReplacementWear: WearReplacementProgressBarViewModel[] =
                             this.calculateReplacement(vehicle, operations, main);
                         if (!!listReplacementWear && listReplacementWear.length > 0) {
                             wearMaintenance = [...wearMaintenance, {
                                 codeMaintenanceFreq: main.maintenanceFreq.code,
+                                iconMaintenance: main.maintenanceFreq.icon,
                                 idMaintenance: main.id,
                                 descriptionMaintenance: main.description,
                                 kmMaintenance: main.km,
@@ -61,8 +65,8 @@ export class HomeService {
                     let total = 0;
                     let totalWarning = 0;
                     let totalDone = 0;
-                    const totalWear = wearMaintenance.filter(main => (main.fromKmMaintenance <= kmVehicleEstimated ||
-                        (main.toKmMaintenance !== null && main.toKmMaintenance >= kmVehicleEstimated)));
+                    const totalWear = wearMaintenance.filter(main => (main.fromKmMaintenance <= vehicle.kmEstimated ||
+                        (main.toKmMaintenance !== null && main.toKmMaintenance >= vehicle.kmEstimated)));
                     totalWear.forEach(main => total += main.listWearReplacement.length);
                     totalWear.forEach(main => main.listWearNotificationReplacement.filter(notif =>
                         notif.warning === WarningWearEnum.WARNING)
@@ -70,18 +74,22 @@ export class HomeService {
                     totalWear.forEach(main => main.listWearNotificationReplacement.filter(notif =>
                         notif.warning === WarningWearEnum.SUCCESS)
                             .forEach(notif => totalDone += notif.numWarning));
+                    const warningWear: WarningWearEnum = this.getPercentVehicle(wearMaintenance, vehicle.kmEstimated);
                     result = [...result, {
                         idVehicle: vehicle.id,
                         nameVehicle: `${vehicle.brand} ${vehicle.model}`,
                         kmVehicle: vehicle.km,
+                        kmEstimatedVehicle: vehicle.kmEstimated,
                         datePurchaseVehicle: new Date(vehicle.datePurchase),
                         kmsPerMonthVehicle: vehicle.kmsPerMonth,
                         dateKmsVehicle: vehicle.dateKms,
                         typeVehicle: vehicle.vehicleType.code,
+                        iconVehicle: vehicle.vehicleType.icon,
                         percent: (totalDone + totalWarning) / total,
                         percentKm: 0,
                         percentTime: 0,
-                        warning: this.getPercentVehicle(wearMaintenance, kmVehicleEstimated),
+                        warning: warningWear,
+                        warningProgressBarIcon: this.iconService.getClassProgressbar(warningWear),
                         idConfiguration: config.id,
                         nameConfiguration: config.name,
                         listWearMaintenance: this.orderMaintenanceWear(wearMaintenance)
@@ -105,7 +113,8 @@ export class HomeService {
                 result = [...result, {
                     numWarning: 1,
                     totalWarning: replacementWear.length,
-                    warning: warningWear
+                    warning: warningWear,
+                    warningIconClass: this.iconService.getClassIcon(warningWear)
                 }];
             } else {
                 aux.numWarning += 1;
@@ -195,13 +204,16 @@ export class HomeService {
             const ops: OperationModel[] = operations.filter(x => x.vehicle.id === vehicle.id &&
                 x.listMaintenanceElement.some(y => y.id === rep.id));
             if (ops.length === 0) {
-                const calKms = (main.km - this.calendarService.calculateKmVehicleEstimated(vehicle));
+                const calKms = (main.km - vehicle.kmEstimated);
                 const calMonths = this.calculateMontVehicleReplacement(main.time, vehicle.datePurchase);
                 const percentKm: number = this.calculatePercent(main.km, calKms);
                 const percentMonth: number = this.calculatePercent(main.time, calMonths);
+                const warningKms: WarningWearEnum = this.getWarningMaintenance(percentKm, calKms < (main.km * -1));
+                const warningMonths: WarningWearEnum = this.getWarningMaintenance(percentMonth, calMonths < (main.time * -1));
                 result = [... result, {
                     idMaintenanceElement: rep.id,
                     nameMaintenanceElement: rep.name,
+                    iconMaintenanceElement: rep.icon,
                     idOperation: -1,
                     descriptionOperation: '',
                     kmOperation: null,
@@ -212,9 +224,14 @@ export class HomeService {
                     calculateKms: calKms,
                     calculateMonths: calMonths,
                     percentKms: percentKm,
-                    warningKms: this.getWarningMaintenance(percentKm, calKms < (main.km * -1)),
+                    warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
+                    warningKms: warningKms,
+                    warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+                    warningKmsIconClass: this.iconService.getClassIcon(warningKms),
                     percentMonths: percentMonth,
-                    warningMonths: this.getWarningMaintenance(percentMonth, calMonths < (main.time * -1))
+                    warningMonths: warningMonths,
+                    warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+                    warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
                 }];
             }
         });
@@ -229,13 +246,16 @@ export class HomeService {
                 x.listMaintenanceElement.some(y => y.id === rep.id) &&
                 x.km >= (main.km - 2000));
             if (ops.length === 0) {
-                const calKms = (main.km - this.calendarService.calculateKmVehicleEstimated(vehicle));
+                const calKms = (main.km - vehicle.kmEstimated);
                 const calMonths = this.calculateMontVehicleReplacement(main.time, vehicle.datePurchase);
                 const percentKm: number = this.calculatePercent(main.km, calKms);
                 const percentMonth: number = this.calculatePercent(main.time, calMonths);
+                const warningKms: WarningWearEnum = this.getWarningWearNormal(main.wear, percentKm, calKms, null, main.km);
+                const warningMonths: WarningWearEnum = this.getWarningWearNormal(main.wear, percentMonth, calMonths, null, main.time);
                 result = [... result, {
                     idMaintenanceElement: rep.id,
                     nameMaintenanceElement: rep.name,
+                    iconMaintenanceElement: rep.icon,
                     idOperation: -1,
                     descriptionOperation: '',
                     kmOperation: null,
@@ -246,9 +266,14 @@ export class HomeService {
                     calculateKms: calKms,
                     calculateMonths: calMonths,
                     percentKms: percentKm,
-                    warningKms: this.getWarningWearNormal(main.wear, percentKm, calKms, null, main.km),
+                    warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
+                    warningKms: warningKms,
+                    warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+                    warningKmsIconClass: this.iconService.getClassIcon(warningKms),
                     percentMonths: percentMonth,
-                    warningMonths: this.getWarningWearNormal(main.wear, percentMonth, calMonths, null, main.time)
+                    warningMonths: warningMonths,
+                    warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+                    warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
                 }];
             }
         });
@@ -276,10 +301,10 @@ export class HomeService {
             if (!!ops && ops.length > 0) {
                 maxKm = this.commonService.max(ops, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
                 op = ops.find(x => x.km === maxKm);
-                calKms = this.calculateKmVehicleReplacement(vehicle, op, main);
+                calKms = this.calculateKmVehicleReplacement(vehicle.kmEstimated, op.km, main.km);
                 calMonths = this.calculateMontVehicleReplacement(main.time, op.date);
             } else {
-                calKms = (main.km - this.calendarService.calculateKmVehicleEstimated(vehicle));
+                calKms = (main.km - vehicle.kmEstimated);
                 calMonths = this.calculateMontVehicleReplacement(main.time, vehicle.datePurchase);
             }
             const percentKm: number = this.calculatePercent(main.km, calKms);
@@ -288,9 +313,12 @@ export class HomeService {
             if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
                 priceSum += this.commonService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
             }
+            const warningKms: WarningWearEnum = this.getWarningWearNormal(main.wear, percentKm, calKms, op.km, main.km);
+            const warningMonths: WarningWearEnum = this.getWarningWearNormal(main.wear, percentMonth, calMonths, op.km, main.time);
             result = [... result, {
                 idMaintenanceElement: rep.id,
                 nameMaintenanceElement: rep.name,
+                iconMaintenanceElement: rep.icon,
                 idOperation: op.id,
                 descriptionOperation: op.description,
                 kmOperation: op.km,
@@ -301,9 +329,14 @@ export class HomeService {
                 calculateKms: calKms,
                 calculateMonths: calMonths,
                 percentKms: percentKm,
-                warningKms: this.getWarningWearNormal(main.wear, percentKm, calKms, op.km, main.km),
+                warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
+                warningKms: warningKms,
+                warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+                warningKmsIconClass: this.iconService.getClassIcon(warningKms),
                 percentMonths: percentMonth,
-                warningMonths: this.getWarningWearNormal(main.wear, percentMonth, calMonths, op.km, main.time)
+                warningMonths: warningMonths,
+                warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+                warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
             }];
         });
         return result;
@@ -326,8 +359,8 @@ export class HomeService {
         }
     }
 
-    calculateKmVehicleReplacement(vehicle: VehicleModel, op: OperationModel, main: MaintenanceModel): number {
-        return (op.km + main.km) - this.calendarService.calculateKmVehicleEstimated(vehicle);
+    calculateKmVehicleReplacement(kmEstimated: number, kmOp: number, kmMain: number): number {
+        return (kmOp + kmMain) - kmEstimated;
     }
 
     calculateMontVehicleReplacement(time: number, date: Date): number {
@@ -365,10 +398,6 @@ export class HomeService {
         let result: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
 
         if (vehicleWear.listWearMaintenance.length > 0) {
-            // Km vehicle estimated
-            const vehicle: VehicleModel = new VehicleModel(null, null, 0, vehicleWear.kmVehicle,
-                null, null, vehicleWear.kmsPerMonthVehicle, vehicleWear.dateKmsVehicle, vehicleWear.datePurchaseVehicle);
-            const kmVehicle: number = this.calendarService.calculateKmVehicleEstimated(vehicle);
             const diffDateToday: number = this.calendarService.monthDiff(vehicleWear.datePurchaseVehicle, new Date());
             const listWear: WearMaintenanceProgressBarViewModel[] = this.commonService.orderBy(
                 vehicleWear.listWearMaintenance, ConstantsColumns.COLUMN_MODEL_FROM_KM_MAINTENANCE);
@@ -380,7 +409,7 @@ export class HomeService {
             if (listWear.some(x => x.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE)) {
                 listWear.forEach((wearMain: WearMaintenanceProgressBarViewModel, index) => {
                     const estimatedKmOperation: number = wearMain.kmMaintenance / 2; // km estimated maintenance
-                    const lastKmVehicle: number = (wearMain.toKmMaintenance === null ? kmVehicle : wearMain.toKmMaintenance);
+                    const lastKmVehicle: number = (wearMain.toKmMaintenance === null ? vehicleWear.kmEstimatedVehicle : wearMain.toKmMaintenance);
                     const wearRep: WearReplacementProgressBarViewModel = wearMain.listWearReplacement[0];
 
                     // Operation with maintenance selected
@@ -388,7 +417,7 @@ export class HomeService {
                     x.listMaintenanceElement.some(m => m.id === wearRep.idMaintenanceElement));
                     const max: number = (lastKmVehicle +
                         (listWear.length === 1 || index + 1 === listWear.length ? 0 : - wearMain.kmMaintenance * 2));
-                    timeCalculate = this.getInitTime(wearMain, vehicle, operationsVehicle, timeCalculate);
+                    timeCalculate = this.getInitTime(wearMain, operationsVehicle, vehicleWear.datePurchaseVehicle, timeCalculate);
                     let opLast = new OperationModel();
                     for (let kmCalculate = this.getInitKm(wearMain); kmCalculate < max; kmCalculate += wearMain.kmMaintenance) {
                         let calcKm: number = (kmCalculate + wearMain.kmMaintenance); // km should maintenance
@@ -411,7 +440,7 @@ export class HomeService {
                         let percentKm = 1;
                         let percentTime = 1;
                         if (!!ops && ops.length > 0) {
-                            opLast = this.getOperationsNearKmTime(vehicle, ops, calcKm, calcTime);
+                            opLast = this.getOperationsNearKmTime(ops, vehicleWear.datePurchaseVehicle, calcKm, calcTime);
                             op = opLast;
                             calcDiffTime = this.calendarService.monthDiff(vehicleWear.datePurchaseVehicle, new Date(op.date));
                             calculateKmEstimate = calcKm - op.km;
@@ -428,12 +457,15 @@ export class HomeService {
                             opLast = null;
                         }
                         if ((wearMain.toKmMaintenance === null || wearMain.toKmMaintenance >= calcKm) &&
-                            (calcKm < kmVehicle || (!!op && op.id !== null)) &&
+                            (calcKm < vehicleWear.kmEstimatedVehicle || (!!op && op.id !== null)) &&
                             (strict || !wearMaintenance.some(wm => wm.listWearReplacement.some(wmr =>
                                 wmr.kmAcumulateMaintenance === calcKm && wmr.timeAcumulateMaintenance === calcTime &&
                                 wmr.calculateKms === calculateKmEstimate && wmr.calculateMonths === calculateTimeEstimate)))) {
+                            const warningKms: WarningWearEnum = this.getWarningRecord(wearMain.wearMaintenance, calculateKmEstimate, percentKm, op.km);
+                            const warningMonths: WarningWearEnum = this.getWarningRecord(wearMain.wearMaintenance, calculateTimeEstimate, percentTime, op.km);
                             wearMaintenance = [... wearMaintenance, {
                                 codeMaintenanceFreq: wearMain.codeMaintenanceFreq,
+                                iconMaintenance: wearMain.iconMaintenance,
                                 idMaintenance: wearMain.idMaintenance,
                                 descriptionMaintenance: wearMain.descriptionMaintenance,
                                 kmMaintenance: wearMain.kmMaintenance,
@@ -446,6 +478,7 @@ export class HomeService {
                                 listWearReplacement: [{
                                     idMaintenanceElement: wearRep.idMaintenanceElement,
                                     nameMaintenanceElement: wearRep.nameMaintenanceElement,
+                                    iconMaintenanceElement: wearRep.iconMaintenanceElement,
                                     idOperation: op.id,
                                     descriptionOperation: op.description,
                                     kmOperation: op.km,
@@ -456,10 +489,14 @@ export class HomeService {
                                     calculateKms: calculateKmEstimate,
                                     calculateMonths: calculateTimeEstimate,
                                     percentKms: percentKm,
-                                    warningKms: this.getWarningRecord(wearMain.wearMaintenance, calculateKmEstimate, percentKm, op.km),
+                                    warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
+                                    warningKms: warningKms,
+                                    warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+                                    warningKmsIconClass: this.iconService.getClassIcon(warningKms),
                                     percentMonths: percentTime,
-                                    warningMonths:
-                                        this.getWarningRecord(wearMain.wearMaintenance, calculateTimeEstimate, percentTime, op.km)
+                                    warningMonths: warningMonths,
+                                    warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+                                    warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
                                 }]
                             }];
                         }
@@ -475,18 +512,22 @@ export class HomeService {
                 });
                 const perKm: number = percentVehicleKm * 100 / wearMaintenance.length;
                 const perTime: number = percentVehicleTime * 100 / wearMaintenance.length;
+                const warningWear: WarningWearEnum = this.getPercentVehicle(wearMaintenance, vehicleWear.kmEstimatedVehicle);
                 result = {
                     idVehicle: vehicleWear.idVehicle,
                     nameVehicle: vehicleWear.nameVehicle,
                     kmVehicle: vehicleWear.kmVehicle,
+                    kmEstimatedVehicle: vehicleWear.kmEstimatedVehicle,
                     datePurchaseVehicle: vehicleWear.datePurchaseVehicle,
                     kmsPerMonthVehicle: vehicleWear.kmsPerMonthVehicle,
                     dateKmsVehicle: vehicleWear.dateKmsVehicle,
                     typeVehicle: vehicleWear.typeVehicle,
+                    iconVehicle: vehicleWear.iconVehicle,
                     percent: Math.round((perKm + perTime) / 2),
                     percentKm: Math.floor(perKm),
                     percentTime: Math.floor(perTime),
-                    warning: this.getPercentVehicle(wearMaintenance, kmVehicle),
+                    warning: warningWear,
+                    warningProgressBarIcon: warningWear,
                     idConfiguration: vehicleWear.idConfiguration,
                     nameConfiguration: vehicleWear.nameConfiguration,
                     listWearMaintenance: wearMaintenance
@@ -501,11 +542,11 @@ export class HomeService {
         return wear.fromKmMaintenance - (wear.fromKmMaintenance > 0 ? wear.kmMaintenance : 0);
     }
 
-    getInitTime(wear: WearMaintenanceProgressBarViewModel, vehicle: VehicleModel, operations: OperationModel[], time: number): number {
+    getInitTime(wear: WearMaintenanceProgressBarViewModel, operations: OperationModel[], datePurchase: Date, time: number): number {
         let result: number = time;
         if (wear.fromKmMaintenance !== 0 && time === 0) {
-            const opCalc: OperationModel = this.getOperationsNearKmTime(vehicle, operations, wear.fromKmMaintenance, 0);
-            result = opCalc === null ? 0 : this.calendarService.monthDiff(vehicle.datePurchase, new Date(opCalc.date));
+            const opCalc: OperationModel = this.getOperationsNearKmTime(operations, datePurchase, wear.fromKmMaintenance, 0);
+            result = opCalc === null ? 0 : this.calendarService.monthDiff(datePurchase, new Date(opCalc.date));
         }
         return result;
     }
@@ -520,7 +561,7 @@ export class HomeService {
                 this.calendarService.monthDiff(datePurchaseVehicle, new Date(x.date)) <= calcTime)));
     }
 
-    getOperationsNearKmTime(vehicle: VehicleModel, operations: OperationModel[], km: number, time: number): OperationModel {
+    getOperationsNearKmTime(operations: OperationModel[], date: Date, km: number, time: number): OperationModel {
         let operation: OperationModel = null;
         let percent = 1;
         operations.forEach(x => {
@@ -530,10 +571,10 @@ export class HomeService {
                 percent = perc;
                 operation = x;
             } else if (time !== 0) {
-                const datePurchase: Date = new Date(vehicle.datePurchase);
+                const datePurchase: Date = new Date(date);
                 datePurchase.setMonth(datePurchase.getMonth() + time);
                 if (new Date(x.date) < datePurchase) {
-                    const timeMaint: number = this.calendarService.monthDiff(new Date(vehicle.datePurchase), new Date(x.date));
+                    const timeMaint: number = this.calendarService.monthDiff(new Date(datePurchase), new Date(x.date));
                     const nearT: number = (time - timeMaint) * (time < timeMaint ? -1 : 1);
                     const percT: number = nearT / time;
                     if (percent > percT) {
@@ -573,46 +614,6 @@ export class HomeService {
             return WarningWearEnum.WARNING;
         } else {
             return WarningWearEnum.SUCCESS;
-        }
-    }
-
-    // ICONS CSS
-
-    getClassProgressbar(warning: WarningWearEnum, styles: string): string {
-        switch (warning) {
-            case WarningWearEnum.SUCCESS:
-                return `${styles} quizz-progress-success`;
-            case WarningWearEnum.WARNING:
-                return `${styles} quizz-progress-warning`;
-            case WarningWearEnum.DANGER:
-            case WarningWearEnum.SKULL:
-                return `${styles} quizz-progress-danger`;
-        }
-    }
-
-    getClassIcon(warning: WarningWearEnum, styles: string): string {
-        switch (warning) {
-            case WarningWearEnum.SUCCESS:
-                return `${styles} icon-color-success`;
-            case WarningWearEnum.WARNING:
-                return `${styles} icon-color-warning`;
-            case WarningWearEnum.DANGER:
-                return `${styles} icon-color-danger`;
-            case WarningWearEnum.SKULL:
-                return `${styles} icon-color-skull`;
-        }
-    }
-
-    getIconKms(warning: WarningWearEnum): string {
-        switch (warning) {
-            case WarningWearEnum.SUCCESS:
-                return 'checkmark-circle';
-            case WarningWearEnum.WARNING:
-                return 'warning';
-            case WarningWearEnum.DANGER:
-                return 'nuclear';
-            case WarningWearEnum.SKULL:
-                return 'skull';
         }
     }
 }

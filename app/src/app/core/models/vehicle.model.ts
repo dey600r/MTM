@@ -7,6 +7,7 @@ export class VehicleModel extends BaseModel {
     brand: string;
     year: number;
     km: number;
+    kmEstimated: number; //Calculated
     configuration: ConfigurationModel;
     vehicleType: VehicleTypeModel;
     kmsPerMonth: number;

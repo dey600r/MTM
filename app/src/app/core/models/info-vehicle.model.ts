@@ -23,7 +23,9 @@ export class InfoVehicleConfigurationModel {
 export class InfoVehicleConfigurationMaintenanceModel extends BaseMaintenanceModel {
     descFrequency: string;
     codeFrequency: string;
+    iconMaintenance: string;
     warning: WarningWearEnum;
+    warningIconClass: string;
     active: boolean;
     listReplacement: InfoVehicleConfigurationMaintenanceElementModel[] = [];
     constructor(d: string = null, lr: InfoVehicleConfigurationMaintenanceElementModel[] = [],
@@ -41,6 +43,8 @@ export class InfoVehicleConfigurationMaintenanceModel extends BaseMaintenanceMod
 
 export class InfoVehicleConfigurationMaintenanceElementModel extends BaseNameModel {
     warning: WarningWearEnum;
+    warningIconClass: string;
+    iconReplacement: string;
     constructor(n: string = null, w: WarningWearEnum = WarningWearEnum.SUCCESS, id: number = -1) {
         super(n, id);
         this.warning = w;
@@ -62,6 +66,7 @@ export class InfoVehicleHistoricReplacementModel extends BaseNameModel {
     timeAverage: number;
     priceAverage: number;
     planned: boolean;
+    iconReplacement: string;
     listReplacements: InfoVehicleReplacementModel[];
     constructor(n: string = '', k: number = 0, t: number = 0,
                 ka: number = 0, ta: number = 0, pa: number = 0, plan: boolean = false,

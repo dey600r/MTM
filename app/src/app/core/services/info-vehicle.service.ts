@@ -19,6 +19,7 @@ import { CommonService } from './common.service';
 
 // UTILS
 import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
+import { IconService } from './icon.service';
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +30,8 @@ export class InfoVehicleService {
                 private calendarService: CalendarService,
                 private translator: TranslateService,
                 private controlService: ControlService,
-                private commonService: CommonService) {}
+                private commonService: CommonService,
+                private iconService: IconService) {}
 
     // INFO VEHICLE CONFIGURATION
 
@@ -40,11 +42,10 @@ export class InfoVehicleService {
 
         vehicles.forEach(veh => {
             const vehicleWear: WearVehicleProgressBarViewModel = allWears.find(x => x.idVehicle === veh.id);
-            const kmVehicleEstimated: number = this.calendarService.calculateKmVehicleEstimated(veh);
             const configuration: ConfigurationModel = configurations.find(x => x.id === veh.configuration.id);
             const listMaintenances = maintenances.filter(x => configuration.listMaintenance.some(y => y.id === x.id));
             const newConfiguration: InfoVehicleConfigurationModel = new InfoVehicleConfigurationModel(
-                veh.id, configuration.id, configuration.name, WarningWearEnum.SUCCESS, [], kmVehicleEstimated);
+                veh.id, configuration.id, configuration.name, WarningWearEnum.SUCCESS, [], veh.kmEstimated);
             listMaintenances.forEach(main => {
                 const maintenanceWear: WearMaintenanceProgressBarViewModel =
                     (!vehicleWear ? new WearMaintenanceProgressBarViewModel() :
@@ -60,13 +61,20 @@ export class InfoVehicleService {
                     const warning: WarningWearEnum = (replacementWear ?
                         this.homeService.calculateWearNotificationPriority(replacementWear.warningKms, replacementWear.warningMonths) :
                         WarningWearEnum.SUCCESS);
-                    newMaintenance.listReplacement = [...newMaintenance.listReplacement,
-                        new InfoVehicleConfigurationMaintenanceElementModel(rep.name, warning, rep.id)];
+                    newMaintenance.listReplacement = [...newMaintenance.listReplacement,{
+                        id: rep.id,
+                        name: rep.name,
+                        warning: warning,
+                        warningIconClass: this.iconService.getClassIcon(warning),
+                        iconReplacement: rep.icon
+                    }];
                 });
                 newMaintenance.active = this.homeService.validateKmIntoMaintenance(
-                    kmVehicleEstimated, newMaintenance.fromKm, newMaintenance.toKm);
+                    veh.kmEstimated, newMaintenance.fromKm, newMaintenance.toKm);
                 newMaintenance.warning = this.calculateWarningFromReplacements<InfoVehicleConfigurationMaintenanceElementModel>(
                     newMaintenance.listReplacement);
+                newMaintenance.warningIconClass = this.iconService.getClassIcon(newMaintenance.warning);
+                newMaintenance.iconMaintenance = main.maintenanceFreq.icon;
                 newConfiguration.listMaintenance = [...newConfiguration.listMaintenance, newMaintenance];
             });
             newConfiguration.warning = this.calculateWarningFromReplacements<InfoVehicleConfigurationMaintenanceModel>(
@@ -92,10 +100,10 @@ export class InfoVehicleService {
 
     // INFO SUMMARY VEHICLE
 
-    getLabelKmVehicle(km: number, kmEmstimated: number, measure: any): string {
+    getLabelKmVehicle(km: number, kmEstimated: number, measure: any): string {
         let labelVehicleKm = this.translator.instant('PAGE_HOME.VehicleKm', { km, measure: measure.value });
-        if (km !== kmEmstimated) {
-            labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.VehicleEstimatedKm', { km: kmEmstimated, measure: measure.value  });
+        if (km !== kmEstimated) {
+            labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.VehicleEstimatedKm', { km: kmEstimated, measure: measure.value  });
         }
         return labelVehicleKm;
     }
@@ -109,15 +117,15 @@ export class InfoVehicleService {
     getIconPercent(labelPercent: number, type: string): string {
         if (labelPercent < 25) {
           return (type === 'color' ?
-            this.homeService.getClassIcon(WarningWearEnum.SKULL, '') : this.homeService.getIconKms(WarningWearEnum.SKULL));
+            this.iconService.getClassIcon(WarningWearEnum.SKULL) : this.iconService.getIconKms(WarningWearEnum.SKULL));
         } else if (labelPercent >= 25 && labelPercent < 50) {
           return (type === 'color' ?
-            this.homeService.getClassIcon(WarningWearEnum.DANGER, '') : this.homeService.getIconKms(WarningWearEnum.DANGER));
+            this.iconService.getClassIcon(WarningWearEnum.DANGER) : this.iconService.getIconKms(WarningWearEnum.DANGER));
         } else if (labelPercent >= 50 && labelPercent < 75) {
           return (type === 'color' ?
-            this.homeService.getClassIcon(WarningWearEnum.WARNING, '') : this.homeService.getIconKms(WarningWearEnum.WARNING));
+            this.iconService.getClassIcon(WarningWearEnum.WARNING) : this.iconService.getIconKms(WarningWearEnum.WARNING));
         } else {
-          return (type === 'color' ? this.homeService.getClassIcon(WarningWearEnum.SUCCESS, '') : 'checkmark-done-circle');
+          return (type === 'color' ? this.iconService.getClassIcon(WarningWearEnum.SUCCESS) : 'checkmark-done-circle');
         }
       }
 
@@ -156,7 +164,6 @@ export class InfoVehicleService {
         const nameOfKmAverage: string = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().kmAverage);
 
         vehicles.forEach(vehicle => {
-            const kmVehicleEstimated: number = this.calendarService.calculateKmVehicleEstimated(vehicle);
             const timeDiffVehicle: number = this.calendarService.monthDiff(new Date(vehicle.datePurchase),
                 (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
             const idMaintenancesOfVehicle: number[] = configurations.find(c => c.id === vehicle.configuration.id)
@@ -189,7 +196,7 @@ export class InfoVehicleService {
                                 op.date, op.listMaintenanceElement.find(x => x.id === replacement.id).price, op.price, op.id)];
                         }
                     });
-                    info.km = kmVehicleEstimated - opWithReplacement[0].km;
+                    info.km = vehicle.kmEstimated - opWithReplacement[0].km;
                     info.time = this.calendarService.monthDiff(new Date(opWithReplacement[0].date),
                         (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
                     info.kmAverage = Math.round(this.commonService.sum(info.listReplacements, nameOfKm) / info.listReplacements.length);
@@ -197,9 +204,10 @@ export class InfoVehicleService {
                         info.listReplacements.length);
                     info.priceAverage = Math.round(this.commonService.sum(info.listReplacements, nameOfPrice) /
                         info.listReplacements.length);
+                    info.iconReplacement = replacement.icon;
                 } else {
-                    info = new InfoVehicleHistoricReplacementModel(replacement.name, kmVehicleEstimated, timeDiffVehicle,
-                        kmVehicleEstimated, timeDiffVehicle, 0, true, [], replacement.id);
+                    info = new InfoVehicleHistoricReplacementModel(replacement.name, vehicle.kmEstimated, timeDiffVehicle,
+                        vehicle.kmEstimated, timeDiffVehicle, 0, true, [], replacement.id);
                 }
                 listReplacements = [...listReplacements, info];
             });

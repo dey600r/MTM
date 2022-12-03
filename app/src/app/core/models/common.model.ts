@@ -58,11 +58,25 @@ export class BaseNameDescriptionModel extends BaseDescriptionModel {
     }
 }
 
+export class BaseIconNameDescriptionModel extends BaseNameDescriptionModel {
+    icon: string; // Calculated
+    constructor(c: string = null, d: string = null, id: number = 1) {
+        super(c, d, id);
+    }
+}
+
 export class BaseCodeDescriptionModel extends BaseDescriptionModel {
     code: string;
     constructor(c: string = null, d: string = null, id: number = 1) {
         super(d, id);
         this.code = c;
+    }
+}
+
+export class BaseIconCodeDescriptionModel extends BaseCodeDescriptionModel {
+    icon: string; // Calculated
+    constructor(c: string = null, d: string = null, id: number = 1) {
+        super(c, d, id);
     }
 }
 
