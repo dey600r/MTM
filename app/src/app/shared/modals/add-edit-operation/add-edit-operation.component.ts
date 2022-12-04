@@ -200,15 +200,17 @@ export class AddEditOperationComponent implements OnInit {
   }
 
   changeReplacement() {
+    const oldList: MaintenanceElementModel[] = Object.assign([], this.maintenanceElementSelect);
     this.maintenanceElementSelect = [];
     this.idMaintenanceElementSelect.forEach(x => {
       const replacement: MaintenanceElementModel = this.maintenanceElement.find(y => y.id === x);
+      const oldReplacement: MaintenanceElementModel = oldList.find(y => y.id === x);
       this.maintenanceElementSelect = [...this.maintenanceElementSelect, {
         id: replacement.id,
         name: replacement.name,
         description: replacement.description,
         master: replacement.master,
-        price: replacement.price,
+        price: (oldReplacement ? oldReplacement.price : 0),
         icon: replacement.icon
       }];
     });

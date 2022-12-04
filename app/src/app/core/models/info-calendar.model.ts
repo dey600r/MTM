@@ -1,4 +1,3 @@
-import { WarningWearEnum } from '@utils/index';
 import { BaseWarningIconModel } from './common.model';
 
 export class InfoCalendarVehicleViewModel {

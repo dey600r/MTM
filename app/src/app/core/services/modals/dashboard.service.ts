@@ -278,9 +278,12 @@ export class DashboardService {
                 const rep: WearReplacementProgressBarViewModel = main.listWearReplacement[0];
                 estimated.series = [...estimated.series, this.getDataDashboard(`${rep.kmAcumulateMaintenance}${measure.value}`,
                     (initKm !== 0 && main.kmMaintenance > initKm && index === 0 ? initKm : main.kmMaintenance))];
-                const realSerie: number = (rep.kmOperation === null ?
-                    (rep.kmAcumulateMaintenance < data.kmEstimatedVehicle ? 0 : data.kmEstimatedVehicle % main.kmMaintenance) :
-                    (initKm !== 0 && main.kmMaintenance > initKm && index === 0 ? initKm : main.kmMaintenance) - rep.calculateKms);
+                let realSerie: number = 0;
+                if (rep.kmOperation === null) {
+                    realSerie = (rep.kmAcumulateMaintenance < data.kmEstimatedVehicle ? 0 : data.kmEstimatedVehicle % main.kmMaintenance);
+                } else {
+                    realSerie = ((initKm !== 0 && main.kmMaintenance > initKm && index === 0 ? initKm : main.kmMaintenance) - rep.calculateKms);
+                }
                 real.series = [...real.series,
                     this.getDataDashboard(`${rep.kmAcumulateMaintenance}${measure.value}`, (realSerie < 0 ? 0 : realSerie))];
 
@@ -314,9 +317,12 @@ export class DashboardService {
                 const rep: WearReplacementProgressBarViewModel = main.listWearReplacement[0];
                 estimated.series = [...estimated.series,
                     this.getDataDashboard(`${rep.kmAcumulateMaintenance}${measure.value}`, rep.timeAcumulateMaintenance)];
-                const realSerie: number = (rep.kmOperation === null ?
-                    (main.kmMaintenance < data.kmEstimatedVehicle ? 0 : this.calendarService.monthDiff(data.datePurchaseVehicle, new Date())) :
-                    (rep.timeAcumulateMaintenance - rep.calculateMonths));
+                let realSerie: number = 0;
+                if (rep.kmOperation === null) {
+                    realSerie = (main.kmMaintenance < data.kmEstimatedVehicle ? 0 : this.calendarService.monthDiff(data.datePurchaseVehicle, new Date()));
+                } else {
+                    realSerie = (rep.timeAcumulateMaintenance - rep.calculateMonths);
+                }
                 real.series = [...real.series,
                 this.getDataDashboard(`${rep.kmAcumulateMaintenance}${measure.value}`, (realSerie < 0 ? 0 : realSerie))];
             });
