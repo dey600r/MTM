@@ -7,8 +7,7 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 
 // SERVICES
 import {
-  CommonService, ConfigurationService, ControlService, DashboardService,
-  DataBaseService, HomeService, IconService, InfoVehicleService, SettingsService, VehicleService
+  CommonService, ControlService, DashboardService, DataBaseService,  InfoVehicleService, SettingsService
 } from '@services/index';
 
 // MODELS
@@ -20,7 +19,7 @@ import {
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, WarningWearEnum } from '@utils/index';
+import { ConstantsColumns } from '@utils/index';
 
 @Component({
   selector: 'app-info-vehicle',
@@ -64,16 +63,12 @@ export class InfoVehicleComponent implements OnInit {
               private screenOrientation: ScreenOrientation,
               private modalController: ModalController,
               private controlService: ControlService,
-              private vehicleService: VehicleService,
               private dbService: DataBaseService,
               private commonService: CommonService,
               private infoVehicleService: InfoVehicleService,
-              private configurationService: ConfigurationService,
               private settingsService: SettingsService,
-              private homeService: HomeService,
               private dashboardService: DashboardService,
-              private changeDetector: ChangeDetectorRef,
-              private iconService: IconService) { }
+              private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.initSummary();
@@ -223,12 +218,6 @@ export class InfoVehicleComponent implements OnInit {
     } else {
       this.hideConfigurationSummary = true;
     }
-  }
-
-  // ICONS
-  
-  getIconKms(warning: WarningWearEnum): string {
-    return this.iconService.getIconKms(warning);
   }
 
   // SEGMENT

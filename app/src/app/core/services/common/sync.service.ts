@@ -10,13 +10,15 @@ import { getAuth, signInWithEmailAndPassword, signOut, UserCredential } from 'fi
 // SERVICES
 import { DataBaseService } from './data-base.service';
 import { ControlService } from './control.service';
-import { SettingsService } from './settings.service';
+import { ExportService } from './export.service';
+import { SettingsService } from '../modals/index';
 
 // UTILS
+import * as loginData from '@assets/data/login-firebase.json';
 import { Constants, ConstantsTable, PageEnum, ToastTypeEnum } from '@utils/index';
 
-import * as loginData from '../../../assets/data/login-firebase.json';
-import { SystemConfigurationModel } from '../models';
+// MODLS
+import { SystemConfigurationModel } from '@models/index';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,7 @@ export class SyncService {
 
   constructor(private sqlitePorter: SQLitePorter,
               private dbService: DataBaseService,
+              private exportService: ExportService,
               private controlService: ControlService,
               private settingsService: SettingsService,
               private file: File) { }
@@ -79,10 +82,11 @@ export class SyncService {
       if (this.validSyncDownloadData(data)) {
         // EXPORT DB
         await this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then(async (json: any) => {
-          const backupFileName: string = this.settingsService.generateNameExportFile(Constants.BACKUP_SYNC_FILE_NAME);
+          const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_SYNC_FILE_NAME);
           // WRITE BACKUP FILE
-          await this.file.writeFile(this.settingsService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
+          await this.file.writeFile(this.exportService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
             JSON.stringify(json), { replace : true}).then(() => {
+              // This is intentional
           }).catch(err => {
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
           });
@@ -151,7 +155,7 @@ export class SyncService {
     if (data) {
       const settings: SystemConfigurationModel[] = JSON.parse(data[ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
       if (settings && settings.length >= 6 &&
-          this.settingsService.validateStructureJsonDB(JSON.stringify(data), this.dbService.getSyncTables())) {
+          this.exportService.validateStructureJsonDB(JSON.stringify(data), this.dbService.getSyncTables())) {
         const syncVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(settings);
         const appVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(this.dbService.getSystemConfigurationData());
         if (syncVersion && syncVersion.value === appVersion.value) {

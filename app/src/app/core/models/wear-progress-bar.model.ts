@@ -1,4 +1,5 @@
 import { WarningWearEnum } from '@utils/index';
+import { BaseWarningIconModel } from './common.model';
 
 export class WearVehicleProgressBarViewModel {
     idVehicle = -1;
@@ -85,16 +86,16 @@ export class WearReplacementProgressBarViewModel {
     warningIconClass = '';
     warningKms: WarningWearEnum = WarningWearEnum.SUCCESS;
     warningKmsProgressBarIcon = '';
+    warningKmsIcon = '';
     warningKmsIconClass = '';
     percentMonths = 0;
     warningMonths: WarningWearEnum = WarningWearEnum.SUCCESS;
     warningMonthsProgressBarIcon = '';
+    warningMonthsIcon = '';
     warningMonthsIconClass = '';
 }
 
-export class WearNotificationReplacementProgressBarViewModel {
-    warning: WarningWearEnum = WarningWearEnum.SUCCESS;
-    warningIconClass = '';
+export class WearNotificationReplacementProgressBarViewModel extends BaseWarningIconModel {
     numWarning = 0;
     totalWarning = 0;
 }

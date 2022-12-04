@@ -119,7 +119,7 @@
               <div class="margin-right5 table-row">
                 <ion-icon [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" 
                   [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
-                  [name]="getIconKms(wm.listWearReplacement[0].warningKms)"></ion-icon>
+                  [name]="wm.listWearReplacement[0].warningKmsIcon"></ion-icon>
                 <p class="p-row">{{ getKmPercent(wm.listWearReplacement[0]) }} {{measure.value}}</p>
               </div>
               <!-- ICON -->
@@ -139,7 +139,7 @@
               <!-- MONTHS -->
               <div class="margin-right5 table-row">
                 <ion-icon [color]="wm.listWearReplacement[0].warningMonthsIconClass" size="small"
-                  [class]="'icon-row' + wm.listWearReplacement[0].warningMonthsIconClass" [name]="getIconKms(wm.listWearReplacement[0].warningMonths)"></ion-icon>
+                  [class]="'icon-row' + wm.listWearReplacement[0].warningMonthsIconClass" [name]="wm.listWearReplacement[0].warningMonthsIcon"></ion-icon>
                 <p class="p-row">{{ getTimePercent(wm.listWearReplacement[0]) }}</p>
               </div>
             </div>

@@ -7,15 +7,15 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import {
-  DataBaseService, DashboardService, ConfigurationService, ControlService, VehicleService,
-  CalendarService, SettingsService, ThemeService, HomeService, IconService
+  DataBaseService, DashboardService, ConfigurationService, ControlService,
+  SettingsService, ThemeService, HomeService
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceModel, MaintenanceFreqModel, ModalInputModel, OperationModel, VehicleModel, VehicleTypeModel,
-  ConfigurationModel, WearReplacementProgressBarViewModel, MaintenanceElementModel, SystemConfigurationModel
+  MaintenanceModel, ModalInputModel, OperationModel, VehicleModel,
+  ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
 } from '@models/index';
-import { WarningWearEnum, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -62,15 +62,12 @@ export class HomePage extends BasePage implements OnInit {
               private dbService: DataBaseService,
               public translator: TranslateService,
               private dashboardService: DashboardService,
-              private calendarService: CalendarService,
               private configurationService: ConfigurationService,
               private controlService: ControlService,
-              private vehicleService: VehicleService,
               private settingsService: SettingsService,
               private themeService: ThemeService,
               private homeService: HomeService,
-              private modalController: ModalController,
-              private iconService: IconService) {
+              private modalController: ModalController) {
     super(platform, translator);
   }
 
@@ -209,10 +206,6 @@ export class HomePage extends BasePage implements OnInit {
       result = false;
     }
     return result;
-  }
-
-  getIconKms(warning: WarningWearEnum): string {
-    return this.iconService.getIconKms(warning);
   }
 
   segmentChanged(event: any): void {

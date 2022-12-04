@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 
-// UTILS
+// MODELS
 import {
     MaintenanceElementModel, ConfigurationModel, VehicleModel, MaintenanceModel, OperationModel
 } from '@models/index';
-import { ConstantsColumns, ActionDBEnum, ConstantsTable, Constants } from '@utils/index';
-import { CommonService } from './common.service';
-import { DataBaseService } from './data-base.service';
-import { SqlService } from './sql.service';
+
+// UTILS
+import { ConstantsColumns, ActionDBEnum, ConstantsTable } from '@utils/index';
+
+// SERVICES
+import { CommonService, DataBaseService, SqlService } from '../common/index';
 
 @Injectable({
     providedIn: 'root'

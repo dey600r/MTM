@@ -12,14 +12,11 @@ import {
 } from '@models/index';
 
 // SERVICES
-import { HomeService } from './home.service';
-import { CalendarService } from './calendar.service';
-import { ControlService } from './control.service';
-import { CommonService } from './common.service';
+import { HomeService } from '../pages/home.service';
+import { CalendarService, ControlService, CommonService, IconService } from '../common/index';
 
 // UTILS
 import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
-import { IconService } from './icon.service';
 
 @Injectable({
     providedIn: 'root'
@@ -65,6 +62,7 @@ export class InfoVehicleService {
                         id: rep.id,
                         name: rep.name,
                         warning: warning,
+                        warningIcon: this.iconService.getIconKms(warning),
                         warningIconClass: this.iconService.getClassIcon(warning),
                         iconReplacement: rep.icon
                     }];
@@ -73,6 +71,7 @@ export class InfoVehicleService {
                     veh.kmEstimated, newMaintenance.fromKm, newMaintenance.toKm);
                 newMaintenance.warning = this.calculateWarningFromReplacements<InfoVehicleConfigurationMaintenanceElementModel>(
                     newMaintenance.listReplacement);
+                newMaintenance.warningIcon = this.iconService.getIconKms(newMaintenance.warning);
                 newMaintenance.warningIconClass = this.iconService.getClassIcon(newMaintenance.warning);
                 newMaintenance.iconMaintenance = main.maintenanceFreq.icon;
                 newConfiguration.listMaintenance = [...newConfiguration.listMaintenance, newMaintenance];

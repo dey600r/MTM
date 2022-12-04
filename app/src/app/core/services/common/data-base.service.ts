@@ -8,14 +8,18 @@ import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 
 // UTILS
+import { ConstantsTable, Constants } from '@utils/index';
+import { environment } from '@environment/environment';
+
+// MODELS
 import {
   VehicleModel, ConfigurationModel, OperationModel, OperationTypeModel, MaintenanceElementModel,
   MaintenanceFreqModel, MaintenanceModel, VehicleTypeModel, SystemConfigurationModel
 } from '@models/index';
-import { ConstantsTable, Constants } from '@utils/index';
+
+// SERVICES
 import { SqlService } from './sql.service';
 
-import { environment } from '@environment/environment';
 
 @Injectable({
   providedIn: 'root'

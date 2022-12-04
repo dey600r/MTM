@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { WarningWearEnum } from '../utils';
+
+// UTILS
+import { WarningWearEnum } from '@utils/index';
 
 // SERVICES
 import { IconService } from './icon.service';
@@ -44,6 +46,22 @@ describe('IconService', () => {
         expect(service.getClassIcon(WarningWearEnum.SKULL)).toEqual(' icon-color-skull');
     });
 
+    it('should get icon km/month from success status', () => {
+        expect(service.getIconKms(WarningWearEnum.SUCCESS)).toEqual('checkmark-circle');
+    });
+
+    it('should get icon km/month from warning status', () => {
+        expect(service.getIconKms(WarningWearEnum.WARNING)).toEqual('warning');
+    });
+
+    it('should get icon km/month from danger status', () => {
+        expect(service.getIconKms(WarningWearEnum.DANGER)).toEqual('nuclear');
+    });
+
+    it('should get icon km/month from skull status', () => {
+        expect(service.getIconKms(WarningWearEnum.SKULL)).toEqual('skull');
+    });
+    
     it('should load info icon dashboard', () => {
         expect(service.loadIconDashboard([])).toEqual('information-circle');
     });

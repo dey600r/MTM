@@ -12,7 +12,7 @@ import { MockData, MockTranslate, SetupTest } from '@testing/index';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { MaintenanceElementModel, MaintenanceFreqModel, OperationTypeModel, VehicleModel, VehicleTypeModel } from '@models/index';
+import { MaintenanceElementModel, MaintenanceFreqModel, OperationTypeModel, SystemConfigurationModel, VehicleModel, VehicleTypeModel } from '@models/index';
 
 // UTILS
 import { Constants, ConstantsColumns } from '@utils/index';
@@ -34,6 +34,21 @@ describe('SqlService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+
+    it('should initialize system configuration table', () => {
+        const mock: SystemConfigurationModel = MockData.SystemConfigurations[0];
+        let result: SystemConfigurationModel[] = service.mapSystemConfiguration(getStructureDatabase([{
+            [ConstantsColumns.COLUMN_MTM_ID]: mock.id,
+            [ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_KEY]: mock.key,
+            [ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_VALUE]: mock.value,
+            [ConstantsColumns.COLUMN_MTM_SYSTEM_CONFIGURATION_UPDATED]: mock.updated
+        }]));
+
+        expect(result[0].id).toEqual(mock.id);
+        expect(result[0].key).toEqual(mock.key);
+        expect(result[0].value).toEqual(mock.value);
+        expect(result[0].updated).toEqual(mock.updated);
     });
 
     it('should initialize maintenance frequency table without maintenance', () => {

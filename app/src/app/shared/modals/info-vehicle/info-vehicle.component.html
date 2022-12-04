@@ -80,7 +80,7 @@
                   <h2 class="text-overflow">{{ m.description }}</h2>
                   <div class="icon-notification">
                     <ion-icon *ngIf="m.active" [class]="m.warningIconClass" [color]="m.warningIconClass"
-                      size="small" [name]="getIconKms(m.warning)"></ion-icon>
+                      size="small" [name]="m.warningIcon"></ion-icon>
                   </div>
                 </div>
                 <div class="table-row">
@@ -108,7 +108,7 @@
                 </ion-avatar>
                 <ion-label [ngClass]="{ 'disable-item-color': !m.active }">{{ r.name }}</ion-label>
                 <ion-icon *ngIf="m.active" [class]="'icon-row' + r.warningIconClass" [color]="r.warningIconClass"
-                  size="small" [name]="getIconKms(r.warning)"></ion-icon>
+                  size="small" [name]="r.warningIcon"></ion-icon>
               </ion-item>
             </ion-list>
           </div>

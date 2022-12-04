@@ -16,7 +16,7 @@ import { SetupTest, SpyMockConfig } from '@testing/index';
 import { MockTranslate } from '@src/testing/mock-i18n.spec';
 
 // SERVICES
-import { ControlService, DataBaseService, SettingsService } from '@services/index';
+import { ControlService, DataBaseService, ExportService } from '@services/index';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -26,14 +26,14 @@ describe('AppComponent', () => {
   let splashScreen: SplashScreen;
   let dbService: DataBaseService;
   let controlService: ControlService;
-  let settingsService: SettingsService;
+  let exportService: ExportService;
   let translate: TranslateService;
 
   beforeEach(async () => {
     const config: any = SetupTest.config;
     config.providers.push(
       SpyMockConfig.ProviderDataBaseService,
-      SpyMockConfig.ProviderSettingsService);
+      SpyMockConfig.ProviderExportService);
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await firstValueFrom(translate.use('es'));
@@ -47,7 +47,7 @@ describe('AppComponent', () => {
     splashScreen = TestBed.inject(SplashScreen);
     dbService = TestBed.inject(DataBaseService);
     controlService = TestBed.inject(ControlService);
-    settingsService = TestBed.inject(SettingsService);
+    exportService = TestBed.inject(ExportService);
     fixture.detectChanges();
   });
 
@@ -66,7 +66,7 @@ describe('AppComponent', () => {
       expect(splashScreen.hide).toHaveBeenCalled();
       expect(dbService.initDB).toHaveBeenCalled();
       expect(controlService.activateButtonExist).toHaveBeenCalled();
-      expect(settingsService.createOutputDirectory).toHaveBeenCalled();
+      expect(exportService.createOutputDirectory).toHaveBeenCalled();
     });
   });
 

@@ -13,8 +13,7 @@ import {
 } from '@models/index';
 
 // SERVICES
-import { CommonService } from './common.service';
-import { CalendarService } from './calendar.service';
+import { CommonService, CalendarService } from '../common/index';
 
 // UTILS
 import { ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum } from '@utils/index';

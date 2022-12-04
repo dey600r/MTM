@@ -12,9 +12,7 @@ import {
 import { ConstantsColumns, WarningWearEnum, Constants } from '@utils/index';
 
 // SERVICES
-import { CommonService } from './common.service';
-import { CalendarService } from './calendar.service';
-import { IconService } from './icon.service';
+import { CommonService, CalendarService, IconService } from '../common/index';
 
 @Injectable({
     providedIn: 'root'
@@ -114,6 +112,7 @@ export class HomeService {
                     numWarning: 1,
                     totalWarning: replacementWear.length,
                     warning: warningWear,
+                    warningIcon: this.iconService.getIconKms(warningWear),
                     warningIconClass: this.iconService.getClassIcon(warningWear)
                 }];
             } else {
@@ -227,10 +226,12 @@ export class HomeService {
                     warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
                     warningKms: warningKms,
                     warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+                    warningKmsIcon: this.iconService.getIconKms(warningKms),
                     warningKmsIconClass: this.iconService.getClassIcon(warningKms),
                     percentMonths: percentMonth,
                     warningMonths: warningMonths,
                     warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+                    warningMonthsIcon: this.iconService.getIconKms(warningMonths),
                     warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
                 }];
             }
@@ -269,10 +270,12 @@ export class HomeService {
                     warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
                     warningKms: warningKms,
                     warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+                    warningKmsIcon: this.iconService.getIconKms(warningKms),
                     warningKmsIconClass: this.iconService.getClassIcon(warningKms),
                     percentMonths: percentMonth,
                     warningMonths: warningMonths,
                     warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+                    warningMonthsIcon: this.iconService.getIconKms(warningMonths),
                     warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
                 }];
             }
@@ -332,10 +335,12 @@ export class HomeService {
                 warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
                 warningKms: warningKms,
                 warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+                warningKmsIcon: this.iconService.getIconKms(warningKms),
                 warningKmsIconClass: this.iconService.getClassIcon(warningKms),
                 percentMonths: percentMonth,
                 warningMonths: warningMonths,
                 warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+                warningMonthsIcon: this.iconService.getIconKms(warningMonths),
                 warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
             }];
         });
@@ -492,10 +497,12 @@ export class HomeService {
                                     warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
                                     warningKms: warningKms,
                                     warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+                                    warningKmsIcon: this.iconService.getIconKms(warningKms),
                                     warningKmsIconClass: this.iconService.getClassIcon(warningKms),
                                     percentMonths: percentTime,
                                     warningMonths: warningMonths,
                                     warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+                                    warningMonthsIcon: this.iconService.getIconKms(warningMonths),
                                     warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
                                 }]
                             }];

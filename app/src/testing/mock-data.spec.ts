@@ -8,7 +8,7 @@ import { Constants } from '@utils/index';
 
 export class MockData {
     static iconService: IconService = new IconService();
-    static calendarService: CalendarService = new CalendarService(null, this.iconService);
+    static calendarService: CalendarService = new CalendarService(null);
 
     /* MAINTENANCE ELELEMTNS */
     static MaintenanceElementsAux: MaintenanceElementModel[] = [

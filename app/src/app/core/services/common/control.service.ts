@@ -105,7 +105,7 @@ export class ControlService {
     }
 
     // CONFIRMS
-    async showConfirm(parent: PageEnum, title: string, msg: string, buttonAccept: any, callbackCancel: any = () => {}) {
+    async showConfirm(parent: PageEnum, title: string, msg: string, buttonAccept: any, callbackCancel: any = () => { /* this is intentional */ }) {
         this.desactivateButtonExist();
         const alert = await this.alertController.create({
             header: title,

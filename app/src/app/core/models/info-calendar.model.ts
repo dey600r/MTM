@@ -1,4 +1,5 @@
 import { WarningWearEnum } from '@utils/index';
+import { BaseWarningIconModel } from './common.model';
 
 export class InfoCalendarVehicleViewModel {
     idVehicle = -1;
@@ -20,15 +21,13 @@ export class InfoCalendarMaintenanceViewModel {
     listInfoCalendarReplacement: InfoCalendarReplacementViewModel[] = [];
 }
 
-export class InfoCalendarReplacementViewModel {
+export class InfoCalendarReplacementViewModel extends BaseWarningIconModel {
     idReplacement = -1;
     nameReplacement = '';
     iconReplacement = '';
     price = 0;
     km = 0;
     time = 0;
-    warning = WarningWearEnum.SUCCESS;
-    warningIconClass = '';
     date: Date = new Date();
     dateFormat = '';
 }

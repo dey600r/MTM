@@ -1,4 +1,4 @@
-import { ModalOutputEnum, PageEnum } from '@utils/index';
+import { ModalOutputEnum, PageEnum, WarningWearEnum } from '@utils/index';
 
 export class BaseModel {
     id: number;
@@ -78,6 +78,12 @@ export class BaseIconCodeDescriptionModel extends BaseCodeDescriptionModel {
     constructor(c: string = null, d: string = null, id: number = 1) {
         super(c, d, id);
     }
+}
+
+export class BaseWarningIconModel {
+    warning: WarningWearEnum = WarningWearEnum.SUCCESS;
+    warningIcon: string = '';
+    warningIconClass: string = '';
 }
 
 export class BaseMaintenanceModel extends BaseDescriptionModel {

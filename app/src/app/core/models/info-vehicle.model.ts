@@ -25,6 +25,7 @@ export class InfoVehicleConfigurationMaintenanceModel extends BaseMaintenanceMod
     codeFrequency: string;
     iconMaintenance: string;
     warning: WarningWearEnum;
+    warningIcon: string;
     warningIconClass: string;
     active: boolean;
     listReplacement: InfoVehicleConfigurationMaintenanceElementModel[] = [];
@@ -43,6 +44,7 @@ export class InfoVehicleConfigurationMaintenanceModel extends BaseMaintenanceMod
 
 export class InfoVehicleConfigurationMaintenanceElementModel extends BaseNameModel {
     warning: WarningWearEnum;
+    warningIcon: string;
     warningIconClass: string;
     iconReplacement: string;
     constructor(n: string = null, w: WarningWearEnum = WarningWearEnum.SUCCESS, id: number = -1) {

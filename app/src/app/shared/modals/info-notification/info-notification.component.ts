@@ -9,15 +9,16 @@ import * as shape from 'd3-shape';
 
 // UTILS
 import {
-  ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel,
+  ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
   InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel
 } from '@models/index';
+import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+
+// SERVICES
 import {
-  DashboardService, ConfigurationService, ControlService, CalendarService,
-  SettingsService, DataBaseService, HomeService, InfoVehicleService, IconService
+  DashboardService, ControlService, CalendarService,
+  SettingsService, DataBaseService, HomeService, InfoVehicleService, InfoCalendarService
 } from '@services/index';
-import { WarningWearEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
@@ -66,8 +67,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
               public navParams: NavParams,
               private modalController: ModalController,
               private dashboardService: DashboardService,
-              private configurationService: ConfigurationService,
               private calendarService: CalendarService,
+              private infoCalendarService: InfoCalendarService,
               private controlService: ControlService,
               private screenOrientation: ScreenOrientation,
               private changeDetector: ChangeDetectorRef,
@@ -75,8 +76,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
               private settingsService: SettingsService,
               private dbService: DataBaseService,
               private homeService: HomeService,
-              private infoVehicleService: InfoVehicleService,
-              private iconService: IconService) {
+              private infoVehicleService: InfoVehicleService) {
   }
 
   ngOnInit() {
@@ -204,9 +204,9 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         { replacement: this.nameMaintenanceElement, km: kmLife, measure: this.measure.value });
     }
     const calendarKm: InfoCalendarReplacementViewModel =
-      this.calendarService.createInfoCalendarReplacement(this.dataMaintenance, wearMain, wearRep, true);
+      this.infoCalendarService.createInfoCalendarReplacement(this.dataMaintenance, wearMain, wearRep, true);
     const calendarTime: InfoCalendarReplacementViewModel =
-      this.calendarService.createInfoCalendarReplacement(this.dataMaintenance, wearMain, wearRep, false);
+      this.infoCalendarService.createInfoCalendarReplacement(this.dataMaintenance, wearMain, wearRep, false);
     const dateMaintenance: Date = (calendarKm.date < calendarTime.date || wearMain.timeMaintenance === null ?
       calendarKm.date : calendarTime.date);
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
@@ -231,10 +231,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     if (!this.hideGraph) {
       this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
     }
-  }
-
-  getIconKms(warning: WarningWearEnum): string {
-    return this.iconService.getIconKms(warning);
   }
 
   getKmPercent(wear: WearReplacementProgressBarViewModel): string {

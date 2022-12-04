@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 
 // UTILS
-import { OperationModel } from '@models/index';
-import { SqlService } from './sql.service';
-import { DataBaseService } from './data-base.service';
 import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
+
+// MODELS
+import { OperationModel } from '@models/index';
+
+// SERVICES
+import { SqlService, DataBaseService } from '../common/index';
 
 @Injectable({
     providedIn: 'root'

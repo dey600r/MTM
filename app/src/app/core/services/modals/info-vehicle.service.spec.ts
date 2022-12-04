@@ -3,7 +3,7 @@ import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { InfoVehicleService } from './info-vehicle.service';
-import { ControlService } from './control.service';
+import { ControlService } from '../common/index';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';

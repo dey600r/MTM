@@ -14,7 +14,7 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // SERVICES
-import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService } from '@services/index';
+import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService, ExportService } from '@services/index';
 
 @Component({
   selector: 'settings',
@@ -65,6 +65,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 private modalController: ModalController,
                 private dbService: DataBaseService,
                 private settingsService: SettingsService,
+                private exportService: ExportService,
                 private file: File,
                 private sqlitePorter: SQLitePorter,
                 private controlService: ControlService,
@@ -75,7 +76,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.settingsService.createOutputDirectory();
+    this.exportService.createOutputDirectory();
 
     this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
         this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
@@ -95,7 +96,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
 
     // EXPORTS AND IMPORTS
-    this.pathExports = this.settingsService.getRootRelativePath(Constants.EXPORT_DIR_NAME);
+    this.pathExports = this.exportService.getRootRelativePath(Constants.EXPORT_DIR_NAME);
     this.pathImports = this.translator.instant('COMMON.SELECT_FILE');
 
     this.getLastExportFile();
@@ -143,7 +144,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   // EPXPORT DATA
   exportData() {
     this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.MANAGE_DATA'),
-      this.translator.instant('PAGE_HOME.ConfirmExportDB', { path: this.settingsService.getRootRelativePath(Constants.EXPORT_DIR_NAME) }),
+      this.translator.instant('PAGE_HOME.ConfirmExportDB', { path: this.exportService.getRootRelativePath(Constants.EXPORT_DIR_NAME) }),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
@@ -155,8 +156,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   exportDBToJson() {
     this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then((json: any) => {
-      const exportFileName: string = this.settingsService.generateNameExportFile(Constants.EXPORT_FILE_NAME);
-      this.file.writeFile(this.settingsService.getRootPathFiles(Constants.EXPORT_DIR_NAME), exportFileName,
+      const exportFileName: string = this.exportService.generateNameExportFile(Constants.EXPORT_FILE_NAME);
+      this.file.writeFile(this.exportService.getRootPathFiles(Constants.EXPORT_DIR_NAME), exportFileName,
         JSON.stringify(json), { replace : true}).then(() => {
             this.getLastExportFile();
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveExportDB', {file: exportFileName});
@@ -190,7 +191,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const contentFile: string = e.target.result;
-      if (this.settingsService.validateStructureJsonDB(contentFile, this.dbService.getAllTables())) {
+      if (this.exportService.validateStructureJsonDB(contentFile, this.dbService.getAllTables())) {
         this.pathImports = file.name;
         this.importData(contentFile, event);
       } else {
@@ -221,9 +222,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
   importJsonToDB(contentFile: string, event: any) {
     // Backup
     this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then((json: any) => {
-      const backupFileName: string = this.settingsService.generateNameExportFile(Constants.BACKUP_FILE_NAME);
+      const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_FILE_NAME);
       // Write backup file
-      this.file.writeFile(this.settingsService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
+      this.file.writeFile(this.exportService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
         JSON.stringify(json), { replace : true}).then(() => {
             // IMPORT DB
             this.sqlitePorter.importJsonToDb(this.dbService.getDB(), JSON.parse(contentFile)).then(() => {
@@ -245,7 +246,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   // GET LIST FILES
   getLastExportFile() {
-    this.file.listDir(this.settingsService.getRootPathFiles(), Constants.EXPORT_DIR_NAME).then((listFiles: Entry[]) => {
+    this.file.listDir(this.exportService.getRootPathFiles(), Constants.EXPORT_DIR_NAME).then((listFiles: Entry[]) => {
       this.lastExport = '';
       const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
       if (!!listActual && listActual.length > 0) {
@@ -259,20 +260,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   showRealExportPath() {
     this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.INFO,
-      this.settingsService.getRootRealRelativePath(Constants.EXPORT_DIR_NAME));
+      this.exportService.getRootRealRelativePath(Constants.EXPORT_DIR_NAME));
   }
 
   showRealImportPath() {
     this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.INFO,
-      this.settingsService.getRootRealRelativePath(Constants.IMPORT_DIR_NAME));
+      this.exportService.getRootRealRelativePath(Constants.IMPORT_DIR_NAME));
   }
 
   showGuideExportImport() {
     const guideTranslate: string = this.translator.instant('PAGE_HOME.GuideExportImport');
     const guide1Translate: string = this.translator.instant('PAGE_HOME.GuideStep1',
-      {path: this.settingsService.getRootRealRelativePath(Constants.EXPORT_DIR_NAME)});
+      {path: this.exportService.getRootRealRelativePath(Constants.EXPORT_DIR_NAME)});
     const guide2Translate: string = this.translator.instant('PAGE_HOME.GuideStep2',
-      {path: this.settingsService.getRootRealRelativePath(Constants.IMPORT_DIR_NAME)});
+      {path: this.exportService.getRootRealRelativePath(Constants.IMPORT_DIR_NAME)});
     const guide3Translate: string = this.translator.instant('PAGE_HOME.GuideStep3');
     this.controlService.alertInfo(PageEnum.MODAL_SETTINGS,
       `${guide1Translate}</br>${guide2Translate}</br>${guide3Translate}`, guideTranslate);
@@ -282,7 +283,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   deleteExportFiles() {
     this.controlService.showConfirm(PageEnum.MODAL_SETTINGS, this.translator.instant('COMMON.MANAGE_DATA'),
       this.translator.instant('PAGE_HOME.ConfirmDeleteExportFile',
-        { path: this.settingsService.getRootRelativePath(Constants.EXPORT_DIR_NAME) }),
+        { path: this.exportService.getRootRelativePath(Constants.EXPORT_DIR_NAME) }),
         {
           text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
@@ -293,15 +294,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   deleteFiles(path: string) {
-    this.file.listDir(this.settingsService.getRootPathFiles(), path).then((listFiles: Entry[]) => {
+    this.file.listDir(this.exportService.getRootPathFiles(), path).then((listFiles: Entry[]) => {
       const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
       if (!!listActual && listActual.length > 0) {
         listActual.forEach(f => {
-          this.file.removeFile(this.settingsService.getRootPathFiles(path), f.name);
+          this.file.removeFile(this.exportService.getRootPathFiles(path), f.name);
         });
         this.getLastExportFile();
         this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.DeleteExportDB',
-          {path: this.settingsService.getRootRelativePath(path)});
+          {path: this.exportService.getRootRelativePath(path)});
       } else {
         this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'PAGE_HOME.InfoNotExistsFilesToDelete');
       }
