@@ -104,3 +104,8 @@ export class BaseMaintenanceModel extends BaseDescriptionModel {
         this.toKm = to;
     }
 }
+
+export interface ISqlitePorterModel {
+    structure: any;
+    data: any;
+}

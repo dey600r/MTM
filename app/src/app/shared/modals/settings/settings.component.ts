@@ -7,7 +7,7 @@ import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { ModalInputModel, SystemConfigurationModel } from '@models/index';
+import { ISqlitePorterModel, ModalInputModel, SystemConfigurationModel } from '@models/index';
 
 // UTILS
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
@@ -155,10 +155,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   exportDBToJson() {
-    this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then((json: any) => {
+    this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then((json: ISqlitePorterModel) => {
       const exportFileName: string = this.exportService.generateNameExportFile(Constants.EXPORT_FILE_NAME);
       this.file.writeFile(this.exportService.getRootPathFiles(Constants.EXPORT_DIR_NAME), exportFileName,
-        JSON.stringify(json), { replace : true}).then(() => {
+        JSON.stringify(json.data), { replace : true}).then(() => {
             this.getLastExportFile();
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveExportDB', {file: exportFileName});
           }).catch(err => {
@@ -221,13 +221,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   importJsonToDB(contentFile: string, event: any) {
     // Backup
-    this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then((json: any) => {
+    this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then((json: ISqlitePorterModel) => {
       const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_FILE_NAME);
       // Write backup file
       this.file.writeFile(this.exportService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
-        JSON.stringify(json), { replace : true}).then(() => {
+        JSON.stringify(json.data), { replace : true}).then(() => {
             // IMPORT DB
-            this.sqlitePorter.importJsonToDb(this.dbService.getDB(), JSON.parse(contentFile)).then(() => {
+            const jsonToImport: ISqlitePorterModel = this.mapDataFromContentFile(contentFile, json);
+            this.sqlitePorter.importJsonToDb(this.dbService.getDB(), jsonToImport).then(() => {
               this.settingsService.finishImportLoad();
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
             }).catch(e => {
@@ -242,6 +243,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorBackupDB');
       this.clearInputFile(event);
     });
+  }
+
+  mapDataFromContentFile(contentFile: string, json: any): ISqlitePorterModel {
+    const contentFileJson: ISqlitePorterModel = JSON.parse(contentFile);
+    if (contentFileJson.structure && contentFileJson.data) {
+      return contentFileJson;
+    }
+    return {
+      structure: json.structure,
+      data: JSON.parse(contentFile)
+    };
   }
 
   // GET LIST FILES

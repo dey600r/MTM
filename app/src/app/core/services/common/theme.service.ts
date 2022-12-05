@@ -9,7 +9,6 @@ import { Constants, DarkTheme, SkyTheme } from '@utils/index';
 })
 export class ThemeService {
 
-
     constructor(private domCtrl: DomController) {}
 
     changeTheme(themeCode: string) {

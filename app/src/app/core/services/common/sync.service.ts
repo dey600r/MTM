@@ -18,7 +18,7 @@ import * as loginData from '@assets/data/login-firebase.json';
 import { Constants, ConstantsTable, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // MODLS
-import { SystemConfigurationModel } from '@models/index';
+import { ISqlitePorterModel, SystemConfigurationModel } from '@models/index';
 
 @Injectable({
   providedIn: 'root'
@@ -81,16 +81,16 @@ export class SyncService {
       const data = snapshot.val();
       if (this.validSyncDownloadData(data)) {
         // EXPORT DB
-        await this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then(async (json: any) => {
+        await this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then(async (json: ISqlitePorterModel) => {
           const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_SYNC_FILE_NAME);
           // WRITE BACKUP FILE
           await this.file.writeFile(this.exportService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
-            JSON.stringify(json), { replace : true}).then(() => {
+            JSON.stringify(json.data), { replace : true}).then(() => {
               // This is intentional
           }).catch(err => {
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
           });
-          const dataImport: any = json;
+          const dataImport: ISqlitePorterModel = json;
           this.dbService.getSyncTables().forEach(x => {
               dataImport.data.inserts[x] = JSON.parse(data[x]);
           });
