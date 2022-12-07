@@ -2,7 +2,7 @@
     <ion-toolbar>
         <!-- Button show filter -->
         <ion-button slot="start" fill="clear" (click)="showPopover($event)" class="btn-width-header">
-            <ion-icon size="large" class="btn-color" name="filter"></ion-icon>
+            <ion-icon size="large" class="btn-color" [name]="iconFilter"></ion-icon>
         </ion-button>
         <!-- Title -->
         <ion-title color="text-header" class="align-center">{{ 'COMMON.CHARTS' | translate }}</ion-title>
@@ -12,7 +12,6 @@
         </ion-button>
     </ion-toolbar>
 </ion-header>
-
 
 <ion-content>
     <div class="info-main padding-info" *ngIf="dashboardVehicleExpenses.data.length === 0 && dashboardOpTypeExpenses.data.length === 0">

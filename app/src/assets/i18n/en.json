@@ -201,6 +201,8 @@
     },
     "PAGE_CONFIGURATION": {
         "YOURS_CONFIGURATIONS": "Configurations",
+        "YOURS_MAINTENANCES": "Maintenances",
+        "YOURS_MAINTENANCES_ELEMENT": "Replacements",
         "AddNewConfiguration": "Add configuration",
         "EditConfiguration": "Edit configuration",
         "AddName": "Add name",

@@ -5,13 +5,17 @@ import { Subscription } from 'rxjs';
 // LIBRARIES
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 
-// UTILS
-import { DashboardService, ControlService, VehicleService } from '@services/index';
+// SERVICES
+import { DashboardService, ControlService, IconService } from '@services/index';
+
+// MODELS
 import { DashboardModel, OperationModel, ModalInputModel } from '@models/index';
+
+// UTILS
 import { PageEnum } from '@utils/index';
 
 // COMPONENTS
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
   selector: 'dashboard',
@@ -32,6 +36,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // DATA
     operations: OperationModel[] = [];
     vehicleModel = '';
+    iconFilter = 'filter';
 
     // SUBSCRIPTION
     searchSubscription: Subscription = new Subscription();
@@ -44,7 +49,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 private dashboardService: DashboardService,
                 private modalController: ModalController,
                 private controlService: ControlService,
-                private vehicleService: VehicleService) {
+                private iconService: IconService) {
   }
 
   ngOnInit() {
@@ -64,6 +69,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // VEHICLE EXPENSES PER OPERATION TYPE
       this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
       this.dashboardReplacementExpenses = this.dashboardService.getDashboardModelReplacementExpenses(windowsSize, this.operations, filter);
+      this.loadIconSearch();
       this.changeDetector.detectChanges();
     });
 
@@ -100,9 +106,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   showPopover(ev: any) {
-    this.controlService.showPopover(this.getParent(this.modalInputModel.parentPage), ev, SearchDashboardPopOverComponent,
-      new ModalInputModel(this.modalInputModel.isCreate, this.modalInputModel.data, this.modalInputModel.dataList,
-        this.getParent(this.modalInputModel.parentPage)));
+    const parentPage: PageEnum = this.getParent(this.modalInputModel.parentPage);
+    this.controlService.showPopover(parentPage, ev, SearchDashboardPopOverComponent,
+      new ModalInputModel(this.modalInputModel.isCreate, this.modalInputModel.data, this.modalInputModel.dataList, parentPage));
   }
 
   isParentPageVehicle() {
@@ -111,5 +117,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   isParentPageOperation() {
     return this.modalInputModel.parentPage === PageEnum.OPERATION;
+  }
+
+  loadIconSearch() {
+    const parentPage: PageEnum = this.getParent(this.modalInputModel.parentPage);
+    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(parentPage));
   }
 }

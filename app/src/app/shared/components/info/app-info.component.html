@@ -10,9 +10,21 @@
                 <ion-icon class="ion-color-info-init" size="large" name="construct"></ion-icon>
                 <h2 class="margin-top5 ion-color-info-init">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h2>
             </div>
-            <div *ngIf="isNotificationPageEmpty()">
+            <div *ngIf="isMaintenancePageEmpty()">
+                <ion-icon class="ion-color-info-init" size="large" name="build"></ion-icon>
+                <h2 class="margin-top5 ion-color-info-init">{{ 'PAGE_CONFIGURATION.YOURS_MAINTENANCES' | translate }}</h2>
+            </div>
+            <div *ngIf="isMaintenanceElementPageEmpty()">
+                <ion-icon class="ion-color-info-init" size="large" name="repeat"></ion-icon>
+                <h2 class="margin-top5 ion-color-info-init">{{ 'PAGE_CONFIGURATION.YOURS_MAINTENANCES_ELEMENT' | translate }}</h2>
+            </div>
+            <div *ngIf="isNotificationPageNotConfigure()">
                 <ion-icon class="ion-color-info-init" size="large" name="cog"></ion-icon>
                 <h2 class="margin-top5 ion-color-info-init">{{ 'ALERT.ConfigurationEmpty' | translate }}</h2>
+            </div>
+            <div *ngIf="isNotificationPageEmpty()">
+                <ion-icon class="ion-color-info-init" size="large" name="stats-chart"></ion-icon>
+                <h2 class="margin-top5 ion-color-info-init">{{ 'ALERT.ConfigurationWithout' | translate }}</h2>
             </div>
         </div>
         <div *ngIf="inputInfo.isCreate">
@@ -26,7 +38,7 @@
                 <div class="info-icon dissapear">
                     <ion-icon></ion-icon>
                 </div>
-                <div [ngClass]="{'info-icon': true, 'dissapear': !isNotificationEmpty()}">
+                <div [ngClass]="{'info-icon': true, 'dissapear': !isNotificationNotConfigure()}">
                     <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
                 </div>
             </div>

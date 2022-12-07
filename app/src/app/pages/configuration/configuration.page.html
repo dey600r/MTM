@@ -1,8 +1,14 @@
 <ion-header [hidden]="!loaded">
   <ion-toolbar>
+    <!-- Button filter -->
+    <ion-button slot="start" fill="clear" class="btn-width-header"></ion-button>
     <ion-title>
       <ion-title color="text-header" class="align-center">{{ 'COMMON.CONFIGURATIONS' | translate }}</ion-title>
     </ion-title>
+    <!-- Button filter -->
+    <ion-button slot="end" fill="clear" (click)="showPopover($event)" class="btn-width-header">
+      <ion-icon size="large" [name]="iconFilter"></ion-icon>
+    </ion-button>
   </ion-toolbar>
   <!-- SEGMENT -->
   <ion-segment class="segment-button-fixed ion-segment-color" [scrollable]="activeSegmentScroll()" [value]="segmentSelected" 
@@ -43,6 +49,8 @@
       </ion-item>
     </ion-item-sliding>
   </ion-list>
+  <!-- INFO MAINTENANCES -->
+  <app-info *ngIf="segmentSelected === 2 && maintenances.length === 0" [inputInfo]="inputMaintenance"></app-info>
   <!-- MAINTENANCES -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 2">
     <ion-item-sliding *ngFor="let m of maintenances" #slidingItemMain>
@@ -86,6 +94,8 @@
       </ion-item>
     </ion-item-sliding>
   </ion-list>
+  <!-- INFO MAINTENANCE ELEMNTS / REPLACEMENT -->
+  <app-info *ngIf="segmentSelected === 3 && maintenanceElements.length === 0" [inputInfo]="inputMaintenanceElement"></app-info>
   <!-- MAINTENANCE ELEMNTS / REPLACEMENT -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 3">
     <ion-item button *ngFor="let me of maintenanceElements">

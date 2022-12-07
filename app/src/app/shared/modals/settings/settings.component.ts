@@ -226,19 +226,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
       // Write backup file
       this.file.writeFile(this.exportService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
         JSON.stringify(json.data), { replace : true}).then(() => {
-            // IMPORT DB
-            const jsonToImport: ISqlitePorterModel = this.mapDataFromContentFile(contentFile, json);
-            this.sqlitePorter.importJsonToDb(this.dbService.getDB(), jsonToImport).then(() => {
-              this.settingsService.finishImportLoad();
-              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
-            }).catch(e => {
-              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB');
-              this.clearInputFile(event);
-            });
-          }).catch(err => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
+          // IMPORT DB
+          const jsonToImport: ISqlitePorterModel = this.mapDataFromContentFile(contentFile, json);
+          this.sqlitePorter.importJsonToDb(this.dbService.getDB(), jsonToImport).then(() => {
+            this.settingsService.finishImportLoad();
+            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
+          }).catch(e => {
+            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB');
             this.clearInputFile(event);
           });
+      }).catch(err => {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
+        this.clearInputFile(event);
+      });
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorBackupDB');
       this.clearInputFile(event);

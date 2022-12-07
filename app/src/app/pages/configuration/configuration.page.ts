@@ -4,13 +4,19 @@ import { IonSelect, Platform } from '@ionic/angular';
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
-// UTILS
-import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService, IconService } from '@services/index';
-import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum } from '@utils/index';
+// SERVICES
+import { 
+  DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService, DashboardService, IconService
+} from '@services/index';
+
+// MODELS
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
-  VehicleModel, OperationModel, ListModalModel, ListDataModalModel
+  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel
 } from '@models/index';
+
+// UTILS
+import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, Constants } from '@utils/index';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
@@ -18,6 +24,7 @@ import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-ed
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 import { BasePage } from '@pages/base.page';
+import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
   selector: 'app-configuration',
@@ -27,18 +34,24 @@ import { BasePage } from '@pages/base.page';
 export class ConfigurationPage extends BasePage implements OnInit {
 
   // MODAL
+  inputMaintenance: ModalInputModel = new ModalInputModel();
+  inputMaintenanceElement: ModalInputModel = new ModalInputModel();
   dataReturned: ModalOutputModel;
 
   // DATA
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
+  allConfigurations: ConfigurationModel[] = [];
   configurations: ConfigurationModel[] = [];
+  allMaintenances: MaintenanceModel[] = [];
   maintenances: MaintenanceModel[] = [];
+  allMaintenanceElements: MaintenanceElementModel[] = [];
   maintenanceElements: MaintenanceElementModel[] = [];
   maxKm = 0;
   measure: any = {};
   segmentHeader: any[] = [];
   segmentSelected = 1;
+  iconFilter = 'filter';
 
   loaded = false;
 
@@ -52,6 +65,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
               private configurationService: ConfigurationService,
               private settingsService: SettingsService,
               private vehicleService: VehicleService,
+              private dashboardService: DashboardService,
               private iconService: IconService,
               private detector: ChangeDetectorRef) {
     super(platform, translator);
@@ -69,6 +83,9 @@ export class ConfigurationPage extends BasePage implements OnInit {
       { id: 2, title: 'PAGE_CONFIGURATION.MAINTENANCES', icon: 'build'},
       { id: 3, title: 'PAGE_CONFIGURATION.REPLACEMENTS', icon: 'repeat'}
     ];
+
+    this.inputMaintenance = new ModalInputModel(false, null, [], PageEnum.CONFIGURATION, Constants.STATE_INFO_MAINTENANCE_EMPTY);
+    this.inputMaintenanceElement = new ModalInputModel(false, null, [], PageEnum.CONFIGURATION, Constants.STATE_INFO_MAINTENANCE_ELEMENT_EMPTY);
 
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
@@ -90,17 +107,28 @@ export class ConfigurationPage extends BasePage implements OnInit {
     });
 
     this.dbService.getConfigurations().subscribe(data => {
+      this.allConfigurations = data; 
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+      this.dashboardService.setSearchConfiguration();
       this.detector.detectChanges();
     });
 
     this.dbService.getMaintenance().subscribe(data => {
+      this.allMaintenances = data;
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+      this.dashboardService.setSearchConfiguration();
       this.detector.detectChanges();
     });
 
     this.dbService.getMaintenanceElement().subscribe(data => {
-      this.maintenanceElements = this.configurationService.orderMaintenanceElement(data);
+      this.allMaintenanceElements = data;
+      this.maintenanceElements = this.configurationService.orderMaintenanceElement(data); 
+      this.dashboardService.setSearchConfiguration();
+      this.detector.detectChanges();
+    });
+
+    this.dashboardService.getObserverSearchConfiguration().subscribe(filter => {
+      this.filterConfiguration(filter);
       this.detector.detectChanges();
     });
   }
@@ -185,6 +213,39 @@ export class ConfigurationPage extends BasePage implements OnInit {
     if (data && data.data && data.action === ModalOutputEnum.SAVE) {
       this.showConfirmSaveMaintenancesAssociatedToConfiguration(data.data, maintenance);
     }
+  }
+
+  showPopover(ev: any) {
+    this.controlService.showPopover(PageEnum.CONFIGURATION, ev, SearchDashboardPopOverComponent,
+      new ModalInputModel(true, null, [], PageEnum.CONFIGURATION));
+  }
+
+  filterConfiguration(filter: SearchDashboardModel) {
+    const filteredText: string = filter.searchText.toLowerCase();
+
+    // FILTER CONFIGURATION
+    const filteredVehicles: VehicleModel[] = this.vehicles.filter(x => filter.searchVehicle.some(y => x.id === y.id));
+    this.configurations = this.commonService.orderBy(this.allConfigurations.filter(x => 
+      (filteredVehicles.length === 0 || filteredVehicles.some(y => x.id === y.configuration.id)) &&
+      (x.name.toLowerCase().includes(filteredText) || x.description.toLowerCase().includes(filteredText))),
+      ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+    
+    // FILTER MAINTENANCE
+    this.maintenances = this.commonService.orderBy(this.allMaintenances.filter(x =>
+      filteredVehicles.length === 0 || this.configurations.some(y => y.listMaintenance.some(z => x.id === z.id)) &&
+      (x.description.toLowerCase().includes(filteredText))),
+      ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+
+    // FILTER MAINTENANCE ELEMENT
+    this.maintenanceElements = this.configurationService.orderMaintenanceElement(this.allMaintenanceElements.filter(x =>
+      filteredVehicles.length === 0 || this.maintenances.some(y => y.listMaintenanceElement.some(z => x.id === z.id)) &&
+      (x.name.toLowerCase().includes(filteredText) || x.description.toLowerCase().includes(filteredText))));
+
+    this.loadIconSearch();
+  }
+
+  loadIconSearch() {
+    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.CONFIGURATION));
   }
 
   /** CONFIGURATION */

@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 // UTILS
 import { Constants, WarningWearEnum } from '@utils/index';
 
+// MODELS
+import { SearchDashboardModel } from '@models/index';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -49,11 +52,19 @@ export class IconService {
     }
 
     loadIconDashboard<T>(data: T[]): string {
-        if (data.length === 0) {
-          return 'information-circle';
-        } else {
-          return 'bar-chart';
-        }
+      if (data.length === 0) {
+        return 'information-circle';
+      } else {
+        return 'bar-chart';
+      }
+    }
+
+    loadIconSearch(empty: boolean): string {
+      if (empty) {
+        return 'filter';
+      } else {
+        return 'filter-circle';
+      }
     }
 
     // VEHICLE

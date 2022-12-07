@@ -8,7 +8,7 @@
     <ion-title color="text-header" class="align-center">{{ 'COMMON.OPERATIONS' | translate }}</ion-title>
     <!-- Button filter -->
     <ion-button slot="end" fill="clear" (click)="showPopover($event)" class="btn-width-header">
-      <ion-icon size="large" name="filter"></ion-icon>
+      <ion-icon size="large" [name]="iconFilter"></ion-icon>
     </ion-button>
   </ion-toolbar>
   <!-- SEGMENT -->

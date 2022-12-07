@@ -9,14 +9,17 @@ import { TranslateService } from '@ngx-translate/core';
 import {
     DashboardModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel,
     WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel,
-    InfoVehicleConfigurationModel
+    InfoVehicleConfigurationModel,
+    IDisplaySearcherControlModel,
+    IObserverSearcherControlModel,
+    ISearcherControlModel
 } from '@models/index';
 
 // SERVICES
 import { CommonService, CalendarService } from '../common/index';
 
 // UTILS
-import { ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum } from '@utils/index';
+import { ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum, PageEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -29,6 +32,8 @@ export class DashboardService {
     public behaviourSearchDashboard: BehaviorSubject<SearchDashboardModel>
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
     public behaviourSearchDashboardRecords: BehaviorSubject<SearchDashboardModel>
+        = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
+    public behaviourSearchConfiguration: BehaviorSubject<SearchDashboardModel>
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
 
     constructor(private commonService: CommonService,
@@ -383,7 +388,7 @@ export class DashboardService {
         return new DashboardModel(view, result, colors);
     }
 
-    // SEARCHER DASHBOARD
+    //#region GET OBSERVER SEARCHER
 
     getObserverSearchDashboard(): Observable<SearchDashboardModel> {
         return this.behaviourSearchDashboard.asObservable();
@@ -397,9 +402,17 @@ export class DashboardService {
         return this.behaviourSearchOperation.asObservable();
     }
 
+    getObserverSearchConfiguration(): Observable<SearchDashboardModel> {
+        return this.behaviourSearchConfiguration.asObservable();
+    }
+
     getSearchDashboard(): SearchDashboardModel {
         return this.searchDashboard;
     }
+
+    //#endregion
+
+    //#region SET OBSERVER SEARCHER
 
     setSearchOperation(sot: OperationTypeModel[] = [],
                        sme: MaintenanceElementModel[] = [], st: string = '') {
@@ -407,6 +420,12 @@ export class DashboardService {
         this.searchDashboard.searchMaintenanceElement = sme;
         this.searchDashboard.searchText = st;
         this.behaviourSearchOperation.next(this.searchDashboard);
+    }
+
+    setSearchConfiguration(vehicles: VehicleModel[] = [], st: string = '') {
+        this.searchDashboard.searchVehicle = vehicles;
+        this.searchDashboard.searchText = st;
+        this.behaviourSearchConfiguration.next(this.searchDashboard);
     }
 
     setSearchDashboard(filter: SearchDashboardModel) {
@@ -419,4 +438,129 @@ export class DashboardService {
         this.searchDashboard.showStrict = strict;
         this.behaviourSearchDashboardRecords.next(this.searchDashboard);
     }
+
+    //#endregion
+
+    //#region IS SEARCHER APPLIED
+
+    getConfigSearcher(): ISearcherControlModel {
+        return {
+            controls: this.getConfigDisplay(),
+            observers: this.getConfigObservers()
+        }
+    }
+
+    getConfigDisplay(): IDisplaySearcherControlModel {
+        return {
+            showFilterKmTime: [PageEnum.HOME],
+            showSearchText: [PageEnum.OPERATION, PageEnum.CONFIGURATION],
+            showFilterOpType: [PageEnum.HOME, PageEnum.OPERATION, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showFilterVehicle: [PageEnum.CONFIGURATION],
+            showFilterMaintElement: [PageEnum.OPERATION, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showFilterMonth: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showStrict: [PageEnum.HOME],
+            showExpensePerKm: [PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showAxis: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showLegend: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showAxisLabel: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showDataLabel: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showDoghnut: [PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showMyData: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION]
+        };
+    }
+
+    getConfigObservers(): IObserverSearcherControlModel {
+        const aux: IDisplaySearcherControlModel = this.getConfigDisplay();
+        const showFilterKmTime: string = this.commonService.nameOf(() => aux.showFilterKmTime);
+        const showSearchText: string = this.commonService.nameOf(() => aux.showSearchText);
+        const showFilterOpType: string = this.commonService.nameOf(() => aux.showFilterOpType);
+        const showFilterVehicle: string = this.commonService.nameOf(() => aux.showFilterVehicle);
+        const showFilterMaintElement: string = this.commonService.nameOf(() => aux.showFilterMaintElement);
+        const showFilterMonth: string = this.commonService.nameOf(() => aux.showFilterMonth);
+        const showStrict: string = this.commonService.nameOf(() => aux.showStrict);
+        const showExpensePerKm: string = this.commonService.nameOf(() => aux.showExpensePerKm);
+        const showAxis: string = this.commonService.nameOf(() => aux.showAxis);
+        const showLegend: string = this.commonService.nameOf(() => aux.showLegend);
+        const showAxisLabel: string = this.commonService.nameOf(() => aux.showAxisLabel);
+        const showDataLabel: string = this.commonService.nameOf(() => aux.showDataLabel);
+        const showDoghnut: string = this.commonService.nameOf(() => aux.showDoghnut);
+        const showMyData: string = this.commonService.nameOf(() => aux.showMyData);
+        return {
+            filterDashboardGrouper: [showFilterOpType, showFilterMaintElement, showFilterMonth, showExpensePerKm, showAxis, showLegend, showAxisLabel, showDataLabel, showDoghnut, showMyData],
+            filterDashboardRecordsGrouper: [showFilterKmTime, showFilterOpType, showFilterMaintElement, showStrict],
+            filterOperationGrouper: [showSearchText, showFilterOpType, showFilterMaintElement],
+            filterConfigurationGrouper: [showSearchText, showFilterVehicle]
+        }
+        
+        // return {
+        //     filterDashboardGrouper: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+        //     filterDashboardRecordsGrouper: [PageEnum.HOME],
+        //     filterOperationGrouper: [PageEnum.OPERATION],
+        //     filterConfigurationGrouper: [PageEnum.CONFIGURATION]
+        // };
+    }
+
+    isEmptySearchDashboard(parentPage: PageEnum): boolean {
+        if (!this.isEmptyFilters(parentPage))
+            return false;
+        return this.isEmptyShowers(parentPage);
+    }
+
+    private isEmptyFilters(parentPage: PageEnum): boolean {
+        const config: IDisplaySearcherControlModel = this.getConfigDisplay();
+        const emptyFilter: SearchDashboardModel = new SearchDashboardModel();
+        let filterApplied: boolean = false;
+        if(config.showFilterKmTime.some(x => x === parentPage)) {
+            filterApplied = (this.searchDashboard.filterKmTime !== emptyFilter.filterKmTime);
+        }
+        if(config.showSearchText.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.searchText !== emptyFilter.searchText);
+        }
+        if(config.showFilterOpType.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.searchOperationType.length !== emptyFilter.searchOperationType.length);
+        }
+        if(config.showFilterVehicle.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.searchVehicle.length !== emptyFilter.searchVehicle.length);
+        }
+        if(config.showFilterMaintElement.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.searchMaintenanceElement.length !== emptyFilter.searchMaintenanceElement.length);
+        }
+        if(config.showFilterMonth.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.showPerMont !== emptyFilter.showPerMont);
+        }
+        if(config.showExpensePerKm.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.expensePerKm !== emptyFilter.expensePerKm);
+        }
+        return !filterApplied;
+    }
+
+    private isEmptyShowers(parentPage: PageEnum): boolean {
+        const config: IDisplaySearcherControlModel = this.getConfigDisplay();
+        const emptyFilter: SearchDashboardModel = new SearchDashboardModel();
+        let filterApplied: boolean = false;
+        if(config.showStrict.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.showStrict !== emptyFilter.showStrict);
+        }
+        if(config.showAxis.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.showAxis !== emptyFilter.showAxis);
+        }
+        if(config.showLegend.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.showLegend !== emptyFilter.showLegend);
+        }
+        if(config.showAxisLabel.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.showAxisLabel !== emptyFilter.showAxisLabel);
+        }
+        if(config.showDataLabel.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.showDataLabel !== emptyFilter.showDataLabel);
+        }
+        if(config.showDoghnut.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.doghnut !== emptyFilter.doghnut);
+        }
+        if(config.showMyData.some(x => x === parentPage)) {
+            filterApplied = filterApplied || (this.searchDashboard.showMyData !== emptyFilter.showMyData);
+        }
+        return !filterApplied;
+    }
+
+    //#endregion
 }

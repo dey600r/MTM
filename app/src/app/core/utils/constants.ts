@@ -37,6 +37,8 @@ export class Constants {
 
     static STATE_INFO_OPERATION_EMPTY = 'operation_empty';
     static STATE_INFO_VEHICLE_EMPTY = 'vehicle_empty';
+    static STATE_INFO_MAINTENANCE_EMPTY = 'maintenance_empty';
+    static STATE_INFO_MAINTENANCE_ELEMENT_EMPTY = 'maintenance_element_empty';
     static STATE_INFO_NOTIFICATION_EMPTY = 'notification_empty';
     static STATE_INFO_NOTIFICATION_WITHOUT = 'notification_without';
 

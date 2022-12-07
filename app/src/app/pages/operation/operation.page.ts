@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   DataBaseService, CommonService, OperationService, ControlService,
-  DashboardService, SettingsService, VehicleService, IconService
+  DashboardService, SettingsService, IconService
 } from '@services/index';
 import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
@@ -17,7 +17,7 @@ import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum } fr
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
 import { BasePage } from '@pages/base.page';
 
@@ -44,6 +44,7 @@ export class OperationPage extends BasePage implements OnInit {
   loadedHeader = false;
   loadedBody = false;
   iconNameHeaderLeft = 'bar-chart';
+  iconFilter = 'filter';
   measure: any = {};
   coin: any = {};
 
@@ -52,7 +53,6 @@ export class OperationPage extends BasePage implements OnInit {
               public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
-              private vehicleService: VehicleService,
               private operationService: OperationService,
               private dashboardService: DashboardService,
               private settingsService: SettingsService,
@@ -97,7 +97,7 @@ export class OperationPage extends BasePage implements OnInit {
       this.filterDashboard = this.dashboardService.getSearchDashboard();
       if (!!data && data.length > 0) {
         this.allOperations = data;
-        this.operationsVehicle = this.allOperations.filter(x => x.vehicle.id === this.vehicleSelected);
+        this.loadOperationVehicles();
       } else {
         this.allOperations = [];
         this.operationsVehicle = [];
@@ -108,9 +108,9 @@ export class OperationPage extends BasePage implements OnInit {
     this.dashboardService.getObserverSearchOperation().subscribe(filter => {
       this.loadOperationVehicles();
       this.loadIconDashboard(this.operationsVehicle);
+      this.loadIconSearch();
       this.filterDashboard = filter;
-      this.operations = this.commonService.orderBy(this.filterOperations(filter, this.operationsVehicle),
-        ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
+      this.operations = this.filterOperations(filter, this.operationsVehicle);
       this.detector.detectChanges();
     });
   }
@@ -198,9 +198,7 @@ export class OperationPage extends BasePage implements OnInit {
     }, 500);
     this.vehicleSelected = Number(event.detail.value);
     this.loadOperationVehicles();
-    this.operations = this.commonService.orderBy(this.filterOperations(this.filterDashboard,
-      this.allOperations.filter(x => x.vehicle.id === Number(event.detail.value))),
-        ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
+    this.operations = this.filterOperations(this.filterDashboard, this.allOperations.filter(x => x.vehicle.id === Number(event.detail.value)));
     this.loadIconDashboard(this.operations);
   }
 
@@ -210,13 +208,14 @@ export class OperationPage extends BasePage implements OnInit {
 
   filterOperations(filter: SearchDashboardModel, operations: OperationModel[]): OperationModel[] {
     const filteredText: string = filter.searchText.toLowerCase();
-    return operations.filter(op =>
+    const dataFiltered: OperationModel[] = operations.filter(op =>
       (op.description.toLowerCase().includes(filteredText) || op.details.toLowerCase().includes(filteredText) ||
-      op.owner.toLowerCase().includes(filteredText) || op.location.toLowerCase().includes(filteredText)) &&
+      op.owner.toLowerCase().includes(filteredText) || (op.location !== null && op.location.toLowerCase().includes(filteredText))) &&
       (filter.searchOperationType.length === 0 || filter.searchOperationType.some(y => y.id === op.operationType.id)) &&
       (filter.searchMaintenanceElement.length === 0 ||
         filter.searchMaintenanceElement.some(y => op.listMaintenanceElement.some(z => y.id === z.id)))
     );
+    return this.commonService.orderBy(dataFiltered, ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
   }
 
   loadOperationVehicles(): void {
@@ -227,5 +226,9 @@ export class OperationPage extends BasePage implements OnInit {
 
   loadIconDashboard(operations: OperationModel[]): void {
     this.iconNameHeaderLeft = this.iconService.loadIconDashboard<OperationModel>(operations);
+  }
+
+  loadIconSearch() {
+    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.OPERATION));
   }
 }

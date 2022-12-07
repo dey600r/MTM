@@ -210,7 +210,7 @@ export class AddEditOperationComponent implements OnInit {
         name: replacement.name,
         description: replacement.description,
         master: replacement.master,
-        price: (oldReplacement ? oldReplacement.price : 0),
+        price: (oldReplacement ? oldReplacement.price : null),
         icon: replacement.icon
       }];
     });

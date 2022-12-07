@@ -14,7 +14,7 @@
     </ion-button>
   </ion-toolbar>
   <!-- SEGMENT -->
-  <ion-segment *ngIf="!activateInfo" class="segment-button-fixed" 
+  <ion-segment *ngIf="!activateInfo || !hideFabButton" class="segment-button-fixed" 
     [value]="this.vehicleSelected.idVehicle" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
     <ion-segment-button *ngFor="let m of wears; let i = index;" [value]="m.idVehicle" layout="icon-start">
       <ion-label>

@@ -32,11 +32,23 @@ export class AppInfoComponent {
     return this.inputInfo.action === Constants.STATE_INFO_OPERATION_EMPTY;
   }
 
-  isNotificationEmpty(): boolean {
-    return this.inputInfo.parentPage !== PageEnum.CONFIGURATION && this.isNotificationPageEmpty();
+  isMaintenancePageEmpty(): boolean {
+    return this.inputInfo.action === Constants.STATE_INFO_MAINTENANCE_EMPTY;
+  }
+
+  isMaintenanceElementPageEmpty(): boolean {
+    return this.inputInfo.action === Constants.STATE_INFO_MAINTENANCE_ELEMENT_EMPTY;
   }
 
   isNotificationPageEmpty(): boolean {
+    return this.inputInfo.action === Constants.STATE_INFO_NOTIFICATION_WITHOUT;
+  }
+
+  isNotificationNotConfigure(): boolean {
+    return this.inputInfo.parentPage !== PageEnum.CONFIGURATION && this.isNotificationPageNotConfigure();
+  }
+
+  isNotificationPageNotConfigure(): boolean {
     return this.inputInfo.action === Constants.STATE_INFO_NOTIFICATION_EMPTY;
   }
  }

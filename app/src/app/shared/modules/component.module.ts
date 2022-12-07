@@ -29,7 +29,7 @@ import { DashboardComponent } from '@modals/dashboard/dashboard.component';
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
 import { SettingsComponent } from '@modals/settings/settings.component';
 import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@modals/search-dashboard-popover/search-dashboard-popover.component';
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 

@@ -200,6 +200,8 @@ export class MockTranslate {
         },
         PAGE_CONFIGURATION: {
             YOURS_CONFIGURATIONS: 'Configurations',
+            YOURS_MAINTENANCES: "Maintenances",
+            YOURS_MAINTENANCES_ELEMENT: "Replacements",
             AddNewConfiguration: 'Add configuration',
             EditConfiguration: 'Edit configuration',
             AddName: 'Add name',
@@ -576,6 +578,8 @@ export class MockTranslate {
         },
         PAGE_CONFIGURATION: {
             YOURS_CONFIGURATIONS: 'Configuraciones',
+            YOURS_MAINTENANCES: "Mantenimientos",
+            YOURS_MAINTENANCES_ELEMENT: "Recambios",
             AddNewConfiguration: 'Añadir configuración',
             EditConfiguration: 'Editar configuración',
             AddName: 'Añada el nombre',

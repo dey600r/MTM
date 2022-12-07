@@ -17,11 +17,11 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 // SERVICES
 import {
   DashboardService, ControlService, CalendarService,
-  SettingsService, DataBaseService, HomeService, InfoVehicleService, InfoCalendarService
+  SettingsService, DataBaseService, HomeService, InfoVehicleService, InfoCalendarService, IconService
 } from '@services/index';
 
 // COMPONENTS
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
   selector: 'info-notification',
@@ -57,6 +57,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   labelNotRecord = '';
   measure: any = {};
   iconMaintenanceElement = '';
+  iconFilter = 'filter';
 
   // SUBSCRIPTION
   searchDashboardSubscription: Subscription = new Subscription();
@@ -76,7 +77,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
               private settingsService: SettingsService,
               private dbService: DataBaseService,
               private homeService: HomeService,
-              private infoVehicleService: InfoVehicleService) {
+              private infoVehicleService: InfoVehicleService,
+              private iconService: IconService) {
   }
 
   ngOnInit() {
@@ -151,6 +153,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       this.dashboardRecordsMaintenance =
         this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter, this.measure);
     }
+    this.loadIconSearch();
   }
 
   getObserverOrientationChange() {
@@ -362,6 +365,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   showPopover(ev: any) {
     this.controlService.showPopover(PageEnum.MODAL_INFO, ev, SearchDashboardPopOverComponent, this.modalInputModel);
+  }
+
+  loadIconSearch() {
+    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(this.modalInputModel.parentPage));
   }
 
   closeModal() {

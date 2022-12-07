@@ -29,7 +29,6 @@
       "@utils/*": ["src/app/core/utils/*"],
       "@shared/*": ["src/app/shared/*"],
       "@modals/*": ["src/app/shared/modals/*"],
-      "@popovers/*": ["src/app/shared/popovers/*"],
       "@pipes/*": ["src/app/shared/pipes/*"],
       "@pages/*": ["src/app/pages/*"],
       "@components/*": ["src/app/shared/components/*"],

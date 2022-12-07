@@ -1,3 +1,5 @@
+import { PageEnum } from "@utils/index";
+
 export class DashboardModel {
     view: any[];
     data: any[];
@@ -61,4 +63,33 @@ export class DashboardModel {
     mapColorScheme(colors: any[]): any {
         return { domain: colors };
     }
+}
+
+export interface ISearcherControlModel {
+    controls: IDisplaySearcherControlModel;
+    observers: IObserverSearcherControlModel;
+}
+
+export interface IDisplaySearcherControlModel {
+    showFilterKmTime: PageEnum[];
+    showSearchText: PageEnum[];
+    showFilterOpType: PageEnum[];
+    showFilterVehicle: PageEnum[];
+    showFilterMaintElement: PageEnum[];
+    showFilterMonth: PageEnum[];
+    showStrict: PageEnum[];
+    showExpensePerKm: PageEnum[];
+    showAxis: PageEnum[];
+    showLegend: PageEnum[];
+    showAxisLabel: PageEnum[];
+    showDataLabel: PageEnum[];
+    showDoghnut: PageEnum[];
+    showMyData: PageEnum[];
+}
+
+export interface IObserverSearcherControlModel {
+    filterOperationGrouper: string[];
+    filterConfigurationGrouper: string[];
+    filterDashboardGrouper: string[];
+    filterDashboardRecordsGrouper: string[];
 }

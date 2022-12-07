@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
 import { DashboardModel, SearchDashboardModel } from '@models/index';
-import { FilterMonthsEnum, FilterKmTimeEnum, Constants } from '@utils/index';
+import { FilterMonthsEnum, Constants, PageEnum, FilterKmTimeEnum } from '@utils/index';
 
 describe('DashboardService', () => {
     let service: DashboardService;
@@ -35,8 +35,10 @@ describe('DashboardService', () => {
     // VEHICLE EXPENSES
 
     it('should calculate other vehicle expenses dashboard - ES', () => {
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
-            false, false, false, false, false, false, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            showMyData: false,
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
@@ -55,8 +57,10 @@ describe('DashboardService', () => {
 
     it('should calculate other vehicle expenses dashboard - EN', async () => {
         await firstValueFrom(translate.use('en'));
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
-            false, false, false, false, false, false, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            showMyData: false,
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
@@ -74,8 +78,10 @@ describe('DashboardService', () => {
     });
 
     it('should calculate my vehicle expenses dashboard', () => {
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
-            false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            showMyData: true,
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
@@ -88,8 +94,11 @@ describe('DashboardService', () => {
     });
 
     it('should calculate vehicle expenses per km dashboard', () => {
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
-            false, false, false, false, false, false, FilterKmTimeEnum.KM, true, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            showMyData: false,
+            expensePerKm: true,
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
@@ -102,16 +111,22 @@ describe('DashboardService', () => {
     });
 
     it('should calculate vehicle other expenses dashboard with filter operations type maintenance home', () => {
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [MockData.OperationTypes[6]], [],
-            false, false, false, false, false, false, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            searchOperationType: [MockData.OperationTypes[6]],
+            showMyData: false,
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(0);
     });
 
     it('should calculate vehicle my expenses dashboard with filter operations type maintenance home', () => {
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [MockData.OperationTypes[0]], [],
-            false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            searchOperationType: [MockData.OperationTypes[0]],
+            showMyData: true,
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
@@ -124,8 +139,10 @@ describe('DashboardService', () => {
     });
 
     it('should calculate vehicle my expenses dashboard with filter replacement oil filter', () => {
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [MockData.MaintenanceElements[4]],
-            false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            searchMaintenanceElement: [MockData.MaintenanceElements[4]],
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
@@ -140,8 +157,9 @@ describe('DashboardService', () => {
     // VEHICLE PER MONTH EXPENSES
 
     it('should calculate other vehicle per month expenses dashboard - ES', () => {
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
-            false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const operationVehicle = MockData.Operations.filter(x => x.vehicle.id === MockData.Vehicles[0].id);
         const dashboard: DashboardModel = service.getDashboardModelVehiclePerTime(windows, operationVehicle, filter);
@@ -161,8 +179,9 @@ describe('DashboardService', () => {
 
     it('should calculate other vehicle per month expenses dashboard - EN', async () => {
         await firstValueFrom(translate.use('en'));
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
-            false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const operationVehicle = MockData.Operations.filter(x => x.vehicle.id === MockData.Vehicles[0].id);
         const dashboard: DashboardModel = service.getDashboardModelVehiclePerTime(windows, operationVehicle, filter);
@@ -179,8 +198,10 @@ describe('DashboardService', () => {
     });
 
     it('should calculate operation type expenses dashboard - ES', () => {
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
-            false, false, false, false, false, false, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            showMyData: false,
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelOpTypeExpenses(windows, MockData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
@@ -199,8 +220,10 @@ describe('DashboardService', () => {
 
     it('should calculate operation type expenses dashboard - EN', async () => {
         await firstValueFrom(translate.use('en'));
-        const filter: SearchDashboardModel = new SearchDashboardModel(FilterMonthsEnum.MONTH, '', [], [],
-            false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            showMyData: true,
+            showStrict: false
+        });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const dashboard: DashboardModel = service.getDashboardModelOpTypeExpenses(windows, MockData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
@@ -221,15 +244,111 @@ describe('DashboardService', () => {
     });
 
     it('should prefilter operations', () => {
-        const op1 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel(FilterMonthsEnum.MONTH, '',
-        [MockData.OperationTypes[0]], [], false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false));
+        const op1 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel({
+            searchOperationType: [MockData.OperationTypes[0]],
+            showStrict: false
+        }));
         expect(op1.some(x => x.operationType.id !== MockData.OperationTypes[0].id)).toBeFalsy();
-        const op2 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel(FilterMonthsEnum.MONTH, '',
-        [], [MockData.MaintenanceElements[0]], false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false));
+        
+        const op2 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel({
+            searchMaintenanceElement: [MockData.MaintenanceElements[0]],
+            showStrict: false
+        }));
         expect(op2.every(x => x.listMaintenanceElement.some(y => y.id === MockData.MaintenanceElements[0].id))).toBeTruthy();
-        const op3 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel(FilterMonthsEnum.MONTH, '',
-        [], [], false, false, false, false, false, true, FilterKmTimeEnum.KM, false, false));
+        
+        const op3 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel());
         expect(op3.some(x => x.owner !== null && x.owner !== '' && x.owner.toLowerCase() !== Constants.OWNER_ME &&
             x.owner.toLowerCase() !== Constants.OWNER_YO)).toBeFalsy();
+    });
+
+    it('should refresh search dashboard operation', () => {
+        service.setSearchOperation(MockData.OperationTypes, MockData.MaintenanceElements, 'hola');
+        expect(service.behaviourSearchOperation.value.searchOperationType).toEqual(MockData.OperationTypes);
+        expect(service.behaviourSearchOperation.value.searchMaintenanceElement).toEqual(MockData.MaintenanceElements);
+        expect(service.behaviourSearchOperation.value.searchText).toEqual('hola');
+    });
+
+    it('should refresh search dashboard vehicles', () => {
+        service.setSearchConfiguration(MockData.Vehicles);
+        expect(service.behaviourSearchOperation.value.searchVehicle).toEqual(MockData.Vehicles);
+    });
+
+    it('should is empty search dashboard operation', () => {
+        service.setSearchOperation();
+        expect(service.isEmptySearchDashboard(PageEnum.OPERATION)).toBeTruthy();
+    });
+    
+    it('should is not empty search dashboard operation', () => {
+        service.setSearchOperation([], [], 'hola');
+        expect(service.isEmptySearchDashboard(PageEnum.OPERATION)).toBeFalse();
+        service.setSearchOperation([], [MockData.MaintenanceElements[0]]);
+        expect(service.isEmptySearchDashboard(PageEnum.OPERATION)).toBeFalse();
+        service.setSearchOperation([MockData.OperationTypes[0]]);
+        expect(service.isEmptySearchDashboard(PageEnum.OPERATION)).toBeFalse();
+    });
+    
+    it('should is empty search dashboard configuration', () => {
+        service.setSearchConfiguration();
+        expect(service.isEmptySearchDashboard(PageEnum.CONFIGURATION)).toBeTruthy();
+    });
+    
+    it('should is not empty search dashboard configuration', () => {
+        service.setSearchConfiguration([MockData.Vehicles[0]], 'hola');
+        expect(service.isEmptySearchDashboard(PageEnum.CONFIGURATION)).toBeFalse();
+        service.setSearchConfiguration([], 'hola');
+        expect(service.isEmptySearchDashboard(PageEnum.CONFIGURATION)).toBeFalse();
+        service.setSearchConfiguration([MockData.Vehicles[0]]);
+        expect(service.isEmptySearchDashboard(PageEnum.CONFIGURATION)).toBeFalse();
+    });
+
+    it('should is empty search dashboard operation/vehicle dashboard', () => {
+        service.setSearchDashboard(new SearchDashboardModel());
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeTruthy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeTruthy();
+    });
+
+    it('should is not empty search dashboard operation/vehicle dashboard', () => {
+        service.setSearchDashboard(new SearchDashboardModel({ searchOperationType: [MockData.OperationTypes[0]] }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+        service.setSearchDashboard(new SearchDashboardModel({ searchMaintenanceElement: [MockData.MaintenanceElements[0]] }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+        service.setSearchDashboard(new SearchDashboardModel({ showPerMont: FilterMonthsEnum.YEAR }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeTruthy();
+        service.setSearchDashboard(new SearchDashboardModel({ expensePerKm: true }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+        service.setSearchDashboard(new SearchDashboardModel({ showAxis: false }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+        service.setSearchDashboard(new SearchDashboardModel({ showLegend: true }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+        service.setSearchDashboard(new SearchDashboardModel({ showAxisLabel: true }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+        service.setSearchDashboard(new SearchDashboardModel({ showDataLabel: true }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+        service.setSearchDashboard(new SearchDashboardModel({ doghnut: true }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+        service.setSearchDashboard(new SearchDashboardModel({ showMyData: false }));
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
+        expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
+    });
+
+    it('should is empty search dashboard home info notification', () => {
+        service.setSearchDashboardRecords(FilterKmTimeEnum.KM, true);
+        expect(service.isEmptySearchDashboard(PageEnum.HOME)).toBeTruthy();
+    });
+
+    it('should is not empty search dashboard home info notification', () => {
+        service.setSearchDashboardRecords(FilterKmTimeEnum.TIME, true);
+        expect(service.isEmptySearchDashboard(PageEnum.HOME)).toBeFalsy();
+        service.setSearchDashboardRecords(FilterKmTimeEnum.KM, false);
+        expect(service.isEmptySearchDashboard(PageEnum.HOME)).toBeFalsy();
     });
 });

@@ -29,7 +29,7 @@ import { OperationPage } from '@pages/operation/operation.page';
 import { VehiclePage } from '@pages/vehicle/vehicle.page';
 import { TabsPage } from '@pages/tabs/tabs.page';
 import { DateFormatCalendarPipe } from '@pipes/date-format-calendar.pipe';
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@modals/search-dashboard-popover/search-dashboard-popover.component';
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';

@@ -202,6 +202,8 @@ export class HomePage extends BasePage implements OnInit {
     } else if (w === null  || w.length === 0) {
       this.hideFabButton = true;
       this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_NOTIFICATION_EMPTY);
+    } else if (w.some(x => x.idVehicle === this.vehicleSelected.idVehicle && x.listWearMaintenance.length === 0)) {
+      this.input = new ModalInputModel(false, null, [], PageEnum.HOME, Constants.STATE_INFO_NOTIFICATION_WITHOUT);
     } else {
       result = false;
     }
@@ -215,7 +217,7 @@ export class HomePage extends BasePage implements OnInit {
     }, 500);
     this.vehicleSelected = this.wears.find(x => x.idVehicle === Number(event.detail.value));
     this.initShowInfoMaintenance();
-    this.activateModeInfo([new VehicleModel()], [this.vehicleSelected]);
+    this.activateInfo = this.activateModeInfo([new VehicleModel()], this.wears);
   }
 
   activeSegmentScroll(): boolean {
