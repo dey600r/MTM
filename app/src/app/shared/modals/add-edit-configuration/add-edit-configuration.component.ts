@@ -15,7 +15,7 @@ import { DataBaseService, CommonService, ConfigurationService, ControlService, S
 export class AddEditConfigurationComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<ConfigurationModel> = new ModalInputModel<ConfigurationModel>();
 
   // MODEL FORM
   configuration: ConfigurationModel = new ConfigurationModel();
@@ -44,8 +44,7 @@ export class AddEditConfigurationComponent implements OnInit {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
 
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<ConfigurationModel>(this.navParams.data);
     this.configuration = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.configuration.id = -1;

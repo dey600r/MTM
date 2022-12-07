@@ -10,7 +10,7 @@ import * as shape from 'd3-shape';
 // UTILS
 import {
   ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
-  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel
+  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel
 } from '@models/index';
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
@@ -31,7 +31,7 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<WearVehicleProgressBarViewModel, OperationModel> = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>();
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
@@ -82,8 +82,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-        this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>(this.navParams.data);
 
     this.getSettings();
 

@@ -15,7 +15,7 @@ import {
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -198,12 +198,33 @@ export class HomePage extends BasePage implements OnInit {
     this.hideFabButton = false;
     if (m === null || m.length === 0) {
       this.hideOpButton = true;
-      this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_VEHICLE_EMPTY);
+      this.input = new ModalInputModel<IInfoModel>({
+        parentPage: PageEnum.HOME,
+        data: {
+          text: 'ALERT.VehicleEmpty',
+          icon: 'home',
+          info: InfoButtonEnum.VEHICLES
+        }
+      });
     } else if (w === null  || w.length === 0) {
       this.hideFabButton = true;
-      this.input = new ModalInputModel(true, null, [], PageEnum.HOME, Constants.STATE_INFO_NOTIFICATION_EMPTY);
+      this.input = new ModalInputModel({
+        parentPage: PageEnum.HOME,
+        data: {
+          text: 'ALERT.ConfigurationNotAssociatedToMaintenance',
+          icon: 'cog',
+          info: InfoButtonEnum.CONFIGURATIONS
+        }
+      });
     } else if (w.some(x => x.idVehicle === this.vehicleSelected.idVehicle && x.listWearMaintenance.length === 0)) {
-      this.input = new ModalInputModel(false, null, [], PageEnum.HOME, Constants.STATE_INFO_NOTIFICATION_WITHOUT);
+      this.input = new ModalInputModel({
+        parentPage: PageEnum.HOME,
+        data: {
+          text: 'ALERT.ConfigurationWithout',
+          icon: 'stats-chart',
+          info: InfoButtonEnum.NONE
+        }
+      });
     } else {
       result = false;
     }
@@ -258,14 +279,21 @@ export class HomePage extends BasePage implements OnInit {
         listWearNotificationReplacement: [], listWearReplacement: [wr], iconMaintenance: x.iconMaintenance
       }];
     });
-    this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent, new ModalInputModel(true,
-      groupWearVehicle, this.operations, PageEnum.HOME));
+    this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent,
+      new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>({
+        data: groupWearVehicle,
+        dataList: this.operations,
+        parentPage: PageEnum.HOME
+      }));
   }
 
   openInfoCalendar() {
     if (!!this.wears && this.wears.length > 0) {
       this.controlService.openModal(PageEnum.HOME,
-        InfoCalendarComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
+        InfoCalendarComponent, new ModalInputModel<any, WearVehicleProgressBarViewModel>({
+          dataList: this.wears,
+          parentPage: PageEnum.HOME
+        }));
     } else {
       const msg = `${this.translator.instant('ALERT.NotificationEmpty')} ${this.translator.instant('ALERT.AddMustVehicle')}`;
       this.controlService.showMsgToast(PageEnum.HOME, ToastTypeEnum.WARNING, msg);
@@ -274,19 +302,26 @@ export class HomePage extends BasePage implements OnInit {
 
   async openSettings() {
     this.modalSettings = await this.controlService.openModal(PageEnum.HOME,
-      SettingsComponent, new ModalInputModel(true, null, this.wears, PageEnum.HOME));
+      SettingsComponent, new ModalInputModel<any, WearVehicleProgressBarViewModel>({
+        dataList: this.wears,
+        parentPage: PageEnum.HOME
+      }));
   }
 
   openModalVehicle(): void {
-    this.controlService.openModal(PageEnum.HOME,
-      AddEditVehicleComponent, new ModalInputModel(true, new VehicleModel(), [], PageEnum.HOME));
+    this.controlService.openModal(PageEnum.HOME, AddEditVehicleComponent, new ModalInputModel<VehicleModel>({
+        data: new VehicleModel(),
+        parentPage: PageEnum.HOME
+    }));
   }
 
   openModalOperation(): void {
     const operation: OperationModel = new OperationModel();
     operation.vehicle.id = this.vehicleSelected.idVehicle;
-    this.controlService.openModal(PageEnum.HOME,
-      AddEditOperationComponent, new ModalInputModel(true, operation, [], PageEnum.HOME));
+    this.controlService.openModal(PageEnum.HOME, AddEditOperationComponent, new ModalInputModel<OperationModel>({
+        data: operation,
+        parentPage: PageEnum.HOME
+      }));
   }
 
   openModalMaintenance(itemSliding: any, w: WearMaintenanceProgressBarViewModel = null, create: boolean = true): void {
@@ -295,8 +330,12 @@ export class HomePage extends BasePage implements OnInit {
       rowMaintenance = this.maintenances.find(x => x.id === w.idMaintenance);
     }
     if (itemSliding) { itemSliding.close(); }
-    this.controlService.openModal(PageEnum.HOME,
-      AddEditMaintenanceComponent, new ModalInputModel(create, rowMaintenance, [this.vehicleSelected.kmVehicle], PageEnum.HOME));
+    this.controlService.openModal(PageEnum.HOME, AddEditMaintenanceComponent, new ModalInputModel<MaintenanceModel, number>({
+        isCreate: create,
+        data: rowMaintenance,
+        dataList: [this.vehicleSelected.kmEstimatedVehicle],
+        parentPage: PageEnum.HOME
+      }));
   }
 
   desactivateMaintenance(itemSliding: any, w: WearMaintenanceProgressBarViewModel): void {

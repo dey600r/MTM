@@ -50,3 +50,11 @@ export enum ModalOutputEnum {
     SAVE = 1,
     CANCEL = 2
 }
+
+export enum InfoButtonEnum {
+    NONE = 0,
+    HOME = 1,
+    VEHICLES = 2,
+    OPERATIONS = 3,
+    CONFIGURATIONS = 4
+}

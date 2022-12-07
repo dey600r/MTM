@@ -7,10 +7,10 @@ import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { ISqlitePorterModel, ModalInputModel, SystemConfigurationModel } from '@models/index';
+import { ModalInputModel, SystemConfigurationModel, WearVehicleProgressBarViewModel } from '@models/index';
 
 // UTILS
-import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, PageEnum, ToastTypeEnum, ISqlitePorterModel } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // SERVICES
@@ -24,7 +24,7 @@ import { SettingsService, DataBaseService, ControlService, ThemeService, SyncSer
 export class SettingsComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel = new ModalInputModel();
+    modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
 
     // MODEL FORM
 
@@ -78,8 +78,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.exportService.createOutputDirectory();
 
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-        this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>(this.navParams.data);
 
     // SETTINGS
     this.listDistances = this.settingsService.getListDistance();

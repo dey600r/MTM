@@ -15,10 +15,10 @@ import { SettingsService } from '../modals/index';
 
 // UTILS
 import * as loginData from '@assets/data/login-firebase.json';
-import { Constants, ConstantsTable, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, ConstantsTable, PageEnum, ToastTypeEnum, ISqlitePorterModel } from '@utils/index';
 
-// MODLS
-import { ISqlitePorterModel, SystemConfigurationModel } from '@models/index';
+// MODALS
+import { SystemConfigurationModel } from '@models/index';
 
 @Injectable({
   providedIn: 'root'

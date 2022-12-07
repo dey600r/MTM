@@ -13,7 +13,7 @@ import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
   OperationTypeModel, SearchDashboardModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, IInfoModel, InfoButtonEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
@@ -29,7 +29,7 @@ import { BasePage } from '@pages/base.page';
 export class OperationPage extends BasePage implements OnInit {
 
   // MODAL
-  input: ModalInputModel = new ModalInputModel();
+  input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   dataReturned: ModalOutputModel;
 
   // MODEL
@@ -69,7 +69,14 @@ export class OperationPage extends BasePage implements OnInit {
 
   initPage() {
 
-    this.input = new ModalInputModel(false, null, [], PageEnum.HOME, Constants.STATE_INFO_OPERATION_EMPTY);
+    this.input = new ModalInputModel<IInfoModel>({
+      parentPage: PageEnum.OPERATION,
+      data: {
+        text: 'ALERT.OperationEmpty',
+        icon: 'construct',
+        info: InfoButtonEnum.NONE
+      }
+    });
 
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
@@ -134,16 +141,21 @@ export class OperationPage extends BasePage implements OnInit {
       row: OperationModel = new OperationModel(null, null, new OperationTypeModel(),
       this.vehicles.find(x => x.id === this.vehicleSelected)),
       create: boolean = true) {
-    this.controlService.openModal(PageEnum.OPERATION,
-      AddEditOperationComponent, new ModalInputModel(create, row, [], PageEnum.OPERATION));
+    this.controlService.openModal(PageEnum.OPERATION, AddEditOperationComponent, new ModalInputModel<OperationModel>({
+        isCreate: create,
+        data: row,
+        parentPage: PageEnum.OPERATION
+      }));
   }
 
   openDashboardOperation() {
     if (this.operationsVehicle.length === 0) {
       this.showModalInfoOperation();
     } else {
-      this.controlService.openModal(PageEnum.OPERATION,
-        DashboardComponent, new ModalInputModel(true, null, this.operationsVehicle, PageEnum.OPERATION));
+      this.controlService.openModal(PageEnum.OPERATION, DashboardComponent, new ModalInputModel<any, OperationModel>({
+          dataList: this.operationsVehicle,
+          parentPage: PageEnum.OPERATION
+        }));
     }
   }
 
@@ -178,7 +190,7 @@ export class OperationPage extends BasePage implements OnInit {
 
   showPopover(ev: any) {
     this.controlService.showPopover(PageEnum.OPERATION, ev, SearchDashboardPopOverComponent,
-      new ModalInputModel(true, null, [], PageEnum.OPERATION));
+      new ModalInputModel({ parentPage: PageEnum.OPERATION }));
   }
 
   /** METHODS */

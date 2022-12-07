@@ -29,7 +29,7 @@ import { ConstantsColumns } from '@utils/index';
 export class InfoVehicleComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
 
   // DATA
   vehicles: VehicleModel[] = [];
@@ -77,8 +77,7 @@ export class InfoVehicleComponent implements OnInit {
   // INIT DATA
 
   initSummary() {
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<any, VehicleModel>(this.navParams.data);
 
     const settings = this.dbService.getSystemConfigurationData();
     this.measure = this.settingsService.getDistanceSelected(settings);

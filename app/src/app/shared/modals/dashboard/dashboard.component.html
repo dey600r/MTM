@@ -14,12 +14,9 @@
 </ion-header>
 
 <ion-content>
-    <div class="info-main padding-info" *ngIf="dashboardVehicleExpenses.data.length === 0 && dashboardOpTypeExpenses.data.length === 0">
-        <div class="p-color">
-            <ion-icon class="font-size26" name="bar-chart"></ion-icon>
-            <h3 class="info-text-notification-empty padding-info-title">{{ 'ALERT.NoDataFound' | translate }}</h3>
-        </div>
-    </div>
+     <!-- INFO MAINTENANCES -->
+    <app-info *ngIf="dashboardVehicleExpenses.data.length === 0 && dashboardOpTypeExpenses.data.length === 0" [inputInfo]="input"></app-info>
+    <!-- CHARTS -->
     <div *ngIf="dashboardVehicleExpenses.data.length > 0 || dashboardOpTypeExpenses.data.length > 0">
         <ion-list-header class="padding-list-header">
             <ion-icon *ngIf="isParentPageVehicle()" size="large" name="home"></ion-icon>

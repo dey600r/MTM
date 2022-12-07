@@ -6,14 +6,16 @@ import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
 import { 
-    SearchDashboardModel, OperationTypeModel, ModalInputModel, MaintenanceElementModel, VehicleModel, IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel
+    SearchDashboardModel, OperationTypeModel, ModalInputModel, MaintenanceElementModel, VehicleModel
 } from '@models/index';
 
 // SERVICES
 import { DashboardService, CommonService, DataBaseService, SettingsService, ConfigurationService } from '@services/index';
 
 // UTILS
-import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
+import { 
+    FilterMonthsEnum, ConstantsColumns, PageEnum, ISearcherControlModel, IDisplaySearcherControlModel
+} from '@utils/index';
 
 @Component({
     selector: 'app-search-dashboard-popover',
@@ -90,8 +92,7 @@ import { FilterMonthsEnum, ConstantsColumns, PageEnum } from '@utils/index';
 
     ngOnInit() {
         this.config = this.dashboardService.getConfigSearcher();
-        this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-            this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+        this.modalInputModel = new ModalInputModel(this.navParams.data);
 
         // FILTER VEHICLES
         this.filterVehicle = [];

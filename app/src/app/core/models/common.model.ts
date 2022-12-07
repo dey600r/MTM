@@ -9,17 +9,14 @@ export class BaseModel {
 
 export class ModalInputModel<T = any, R = any> {
     isCreate: boolean;
-    data: any;
-    dataList: any[];
+    data: T;
+    dataList: R[];
     parentPage: PageEnum;
-    action: string;
-    constructor(create: boolean = true, d: T = null, dl: R[] = [], parentPage: PageEnum = PageEnum.HOME,
-                act: string = '') {
-        this.isCreate = create;
-        this.data = d;
-        this.dataList = dl;
-        this.parentPage = parentPage;
-        this.action = act;
+    constructor(data: Partial<ModalInputModel<T, R>> = {}) {
+        this.isCreate = (data.isCreate !== undefined ? data.isCreate : true);
+        this.data = (data.data ? data.data : null);
+        this.dataList = (data.dataList ? data.dataList : []);
+        this.parentPage = (data.parentPage ? data.parentPage : PageEnum.HOME);
     }
 }
 
@@ -27,10 +24,10 @@ export class ModalOutputModel<T = any, R = any> {
     action: ModalOutputEnum;
     data: T;
     dataList: R[];
-    constructor(a: ModalOutputEnum = ModalOutputEnum.SAVE, d: T = null, dl: R[] = []) {
-        this.action = a;
-        this.data = d;
-        this.dataList = dl;
+    constructor(data: Partial<ModalOutputModel<T, R>> = {}) {
+        this.action = (data.action ? data.action : ModalOutputEnum.SAVE);
+        this.data = (data.data ? data.data : null);
+        this.dataList = (data.dataList ? data.dataList : []);
     }
 }
 
@@ -103,9 +100,4 @@ export class BaseMaintenanceModel extends BaseDescriptionModel {
         this.fromKm = fr;
         this.toKm = to;
     }
-}
-
-export interface ISqlitePorterModel {
-    structure: any;
-    data: any;
 }

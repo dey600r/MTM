@@ -15,7 +15,7 @@ import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
-import { ModalInputModel, WearVehicleProgressBarViewModel } from '@models/index';
+import { ModalInputModel, OperationModel, WearVehicleProgressBarViewModel } from '@models/index';
 
 describe('InfoNotificationComponent', () => {
   let component: InfoNotificationComponent;
@@ -40,7 +40,11 @@ describe('InfoNotificationComponent', () => {
     component = fixture.componentInstance;
     const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
       MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
-    component.navParams.data = new ModalInputModel(true, allWears[0], MockData.Operations, PageEnum.HOME);
+    component.navParams.data = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>({
+        data: allWears[0],
+        dataList: MockData.Operations,
+        parentPage: PageEnum.HOME
+      });
     fixture.detectChanges();
   });
 

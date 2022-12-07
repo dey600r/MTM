@@ -23,7 +23,7 @@ import {
 export class AddEditOperationComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<OperationModel> = new ModalInputModel<OperationModel>();
 
   // MODEL FORM
   operation: OperationModel = new OperationModel();
@@ -70,8 +70,7 @@ export class AddEditOperationComponent implements OnInit {
 
   ngOnInit() {
 
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<OperationModel>(this.navParams.data);
 
     this.operation = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {

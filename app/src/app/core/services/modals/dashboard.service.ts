@@ -9,17 +9,17 @@ import { TranslateService } from '@ngx-translate/core';
 import {
     DashboardModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel,
     WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel,
-    InfoVehicleConfigurationModel,
-    IDisplaySearcherControlModel,
-    IObserverSearcherControlModel,
-    ISearcherControlModel
+    InfoVehicleConfigurationModel
 } from '@models/index';
 
 // SERVICES
 import { CommonService, CalendarService } from '../common/index';
 
 // UTILS
-import { ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum, PageEnum } from '@utils/index';
+import { 
+    ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum, PageEnum,
+    IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel
+} from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -491,13 +491,6 @@ export class DashboardService {
             filterOperationGrouper: [showSearchText, showFilterOpType, showFilterMaintElement],
             filterConfigurationGrouper: [showSearchText, showFilterVehicle]
         }
-        
-        // return {
-        //     filterDashboardGrouper: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
-        //     filterDashboardRecordsGrouper: [PageEnum.HOME],
-        //     filterOperationGrouper: [PageEnum.OPERATION],
-        //     filterConfigurationGrouper: [PageEnum.CONFIGURATION]
-        // };
     }
 
     isEmptySearchDashboard(parentPage: PageEnum): boolean {

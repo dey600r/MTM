@@ -1,44 +1,24 @@
 <ion-content>
-    <div [ngClass]="{'info-content-height-icon': inputInfo.isCreate,
-            'info-content-height-no-icon': !inputInfo.isCreate}">
+    <div [ngClass]="{'info-content-height-icon': inputInfo.data.info > 0,
+            'info-content-height-no-icon': inputInfo.data.info === 0}">
         <div class="info-main">
-            <div *ngIf="isVehicleEmpty()">
-                <ion-icon class="ion-color-info-init" size="large" name="home"></ion-icon>
-                <h2 class="margin-top5 ion-color-info-init">{{ 'ALERT.VehicleEmpty' | translate }}</h2>
-            </div>
-            <div *ngIf="isOperationPageEmpty()">
-                <ion-icon class="ion-color-info-init" size="large" name="construct"></ion-icon>
-                <h2 class="margin-top5 ion-color-info-init">{{ 'PAGE_OPERATION.YOURS_OPERATIONS' | translate }}</h2>
-            </div>
-            <div *ngIf="isMaintenancePageEmpty()">
-                <ion-icon class="ion-color-info-init" size="large" name="build"></ion-icon>
-                <h2 class="margin-top5 ion-color-info-init">{{ 'PAGE_CONFIGURATION.YOURS_MAINTENANCES' | translate }}</h2>
-            </div>
-            <div *ngIf="isMaintenanceElementPageEmpty()">
-                <ion-icon class="ion-color-info-init" size="large" name="repeat"></ion-icon>
-                <h2 class="margin-top5 ion-color-info-init">{{ 'PAGE_CONFIGURATION.YOURS_MAINTENANCES_ELEMENT' | translate }}</h2>
-            </div>
-            <div *ngIf="isNotificationPageNotConfigure()">
-                <ion-icon class="ion-color-info-init" size="large" name="cog"></ion-icon>
-                <h2 class="margin-top5 ion-color-info-init">{{ 'ALERT.ConfigurationEmpty' | translate }}</h2>
-            </div>
-            <div *ngIf="isNotificationPageEmpty()">
-                <ion-icon class="ion-color-info-init" size="large" name="stats-chart"></ion-icon>
-                <h2 class="margin-top5 ion-color-info-init">{{ 'ALERT.ConfigurationWithout' | translate }}</h2>
+            <div>
+                <ion-icon class="ion-color-info-init" size="large" [name]="inputInfo.data.icon"></ion-icon>
+                <h2 class="margin-top5 ion-color-info-init">{{ inputInfo.data.text | translate }}</h2>
             </div>
         </div>
-        <div *ngIf="inputInfo.isCreate">
+        <div *ngIf="inputInfo.data.info > 0">
             <div class="info-tab">
-                <div class="info-icon dissapear">
+                <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 1}">
                     <ion-icon class="ion-color-info-init"></ion-icon>
                 </div>
-                <div [ngClass]="{'info-icon': true, 'dissapear': !isVehicleEmpty()}">
+                <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 2}">
                     <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
                 </div>
-                <div class="info-icon dissapear">
+                <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 3}">
                     <ion-icon></ion-icon>
                 </div>
-                <div [ngClass]="{'info-icon': true, 'dissapear': !isNotificationNotConfigure()}">
+                <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 4}">
                     <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
                 </div>
             </div>

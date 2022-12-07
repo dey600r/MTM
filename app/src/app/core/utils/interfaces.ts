@@ -1,0 +1,41 @@
+import { InfoButtonEnum, PageEnum } from "./enums";
+
+export interface ISqlitePorterModel {
+    structure: any;
+    data: any;
+}
+
+export interface IInfoModel {
+    text: string;
+    icon: string;
+    info: InfoButtonEnum;
+}
+
+export interface ISearcherControlModel {
+    controls: IDisplaySearcherControlModel;
+    observers: IObserverSearcherControlModel;
+}
+
+export interface IDisplaySearcherControlModel {
+    showFilterKmTime: PageEnum[];
+    showSearchText: PageEnum[];
+    showFilterOpType: PageEnum[];
+    showFilterVehicle: PageEnum[];
+    showFilterMaintElement: PageEnum[];
+    showFilterMonth: PageEnum[];
+    showStrict: PageEnum[];
+    showExpensePerKm: PageEnum[];
+    showAxis: PageEnum[];
+    showLegend: PageEnum[];
+    showAxisLabel: PageEnum[];
+    showDataLabel: PageEnum[];
+    showDoghnut: PageEnum[];
+    showMyData: PageEnum[];
+}
+
+export interface IObserverSearcherControlModel {
+    filterOperationGrouper: string[];
+    filterConfigurationGrouper: string[];
+    filterDashboardGrouper: string[];
+    filterDashboardRecordsGrouper: string[];
+}

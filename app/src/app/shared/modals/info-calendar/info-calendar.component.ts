@@ -8,7 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 // MODELS
 import {
   ModalInputModel, InfoCalendarVehicleViewModel,
-  InfoCalendarReplacementViewModel
+  InfoCalendarReplacementViewModel,
+  WearVehicleProgressBarViewModel
 } from '@models/index';
 
 // SERVICES
@@ -27,7 +28,7 @@ import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/
 export class InfoCalendarComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
 
   // DATA
   listInfoCalendar: InfoCalendarVehicleViewModel[] = [];
@@ -64,8 +65,7 @@ export class InfoCalendarComponent implements OnInit {
 
   ngOnInit() {
     this.activeSpinner = true;
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>(this.navParams.data);
 
     // GET SETTINGS
     const settings = this.dbService.getSystemConfigurationData();

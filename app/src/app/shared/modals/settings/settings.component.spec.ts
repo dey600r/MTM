@@ -25,7 +25,7 @@ describe('SettingsComponent', () => {
   beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService, ExportService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel(true, null, [], PageEnum.HOME)));
+      SpyMockConfig.getProviderNavParams(new ModalInputModel({ parentPage: PageEnum.HOME })));
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);

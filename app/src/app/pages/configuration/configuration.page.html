@@ -20,6 +20,8 @@
   </ion-segment>
 </ion-header>
 <ion-content [hidden]="!loaded">
+  <!-- INFO MAINTENANCES -->
+  <app-info *ngIf="segmentSelected === 1 && configurations.length === 0" [inputInfo]="inputConfiguration"></app-info>
   <!-- CONFIGURATIONS -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 1">
     <ion-item-sliding *ngFor="let c of configurations" #slidingItemConf>

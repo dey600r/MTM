@@ -16,7 +16,7 @@ import {
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, Constants } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, Constants, IInfoModel, InfoButtonEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
@@ -34,8 +34,9 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class ConfigurationPage extends BasePage implements OnInit {
 
   // MODAL
-  inputMaintenance: ModalInputModel = new ModalInputModel();
-  inputMaintenanceElement: ModalInputModel = new ModalInputModel();
+  inputConfiguration: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  inputMaintenance: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  inputMaintenanceElement: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   dataReturned: ModalOutputModel;
 
   // DATA
@@ -76,7 +77,21 @@ export class ConfigurationPage extends BasePage implements OnInit {
   }
 
   initPage() {
+    this.initInfoData();
+    this.initData();
+  }
 
+  ionViewDidEnter() {
+    if (document.getElementById('custom-overlay').style.display === 'flex' ||
+    document.getElementById('custom-overlay').style.display === '') {
+      document.getElementById('custom-overlay').style.display = 'none';
+    }
+    if (!this.loaded) {
+      setTimeout(() => { this.loaded = true; }, 1200);
+    }
+  }
+
+  initInfoData() {
     this.segmentSelected = 1;
     this.segmentHeader = [
       { id: 1, title: 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS', icon: 'cog'},
@@ -84,15 +99,39 @@ export class ConfigurationPage extends BasePage implements OnInit {
       { id: 3, title: 'PAGE_CONFIGURATION.REPLACEMENTS', icon: 'repeat'}
     ];
 
-    this.inputMaintenance = new ModalInputModel(false, null, [], PageEnum.CONFIGURATION, Constants.STATE_INFO_MAINTENANCE_EMPTY);
-    this.inputMaintenanceElement = new ModalInputModel(false, null, [], PageEnum.CONFIGURATION, Constants.STATE_INFO_MAINTENANCE_ELEMENT_EMPTY);
+    this.inputConfiguration = new ModalInputModel<IInfoModel>({
+      parentPage: PageEnum.CONFIGURATION,
+      data: {
+        text: 'ALERT.ConfigurationEmpty',
+        icon: this.segmentHeader[0].icon,
+        info: InfoButtonEnum.NONE
+      }
+    });
+    this.inputMaintenance = new ModalInputModel<IInfoModel>({
+        parentPage: PageEnum.CONFIGURATION,
+        data: {
+          text: 'ALERT.MaintenanceEmpty',
+          icon: this.segmentHeader[1].icon,
+          info: InfoButtonEnum.NONE
+        }
+      });
+    this.inputMaintenanceElement = new ModalInputModel({
+        parentPage: PageEnum.CONFIGURATION,
+        data: {
+          text: 'ALERT.MaintenanceElementEmpty',
+          icon: this.segmentHeader[2].icon,
+          info: InfoButtonEnum.NONE
+        }
+      });
 
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
       }
     });
+  }
 
+  initData() {
     this.dbService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
@@ -133,16 +172,6 @@ export class ConfigurationPage extends BasePage implements OnInit {
     });
   }
 
-  ionViewDidEnter() {
-    if (document.getElementById('custom-overlay').style.display === 'flex' ||
-    document.getElementById('custom-overlay').style.display === '') {
-      document.getElementById('custom-overlay').style.display = 'none';
-    }
-    if (!this.loaded) {
-      setTimeout(() => { this.loaded = true; }, 1200);
-    }
-  }
-
   segmentChanged(event: any): void {
     this.segmentSelected = Number(event.detail.value);
   }
@@ -180,7 +209,10 @@ export class ConfigurationPage extends BasePage implements OnInit {
     const listModel: ListModalModel = new ListModalModel(this.translator.instant('PAGE_CONFIGURATION.AssignConfigurationToVehicle',
       { configuration : configuration.name }), true, listDataModel);
     const modal = await this.controlService.openModal(PageEnum.CONFIGURATION,
-      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>(true, listModel, [], PageEnum.CONFIGURATION));
+      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>({
+          data: listModel,
+          parentPage: PageEnum.CONFIGURATION
+        }));
 
     const { data } = await modal.onWillDismiss();
     if (itemSliding) { itemSliding.close(); }
@@ -206,7 +238,10 @@ export class ConfigurationPage extends BasePage implements OnInit {
     const listModel: ListModalModel = new ListModalModel(this.translator.instant('PAGE_CONFIGURATION.AssignMaintenanceToConfiguration',
       { maintenance : maintenance.description }), true, listDataModel);
     const modal = await this.controlService.openModal(PageEnum.CONFIGURATION,
-      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>(true, listModel, [], PageEnum.CONFIGURATION));
+      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>({
+        data: listModel,
+        parentPage: PageEnum.CONFIGURATION
+      }));
 
     const { data } = await modal.onWillDismiss();
     if (itemSliding) { itemSliding.close(); }
@@ -217,7 +252,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   showPopover(ev: any) {
     this.controlService.showPopover(PageEnum.CONFIGURATION, ev, SearchDashboardPopOverComponent,
-      new ModalInputModel(true, null, [], PageEnum.CONFIGURATION));
+      new ModalInputModel({ parentPage: PageEnum.CONFIGURATION }));
   }
 
   filterConfiguration(filter: SearchDashboardModel) {
@@ -232,13 +267,13 @@ export class ConfigurationPage extends BasePage implements OnInit {
     
     // FILTER MAINTENANCE
     this.maintenances = this.commonService.orderBy(this.allMaintenances.filter(x =>
-      filteredVehicles.length === 0 || this.configurations.some(y => y.listMaintenance.some(z => x.id === z.id)) &&
+      (filteredVehicles.length === 0 || this.configurations.some(y => y.listMaintenance.some(z => x.id === z.id))) &&
       (x.description.toLowerCase().includes(filteredText))),
       ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
 
     // FILTER MAINTENANCE ELEMENT
     this.maintenanceElements = this.configurationService.orderMaintenanceElement(this.allMaintenanceElements.filter(x =>
-      filteredVehicles.length === 0 || this.maintenances.some(y => y.listMaintenanceElement.some(z => x.id === z.id)) &&
+      (filteredVehicles.length === 0 || this.maintenances.some(y => y.listMaintenanceElement.some(z => x.id === z.id))) &&
       (x.name.toLowerCase().includes(filteredText) || x.description.toLowerCase().includes(filteredText))));
 
     this.loadIconSearch();
@@ -251,8 +286,11 @@ export class ConfigurationPage extends BasePage implements OnInit {
   /** CONFIGURATION */
 
   openConfigurationModal(row: ConfigurationModel = new ConfigurationModel(), create: boolean = true) {
-    this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditConfigurationComponent, new ModalInputModel(create, row, [], PageEnum.CONFIGURATION));
+    this.controlService.openModal(PageEnum.CONFIGURATION, AddEditConfigurationComponent, new ModalInputModel<ConfigurationModel>({
+          isCreate: create, 
+          data: row,
+          parentPage: PageEnum.CONFIGURATION
+        }));
   }
 
   deleteConfiguration(row: ConfigurationModel) {
@@ -335,7 +373,12 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
     this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditMaintenanceComponent, new ModalInputModel(create, row, [this.maxKm], PageEnum.CONFIGURATION));
+      AddEditMaintenanceComponent, new ModalInputModel<MaintenanceModel, number>({
+          isCreate: create,
+          data: row,
+          dataList: [this.maxKm],
+          parentPage: PageEnum.CONFIGURATION
+        }));
   }
 
   deleteMaintenance(row: MaintenanceModel) {
@@ -410,8 +453,11 @@ export class ConfigurationPage extends BasePage implements OnInit {
   /** MAINTENANCE ELEMENTS / REPLACEMENT */
 
   openReplacementModal(row: MaintenanceElementModel = new MaintenanceElementModel(), create: boolean = true) {
-    this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditMaintenanceElementComponent, new ModalInputModel(create, row, [], PageEnum.CONFIGURATION));
+    this.controlService.openModal(PageEnum.CONFIGURATION, AddEditMaintenanceElementComponent, new ModalInputModel<MaintenanceElementModel>({
+          isCreate: create,
+          data: row,
+          parentPage: PageEnum.CONFIGURATION
+        }));
   }
 
   deleteReplacement(row: MaintenanceElementModel) {

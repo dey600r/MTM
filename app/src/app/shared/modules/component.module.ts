@@ -17,7 +17,10 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
 import { DataBaseService, CommonService } from '@services/index';
-import { PipeModule } from '@app/shared/modules/pipes.module';
+
+// MODULES
+import { PipeModule } from '@modules/pipes.module';
+import { SharedModule } from '@modules/shared.module';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
@@ -57,6 +60,7 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
     CalendarModule,
     NgxChartsModule,
     PipeModule,
+    SharedModule,
     TranslateModule.forChild()
   ],
   exports: [

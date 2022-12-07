@@ -5,7 +5,7 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum } from '@utils/index';
 import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
 import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
@@ -64,7 +64,14 @@ export class VehiclePage extends BasePage implements OnInit {
 
   /** INIT */
   initPage() {
-    this.input = new ModalInputModel(false, null, [], PageEnum.HOME, Constants.STATE_INFO_VEHICLE_EMPTY);
+    this.input = new ModalInputModel<IInfoModel>({
+        parentPage: PageEnum.VEHICLE,
+        data: {
+          text: 'ALERT.VehicleEmpty',
+          icon: 'home',
+          info: InfoButtonEnum.NONE
+        }
+      });
 
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
@@ -89,8 +96,11 @@ export class VehiclePage extends BasePage implements OnInit {
   /** MODALS */
 
   openVehicleModal(row: VehicleModel = new VehicleModel(), create: boolean = true) {
-    this.controlService.openModal(PageEnum.VEHICLE,
-      AddEditVehicleComponent, new ModalInputModel(create, row, [], PageEnum.VEHICLE));
+    this.controlService.openModal(PageEnum.VEHICLE, AddEditVehicleComponent, new ModalInputModel<VehicleModel>({
+        isCreate: create,
+        data: row,
+        parentPage: PageEnum.VEHICLE
+      }));
   }
 
   openInfoVehicle() {
@@ -98,8 +108,10 @@ export class VehiclePage extends BasePage implements OnInit {
       this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToInfo', Constants.DELAY_TOAST_NORMAL);
     }
     else {
-      this.controlService.openModal(PageEnum.VEHICLE,
-          InfoVehicleComponent, new ModalInputModel(true, null, this.vehicles, PageEnum.VEHICLE));
+      this.controlService.openModal(PageEnum.VEHICLE, InfoVehicleComponent, new ModalInputModel<any, VehicleModel>({
+          dataList: this.vehicles,
+          parentPage: PageEnum.VEHICLE
+        }));
     }
   }
 
@@ -111,8 +123,11 @@ export class VehiclePage extends BasePage implements OnInit {
     if (this.vehicles.length === 0) {
       this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
     } else {
-      this.controlService.openModal(PageEnum.VEHICLE,
-        DashboardComponent, new ModalInputModel(false, null, this.operations, PageEnum.VEHICLE));
+      this.controlService.openModal(PageEnum.VEHICLE, DashboardComponent, new ModalInputModel<any, OperationModel>({
+          isCreate: false,
+          dataList: this.operations,
+          parentPage: PageEnum.VEHICLE
+        }));
     }
   }
 

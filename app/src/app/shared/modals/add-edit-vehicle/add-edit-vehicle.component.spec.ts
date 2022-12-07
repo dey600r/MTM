@@ -15,7 +15,7 @@ import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
-import { ModalInputModel } from '@models/index';
+import { ModalInputModel, VehicleModel } from '@models/index';
 
 describe('AddEditVehicleComponent', () => {
   let component: AddEditVehicleComponent;
@@ -25,7 +25,10 @@ describe('AddEditVehicleComponent', () => {
   beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel(true, MockData.Vehicles[0], [], PageEnum.VEHICLE)));
+      SpyMockConfig.getProviderNavParams(new ModalInputModel<VehicleModel>({
+        data: MockData.Vehicles[0],
+        parentPage: PageEnum.VEHICLE
+      })));
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);

@@ -12,7 +12,7 @@ import { DashboardService, ControlService, IconService } from '@services/index';
 import { DashboardModel, OperationModel, ModalInputModel } from '@models/index';
 
 // UTILS
-import { PageEnum } from '@utils/index';
+import { IInfoModel, InfoButtonEnum, PageEnum } from '@utils/index';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
@@ -25,7 +25,8 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class DashboardComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel = new ModalInputModel();
+    modalInputModel: ModalInputModel<any, OperationModel> = new ModalInputModel<any, OperationModel>();
+    input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
     // MODEL FORM
     dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
@@ -53,8 +54,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-        this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<any, OperationModel>(this.navParams.data);
+    this.input = new ModalInputModel<IInfoModel>({
+      parentPage: this.getParent(this.modalInputModel.parentPage),
+      data: {
+        text: 'ALERT.NoDataFound',
+        icon: 'bar-chart',
+        info: InfoButtonEnum.NONE
+      }
+    });
 
     this.operations = this.modalInputModel.dataList;
     this.vehicleModel = (!!this.operations && this.operations.length > 0 ?
@@ -107,8 +115,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   showPopover(ev: any) {
     const parentPage: PageEnum = this.getParent(this.modalInputModel.parentPage);
-    this.controlService.showPopover(parentPage, ev, SearchDashboardPopOverComponent,
-      new ModalInputModel(this.modalInputModel.isCreate, this.modalInputModel.data, this.modalInputModel.dataList, parentPage));
+    this.controlService.showPopover(parentPage, ev, SearchDashboardPopOverComponent, new ModalInputModel({ parentPage: parentPage }));
   }
 
   isParentPageVehicle() {
