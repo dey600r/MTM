@@ -69,4 +69,12 @@ describe('IconService', () => {
     it('should load bar char icon dashboard', () => {
         expect(service.loadIconDashboard([1, 2])).toEqual('bar-chart');
     });
+
+    it('should load filter icon search', () => {
+        expect(service.loadIconSearch(true)).toEqual('filter');
+    });
+
+    it('should load filter circle icon search', () => {
+        expect(service.loadIconSearch(false)).toEqual('filter-circle');
+    });
 });

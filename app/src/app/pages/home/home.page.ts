@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
@@ -67,7 +67,8 @@ export class HomePage extends BasePage implements OnInit {
               private settingsService: SettingsService,
               private themeService: ThemeService,
               private homeService: HomeService,
-              private modalController: ModalController) {
+              private modalController: ModalController,
+              private detector: ChangeDetectorRef) {
     super(platform, translator);
   }
 
@@ -159,6 +160,7 @@ export class HomePage extends BasePage implements OnInit {
     this.activateInfo = this.activateModeInfo(vehiclesActives, this.wears);
     this.initShowInfoMaintenance();
     this.timeOutLoader();
+    this.detector.detectChanges();
   }
 
   initShowInfoMaintenance() {
