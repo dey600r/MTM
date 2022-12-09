@@ -3,9 +3,6 @@ import { Injectable } from '@angular/core';
 // UTILS
 import { Constants, WarningWearEnum } from '@utils/index';
 
-// MODELS
-import { SearchDashboardModel } from '@models/index';
-
 @Injectable({
     providedIn: 'root'
 })

@@ -14,7 +14,7 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { ControlService, DataBaseService, ExportService, SettingsService, SqlService } from '@services/index';
+import { ControlService, DataBaseService, ExportService, SqlService } from '@services/index';
 import { DateFormatCalendarPipe } from '@pipes/date-format-calendar.pipe';
 
 // MOCK

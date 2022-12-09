@@ -396,7 +396,7 @@ export class HomeService {
         return date;
     }
 
-    /* INFO NOTIFICATIONS */
+    /** INFO NOTIFICATIONS */
 
     getWearReplacement(strict: boolean, vehicleWear: WearVehicleProgressBarViewModel,
                        operations: OperationModel[]): WearVehicleProgressBarViewModel {
