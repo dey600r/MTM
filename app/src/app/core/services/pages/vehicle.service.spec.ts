@@ -31,7 +31,7 @@ describe('VehicleService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { insertSqlVehicle: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new VehicleService(spyDataBase, spySqlService, null);
-        service2.saveVehicle([new VehicleModel('test', 'test', 2005, 1000)], ActionDBEnum.CREATE, []);
+        service2.saveVehicle([new VehicleModel('test', 'test', 2005, 1000)], ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlVehicle).toHaveBeenCalled();
     });

@@ -1,9 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { SettingsService } from './settings.service';
 import { DataBaseService, SqlService } from '../common/index';
+
+// MDOELS
+import { SystemConfigurationModel } from '@models/index';
 
 // CONFIGURATIONS
 import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
@@ -116,6 +119,12 @@ describe('SettingsService', () => {
         expect(result.valueLarge).toEqual(Constants.SETTING_THEME_DARK);
     });
 
+    it('should get version selected', () => {
+        const result: SystemConfigurationModel = service.getVersionSelected(MockData.SystemConfigurations);
+        expect(result.key).toEqual(Constants.KEY_LAST_UPDATE_DB);
+        expect(result.value).toEqual('v3.1.0');
+    });
+
     it('should save system configuration key', () => {
         jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
         const spyDBService = spyOn(dbService, 'executeScriptDataBase');
@@ -159,4 +168,13 @@ describe('SettingsService', () => {
         expect(spyDBService).toHaveBeenCalledTimes(0);
         expect(spySqlService).toHaveBeenCalledTimes(0);
     });
+
+    it('should finish import', fakeAsync(() => {
+        const spyDBServiceSystem = spyOn(dbService, 'getSystemConfigurationData').and.returnValue(MockData.SystemConfigurations);
+        const spyDBServiceAllTables = spyOn(dbService, 'loadAllTables').and.returnValue();
+        service.finishImportLoad();
+        expect(spyDBServiceAllTables).toHaveBeenCalled();
+        tick(600);
+        expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
+    }));
 });

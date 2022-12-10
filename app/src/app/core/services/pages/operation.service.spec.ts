@@ -76,5 +76,6 @@ describe('OperationService', () => {
         expect(spyDataBase.executeScriptDataBase).not.toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalledTimes(2);
         expect(result).toEqual('query1;query2;');
+        expect(service2.getSqlDeleteVehicleOperation()).toEqual('');
     });
 });

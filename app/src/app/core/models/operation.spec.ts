@@ -7,7 +7,6 @@ describe('OperationModel', () => {
         expect(base.id).toEqual(1);
         expect(base.description).toEqual(null);
         expect(base.details).toEqual(null);
-        expect(base.date).toEqual(new Date());
         expect(base.km).toEqual(null);
         expect(base.price).toEqual(null);
         expect(base.location).toEqual(null);

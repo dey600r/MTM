@@ -49,7 +49,7 @@ describe('ConfigurationService', () => {
             insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveConfiguration(new ConfigurationModel('test', 'test', true, [], 10), ActionDBEnum.CREATE, []);
+        service2.saveConfiguration(new ConfigurationModel('test', 'test', true, [], 10), ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlConfiguration).toHaveBeenCalled();
         expect(spySqlService.insertSqlConfigurationMaintenance).toHaveBeenCalled();
@@ -115,7 +115,7 @@ describe('ConfigurationService', () => {
             insertSqlMaintenanceElementRel: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveMaintenance(new MaintenanceModel('test', []), ActionDBEnum.CREATE, []);
+        service2.saveMaintenance(new MaintenanceModel('test', []), ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlMaintenance).toHaveBeenCalled();
         expect(spySqlService.insertSqlMaintenanceElementRel).toHaveBeenCalled();
@@ -151,7 +151,7 @@ describe('ConfigurationService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { insertSqlMaintenanceElement: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveMaintenanceElement(new MaintenanceElementModel('test'), ActionDBEnum.CREATE, []);
+        service2.saveMaintenanceElement(new MaintenanceElementModel('test'), ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlMaintenanceElement).toHaveBeenCalled();
     });

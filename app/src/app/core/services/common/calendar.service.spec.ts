@@ -40,11 +40,33 @@ describe('CalendarService', () => {
         expect(service.getDateString(new Date(2020, 2, 5, 1, 1, 1))).toEqual('03/05/2020');
     });
 
+    it('should get format calendar week start - ES', () => {
+        expect(service.getFormatCalendarWeekStart()).toEqual(1);
+    });
+
     it('should get format calendar week start - EN', async () => {
         await firstValueFrom(translate.use('en'));
         expect(service.getFormatCalendarWeekStart()).toEqual(0);
     });
 
+    it('should get format calendar week - ES', () => {
+        expect(service.getFormatCalendarWeek()).toEqual(['D', 'L', 'M', 'X', 'J', 'V', 'S']);
+    });
+
+    it('should get format calendar week - EN', async () => {
+        await firstValueFrom(translate.use('en'));
+        expect(service.getFormatCalendarWeek()).toEqual(['S', 'M', 'T', 'W', 'T', 'F', 'S']);
+    });
+
+    it('should get format calendar month - ES', () => {
+        expect(service.getFormatCalendarMonth()).toEqual(['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DEC']);
+    });
+
+    it('should get format calendar month - EN', async () => {
+        await firstValueFrom(translate.use('en'));
+        expect(service.getFormatCalendarMonth()).toEqual(['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']);
+    });
+    
     it('should transform date to format DB - YYYY-MM-DD', () => {
         expect(service.getDateStringToDB(new Date(2020, 2, 5, 1, 1, 1))).toEqual('2020-03-05');
     });
@@ -93,5 +115,14 @@ describe('CalendarService', () => {
 
         const result: number = service.calculateKmVehicleEstimated(vehice);
         expect(result).toEqual(0);
+    });
+
+    it('should not calculate kilometer vehicle estimated', () => {
+        const today: Date = new Date();
+        const date: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10);
+        const vehice = new VehicleModel(null, null, 0, 80000, null, null, 700, date, new Date(2015, 8, 1), false);
+
+        const result: number = service.calculateKmVehicleEstimated(vehice);
+        expect(result).toEqual(vehice.km);
     });
 });
