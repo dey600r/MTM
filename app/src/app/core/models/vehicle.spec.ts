@@ -3,8 +3,8 @@ import { ConfigurationModel, VehicleModel, VehicleTypeModel } from "@models/inde
 describe('VehicleModels', () => {
 
     it('should initialize vehicle model', () => {
-        const date: Date = new Date();
         let base: VehicleModel = new VehicleModel();
+        const date: Date = new Date();
         expect(base.id).toEqual(1);
         expect(base.dateKms).toEqual(date);
         expect(base.datePurchase).toEqual(date);
