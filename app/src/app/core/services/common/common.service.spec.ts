@@ -159,4 +159,9 @@ describe('CommonService', () => {
     it('should get name of class', () => {
         expect(service.nameOf(() => new VehicleModel().km)).toEqual('km');
     });
+
+    it('should round number', () => {
+        expect(service.round((10 / 3), 10)).toEqual(3.3);
+        expect(service.round((10 / 3), 100)).toEqual(3.33);
+    });
 });

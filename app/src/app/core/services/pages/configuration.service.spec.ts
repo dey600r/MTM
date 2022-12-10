@@ -43,10 +43,10 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with insert configuration sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { 
-            insertSqlConfiguration: jasmine.createSpy().and.returnValues('', ''),
-            insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('', '')
+            insertSqlConfiguration: jasmine.createSpy().and.returnValues('query1;'),
+            insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveConfiguration(new ConfigurationModel('test', 'test', true, [], 10), ActionDBEnum.CREATE, []);
@@ -56,11 +56,11 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with update configuration sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { 
-            updateSqlConfiguration: jasmine.createSpy().and.returnValues('', ''),
-            deleteSql: jasmine.createSpy().and.returnValues('', ''),
-            insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('', '')
+            updateSqlConfiguration: jasmine.createSpy().and.returnValues('query1;'),
+            deleteSql: jasmine.createSpy().and.returnValues('query1;'),
+            insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveConfiguration(new ConfigurationModel('test', 'test', true, [], 10), ActionDBEnum.UPDATE, []);
@@ -71,10 +71,10 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with delete configuration sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { 
-            deleteSql: jasmine.createSpy().and.returnValues('', ''),
-            updateSqlVehicle: jasmine.createSpy().and.returnValues('', '')
+            deleteSql: jasmine.createSpy().and.returnValues('query1;', 'query2;'),
+            updateSqlVehicle: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveConfiguration(new ConfigurationModel('test', 'test', true,
@@ -85,10 +85,10 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with insert configuration maintenance sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { 
-            insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('', ''),
-            deleteSql: jasmine.createSpy().and.returnValues('', '')
+            insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('query1;'),
+            deleteSql: jasmine.createSpy().and.returnValues('query1;','query2;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveConfigurationMaintenance([ new ConfigurationModel(), new ConfigurationModel()], [new ConfigurationModel()]);
@@ -98,8 +98,8 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with delete configuration maintenance sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
-        const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('', '') };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
+        const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.deleteConfigManintenance(1, 1);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
@@ -109,10 +109,10 @@ describe('ConfigurationService', () => {
     /* MAINTENANCES */
 
     it('should call execute query with insert maintenance sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { 
-            insertSqlMaintenance: jasmine.createSpy().and.returnValues('', ''),
-            insertSqlMaintenanceElementRel: jasmine.createSpy().and.returnValues('', '')
+            insertSqlMaintenance: jasmine.createSpy().and.returnValues('query1;'),
+            insertSqlMaintenanceElementRel: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveMaintenance(new MaintenanceModel('test', []), ActionDBEnum.CREATE, []);
@@ -122,11 +122,11 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with update maintenance sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { 
-            updateSqlMaintenance: jasmine.createSpy().and.returnValues('', ''),
-            deleteSql: jasmine.createSpy().and.returnValues('', ''),
-            insertSqlMaintenanceElementRel: jasmine.createSpy().and.returnValues('', '')
+            updateSqlMaintenance: jasmine.createSpy().and.returnValues('query1;'),
+            deleteSql: jasmine.createSpy().and.returnValues('query1;'),
+            insertSqlMaintenanceElementRel: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveMaintenance(new MaintenanceModel('test', []), ActionDBEnum.UPDATE, []);
@@ -137,8 +137,8 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with delete maintenance sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
-        const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('', '') };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
+        const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('query1;', 'query2;', 'query3;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveMaintenance(new MaintenanceModel('test', [ new MaintenanceElementModel() ]), ActionDBEnum.DELETE, [ new ConfigurationModel()]);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
@@ -148,8 +148,8 @@ describe('ConfigurationService', () => {
     /* MAINTENANCE ELEMENTS */
 
     it('should call execute query with insert maintenance element sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
-        const spySqlService: any = { insertSqlMaintenanceElement: jasmine.createSpy().and.returnValues('', '') };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
+        const spySqlService: any = { insertSqlMaintenanceElement: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveMaintenanceElement(new MaintenanceElementModel('test'), ActionDBEnum.CREATE, []);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
@@ -157,8 +157,8 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with update maintenance element sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
-        const spySqlService: any = { updateSqlMaintenanceElement: jasmine.createSpy().and.returnValues('', '') };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
+        const spySqlService: any = { updateSqlMaintenanceElement: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveMaintenanceElement(new MaintenanceElementModel('test'), ActionDBEnum.UPDATE, []);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
@@ -166,8 +166,8 @@ describe('ConfigurationService', () => {
     });
 
     it('should call execute query with delete maintenance element sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({}), Promise.resolve({})) };
-        const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('', '') };
+        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
+        const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('query1;', 'query2;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
         service2.saveMaintenanceElement(new MaintenanceElementModel('test'), ActionDBEnum.DELETE, [ new OperationModel() ]);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
