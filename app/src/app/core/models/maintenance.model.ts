@@ -5,12 +5,6 @@ import { MaintenanceFreqModel } from './maintenance-freq.model';
 export class MaintenanceModel extends BaseMaintenanceModel {
     listMaintenanceElement: MaintenanceElementModel[];
     maintenanceFreq: MaintenanceFreqModel;
-    km: number;
-    time: number;
-    init: boolean;
-    wear: boolean;
-    fromKm: number;
-    toKm: number;
     master: boolean;
     constructor(d: string = null, lme: MaintenanceElementModel[] = [],
                 mf: MaintenanceFreqModel = new MaintenanceFreqModel(),
