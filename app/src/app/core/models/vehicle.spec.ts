@@ -4,10 +4,7 @@ describe('VehicleModels', () => {
 
     it('should initialize vehicle model', () => {
         let base: VehicleModel = new VehicleModel();
-        const date: Date = new Date();
         expect(base.id).toEqual(1);
-        expect(base.dateKms).toEqual(date);
-        expect(base.datePurchase).toEqual(date);
         expect(base.model).toEqual(null);
         expect(base.brand).toEqual(null);
         expect(base.year).toEqual(null);
