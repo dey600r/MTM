@@ -44,6 +44,7 @@ export class HomePage extends BasePage implements OnInit {
   vehicleSelected: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
   operations: OperationModel[] = [];
   maintenances: MaintenanceModel[] = [];
+  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
   hideOpButton = false;
@@ -124,12 +125,12 @@ export class HomePage extends BasePage implements OnInit {
         });
       } else {
         this.timeOutLoader();
-        this.activateInfo = this.activateModeInfo(vehiclesActives, []);
+        this.activateInfo = this.activateModeInfo([], []);
         this.vehicleSelected = new WearVehicleProgressBarViewModel();
       }
     } else {
       this.timeOutLoader();
-      this.activateInfo = this.activateModeInfo(vehicles, []);
+      this.activateInfo = this.activateModeInfo([], []);
       this.vehicleSelected = new WearVehicleProgressBarViewModel();
     }
   }
@@ -186,11 +187,8 @@ export class HomePage extends BasePage implements OnInit {
     document.getElementById('custom-overlay').style.display === '') {
       setTimeout(() => { document.getElementById('custom-overlay').style.display = 'none'; }, 3000);
     }
-    if (!this.loadedHeader || !this.loadedBody) {
-      setTimeout(() => {
-        this.loadedHeader = true;
-        this.loadedBody = true;
-      }, 2500);
+    if (this.initLoaded) {
+      this.showSkeleton();
     }
   }
 
@@ -234,17 +232,38 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   segmentChanged(event: any): void {
-    this.loadedBody = false;
-    setTimeout(() => {
-      this.loadedBody = true;
-    }, 500);
+    this.showSkeletonBodyNotInit(500);
     this.vehicleSelected = this.wears.find(x => x.idVehicle === Number(event.detail.value));
     this.initShowInfoMaintenance();
-    this.activateInfo = this.activateModeInfo([new VehicleModel()], this.wears);
+    this.activateInfo = this.activateModeInfo((this.vehicleSelected ? [new VehicleModel()] : []), this.wears);
+    this.detector.detectChanges();
   }
 
   activeSegmentScroll(): boolean {
     return this.controlService.activeSegmentScroll(this.wears.length);
+  }
+
+  /* SKELETON */
+
+  showSkeleton() {
+    this.showSkeletonHeader(2500);
+    this.showSkeletonBody(2500);
+  }
+
+  showSkeletonHeader(time: number) {
+    this.loadedHeader = false;
+    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
+  }
+
+  showSkeletonBodyNotInit(time: number) {
+    this.loadedBody = false;
+    if(!this.initLoaded) {
+      this.showSkeletonBody(time);
+    }
+  }
+
+  showSkeletonBody(time: number) {
+    setTimeout(() => { this.loadedBody = true; }, time);
   }
 
   // MODALS

@@ -29,7 +29,9 @@ export class VehiclePage extends BasePage implements OnInit {
   // DATA
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
-  loaded = false;
+  initLoaded = true;
+  loadedHeader = false;
+  loadedBody = false;
   measure: any = {};
   iconNameHeaderLeft = '';
 
@@ -57,8 +59,8 @@ export class VehiclePage extends BasePage implements OnInit {
     document.getElementById('custom-overlay').style.display === '') {
       document.getElementById('custom-overlay').style.display = 'none';
     }
-    if (!this.loaded) {
-      setTimeout(() => { this.loaded = true; }, 1000);
+    if (this.initLoaded) {
+      this.showSkeleton();
     }
   }
 
@@ -85,6 +87,7 @@ export class VehiclePage extends BasePage implements OnInit {
       }
       this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
       this.loadIconDashboard();
+      this.showSkeletonBodyNotInit(500);
       this.detector.detectChanges();
     });
 
@@ -178,6 +181,29 @@ export class VehiclePage extends BasePage implements OnInit {
 
   loadIconDashboard(): void {
     this.iconNameHeaderLeft = this.iconService.loadIconDashboard<VehicleModel>(this.vehicles);
+  }
+
+  /* SKELETON */
+  
+  showSkeleton() {
+    this.showSkeletonHeader(1000);
+    this.showSkeletonBody(1000);
+  }
+
+  showSkeletonHeader(time: number) {
+    this.loadedHeader = false;
+    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
+  }
+
+  showSkeletonBodyNotInit(time: number) {
+    this.loadedBody = false;
+    if(!this.initLoaded) {
+      this.showSkeletonBody(time);
+    }
+  }
+
+  showSkeletonBody(time: number) {
+    setTimeout(() => { this.loadedBody = true; }, time);
   }
 
 }

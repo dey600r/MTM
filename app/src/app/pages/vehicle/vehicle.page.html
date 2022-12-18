@@ -1,4 +1,4 @@
-<ion-header [hidden]="!loaded">
+<ion-header [hidden]="!loadedHeader">
   <ion-toolbar>
     <!-- Button chart -->
     <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openDashboardVehicle()">
@@ -19,7 +19,7 @@
     </ion-segment-button>
   </ion-segment>
 </ion-header>
-<ion-content [hidden]="!loaded">
+<ion-content [hidden]="!loadedBody">
   <!-- INFO -->
   <app-info *ngIf="vehicles.length === 0" [inputInfo]="input"></app-info>
   <!-- LIST -->
@@ -68,11 +68,11 @@
 </ion-content>
 
 <!-- SKELETON LOADER INITAL -->
-<ion-header *ngIf="!loaded">
+<ion-header *ngIf="!loadedHeader">
   <app-header-skeleton [input]="[4, 8]"></app-header-skeleton>
 </ion-header>
 
-<ion-content *ngIf="!loaded">
+<ion-content *ngIf="!loadedBody">
   <ion-list>
     <ion-item *ngFor="let i of [1, 2, 3]">
       <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>

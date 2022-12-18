@@ -53,7 +53,7 @@ export class InfoVehicleConfigurationMaintenanceElementModel extends BaseNameMod
     }
 }
 
-export class InfoVehicleHistoricModel extends BaseModel{
+export class InfoVehicleHistoricModel extends BaseModel {
     listHistoricReplacements: InfoVehicleHistoricReplacementModel[];
     constructor(id: number = -1, list: InfoVehicleHistoricReplacementModel[] = []) {
         super(id);

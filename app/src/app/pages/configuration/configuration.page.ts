@@ -54,7 +54,9 @@ export class ConfigurationPage extends BasePage implements OnInit {
   segmentSelected = 1;
   iconFilter = 'filter';
 
-  loaded = false;
+  initLoaded = true;
+  loadedHeader = false;
+  loadedBody = false;
 
   @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
@@ -86,8 +88,8 @@ export class ConfigurationPage extends BasePage implements OnInit {
     document.getElementById('custom-overlay').style.display === '') {
       document.getElementById('custom-overlay').style.display = 'none';
     }
-    if (!this.loaded) {
-      setTimeout(() => { this.loaded = true; }, 1200);
+    if (this.initLoaded) {
+      this.showSkeleton();
     }
   }
 
@@ -149,6 +151,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allConfigurations = data; 
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
       this.dashboardService.setSearchConfiguration();
+      this.showSkeletonBodyNotInit(500);
       this.detector.detectChanges();
     });
 
@@ -156,6 +159,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allMaintenances = data;
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
       this.dashboardService.setSearchConfiguration();
+      this.showSkeletonBodyNotInit(500);
       this.detector.detectChanges();
     });
 
@@ -163,6 +167,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allMaintenanceElements = data;
       this.maintenanceElements = this.configurationService.orderMaintenanceElement(data); 
       this.dashboardService.setSearchConfiguration();
+      this.showSkeletonBodyNotInit(500);
       this.detector.detectChanges();
     });
 
@@ -174,6 +179,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   segmentChanged(event: any): void {
     this.segmentSelected = Number(event.detail.value);
+    this.showSkeletonBodyNotInit(500);
   }
 
   openModalSegmentSelected() {
@@ -490,5 +496,28 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   isNotValidToDeleteReplacement(replacement: MaintenanceElementModel): boolean {
     return !replacement.master && this.maintenances.some(x => x.listMaintenanceElement.some(y => y.id === replacement.id));
+  }
+
+  /* SKELETON */
+
+  showSkeleton() {
+    this.showSkeletonHeader(1200);
+    this.showSkeletonBody(1200);
+  }
+
+  showSkeletonHeader(time: number) {
+    this.loadedHeader = false;
+    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
+  }
+
+  showSkeletonBodyNotInit(time: number) {
+    this.loadedBody = false;
+    if(!this.initLoaded) {
+      this.showSkeletonBody(time);
+    }
+  }
+
+  showSkeletonBody(time: number) {
+    setTimeout(() => { this.loadedBody = true; }, time);
   }
 }

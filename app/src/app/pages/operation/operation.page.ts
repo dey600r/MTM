@@ -41,6 +41,7 @@ export class OperationPage extends BasePage implements OnInit {
   allOperations: OperationModel[] = [];
   vehicles: VehicleModel[] = [];
   vehicleSelected = -1;
+  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
   iconNameHeaderLeft = 'bar-chart';
@@ -110,6 +111,7 @@ export class OperationPage extends BasePage implements OnInit {
         this.operationsVehicle = [];
       }
       this.dashboardService.setSearchOperation();
+      this.showSkeletonBodyNotInit(500);
     });
 
     this.dashboardService.getObserverSearchOperation().subscribe(filter => {
@@ -127,11 +129,8 @@ export class OperationPage extends BasePage implements OnInit {
     document.getElementById('custom-overlay').style.display === '') {
       document.getElementById('custom-overlay').style.display = 'none';
     }
-    if (!this.loadedHeader || !this.loadedBody) {
-      setTimeout(() => {
-        this.loadedHeader = true;
-        this.loadedBody = true;
-      }, 1000);
+    if (this.initLoaded) {
+      this.showSkeleton();
     }
   }
 
@@ -204,10 +203,7 @@ export class OperationPage extends BasePage implements OnInit {
   }
 
   segmentChanged(event: any): void {
-    this.loadedBody = false;
-    setTimeout(() => {
-      this.loadedBody = true;
-    }, 500);
+    this.showSkeletonBodyNotInit(500);
     this.vehicleSelected = Number(event.detail.value);
     this.loadOperationVehicles();
     this.operations = this.filterOperations(this.filterDashboard, this.allOperations.filter(x => x.vehicle.id === Number(event.detail.value)));
@@ -242,5 +238,28 @@ export class OperationPage extends BasePage implements OnInit {
 
   loadIconSearch() {
     this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.OPERATION));
+  }
+
+  /* SKELETON */
+
+  showSkeleton() {
+    this.showSkeletonHeader(1000);
+    this.showSkeletonBody(1000);
+  }
+
+  showSkeletonHeader(time: number) {
+    this.loadedHeader = false;
+    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
+  }
+
+  showSkeletonBodyNotInit(time: number) {
+    this.loadedBody = false;
+    if(!this.initLoaded) {
+      this.showSkeletonBody(time);
+    }
+  }
+
+  showSkeletonBody(time: number) {
+    setTimeout(() => { this.loadedBody = true; }, time);
   }
 }
