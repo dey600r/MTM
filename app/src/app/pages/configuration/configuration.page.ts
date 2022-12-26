@@ -438,14 +438,24 @@ export class ConfigurationPage extends BasePage implements OnInit {
       if (c.listMaintenance && c.listMaintenance.length > 0) {
         c.listMaintenance.forEach(m => {
           if (maintenance.id === m.id && data.listData.some(x => x.id === c.id && !x.selected)) {
-            configurationDelete = [...configurationDelete, new ConfigurationModel(c.name, c.description, c.master, [m], c.id)];
+            configurationDelete = [...configurationDelete, new ConfigurationModel({
+              name: c.name, 
+              description: c.description,
+              master: c.master,
+              listMaintenance: [m],
+              id: c.id
+            })];
           }
         });
       }
     });
     data.listData.forEach(x => {
       if (x.selected && this.configurations.some(c => c.id === x.id && !c.listMaintenance.some(m => m.id === maintenance.id))) {
-        configurationSave = [...configurationSave, new ConfigurationModel('', '', true, [maintenance], x.id)];
+        configurationSave = [...configurationSave, new ConfigurationModel({
+          master: true,
+          listMaintenance: [maintenance],
+          id: x.id
+        })];
       }
     });
     this.configurationService.saveConfigurationMaintenance(configurationSave, configurationDelete).then(res => {

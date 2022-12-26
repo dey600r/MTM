@@ -78,7 +78,7 @@ export class InfoCalendarService {
         if (km) {
             kms = wear.kmEstimatedVehicle + wearRep.calculateKms;
             warnings = wearRep.warningKms;
-            dateResult = this.getDateCalculatingKm(wear, wearMain, wearRep, wear.kmEstimatedVehicle);
+            dateResult = this.getDateCalculatingKm(wear, wearMain, wearRep);
         } else {
             times = wearRep.calculateMonths;
             warnings = wearRep.warningMonths;
@@ -100,11 +100,17 @@ export class InfoCalendarService {
     }
 
     getDateCalculatingKm(wear: WearVehicleProgressBarViewModel, wearMain: WearMaintenanceProgressBarViewModel,
-                         wearRep: WearReplacementProgressBarViewModel, kmVehicle: number): Date {
+                         wearRep: WearReplacementProgressBarViewModel): Date {
         let dateResult: Date;
         if (wearRep.calculateKms > 0) {
-            dateResult = this.calculateKmInfoNotification(new VehicleModel(null, null, null, wear.kmVehicle, null, null,
-                wear.kmsPerMonthVehicle, wear.dateKmsVehicle, wear.datePurchaseVehicle), 0, wearRep.calculateKms);
+            dateResult = this.calculateKmInfoNotification(new VehicleModel({
+                km: wear.kmVehicle,
+                configuration: null,
+                vehicleType: null,
+                kmsPerMonth: wear.kmsPerMonthVehicle,
+                dateKms: wear.dateKmsVehicle,
+                datePurchase: wear.datePurchaseVehicle
+            }), 0, wearRep.calculateKms);
         } else {
             let diffVehiclePurchase = 0;
             let monthsEstimated = 0;
@@ -112,11 +118,11 @@ export class InfoCalendarService {
             if (wearRep.kmOperation === null) {
                 dateCompare = wear.datePurchaseVehicle;
                 diffVehiclePurchase = this.calendarService.monthDiff(dateCompare, new Date());
-                monthsEstimated = (wearMain.kmMaintenance * diffVehiclePurchase) / kmVehicle;
+                monthsEstimated = (wearMain.kmMaintenance * diffVehiclePurchase) / wear.kmEstimatedVehicle;
             } else {
                 dateCompare = new Date(wearRep.dateOperation);
                 diffVehiclePurchase = this.calendarService.monthDiff(dateCompare, new Date());
-                monthsEstimated = (wearMain.kmMaintenance * diffVehiclePurchase) / (kmVehicle - wearRep.kmOperation);
+                monthsEstimated = (wearMain.kmMaintenance * diffVehiclePurchase) / (wear.kmEstimatedVehicle - wearRep.kmOperation);
             }
             dateResult = this.calculateTimeInfoCalendar(dateCompare, Math.floor(monthsEstimated));
         }

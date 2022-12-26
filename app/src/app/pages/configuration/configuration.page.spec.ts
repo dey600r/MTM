@@ -30,7 +30,8 @@ describe('ConfigurationPage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConfigurationPage);
     component = fixture.componentInstance;
-    component.loaded = true;
+    component.loadedHeader = true;
+    component.loadedBody = true;
     fixture.detectChanges();
   });
 

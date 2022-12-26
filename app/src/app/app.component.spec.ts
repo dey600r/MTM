@@ -12,8 +12,7 @@ import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // CONFIGURATION
-import { SetupTest, SpyMockConfig } from '@testing/index';
-import { MockTranslate } from '@src/testing/mock-i18n.spec';
+import { SetupTest, SpyMockConfig, MockTranslate } from '@testing/index';
 
 // SERVICES
 import { ControlService, DataBaseService, ExportService } from '@services/index';

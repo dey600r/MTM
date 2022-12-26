@@ -34,7 +34,7 @@ describe('OperationService', () => {
             insertSqlOpMaintenanceElement: jasmine.createSpy().and.returnValues('query1;'),
         };
         const service2 = new OperationService(spyDataBase, spySqlService);
-        service2.saveOperation(new OperationModel('test'), ActionDBEnum.CREATE);
+        service2.saveOperation(new OperationModel({ description: 'test' }), ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlOperation).toHaveBeenCalled();
         expect(spySqlService.insertSqlOpMaintenanceElement).toHaveBeenCalled();
@@ -48,7 +48,7 @@ describe('OperationService', () => {
             insertSqlOpMaintenanceElement: jasmine.createSpy().and.returnValues('query1;'),
         };
         const service2 = new OperationService(spyDataBase, spySqlService);
-        service2.saveOperation(new OperationModel('test'), ActionDBEnum.UPDATE);
+        service2.saveOperation(new OperationModel({ description: 'test' }), ActionDBEnum.UPDATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.updateSqlOperation).toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalled();
@@ -59,10 +59,13 @@ describe('OperationService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('query1;', 'query2;') };
         const service2 = new OperationService(spyDataBase, spySqlService);
-        service2.saveOperation(
-            new OperationModel('test', 'test', new OperationTypeModel(), new VehicleModel(), 
-                100, new Date(), '', '', 100, '', 1, [new MaintenanceElementModel()]),
-            ActionDBEnum.DELETE);
+        service2.saveOperation(new OperationModel({
+                description: 'test',
+                details: 'test',
+                km: 100,
+                price: 100, 
+                listMaintenanceElement: [new MaintenanceElementModel()]
+            }), ActionDBEnum.DELETE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalledTimes(2);
     });

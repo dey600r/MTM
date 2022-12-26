@@ -49,7 +49,13 @@ describe('ConfigurationService', () => {
             insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveConfiguration(new ConfigurationModel('test', 'test', true, [], 10), ActionDBEnum.CREATE);
+        service2.saveConfiguration(new ConfigurationModel({
+            name: 'test',
+            description: 'test',
+            master: true,
+            listMaintenance: [],
+            id: 10
+        }), ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlConfiguration).toHaveBeenCalled();
         expect(spySqlService.insertSqlConfigurationMaintenance).toHaveBeenCalled();
@@ -63,7 +69,13 @@ describe('ConfigurationService', () => {
             insertSqlConfigurationMaintenance: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveConfiguration(new ConfigurationModel('test', 'test', true, [], 10), ActionDBEnum.UPDATE, []);
+        service2.saveConfiguration(new ConfigurationModel({
+            name: 'test', 
+            description: 'test',
+            master: true,
+            listMaintenance: [],
+            id: 10
+        }), ActionDBEnum.UPDATE, []);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.updateSqlConfiguration).toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalled();
@@ -77,8 +89,18 @@ describe('ConfigurationService', () => {
             updateSqlVehicle: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveConfiguration(new ConfigurationModel('test', 'test', true,
-            [ new MaintenanceModel('test', [], new MaintenanceFreqModel(), 10)], 10), ActionDBEnum.DELETE, [new VehicleModel()]);
+        service2.saveConfiguration(new ConfigurationModel({
+            name: 'test',
+            description: 'test',
+            master: true,
+            listMaintenance: [ new MaintenanceModel({
+                    description: 'test',
+                    listMaintenanceElement: [],
+                    maintenanceFreq: new MaintenanceFreqModel(),
+                    km: 10
+                })],
+            id: 10
+        }), ActionDBEnum.DELETE, [new VehicleModel()]);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalledTimes(2);
         expect(spySqlService.updateSqlVehicle).toHaveBeenCalled();
@@ -115,7 +137,7 @@ describe('ConfigurationService', () => {
             insertSqlMaintenanceElementRel: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveMaintenance(new MaintenanceModel('test', []), ActionDBEnum.CREATE);
+        service2.saveMaintenance(new MaintenanceModel({ description: 'test' }), ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlMaintenance).toHaveBeenCalled();
         expect(spySqlService.insertSqlMaintenanceElementRel).toHaveBeenCalled();
@@ -129,7 +151,7 @@ describe('ConfigurationService', () => {
             insertSqlMaintenanceElementRel: jasmine.createSpy().and.returnValues('query1;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveMaintenance(new MaintenanceModel('test', []), ActionDBEnum.UPDATE, []);
+        service2.saveMaintenance(new MaintenanceModel({ description: 'test' }), ActionDBEnum.UPDATE, []);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.updateSqlMaintenance).toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalled();
@@ -140,7 +162,10 @@ describe('ConfigurationService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('query1;', 'query2;', 'query3;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveMaintenance(new MaintenanceModel('test', [ new MaintenanceElementModel() ]), ActionDBEnum.DELETE, [ new ConfigurationModel()]);
+        service2.saveMaintenance(new MaintenanceModel({ 
+                description: 'test',
+                listMaintenanceElement: [ new MaintenanceElementModel() ]
+            }), ActionDBEnum.DELETE, [ new ConfigurationModel()]);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalledTimes(3);
     });
@@ -151,7 +176,7 @@ describe('ConfigurationService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { insertSqlMaintenanceElement: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveMaintenanceElement(new MaintenanceElementModel('test'), ActionDBEnum.CREATE);
+        service2.saveMaintenanceElement(new MaintenanceElementModel({ name: 'test' }), ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlMaintenanceElement).toHaveBeenCalled();
     });
@@ -160,7 +185,7 @@ describe('ConfigurationService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { updateSqlMaintenanceElement: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveMaintenanceElement(new MaintenanceElementModel('test'), ActionDBEnum.UPDATE, []);
+        service2.saveMaintenanceElement(new MaintenanceElementModel({ name: 'test' }), ActionDBEnum.UPDATE, []);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.updateSqlMaintenanceElement).toHaveBeenCalled();
     });
@@ -169,7 +194,7 @@ describe('ConfigurationService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('query1;', 'query2;') };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveMaintenanceElement(new MaintenanceElementModel('test'), ActionDBEnum.DELETE, [ new OperationModel() ]);
+        service2.saveMaintenanceElement(new MaintenanceElementModel({ name: 'test' }), ActionDBEnum.DELETE, [ new OperationModel() ]);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalledTimes(2);
     });

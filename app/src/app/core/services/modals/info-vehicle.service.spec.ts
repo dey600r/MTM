@@ -50,7 +50,7 @@ describe('InfoVehicleService', () => {
     });
 
     it('should get percent km vehicle', () => {
-        const data = service.calculateInfoVehicleConfiguration(MockData.Operations, MockData.Vehicles,
+        const data = service.calculateInfoVehicleConfiguration(MockData.Operations, [MockData.Vehicles[0]],
             MockData.Configurations, MockData.Maintenances);
         expect(service.getPercentKmVehicle(data[0])).toEqual(50);
     });

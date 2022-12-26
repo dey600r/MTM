@@ -84,4 +84,19 @@ describe('InfoCalendarService', () => {
         expect(allColors.some(x => x === 'day-circle-config-success')).toBeTruthy();
         expect(allColors.some(x => x === 'day-circle-config-all')).toBeFalsy();
     });
+
+    it('should get date from km', () => {
+        const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
+            MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+        const date: Date = service.getDateCalculatingKm(allWears[0], 
+                                                        allWears[0].listWearMaintenance[3], 
+                                                        allWears[0].listWearMaintenance[3].listWearReplacement[1]);
+        expect(date).toEqual(new Date(2010, 9, 15));
+    });
+
+    it('should calculate km info notification', () => {
+        expect(service.calculateKmInfoNotification(MockData.Vehicles[0], 10, 1000)).toEqual(new Date(2021, 7, 21));
+        expect(service.calculateKmInfoNotification(MockData.Vehicles[1], 0, 2000)).toEqual(new Date(2024, 9, 14));
+        expect(service.calculateKmInfoNotification(MockData.Vehicles[2], 1000, 6000)).toEqual(new Date(2022, 2, 9));
+    });
 });

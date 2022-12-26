@@ -137,9 +137,9 @@ export class OperationPage extends BasePage implements OnInit {
   /** MODALS */
 
   openOperationModal(
-      row: OperationModel = new OperationModel(null, null, new OperationTypeModel(),
-      this.vehicles.find(x => x.id === this.vehicleSelected)),
-      create: boolean = true) {
+      row: OperationModel = new OperationModel({
+          vehicle: this.vehicles.find(x => x.id === this.vehicleSelected)
+        }), create: boolean = true) {
     this.controlService.openModal(PageEnum.OPERATION, AddEditOperationComponent, new ModalInputModel<OperationModel>({
         isCreate: create,
         data: row,

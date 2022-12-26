@@ -31,7 +31,12 @@ describe('VehicleService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { insertSqlVehicle: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new VehicleService(spyDataBase, spySqlService, null);
-        service2.saveVehicle([new VehicleModel('test', 'test', 2005, 1000)], ActionDBEnum.CREATE);
+        service2.saveVehicle([new VehicleModel({
+            model: 'test',
+            brand: 'test',
+            year: 2005,
+            km: 1000
+        })], ActionDBEnum.CREATE);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlVehicle).toHaveBeenCalled();
     });
@@ -40,7 +45,12 @@ describe('VehicleService', () => {
         const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
         const spySqlService: any = { updateSqlVehicle: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new VehicleService(spyDataBase, spySqlService, null);
-        service2.saveVehicle([new VehicleModel('test', 'test', 2005, 1000)], ActionDBEnum.UPDATE, []);
+        service2.saveVehicle([new VehicleModel({
+            model: 'test',
+            brand: 'test',
+            year: 2005,
+            km: 1000
+        })], ActionDBEnum.UPDATE, []);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.updateSqlVehicle).toHaveBeenCalled();
     });
@@ -50,7 +60,12 @@ describe('VehicleService', () => {
         const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('query1;') };
         const spyOperationService: any = { getSqlDeleteVehicleOperation: jasmine.createSpy().and.returnValues('query1;') };
         const service2 = new VehicleService(spyDataBase, spySqlService, spyOperationService);
-        service2.saveVehicle([new VehicleModel('test', 'test', 2005, 1000)], ActionDBEnum.DELETE, [new OperationModel()]);
+        service2.saveVehicle([new VehicleModel({
+            model: 'test',
+            brand: 'test',
+            year: 2005,
+            km: 1000
+        })], ActionDBEnum.DELETE, [new OperationModel()]);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spyOperationService.getSqlDeleteVehicleOperation).toHaveBeenCalled();
         expect(spySqlService.deleteSql).toHaveBeenCalled();

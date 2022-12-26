@@ -92,7 +92,12 @@ describe('CalendarService', () => {
     it('should calculate kilometer vehicle estimated with km per month', () => {
         const today: Date = new Date();
         const date: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10);
-        const vehice = new VehicleModel(null, null, 0, 80000, null, null, 700, date, new Date(2015, 8, 1));
+        const vehice = new VehicleModel({
+            km: 80000,
+            kmsPerMonth: 700,
+            dateKms: date,
+            datePurchase: new Date(2015, 8, 1)
+        });
 
         const result: number = service.calculateKmVehicleEstimated(vehice);
         expect(result).toBeGreaterThanOrEqual(vehice.km);
@@ -101,7 +106,11 @@ describe('CalendarService', () => {
     it('should calculate kilometer vehicle estimated without km per month', () => {
         const today: Date = new Date();
         const date: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10);
-        const vehice = new VehicleModel(null, null, 0, 80000, null, null, null, date, new Date(2015, 8, 1));
+        const vehice = new VehicleModel({
+            km: 80000,
+            dateKms: date,
+            datePurchase: new Date(2015, 8, 1)
+        });
 
         const result: number = service.calculateKmVehicleEstimated(vehice);
         expect(result).toBeGreaterThanOrEqual(vehice.km);
@@ -111,7 +120,11 @@ describe('CalendarService', () => {
         const today: Date = new Date();
         const date: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10);
         const datePurchase: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 15);
-        const vehice = new VehicleModel(null, null, 0, 0, null, null, null, date, datePurchase);
+        const vehice = new VehicleModel({
+            km: 0,
+            dateKms: date,
+            datePurchase: datePurchase
+        });
 
         const result: number = service.calculateKmVehicleEstimated(vehice);
         expect(result).toEqual(0);
@@ -120,7 +133,13 @@ describe('CalendarService', () => {
     it('should not calculate kilometer vehicle estimated', () => {
         const today: Date = new Date();
         const date: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10);
-        const vehice = new VehicleModel(null, null, 0, 80000, null, null, 700, date, new Date(2015, 8, 1), false);
+        const vehice = new VehicleModel({
+            km: 80000,
+            kmsPerMonth: 700,
+            dateKms: date,
+            datePurchase: new Date(2015, 8, 1),
+            active: false
+        });
 
         const result: number = service.calculateKmVehicleEstimated(vehice);
         expect(result).toEqual(vehice.km);
