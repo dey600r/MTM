@@ -115,6 +115,11 @@ describe('CommonService', () => {
         expect(sumMock).toEqual(20);
     });
 
+    it('should sum list empty', () => {
+        const sumMock: number = service.sum(mockNumbers, 'david');
+        expect(sumMock).toEqual(0);
+    });
+
     it('should not sum list empty', () => {
         const sumMock1: number = service.sum(null, 'value');
         const sumMock2: number = service.sum(undefined, 'value');
@@ -158,6 +163,11 @@ describe('CommonService', () => {
 
     it('should get name of class', () => {
         expect(service.nameOf(() => new VehicleModel().km)).toEqual('km');
+    });
+
+    it('should get name of class empty', () => {
+        expect(service.nameOf(() => 'david')).toEqual('() => \'david\'');
+        expect(service.nameOf(() => new VehicleModel())).toEqual('VehicleModel()');
     });
 
     it('should round number', () => {

@@ -6,14 +6,14 @@ import { InfoCalendarService } from './info-calendar.service';
 import { HomeService } from '../pages/index';
 
 // CONFIGURATIONS
-import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
-import { Constants } from '@utils/index';
+import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
+import { Constants, WarningWearEnum } from '@utils/index';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { InfoCalendarVehicleViewModel, WearVehicleProgressBarViewModel } from '@models/index';
+import { InfoCalendarReplacementViewModel, InfoCalendarVehicleViewModel, WearVehicleProgressBarViewModel } from '@models/index';
 
 describe('InfoCalendarService', () => {
     let service: InfoCalendarService;
@@ -83,6 +83,34 @@ describe('InfoCalendarService', () => {
         expect(allColors.some(x => x === 'day-circle-config-warning')).toBeTruthy();
         expect(allColors.some(x => x === 'day-circle-config-success')).toBeTruthy();
         expect(allColors.some(x => x === 'day-circle-config-all')).toBeFalsy();
+    });
+
+    it('should create info calendar replacement', () => {
+        const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
+            MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+        let result: InfoCalendarReplacementViewModel = service.createInfoCalendarReplacement(allWears[0], 
+                                                                allWears[0].listWearMaintenance[3], 
+                                                                allWears[0].listWearMaintenance[3].listWearReplacement[1], true);
+        
+        expect(result.idReplacement).toEqual(1);
+        expect(result.nameReplacement).toEqual(MockData.MaintenanceElementsAux[0].name);
+        expect(result.km).toEqual(22000);
+        expect(result.price).toEqual(235);
+        expect(result.time).toEqual(0);
+        expect(result.warning).toEqual(WarningWearEnum.WARNING);
+        expect(result.date.toDateString()).toEqual(new Date(2010, 9, 15).toDateString());
+
+        result = service.createInfoCalendarReplacement(allWears[1], 
+                                                        allWears[1].listWearMaintenance[0], 
+                                                        allWears[1].listWearMaintenance[0].listWearReplacement[0], true);
+
+        expect(result.idReplacement).toEqual(2);
+        expect(result.nameReplacement).toEqual(MockData.MaintenanceElementsAux[1].name);
+        expect(result.km).toEqual(8000);
+        expect(result.price).toEqual(0);
+        expect(result.time).toEqual(0);
+        expect(result.warning).toEqual(WarningWearEnum.SKULL);
+        expect(result.date.toDateString()).toEqual(new Date(2021, 9, 5).toDateString());
     });
 
     it('should get date from km', () => {

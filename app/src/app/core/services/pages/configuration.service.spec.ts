@@ -113,7 +113,8 @@ describe('ConfigurationService', () => {
             deleteSql: jasmine.createSpy().and.returnValues('query1;','query2;')
         };
         const service2 = new ConfigurationService(null, spyDataBase, spySqlService);
-        service2.saveConfigurationMaintenance([ new ConfigurationModel(), new ConfigurationModel()], [new ConfigurationModel()]);
+        service2.saveConfigurationMaintenance([ new ConfigurationModel(), new ConfigurationModel()], 
+            [ new ConfigurationModel(), new ConfigurationModel({ id : 2, listMaintenance: [ new MaintenanceModel({ id: 3 }) ]}) ]);
         expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
         expect(spySqlService.insertSqlConfigurationMaintenance).toHaveBeenCalledTimes(2);
         expect(spySqlService.deleteSql).toHaveBeenCalled();

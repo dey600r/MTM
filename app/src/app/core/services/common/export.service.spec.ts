@@ -3,10 +3,11 @@ import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { ExportService } from './export.service';
+import { DataBaseService } from './data-base.service';
 
 // CONFIGURATIONS
 import { ConstantsTest, SetupTest, SpyMockConfig } from '@testing/index';
-import { Constants } from '@utils/index';
+import { Constants, ConstantsTable } from '@utils/index';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +15,7 @@ import { File } from '@awesome-cordova-plugins/file/ngx';
 
 describe('ExportService', () => {
     let service: ExportService;
+    let databaseService: DataBaseService;
     let translate: TranslateService;
     let file: File;
 
@@ -23,6 +25,7 @@ describe('ExportService', () => {
             providers: SpyMockConfig.ProvidersServices
         }).compileComponents();
         service = TestBed.inject(ExportService);
+        databaseService = TestBed.inject(DataBaseService);
         translate = TestBed.inject(TranslateService);
         file = TestBed.inject(File);
         await firstValueFrom(translate.use('es'));
@@ -133,5 +136,21 @@ describe('ExportService', () => {
         expect(service.generateNameExportFile('test'))
             .toEqual(`test_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}_` +
             `${today.getHours()}${today.getMinutes()}${today.getSeconds()}.${Constants.FORMAT_FILE_DB}`);
+    });
+
+    it('should validate format JSON', () => {
+        expect(service.validateStructureJsonDB('david', databaseService.getAllTables())).toBeFalsy();
+        expect(service.validateStructureJsonDB(`${ConstantsTable.TABLE_MTM_VEHICLE_TYPE}
+        ${ConstantsTable.TABLE_MTM_OPERATION_TYPE}
+        ${ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ}
+        ${ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION}
+        ${ConstantsTable.TABLE_MTM_VEHICLE}
+        ${ConstantsTable.TABLE_MTM_CONFIGURATION}
+        ${ConstantsTable.TABLE_MTM_OPERATION}
+        ${ConstantsTable.TABLE_MTM_MAINTENANCE}
+        ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT}
+        ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT}
+        ${ConstantsTable.TABLE_MTM_CONFIG_MAINT}
+        ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL}`, databaseService.getAllTables())).toBeTruthy();
     });
 });

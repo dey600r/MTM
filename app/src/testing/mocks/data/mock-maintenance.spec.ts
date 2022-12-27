@@ -182,7 +182,7 @@ export class MockMaintenance {
         }),
         new MaintenanceModel({
             description: 'REVIES BRAKES', 
-            listMaintenanceElement: [MockMaintenance.MaintenanceElements[8], MockMaintenance.MaintenanceElements[8]],
+            listMaintenanceElement: [MockMaintenance.MaintenanceElements[8], MockMaintenance.MaintenanceElements[9]],
             maintenanceFreq: MockMaintenance.MaintenanceFreqs[1],
             km: 18000,
             time: 48,

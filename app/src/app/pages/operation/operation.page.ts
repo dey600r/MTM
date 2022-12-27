@@ -10,8 +10,7 @@ import {
   DashboardService, SettingsService, IconService
 } from '@services/index';
 import {
-  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
-  OperationTypeModel, SearchDashboardModel
+  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel
 } from '@models/index';
 import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, IInfoModel, InfoButtonEnum } from '@utils/index';
 
