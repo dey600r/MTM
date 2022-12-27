@@ -19,22 +19,19 @@ export class WearVehicleProgressBarViewModel {
     idConfiguration = -1;
     nameConfiguration = '';
     listWearMaintenance: WearMaintenanceProgressBarViewModel[] = [];
-    constructor(id: number = -1, name: string = '', km: number = 0, kme: number = 0, dateP: Date = new Date(),
-                kmsM: number = 0, dateK: Date = new Date(), per: number = 0, perKm: number = 0, perTime: number = 0,
-                war: WarningWearEnum = WarningWearEnum.SUCCESS,
-                list: WearMaintenanceProgressBarViewModel[] = []) {
-        this.idVehicle = id;
-        this.nameVehicle = name;
-        this.kmVehicle = km;
-        this.kmEstimatedVehicle = kme;
-        this.datePurchaseVehicle = dateP;
-        this.kmsPerMonthVehicle = kmsM;
-        this.dateKmsVehicle = dateK;
-        this.percent = per;
-        this.percentKm = perKm;
-        this.percentTime = perTime;
-        this.warning = war;
-        this.listWearMaintenance = list;
+    constructor(data: Partial<WearVehicleProgressBarViewModel> = {}) {
+        this.idVehicle = (data.idVehicle !== undefined ? data.idVehicle : -1);
+        this.nameVehicle = (data.nameVehicle !== undefined ? data.nameVehicle : '');
+        this.kmVehicle = (data.kmVehicle !== undefined ? data.kmVehicle : 0);
+        this.kmEstimatedVehicle = (data.kmEstimatedVehicle !== undefined ? data.kmEstimatedVehicle : 0);
+        this.datePurchaseVehicle = (data.datePurchaseVehicle !== undefined ? data.datePurchaseVehicle : new Date());
+        this.kmsPerMonthVehicle = (data.kmsPerMonthVehicle !== undefined ? data.kmsPerMonthVehicle : 0);
+        this.dateKmsVehicle = (data.dateKmsVehicle !== undefined ? data.dateKmsVehicle : new Date());
+        this.percent = (data.percent !== undefined ? data.percent : 0);
+        this.percentKm = (data.percentKm !== undefined ? data.percentKm : 0);
+        this.percentTime = (data.percentTime !== undefined ? data.percentTime : 0);
+        this.warning = (data.warning !== undefined ? data.warning : WarningWearEnum.SUCCESS);
+        this.listWearMaintenance = (data.listWearMaintenance ? data.listWearMaintenance : []);
     }
 }
 
@@ -51,21 +48,18 @@ export class WearMaintenanceProgressBarViewModel {
     wearMaintenance = false;
     listWearNotificationReplacement: WearNotificationReplacementProgressBarViewModel[] = [];
     listWearReplacement: WearReplacementProgressBarViewModel[] = [];
-    constructor(codeFreq: string = '', id: number = -1, desc: string = '', km: number = 0, time: number = 0,
-                from: number = 0, to: number = 0, init: boolean = false, wear: boolean = false,
-                listNotif: WearNotificationReplacementProgressBarViewModel[] = [],
-                listRep: WearReplacementProgressBarViewModel[] = []) {
-        this.codeMaintenanceFreq = codeFreq;
-        this.idMaintenance = id;
-        this.descriptionMaintenance = desc;
-        this.kmMaintenance = km;
-        this.timeMaintenance = time;
-        this.fromKmMaintenance = from;
-        this.toKmMaintenance = to;
-        this.initMaintenance = init;
-        this.wearMaintenance = wear;
-        this.listWearNotificationReplacement = listNotif;
-        this.listWearReplacement = listRep;
+    constructor(data: Partial<WearMaintenanceProgressBarViewModel> = {}) {
+        this.codeMaintenanceFreq = (data.codeMaintenanceFreq ? data.codeMaintenanceFreq : '');
+        this.idMaintenance = (data.idMaintenance !== undefined ? data.idMaintenance : -1);
+        this.descriptionMaintenance = (data.descriptionMaintenance ? data.descriptionMaintenance : '');
+        this.kmMaintenance = (data.kmMaintenance !== undefined ? data.kmMaintenance : 0);
+        this.timeMaintenance = (data.timeMaintenance !== undefined ? data.timeMaintenance : 0);
+        this.fromKmMaintenance = (data.fromKmMaintenance !== undefined ? data.fromKmMaintenance : 0);
+        this.toKmMaintenance = (data.toKmMaintenance !== undefined ? data.toKmMaintenance : 0);
+        this.initMaintenance = (data.initMaintenance !== undefined ? data.initMaintenance : false);
+        this.wearMaintenance = (data.wearMaintenance !== undefined ? data.wearMaintenance : false);
+        this.listWearNotificationReplacement = (data.listWearNotificationReplacement ? data.listWearNotificationReplacement : []);
+        this.listWearReplacement = (data.listWearReplacement ? data.listWearReplacement : []);
     }
 }
 

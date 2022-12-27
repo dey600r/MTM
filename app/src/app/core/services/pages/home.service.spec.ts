@@ -238,13 +238,13 @@ describe('HomeService', () => {
     });
 
     it('should calculate init KM', () => {
-        expect(service.getInitKm(new WearMaintenanceProgressBarViewModel('', 1, '', 10, 0, 0))).toEqual(0);
-        expect(service.getInitKm(new WearMaintenanceProgressBarViewModel('', 1, '', 10, 0, 1))).toEqual(-9);
+        expect(service.getInitKm(new WearMaintenanceProgressBarViewModel({ kmMaintenance: 10 }))).toEqual(0);
+        expect(service.getInitKm(new WearMaintenanceProgressBarViewModel({ kmMaintenance: 10, fromKmMaintenance: 1 }))).toEqual(-9);
     });
 
     it('should calculate init KM', () => {
-        expect(service.getInitTime(new WearMaintenanceProgressBarViewModel('', 1, '', 10, 0, 0), [], null, 10)).toEqual(10);
-        expect(service.getInitTime(new WearMaintenanceProgressBarViewModel('', 1, '', 10, 0, 1), [], new Date(), 0)).toEqual(0);
+        expect(service.getInitTime(new WearMaintenanceProgressBarViewModel({ kmMaintenance: 10 }), [], null, 10)).toEqual(10);
+        expect(service.getInitTime(new WearMaintenanceProgressBarViewModel({ kmMaintenance: 10, fromKmMaintenance: 1 }), [], new Date(), 0)).toEqual(0);
     });
 
     it('should calculate init KM', () => {

@@ -52,10 +52,21 @@ export class DashboardService {
 
     // VEHICLE OP TYPE EXPENSES
     getDashboardModelVehicleExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardVehicleExpenses(data, filter), null,
-            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.VEHICLES'),
-            filter.showAxisLabel, this.translator.instant('COMMON.VEHICLES'),
-            filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
+        return new DashboardModel({
+            view: view,
+            data: this.mapOperationToDashboardVehicleExpenses(data, filter), 
+            showXAxis: filter.showAxis, 
+            showYAxis: filter.showAxis,
+            showLegend: filter.showLegend,
+            legendTitle: this.translator.instant('COMMON.VEHICLES'),
+            showXAxisLabel: filter.showAxisLabel,
+            xAxisLabel: this.translator.instant('COMMON.VEHICLES'),
+            showYAxisLabel: filter.showAxisLabel,
+            yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
+            isDoughnut: filter.doghnut,
+            legendPosition: 'below',
+            showDataLabel: filter.showDataLabel
+        });
     }
 
     mapOperationToDashboardVehicleExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
@@ -84,10 +95,21 @@ export class DashboardService {
 
     // VEHICLE PER MONTH EXPENSES
     getDashboardModelVehiclePerTime(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter), null,
-            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.DATE'),
-            filter.showAxisLabel, this.translator.instant('COMMON.DATE'),
-            filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
+        return new DashboardModel({
+            view: view,
+            data: this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter), 
+            showXAxis: filter.showAxis, 
+            showYAxis: filter.showAxis,
+            showLegend: filter.showLegend,
+            legendTitle: this.translator.instant('COMMON.DATE'),
+            showXAxisLabel: filter.showAxisLabel,
+            xAxisLabel: this.translator.instant('COMMON.DATE'),
+            showYAxisLabel: filter.showAxisLabel,
+            yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
+            isDoughnut: filter.doghnut,
+            legendPosition: 'below',
+            showDataLabel: filter.showDataLabel
+        });
     }
 
     mapOperationToDashboardVehiclePerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
@@ -142,10 +164,21 @@ export class DashboardService {
 
     // OPERATION TYPE EXPENSES
     getDashboardModelOpTypeExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardOpTypeExpenses(data, filter), null,
-            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OPERATION_TYPE'),
-            filter.showAxisLabel, this.translator.instant('COMMON.OPERATION_TYPE'),
-            filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
+        return new DashboardModel({
+            view: view,
+            data: this.mapOperationToDashboardOpTypeExpenses(data, filter), 
+            showXAxis: filter.showAxis, 
+            showYAxis: filter.showAxis,
+            showLegend: filter.showLegend,
+            legendTitle: this.translator.instant('COMMON.OPERATION_TYPE'),
+            showXAxisLabel: filter.showAxisLabel,
+            xAxisLabel: this.translator.instant('COMMON.OPERATION_TYPE'),
+            showYAxisLabel: filter.showAxisLabel,
+            yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
+            isDoughnut: filter.doghnut,
+            legendPosition: 'below',
+            showDataLabel: filter.showDataLabel
+        });
     }
 
     mapOperationToDashboardOpTypeExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
@@ -184,10 +217,21 @@ export class DashboardService {
 
     // REPLACEMENTS EXPENSES
     getDashboardModelReplacementExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel(view, this.mapOperationToDashboardReplacementExpenses(data, filter), null,
-            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OPERATION_TYPE'),
-            filter.showAxisLabel, this.translator.instant('COMMON.OPERATION_TYPE'),
-            filter.showAxisLabel, this.translator.instant('COMMON.EXPENSE'), true, filter.doghnut, 'below', filter.showDataLabel);
+        return new DashboardModel({
+            view: view,
+            data: this.mapOperationToDashboardReplacementExpenses(data, filter), 
+            showXAxis: filter.showAxis, 
+            showYAxis: filter.showAxis,
+            showLegend: filter.showLegend,
+            legendTitle: this.translator.instant('COMMON.OPERATION_TYPE'),
+            showXAxisLabel: filter.showAxisLabel,
+            xAxisLabel: this.translator.instant('COMMON.OPERATION_TYPE'),
+            showYAxisLabel: filter.showAxisLabel,
+            yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
+            isDoughnut: filter.doghnut,
+            legendPosition: 'below',
+            showDataLabel: filter.showDataLabel
+        });
     }
 
     mapOperationToDashboardReplacementExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
@@ -260,10 +304,22 @@ export class DashboardService {
             dataDashboard = this.mapWearToDashboardTimeRecordMaintenances(data, measure);
             translateY = this.translator.instant('COMMON.MONTHS');
         }
-        return new DashboardModel(view, dataDashboard, ['#D91CF6', '#1CEAF6', '#5FF61C'],
-            filter.showAxis, filter.showAxis, true, filter.showLegend, this.translator.instant('COMMON.OPERATIONS'),
-            filter.showAxisLabel, this.translator.instant('PAGE_CONFIGURATION.MAINTENANCES'),
-            filter.showAxisLabel, translateY, true, filter.doghnut, 'below', filter.showDataLabel);
+        return new DashboardModel({
+            view: view,
+            data: dataDashboard, 
+            colorScheme: ['#D91CF6', '#1CEAF6', '#5FF61C'],
+            showXAxis: filter.showAxis, 
+            showYAxis: filter.showAxis,
+            showLegend: filter.showLegend,
+            legendTitle: this.translator.instant('COMMON.OPERATIONS'),
+            showXAxisLabel: filter.showAxisLabel,
+            xAxisLabel: this.translator.instant('PAGE_CONFIGURATION.MAINTENANCES'),
+            showYAxisLabel: filter.showAxisLabel,
+            yAxisLabel: translateY,
+            isDoughnut: filter.doghnut,
+            legendPosition: 'below',
+            showDataLabel: filter.showDataLabel
+        });
     }
 
     mapWearToDashboardKmRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): any[] {
@@ -385,7 +441,11 @@ export class DashboardService {
             result = [...result, this.getDataDashboard(this.translator.instant('COMMON.INACTIVE'), numInactive)];
             colors = [...colors, '#7D7D7D'];
         }
-        return new DashboardModel(view, result, colors);
+        return new DashboardModel({
+            view: view,
+            data: result,
+            colorScheme: colors
+        });
     }
 
     //#region GET OBSERVER SEARCHER

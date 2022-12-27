@@ -14,8 +14,14 @@ describe('InfoVehicleModels', () => {
         expect(base.warning).toEqual(WarningWearEnum.SUCCESS);
         expect(base.listMaintenance).toEqual([]);
         expect(base.kmEstimated).toEqual(0);
-        base = new InfoVehicleConfigurationModel(2, 3, 'nameConfiguration', WarningWearEnum.DANGER,
-            [new InfoVehicleConfigurationMaintenanceModel()], 100);
+        base = new InfoVehicleConfigurationModel({
+            idVehicle: 2,
+            idConfiguration: 3,
+            nameConfiguration: 'nameConfiguration',
+            warning: WarningWearEnum.DANGER,
+            listMaintenance: [new InfoVehicleConfigurationMaintenanceModel()],
+            kmEstimated: 100
+        });
         expect(base.idVehicle).toEqual(2);
         expect(base.idConfiguration).toEqual(3);
         expect(base.nameConfiguration).toEqual('nameConfiguration');
@@ -42,8 +48,21 @@ describe('InfoVehicleModels', () => {
         expect(base.warningIcon).toEqual(undefined);
         expect(base.warningIconClass).toEqual(undefined);
         expect(base.active).toEqual(true);
-        base = new InfoVehicleConfigurationMaintenanceModel('david', [ new InfoVehicleConfigurationMaintenanceElementModel()],
-            'code', 'desc', 100, 12, true, true, 10, 200, WarningWearEnum.DANGER, false, 3);
+        base = new InfoVehicleConfigurationMaintenanceModel({
+            description: 'david',
+            codeFrequency: 'code',
+            descFrequency: 'desc',
+            km: 100,
+            time: 12,
+            init: true,
+            wear: true,
+            fromKm: 10,
+            toKm: 200,
+            warning: WarningWearEnum.DANGER,
+            active: false,
+            id: 3,
+            listReplacement: [ new InfoVehicleConfigurationMaintenanceElementModel()]
+        });
         expect(base.id).toEqual(3);
         expect(base.description).toEqual('david');
         expect(base.fromKm).toEqual(10);
@@ -100,8 +119,17 @@ describe('InfoVehicleModels', () => {
         expect(base.planned).toEqual(false);
         expect(base.iconReplacement).toEqual(undefined);
         expect(base.listReplacements).toEqual([]);
-        base = new InfoVehicleHistoricReplacementModel('david', 100, 12, 50, 6, 2000, true,
-            [new InfoVehicleReplacementModel()], 2);
+        base = new InfoVehicleHistoricReplacementModel({
+            name: 'david',
+            km: 100,
+            time: 12,
+            kmAverage: 50,
+            timeAverage: 6,
+            priceAverage: 2000,
+            planned: true,
+            listReplacements: [new InfoVehicleReplacementModel()],
+            id: 2
+        });
         expect(base.id).toEqual(2);
         expect(base.name).toEqual('david');
         expect(base.km).toEqual(100);
@@ -124,7 +152,15 @@ describe('InfoVehicleModels', () => {
         expect(base.price).toEqual(0);
         expect(base.priceOp).toEqual(0);
         const date = new Date(2022, 11, 12);
-        base = new InfoVehicleReplacementModel('david', 100, 12, date, 600, 2000, 2);
+        base = new InfoVehicleReplacementModel({
+            opName: 'david',
+            km: 100,
+            time: 12,
+            date: date,
+            price: 600,
+            priceOp: 2000,
+            id: 2
+        });
         expect(base.id).toEqual(2);
         expect(base.opName).toEqual('david');
         expect(base.km).toEqual(100);

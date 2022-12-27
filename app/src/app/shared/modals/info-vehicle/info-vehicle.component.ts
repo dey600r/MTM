@@ -49,7 +49,7 @@ export class InfoVehicleComponent implements OnInit {
   loadedBodyConfigurationSummary = true;
   hideReplacementSummary = true;
   loadedBodyReplacementSummary = true;
-  dashboard: DashboardModel = new DashboardModel([], []);
+  dashboard: DashboardModel = new DashboardModel();
   windowsSize: any[] = [];
   dataDashboard: any[] = [];
   labelVehicleKm = '';

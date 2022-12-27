@@ -25,8 +25,20 @@ describe('WearProgressModels', () => {
         expect(base.listWearMaintenance).toEqual([]);
         const date1 = new Date(2021, 11, 1);
         const date2 = new Date(2022, 3, 3);
-        base = new WearVehicleProgressBarViewModel(2, 'nameV', 100, 120, date1, 40, date2,
-            0.5, 0.6, 0.7, WarningWearEnum.DANGER, [new WearMaintenanceProgressBarViewModel()]);
+        base = new WearVehicleProgressBarViewModel({
+            idVehicle: 2,
+            nameVehicle: 'nameV',
+            kmVehicle: 100,
+            kmEstimatedVehicle: 120,
+            datePurchaseVehicle: date1,
+            kmsPerMonthVehicle: 40,
+            dateKmsVehicle: date2,
+            percent: 0.5,
+            percentKm: 0.6,
+            percentTime: 0.7,
+            warning: WarningWearEnum.DANGER,
+            listWearMaintenance: [new WearMaintenanceProgressBarViewModel()]
+        });
         expect(base.idVehicle).toEqual(2);
         expect(base.nameVehicle).toEqual('nameV');
         expect(base.kmVehicle).toEqual(100);
@@ -60,8 +72,19 @@ describe('WearProgressModels', () => {
         expect(base.wearMaintenance).toEqual(false);
         expect(base.listWearNotificationReplacement).toEqual([]);
         expect(base.listWearReplacement).toEqual([]);
-        base = new WearMaintenanceProgressBarViewModel('code', 2, 'desc', 100, 12, 50, 500, true, true,
-            [new WearNotificationReplacementProgressBarViewModel()], [new WearReplacementProgressBarViewModel()]);
+        base = new WearMaintenanceProgressBarViewModel({
+            codeMaintenanceFreq: 'code',
+            idMaintenance: 2,
+            descriptionMaintenance: 'desc',
+            kmMaintenance: 100,
+            timeMaintenance: 12,
+            fromKmMaintenance: 50,
+            toKmMaintenance: 500,
+            initMaintenance: true,
+            wearMaintenance: true,
+            listWearNotificationReplacement:[new WearNotificationReplacementProgressBarViewModel()],
+            listWearReplacement: [new WearReplacementProgressBarViewModel()]
+        });
         expect(base.codeMaintenanceFreq).toEqual('code');
         expect(base.iconMaintenance).toEqual('');
         expect(base.idMaintenance).toEqual(2);

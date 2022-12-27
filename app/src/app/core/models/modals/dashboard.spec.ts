@@ -3,7 +3,7 @@ import { DashboardModel } from "@models/index";
 describe('DashboardModels', () => {
 
     it('should initialize dashboard model', () => {
-        let base: DashboardModel = new DashboardModel([], []);
+        let base: DashboardModel = new DashboardModel();
         expect(base.view).toEqual([]);
         expect(base.data).toEqual([]);
         expect(base.showXAxis).toEqual(true);
@@ -22,7 +22,26 @@ describe('DashboardModels', () => {
         expect(base.showDataLabel).toEqual(false);
         expect(base.barPadding).toEqual(2);
         expect(base.groupPadding).toEqual(4);
-        base = new DashboardModel([1, 2, 3], [4, 5, 6], ['david'], false, false, false, true, 'title', true, 'x', true, 'y', false, true, 'top', true, 7, 9);
+        base = new DashboardModel({
+            view: [1, 2, 3],
+            data: [4, 5, 6],
+            colorScheme: ['david'],
+            showXAxis: false,
+            showYAxis: false,
+            gradient: false,
+            showLegend: true,
+            legendTitle: 'title',
+            showXAxisLabel: true,
+            xAxisLabel: 'x',
+            showYAxisLabel: true,
+            yAxisLabel: 'y',
+            showLabels: false,
+            isDoughnut: true,
+            legendPosition: 'top',
+            showDataLabel: true,
+            barPadding: 7,
+            groupPadding: 9
+        });
         expect(base.view).toEqual([1, 2, 3]);
         expect(base.data).toEqual([4, 5, 6]);
         expect(base.showXAxis).toEqual(false);

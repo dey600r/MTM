@@ -17,29 +17,33 @@ export class DashboardModel {
     showDataLabel: boolean;
     barPadding: number;
     groupPadding: number;
-    constructor(v: any[], d: any[], color: any = null,
-                x: boolean = true, y: boolean = true, grad: boolean = true, legShow: boolean = false,
-                legTitle: string = '', xShow: boolean = false, xLabel: string = '',
-                yShow: boolean = false, yLabel: string = '', labelShow: boolean = true, doug: boolean = false,
-                legPos: string = '', dataLabel: boolean = false, barPad: number = 2, groupPad: number = 4) {
-        this.view = v;
-        this.data = d;
-        this.colorScheme = (!color ? this.getColorSchemeDefault() : this.mapColorScheme(color));
-        this.showXAxis = x;
-        this.showYAxis = y;
-        this.gradient = grad;
-        this.showLegend = legShow;
-        this.legendTitle = legTitle;
-        this.showXAxisLabel = xShow;
-        this.xAxisLabel = xLabel;
-        this.showYAxisLabel = yShow;
-        this.yAxisLabel = yLabel;
-        this.showLabels = labelShow;
-        this.isDoughnut = doug;
-        this.legendPosition = legPos;
-        this.showDataLabel = dataLabel;
-        this.barPadding = barPad;
-        this.groupPadding = groupPad;
+    constructor(data: Partial<DashboardModel> = {}) {
+        this.setData1(data);
+        this.setData2(data);
+    }
+
+    private setData1(data: Partial<DashboardModel>) {
+        this.view = (data.view ? data.view : []);
+        this.data = (data.data ? data.data : []);
+        this.colorScheme = (data.colorScheme === undefined || data.colorScheme === null ? this.getColorSchemeDefault() : this.mapColorScheme(data.colorScheme));
+        this.showXAxis = (data.showXAxis !== undefined ? data.showXAxis : true);
+        this.showYAxis = (data.showYAxis !== undefined ? data.showYAxis : true);
+        this.gradient = (data.gradient !== undefined ? data.gradient : true);
+        this.showLegend = (data.showLegend !== undefined ? data.showLegend : false);
+        this.legendTitle = (data.legendTitle !== undefined ? data.legendTitle : '');
+        this.showXAxisLabel = (data.showXAxisLabel !== undefined ? data.showXAxisLabel : false);
+    }
+
+    private setData2(data: Partial<DashboardModel>) {
+        this.xAxisLabel = (data.xAxisLabel !== undefined ? data.xAxisLabel : '');
+        this.showYAxisLabel = (data.showYAxisLabel !== undefined ? data.showYAxisLabel : false);
+        this.yAxisLabel = (data.yAxisLabel !== undefined ? data.yAxisLabel : '');
+        this.showLabels = (data.showLabels !== undefined ? data.showLabels : true);
+        this.isDoughnut = (data.isDoughnut !== undefined ? data.isDoughnut : false);
+        this.legendPosition = (data.legendPosition !== undefined ? data.legendPosition : '');
+        this.showDataLabel = (data.showDataLabel !== undefined ? data.showDataLabel : false);
+        this.barPadding = (data.barPadding !== undefined ? data.barPadding : 2);
+        this.groupPadding = (data.groupPadding !== undefined ? data.groupPadding : 4);
     }
 
     getColorSchemeDefault(): any {

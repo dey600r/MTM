@@ -35,8 +35,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-  dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
-  dashboardRecordsMaintenance: DashboardModel = new DashboardModel([], []);
+  dashboardVehicleExpenses: DashboardModel = new DashboardModel();
+  dashboardRecordsMaintenance: DashboardModel = new DashboardModel();
   currentPopover = null;
   hideGraph = true;
   hideSummary = false;

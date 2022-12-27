@@ -8,14 +8,13 @@ export class InfoVehicleConfigurationModel {
     warning: WarningWearEnum;
     kmEstimated: number;
     listMaintenance: InfoVehicleConfigurationMaintenanceModel[] = [];
-    constructor(idV: number = -1, idC: number = -1, nc: string = null, w: WarningWearEnum = WarningWearEnum.SUCCESS,
-                l: InfoVehicleConfigurationMaintenanceModel[] = [], kmEstimated: number = 0) {
-        this.idVehicle = idV;
-        this.idConfiguration = idC;
-        this.nameConfiguration = nc;
-        this.warning = w;
-        this.listMaintenance = l;
-        this.kmEstimated = kmEstimated;
+    constructor(data: Partial<InfoVehicleConfigurationModel> = {}) {
+        this.idVehicle = (data.idVehicle !== undefined ? data.idVehicle : -1);
+        this.idConfiguration = (data.idConfiguration !== undefined ? data.idConfiguration : -1);
+        this.nameConfiguration = (data.nameConfiguration ? data.nameConfiguration : null);
+        this.warning = (data.warning ? data.warning : WarningWearEnum.SUCCESS);
+        this.listMaintenance = (data.listMaintenance ? data.listMaintenance : []);
+        this.kmEstimated = (data.kmEstimated !== undefined ? data.kmEstimated : 0);
     }
 }
 
@@ -28,25 +27,22 @@ export class InfoVehicleConfigurationMaintenanceModel extends BaseMaintenanceMod
     warningIconClass: string;
     active: boolean;
     listReplacement: InfoVehicleConfigurationMaintenanceElementModel[] = [];
-    constructor(d: string = null, lr: InfoVehicleConfigurationMaintenanceElementModel[] = [],
-                cf: string = null, df: string = null, k: number = null, t: number = null, i: boolean = false,
-                w: boolean = false, fr: number = 0, to: number = null, warn: WarningWearEnum = WarningWearEnum.SUCCESS,
-                act: boolean = true, id: number = -1) {
+    constructor(data: Partial<InfoVehicleConfigurationMaintenanceModel> = {}) {
         super({
-            description: d,
-            km: k,
-            time: t,
-            init: i,
-            wear: w,
-            fromKm: fr,
-            toKm: to,
-            id: id
+            description: data.description,
+            km: data.km,
+            time: data.time,
+            init: data.init,
+            wear: data.wear,
+            fromKm: data.fromKm,
+            toKm: data.toKm,
+            id: (data.id !== undefined ? data.id : -1)
         });
-        this.codeFrequency = cf;
-        this.descFrequency = df;
-        this.listReplacement = lr;
-        this.warning = warn;
-        this.active = act;
+        this.codeFrequency = (data.codeFrequency ? data.codeFrequency : null);
+        this.descFrequency = (data.descFrequency ? data.descFrequency : null)
+        this.listReplacement = (data.listReplacement ? data.listReplacement : []);
+        this.warning = (data.warning ? data.warning : WarningWearEnum.SUCCESS);
+        this.active = (data.active !== undefined ? data.active : true);
     }
 }
 
@@ -78,17 +74,18 @@ export class InfoVehicleHistoricReplacementModel extends BaseNameModel {
     planned: boolean;
     iconReplacement: string;
     listReplacements: InfoVehicleReplacementModel[];
-    constructor(n: string = '', k: number = 0, t: number = 0,
-                ka: number = 0, ta: number = 0, pa: number = 0, plan: boolean = false,
-                list: InfoVehicleReplacementModel[] = [], id: number = -1) {
-        super(n, id);
-        this.km = k;
-        this.time = t;
-        this.kmAverage = ka;
-        this.timeAverage = ta;
-        this.priceAverage = pa;
-        this.planned = plan;
-        this.listReplacements = list;
+    constructor(data: Partial<InfoVehicleHistoricReplacementModel> = {} ) {
+        super(
+            (data.name ? data.name : ''),
+            (data.id !== undefined ? data.id : -1)
+        );
+        this.km = (data.km !== undefined ? data.km : 0);
+        this.time = (data.time !== undefined ? data.time : 0);
+        this.kmAverage = (data.kmAverage !== undefined ? data.kmAverage : 0);
+        this.timeAverage = (data.timeAverage !== undefined ? data.timeAverage : 0);
+        this.priceAverage = (data.priceAverage !== undefined ? data.priceAverage : 0);
+        this.planned = (data.planned !== undefined ? data.planned : false);
+        this.listReplacements = (data.listReplacements ? data.listReplacements : []);
     }
 }
 
@@ -99,14 +96,13 @@ export class InfoVehicleReplacementModel extends BaseModel {
     date: Date;
     price: number;
     priceOp: number;
-    constructor(op: string = '', k: number = 0, t: number = 0, d: Date = new Date(), p: number = 0,
-                pop: number = 0, id: number = -1) {
-        super(id);
-        this.opName = op;
-        this.km = k;
-        this.time = t;
-        this.date = d;
-        this.price = p;
-        this.priceOp = pop;
+    constructor(data: Partial<InfoVehicleReplacementModel> = {}) {
+        super(data.id !== undefined ? data.id: -1);
+        this.opName = (data.opName ? data.opName : '');
+        this.km = (data.km !== undefined ? data.km : 0);
+        this.time = (data.time !== undefined ? data.time : 0);
+        this.date = (data.date ? data.date : new Date());
+        this.price = (data.price !== undefined ? data.price : 0);
+        this.priceOp = (data.priceOp !== undefined ? data.priceOp : 0);
     }
 }

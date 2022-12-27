@@ -29,9 +29,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
     // MODEL FORM
-    dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
-    dashboardReplacementExpenses: DashboardModel = new DashboardModel([], []);
-    dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
+    dashboardOpTypeExpenses: DashboardModel = new DashboardModel();
+    dashboardReplacementExpenses: DashboardModel = new DashboardModel();
+    dashboardVehicleExpenses: DashboardModel = new DashboardModel();
     currentPopover = null;
 
     // DATA
