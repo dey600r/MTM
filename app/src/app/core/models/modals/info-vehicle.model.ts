@@ -43,6 +43,9 @@ export class InfoVehicleConfigurationMaintenanceModel extends BaseMaintenanceMod
         this.listReplacement = (data.listReplacement ? data.listReplacement : []);
         this.warning = (data.warning ? data.warning : WarningWearEnum.SUCCESS);
         this.active = (data.active !== undefined ? data.active : true);
+        this.iconMaintenance = (data.iconMaintenance ? data.iconMaintenance : '');
+        this.warningIcon = (data.warningIcon ? data.warningIcon : '');
+        this.warningIconClass = (data.warningIconClass ? data.warningIconClass : '');
     }
 }
 
@@ -86,6 +89,7 @@ export class InfoVehicleHistoricReplacementModel extends BaseNameModel {
         this.priceAverage = (data.priceAverage !== undefined ? data.priceAverage : 0);
         this.planned = (data.planned !== undefined ? data.planned : false);
         this.listReplacements = (data.listReplacements ? data.listReplacements : []);
+        this.iconReplacement = (data.iconReplacement ? data.iconReplacement : '');
     }
 }
 

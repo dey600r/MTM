@@ -168,6 +168,7 @@ describe('CommonService', () => {
     it('should get name of class empty', () => {
         expect(service.nameOf(() => 'david')).toEqual('() => \'david\'');
         expect(service.nameOf(() => new VehicleModel())).toEqual('VehicleModel()');
+        expect(service.nameOf(null)).toEqual('null');
     });
 
     it('should round number', () => {

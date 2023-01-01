@@ -100,6 +100,7 @@ describe('InfoCalendarService', () => {
         expect(result.warning).toEqual(WarningWearEnum.WARNING);
         expect(result.date.toDateString()).toEqual(new Date(2010, 9, 15).toDateString());
 
+        allWears[1].listWearMaintenance[0].listWearReplacement[0].priceOperation = null;
         result = service.createInfoCalendarReplacement(allWears[1], 
                                                         allWears[1].listWearMaintenance[0], 
                                                         allWears[1].listWearMaintenance[0].listWearReplacement[0], true);

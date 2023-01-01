@@ -183,10 +183,6 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   timeOutLoader() {
-    if (document.getElementById('custom-overlay').style.display === 'flex' ||
-    document.getElementById('custom-overlay').style.display === '') {
-      setTimeout(() => { document.getElementById('custom-overlay').style.display = 'none'; }, 3000);
-    }
     if (this.initLoaded) {
       this.showSkeleton();
     }

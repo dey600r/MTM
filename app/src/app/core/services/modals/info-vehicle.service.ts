@@ -36,22 +36,34 @@ export class InfoVehicleService {
                                       maintenances: MaintenanceModel[]): InfoVehicleConfigurationModel[] {
         let result: InfoVehicleConfigurationModel[] = [];
         const allWears = this.homeService.getWearReplacementToVehicle(operations, vehicles, configurations, maintenances);
-
         vehicles.forEach(veh => {
             const vehicleWear: WearVehicleProgressBarViewModel = allWears.find(x => x.idVehicle === veh.id);
             const configuration: ConfigurationModel = configurations.find(x => x.id === veh.configuration.id);
             const listMaintenances = maintenances.filter(x => configuration.listMaintenance.some(y => y.id === x.id));
-            const newConfiguration: InfoVehicleConfigurationModel = new InfoVehicleConfigurationModel({
-                idVehicle: veh.id,
-                idConfiguration: configuration.id,
-                nameConfiguration: configuration.name,
-                kmEstimated: veh.kmEstimated
-            });
+            let infoListMaintenance: InfoVehicleConfigurationMaintenanceModel[] = [];
             listMaintenances.forEach(main => {
                 const maintenanceWear: WearMaintenanceProgressBarViewModel =
                     (!vehicleWear ? new WearMaintenanceProgressBarViewModel() :
                     vehicleWear.listWearMaintenance.find(x => x.idMaintenance === main.id));
-                const newMaintenance: InfoVehicleConfigurationMaintenanceModel = new InfoVehicleConfigurationMaintenanceModel({
+                let infoListReplacement: InfoVehicleConfigurationMaintenanceElementModel[] = [];
+                main.listMaintenanceElement.forEach(rep => {
+                    const replacementWear: WearReplacementProgressBarViewModel =
+                        (!maintenanceWear ? new WearReplacementProgressBarViewModel() :
+                        maintenanceWear.listWearReplacement.find(x => x.idMaintenanceElement === rep.id));
+                    const warning: WarningWearEnum = (replacementWear ?
+                        this.homeService.calculateWearNotificationPriority(replacementWear.warningKms, replacementWear.warningMonths) :
+                        WarningWearEnum.SUCCESS);
+                    infoListReplacement = [...infoListReplacement, {
+                        id: rep.id,
+                        name: rep.name,
+                        warning: warning,
+                        warningIcon: this.iconService.getIconKms(warning),
+                        warningIconClass: this.iconService.getClassIcon(warning),
+                        iconReplacement: rep.icon
+                    }];
+                });
+                let infoWarning: WarningWearEnum = this.calculateWarningFromReplacements<InfoVehicleConfigurationMaintenanceElementModel>(infoListReplacement);
+                infoListMaintenance = [...infoListMaintenance, new InfoVehicleConfigurationMaintenanceModel({
                     description: main.description,
                     codeFrequency: main.maintenanceFreq.code,
                     descFrequency: main.maintenanceFreq.description,
@@ -61,38 +73,23 @@ export class InfoVehicleService {
                     wear: main.wear,
                     fromKm: main.fromKm,
                     toKm: main.toKm,
-                    warning: WarningWearEnum.SUCCESS,
-                    active: true,
-                    id: main.id
-                });
-                main.listMaintenanceElement.forEach(rep => {
-                    const replacementWear: WearReplacementProgressBarViewModel =
-                        (!maintenanceWear ? new WearReplacementProgressBarViewModel() :
-                        maintenanceWear.listWearReplacement.find(x => x.idMaintenanceElement === rep.id));
-                    const warning: WarningWearEnum = (replacementWear ?
-                        this.homeService.calculateWearNotificationPriority(replacementWear.warningKms, replacementWear.warningMonths) :
-                        WarningWearEnum.SUCCESS);
-                    newMaintenance.listReplacement = [...newMaintenance.listReplacement,{
-                        id: rep.id,
-                        name: rep.name,
-                        warning: warning,
-                        warningIcon: this.iconService.getIconKms(warning),
-                        warningIconClass: this.iconService.getClassIcon(warning),
-                        iconReplacement: rep.icon
-                    }];
-                });
-                newMaintenance.active = this.homeService.validateKmIntoMaintenance(
-                    veh.kmEstimated, newMaintenance.fromKm, newMaintenance.toKm);
-                newMaintenance.warning = this.calculateWarningFromReplacements<InfoVehicleConfigurationMaintenanceElementModel>(
-                    newMaintenance.listReplacement);
-                newMaintenance.warningIcon = this.iconService.getIconKms(newMaintenance.warning);
-                newMaintenance.warningIconClass = this.iconService.getClassIcon(newMaintenance.warning);
-                newMaintenance.iconMaintenance = main.maintenanceFreq.icon;
-                newConfiguration.listMaintenance = [...newConfiguration.listMaintenance, newMaintenance];
+                    warning: infoWarning,
+                    warningIcon: this.iconService.getIconKms(infoWarning),
+                    warningIconClass: this.iconService.getClassIcon(infoWarning),
+                    active: this.homeService.validateKmIntoMaintenance(veh.kmEstimated, main.fromKm, main.toKm),
+                    id: main.id,
+                    listReplacement: infoListReplacement,
+                    iconMaintenance: main.maintenanceFreq.icon,
+                })];
             });
-            newConfiguration.warning = this.calculateWarningFromReplacements<InfoVehicleConfigurationMaintenanceModel>(
-                newConfiguration.listMaintenance);
-            result = [...result, newConfiguration];
+            result = [...result, new InfoVehicleConfigurationModel({
+                idVehicle: veh.id,
+                idConfiguration: configuration.id,
+                nameConfiguration: configuration.name,
+                kmEstimated: veh.kmEstimated,
+                warning: this.calculateWarningFromReplacements<InfoVehicleConfigurationMaintenanceModel>(infoListMaintenance),
+                listMaintenance: infoListMaintenance
+            })];
         });
 
         return result;
@@ -192,13 +189,18 @@ export class InfoVehicleService {
             maintenanceElementsVehicle.forEach(replacement => {
                 const opWithReplacement: OperationModel[] = operationsVehicle.filter(op =>
                     op.listMaintenanceElement.some(x => x.id === replacement.id));
-                let info: InfoVehicleHistoricReplacementModel = new InfoVehicleHistoricReplacementModel();
+                let infoListReplacement: InfoVehicleReplacementModel[] = [];
+                let infoPlanned: boolean = true;
+                let infoKm: number = 0;
+                let infoTime: number = 0;
+                let infoPriceAverage: number = 0;
+                let infoKmAverage: number = 0;
+                let infoTimeAverage: number = 0;
                 if (opWithReplacement && opWithReplacement.length > 0) {
-                    const planned = maintenancesOfVehicle.some(main => main.listMaintenanceElement.some(rep => rep.id === replacement.id));
-                    info = new InfoVehicleHistoricReplacementModel({ name: replacement.name, planned: planned, id: replacement.id });
+                    infoPlanned = maintenancesOfVehicle.some(main => main.listMaintenanceElement.some(rep => rep.id === replacement.id));
                     opWithReplacement.forEach((op, index) => {
                         if (index === (opWithReplacement.length - 1)) {
-                            info.listReplacements = [...info.listReplacements, new InfoVehicleReplacementModel({
+                            infoListReplacement = [...infoListReplacement, new InfoVehicleReplacementModel({
                                 opName: op.description,
                                 km: op.km,
                                 time: this.calendarService.monthDiff(new Date(vehicle.datePurchase), new Date(op.date)),
@@ -208,7 +210,7 @@ export class InfoVehicleService {
                                 id: op.id
                             })];
                         } else {
-                            info.listReplacements = [...info.listReplacements, new InfoVehicleReplacementModel({
+                            infoListReplacement = [...infoListReplacement, new InfoVehicleReplacementModel({
                                 opName: op.description,
                                 km: (op.km - opWithReplacement[index + 1].km),
                                 time: this.calendarService.monthDiff(new Date(opWithReplacement[index + 1].date), new Date(op.date)),
@@ -219,27 +221,31 @@ export class InfoVehicleService {
                             })];
                         }
                     });
-                    info.km = vehicle.kmEstimated - opWithReplacement[0].km;
-                    info.time = this.calendarService.monthDiff(new Date(opWithReplacement[0].date),
+                    infoKm = vehicle.kmEstimated - opWithReplacement[0].km;
+                    infoTime = this.calendarService.monthDiff(new Date(opWithReplacement[0].date),
                         (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
-                    info.kmAverage = Math.round(this.commonService.sum(info.listReplacements, nameOfKm) / info.listReplacements.length);
-                    info.timeAverage = Math.round(this.commonService.sum(info.listReplacements, nameOfTime) /
-                        info.listReplacements.length);
-                    info.priceAverage = Math.round(this.commonService.sum(info.listReplacements, nameOfPrice) /
-                        info.listReplacements.length);
-                    info.iconReplacement = replacement.icon;
+                    infoKmAverage = Math.round(this.commonService.sum(infoListReplacement, nameOfKm) / infoListReplacement.length);
+                    infoTimeAverage = Math.round(this.commonService.sum(infoListReplacement, nameOfTime) /
+                        infoListReplacement.length);
+                    infoPriceAverage = Math.round(this.commonService.sum(infoListReplacement, nameOfPrice) / infoListReplacement.length);
                 } else {
-                    info = new InfoVehicleHistoricReplacementModel({
-                        name: replacement.name,
-                        km: vehicle.kmEstimated,
-                        time: timeDiffVehicle,
-                        kmAverage: vehicle.kmEstimated,
-                        timeAverage: timeDiffVehicle,
-                        planned: true,
-                        id: replacement.id
-                    });
+                    infoKm = vehicle.kmEstimated;
+                    infoTime = timeDiffVehicle;
+                    infoKmAverage = vehicle.kmEstimated;
+                    infoTimeAverage = timeDiffVehicle;
                 }
-                listReplacements = [...listReplacements, info];
+                listReplacements = [...listReplacements, new InfoVehicleHistoricReplacementModel({
+                    name: replacement.name,
+                    km: infoKm,
+                    time: infoTime,
+                    priceAverage: infoPriceAverage,
+                    kmAverage: infoKmAverage,
+                    timeAverage: infoTimeAverage,
+                    planned: infoPlanned,
+                    id: replacement.id,
+                    iconReplacement: replacement.icon,
+                    listReplacements: infoListReplacement
+                })];
             });
             result = [...result, new InfoVehicleHistoricModel(vehicle.id, this.commonService.orderBy(listReplacements, nameOfKmAverage))];
         });

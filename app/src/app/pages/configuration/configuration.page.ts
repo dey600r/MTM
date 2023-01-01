@@ -84,10 +84,6 @@ export class ConfigurationPage extends BasePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    if (document.getElementById('custom-overlay').style.display === 'flex' ||
-    document.getElementById('custom-overlay').style.display === '') {
-      document.getElementById('custom-overlay').style.display = 'none';
-    }
     if (this.initLoaded) {
       this.showSkeleton();
     }

@@ -32,6 +32,8 @@ export class WearVehicleProgressBarViewModel {
         this.percentTime = (data.percentTime !== undefined ? data.percentTime : 0);
         this.warning = (data.warning !== undefined ? data.warning : WarningWearEnum.SUCCESS);
         this.listWearMaintenance = (data.listWearMaintenance ? data.listWearMaintenance : []);
+        this.iconVehicle = (data.iconVehicle ? data.iconVehicle : '');
+        this.warningProgressBarIcon = (data.warningProgressBarIcon ? data.warningProgressBarIcon : '');
     }
 }
 
@@ -60,6 +62,7 @@ export class WearMaintenanceProgressBarViewModel {
         this.wearMaintenance = (data.wearMaintenance !== undefined ? data.wearMaintenance : false);
         this.listWearNotificationReplacement = (data.listWearNotificationReplacement ? data.listWearNotificationReplacement : []);
         this.listWearReplacement = (data.listWearReplacement ? data.listWearReplacement : []);
+        this.iconMaintenance = (data.iconMaintenance ? data.iconMaintenance : '');
     }
 }
 

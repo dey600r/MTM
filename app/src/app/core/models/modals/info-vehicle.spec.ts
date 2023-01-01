@@ -43,10 +43,10 @@ describe('InfoVehicleModels', () => {
         expect(base.codeFrequency).toEqual(null);
         expect(base.descFrequency).toEqual(null);
         expect(base.listReplacement).toEqual([]);
-        expect(base.iconMaintenance).toEqual(undefined);
+        expect(base.iconMaintenance).toEqual('');
         expect(base.warning).toEqual(WarningWearEnum.SUCCESS);
-        expect(base.warningIcon).toEqual(undefined);
-        expect(base.warningIconClass).toEqual(undefined);
+        expect(base.warningIcon).toEqual('');
+        expect(base.warningIconClass).toEqual('');
         expect(base.active).toEqual(true);
         base = new InfoVehicleConfigurationMaintenanceModel({
             description: 'david',
@@ -61,7 +61,10 @@ describe('InfoVehicleModels', () => {
             warning: WarningWearEnum.DANGER,
             active: false,
             id: 3,
-            listReplacement: [ new InfoVehicleConfigurationMaintenanceElementModel()]
+            listReplacement: [ new InfoVehicleConfigurationMaintenanceElementModel()],
+            iconMaintenance: 'icon',
+            warningIcon: 'warning-icon',
+            warningIconClass: 'warning-icon-class'
         });
         expect(base.id).toEqual(3);
         expect(base.description).toEqual('david');
@@ -74,10 +77,10 @@ describe('InfoVehicleModels', () => {
         expect(base.codeFrequency).toEqual('code');
         expect(base.descFrequency).toEqual('desc');
         expect(base.listReplacement[0].id).toEqual(-1);
-        expect(base.iconMaintenance).toEqual(undefined);
+        expect(base.iconMaintenance).toEqual('icon');
         expect(base.warning).toEqual(WarningWearEnum.DANGER);
-        expect(base.warningIcon).toEqual(undefined);
-        expect(base.warningIconClass).toEqual(undefined);
+        expect(base.warningIcon).toEqual('warning-icon');
+        expect(base.warningIconClass).toEqual('warning-icon-class');
         expect(base.active).toEqual(false);
     });
 
@@ -117,7 +120,7 @@ describe('InfoVehicleModels', () => {
         expect(base.timeAverage).toEqual(0);
         expect(base.priceAverage).toEqual(0);
         expect(base.planned).toEqual(false);
-        expect(base.iconReplacement).toEqual(undefined);
+        expect(base.iconReplacement).toEqual('');
         expect(base.listReplacements).toEqual([]);
         base = new InfoVehicleHistoricReplacementModel({
             name: 'david',
@@ -128,7 +131,8 @@ describe('InfoVehicleModels', () => {
             priceAverage: 2000,
             planned: true,
             listReplacements: [new InfoVehicleReplacementModel()],
-            id: 2
+            id: 2,
+            iconReplacement: 'icon'
         });
         expect(base.id).toEqual(2);
         expect(base.name).toEqual('david');
@@ -138,7 +142,7 @@ describe('InfoVehicleModels', () => {
         expect(base.timeAverage).toEqual(6);
         expect(base.priceAverage).toEqual(2000);
         expect(base.planned).toEqual(true);
-        expect(base.iconReplacement).toEqual(undefined);
+        expect(base.iconReplacement).toEqual('icon');
         expect(base.listReplacements[0].id).toEqual(-1);
     });
 
