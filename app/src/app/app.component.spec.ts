@@ -57,17 +57,17 @@ describe('AppComponent', () => {
 
   it('should initialize the app', fakeAsync(() => {
     component.initializeApp();
-    fixture.detectChanges();
     platform.ready();
     tick(3000);
+    fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(platform.ready).toHaveBeenCalled();
-      expect(statusBar.styleBlackTranslucent).toHaveBeenCalled();
-      expect(splashScreen.hide).toHaveBeenCalled();
-      expect(dbService.initDB).toHaveBeenCalled();
-      expect(controlService.activateButtonExist).toHaveBeenCalled();
-      expect(exportService.createOutputDirectory).toHaveBeenCalled();
-      flush();
+        expect(platform.ready).toHaveBeenCalled();
+        expect(statusBar.styleBlackTranslucent).toHaveBeenCalled();
+        expect(splashScreen.hide).toHaveBeenCalled();
+        expect(dbService.initDB).toHaveBeenCalled();
+        expect(controlService.activateButtonExist).toHaveBeenCalled();
+        expect(exportService.createOutputDirectory).toHaveBeenCalled();
+        flush();
     });
     flush();
   }));
