@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Platform } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 
@@ -55,22 +55,19 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should initialize the app', fakeAsync(() => {
+  it('should initialize the app', async () => {
     component.initializeApp();
-    platform.ready();
-    tick(3000);
     fixture.detectChanges();
+    await platform.ready();
     fixture.whenStable().then(() => {
         expect(platform.ready).toHaveBeenCalled();
         expect(statusBar.styleBlackTranslucent).toHaveBeenCalled();
         expect(splashScreen.hide).toHaveBeenCalled();
         expect(dbService.initDB).toHaveBeenCalled();
-        expect(controlService.activateButtonExist).toHaveBeenCalled();
+        expect(controlService.activateButtonExist).toHaveBeenCalledTimes(1);
         expect(exportService.createOutputDirectory).toHaveBeenCalled();
-        flush();
     });
-    flush();
-  }));
+  });
 
   it('should translate app - ES', () => {
     expect(translate.instant('COMMON.SAVE')).toEqual(MockTranslate.ES.COMMON.SAVE);
