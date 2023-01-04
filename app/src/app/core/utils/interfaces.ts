@@ -39,3 +39,15 @@ export interface IObserverSearcherControlModel {
     filterDashboardGrouper: string[];
     filterDashboardRecordsGrouper: string[];
 }
+
+export interface IDashboardModel {
+    id: number;
+    name: string;
+    value: any;
+}
+
+export interface IDashboardSerieModel {
+    id: number;
+    name: string;
+    series: any[];
+}

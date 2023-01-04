@@ -111,6 +111,7 @@
         "WearReplacement": "Desgaste de recambios",
         "VehicleKm": "La distancia recorrida del vehículo es {{km}} {{measure}}.",
         "VehicleEstimatedKm": "La distancia estimada es {{km}} {{measure}}.",
+        "VehicleAverageKm": "La distancia media por año es {{km1}} {{measure}}. La distancia del año actual es {{km2}} {{measure}}",
         "RELIABILITY": "Fiabilidad",
         "RELIABILITY_VEHICLE": "Fiabilidad del vehículo",
         "NextChangeKm": "El próximo cambio de {{maintenance}} es a los {{km}} {{measure}} en la fecha prevista {{date}}",

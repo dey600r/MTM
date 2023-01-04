@@ -1,6 +1,6 @@
-export class DashboardModel {
+export class DashboardModel<T> {
     view: any[];
-    data: any[];
+    data: T[];
     showXAxis: boolean;
     showYAxis: boolean;
     gradient: boolean;
@@ -17,12 +17,12 @@ export class DashboardModel {
     showDataLabel: boolean;
     barPadding: number;
     groupPadding: number;
-    constructor(data: Partial<DashboardModel> = {}) {
+    constructor(data: Partial<DashboardModel<T>> = {}) {
         this.setData1(data);
         this.setData2(data);
     }
 
-    private setData1(data: Partial<DashboardModel>) {
+    private setData1(data: Partial<DashboardModel<T>>) {
         this.view = (data.view ? data.view : []);
         this.data = (data.data ? data.data : []);
         this.colorScheme = (data.colorScheme === undefined || data.colorScheme === null ? this.getColorSchemeDefault() : this.mapColorScheme(data.colorScheme));
@@ -34,7 +34,7 @@ export class DashboardModel {
         this.showXAxisLabel = (data.showXAxisLabel !== undefined ? data.showXAxisLabel : false);
     }
 
-    private setData2(data: Partial<DashboardModel>) {
+    private setData2(data: Partial<DashboardModel<T>>) {
         this.xAxisLabel = (data.xAxisLabel !== undefined ? data.xAxisLabel : '');
         this.showYAxisLabel = (data.showYAxisLabel !== undefined ? data.showYAxisLabel : false);
         this.yAxisLabel = (data.yAxisLabel !== undefined ? data.yAxisLabel : '');

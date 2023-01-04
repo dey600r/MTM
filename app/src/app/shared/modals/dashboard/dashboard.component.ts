@@ -12,7 +12,7 @@ import { DashboardService, ControlService, IconService } from '@services/index';
 import { DashboardModel, OperationModel, ModalInputModel } from '@models/index';
 
 // UTILS
-import { IInfoModel, InfoButtonEnum, PageEnum } from '@utils/index';
+import { IDashboardModel, IInfoModel, InfoButtonEnum, PageEnum } from '@utils/index';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
@@ -29,9 +29,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
     // MODEL FORM
-    dashboardOpTypeExpenses: DashboardModel = new DashboardModel();
-    dashboardReplacementExpenses: DashboardModel = new DashboardModel();
-    dashboardVehicleExpenses: DashboardModel = new DashboardModel();
+    dashboardOpTypeExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+    dashboardReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+    dashboardVehicleExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
     currentPopover = null;
 
     // DATA

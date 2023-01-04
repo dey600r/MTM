@@ -1,9 +1,10 @@
 import { DashboardModel } from "@models/index";
+import { IDashboardModel } from "@utils/index";
 
 describe('DashboardModels', () => {
 
     it('should initialize dashboard model', () => {
-        let base: DashboardModel = new DashboardModel();
+        let base: DashboardModel<number> = new DashboardModel();
         expect(base.view).toEqual([]);
         expect(base.data).toEqual([]);
         expect(base.showXAxis).toEqual(true);
@@ -22,7 +23,7 @@ describe('DashboardModels', () => {
         expect(base.showDataLabel).toEqual(false);
         expect(base.barPadding).toEqual(2);
         expect(base.groupPadding).toEqual(4);
-        base = new DashboardModel({
+        base = new DashboardModel<number>({
             view: [1, 2, 3],
             data: [4, 5, 6],
             colorScheme: ['david'],

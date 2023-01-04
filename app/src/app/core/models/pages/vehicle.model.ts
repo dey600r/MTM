@@ -20,6 +20,7 @@ export class VehicleModel extends BaseModel {
         this.brand = (data.brand ? data.brand : null);
         this.year = (data.year !== undefined ? data.year : null);
         this.km = (data.km !== undefined ? data.km : null);
+        this.kmEstimated = (data.kmEstimated !== undefined ? data.kmEstimated : null);
         this.configuration = (data.configuration ? data.configuration : new ConfigurationModel());
         this.vehicleType = (data.vehicleType ? data.vehicleType : new VehicleTypeModel());
         this.kmsPerMonth = (data.kmsPerMonth !== undefined ? data.kmsPerMonth : null);

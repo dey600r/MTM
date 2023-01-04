@@ -13,7 +13,7 @@ import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 
 // MODELS
 import { InfoVehicleConfigurationModel, InfoVehicleHistoricModel } from '@models/index';
-import { WarningWearEnum } from '@utils/index';
+import { IDashboardModel, WarningWearEnum } from '@utils/index';
 
 describe('InfoVehicleService', () => {
     let service: InfoVehicleService;
@@ -47,6 +47,23 @@ describe('InfoVehicleService', () => {
         expect(service.getIconPercent(40, 'color')).toEqual(' icon-color-danger');
         expect(service.getIconPercent(60, 'color')).toEqual(' icon-color-warning');
         expect(service.getIconPercent(90, 'color')).toEqual(' icon-color-success');
+    });
+    
+    it('should get label average km vehicle', () => {
+        const year: number = new Date().getFullYear();
+        const data: IDashboardModel[] = [
+            { id: 1, name: (year-6).toString(), value: 100 },
+            { id: 1, name: (year-5).toString(), value: 200 },
+            { id: 1, name: (year-4).toString(), value: 400 },
+            { id: 1, name: (year-3).toString(), value: 600 },
+            { id: 1, name: (year-2).toString(), value: 200 },
+            { id: 1, name: (year-1).toString(), value: 800 },
+            { id: 1, name: year.toString(), value: 12 },
+        ];
+        const label: string = service.getLabelAverageKmVehicle(data, { value: 'km' });
+        expect(label).toContain('330');
+        expect(label).toContain('12');
+        expect(label).toContain('km');
     });
 
     it('should get percent km vehicle', () => {

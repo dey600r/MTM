@@ -18,7 +18,7 @@ import { CommonService, CalendarService } from '../common/index';
 // UTILS
 import { 
     ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum, PageEnum,
-    IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel
+    IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel, IDashboardModel, IDashboardSerieModel
 } from '@utils/index';
 
 @Injectable({
@@ -42,7 +42,7 @@ export class DashboardService {
                 private platform: Platform) {
     }
 
-    getSizeWidthHeight(w: number, h: number): any[] {
+    getSizeWidthHeight(w: number, h: number): number[] {
         const width: number = (w > 768 && h > 600 ? 600 : w);
         const height: number = (w > 768 && h > 600 ? 600 : h);
         return [width - 15, height / 3 + 35];
@@ -51,8 +51,8 @@ export class DashboardService {
     /** DASHBOADS */
 
     // VEHICLE OP TYPE EXPENSES
-    getDashboardModelVehicleExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel({
+    getDashboardModelVehicleExpenses(view: number[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+        return new DashboardModel<IDashboardModel>({
             view: view,
             data: this.mapOperationToDashboardVehicleExpenses(data, filter), 
             showXAxis: filter.showAxis, 
@@ -69,8 +69,8 @@ export class DashboardService {
         });
     }
 
-    mapOperationToDashboardVehicleExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
-        let result: any[] = [];
+    mapOperationToDashboardVehicleExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
+        let result: IDashboardModel[] = [];
         const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
         operationPreFilter.forEach(x => {
             if (!result.some((z: any) => z.id === x.vehicle.id)) {
@@ -94,8 +94,8 @@ export class DashboardService {
     }
 
     // VEHICLE PER MONTH EXPENSES
-    getDashboardModelVehiclePerTime(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel({
+    getDashboardModelVehiclePerTime(view: number[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+        return new DashboardModel<IDashboardModel>({
             view: view,
             data: this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter), 
             showXAxis: filter.showAxis, 
@@ -112,8 +112,8 @@ export class DashboardService {
         });
     }
 
-    mapOperationToDashboardVehiclePerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
-        let result: any[] = [];
+    mapOperationToDashboardVehiclePerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
+        let result: IDashboardModel[] = [];
         if (!!data && data.length > 0) {
             const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
             if (!!operationPreFilter && operationPreFilter.length > 0) {
@@ -163,8 +163,8 @@ export class DashboardService {
     }
 
     // OPERATION TYPE EXPENSES
-    getDashboardModelOpTypeExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel({
+    getDashboardModelOpTypeExpenses(view: number[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+        return new DashboardModel<IDashboardModel>({
             view: view,
             data: this.mapOperationToDashboardOpTypeExpenses(data, filter), 
             showXAxis: filter.showAxis, 
@@ -181,8 +181,8 @@ export class DashboardService {
         });
     }
 
-    mapOperationToDashboardOpTypeExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
-        let result: any[] = [];
+    mapOperationToDashboardOpTypeExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
+        let result: IDashboardModel[] = [];
         const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
         operationPreFilter.forEach(x => {
             if (!result.some((z: any) => z.id === x.operationType.id)) {
@@ -216,8 +216,8 @@ export class DashboardService {
     }
 
     // REPLACEMENTS EXPENSES
-    getDashboardModelReplacementExpenses(view: any[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel {
-        return new DashboardModel({
+    getDashboardModelReplacementExpenses(view: number[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+        return new DashboardModel<IDashboardModel>({
             view: view,
             data: this.mapOperationToDashboardReplacementExpenses(data, filter), 
             showXAxis: filter.showAxis, 
@@ -234,8 +234,8 @@ export class DashboardService {
         });
     }
 
-    mapOperationToDashboardReplacementExpenses(data: OperationModel[], filter: SearchDashboardModel): any[] {
-        let result: any[] = [];
+    mapOperationToDashboardReplacementExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
+        let result: IDashboardModel[] = [];
         const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
         operationPreFilter.forEach(op => {
             if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
@@ -294,9 +294,9 @@ export class DashboardService {
     }
 
     // RECORDS MAINTENANCES
-    getDashboardRecordMaintenances(view: any[], data: WearVehicleProgressBarViewModel, filter: SearchDashboardModel,
-                                   measure: any): DashboardModel {
-        let dataDashboard: any[] = [];
+    getDashboardRecordMaintenances(view: number[], data: WearVehicleProgressBarViewModel, filter: SearchDashboardModel,
+                                   measure: any): DashboardModel<IDashboardSerieModel> {
+        let dataDashboard: IDashboardSerieModel[] = [];
         let translateY = measure.valueLarge;
         if (filter.filterKmTime === FilterKmTimeEnum.KM) {
             dataDashboard = this.mapWearToDashboardKmRecordMaintenances(data, measure);
@@ -304,7 +304,7 @@ export class DashboardService {
             dataDashboard = this.mapWearToDashboardTimeRecordMaintenances(data, measure);
             translateY = this.translator.instant('COMMON.MONTHS');
         }
-        return new DashboardModel({
+        return new DashboardModel<IDashboardSerieModel>({
             view: view,
             data: dataDashboard, 
             colorScheme: ['#D91CF6', '#1CEAF6', '#5FF61C'],
@@ -322,14 +322,14 @@ export class DashboardService {
         });
     }
 
-    mapWearToDashboardKmRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): any[] {
-        let result: any[] = [];
+    mapWearToDashboardKmRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): IDashboardSerieModel[] {
+        let result: IDashboardSerieModel[] = [];
         if (!!data && data.listWearMaintenance.length > 0) {
             const firstMain: WearMaintenanceProgressBarViewModel = data.listWearMaintenance[0];
             const lastMain: WearMaintenanceProgressBarViewModel = data.listWearMaintenance[data.listWearMaintenance.length - 1];
             let initKm: number = firstMain.fromKmMaintenance;
-            const estimated: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'), []);
-            const real: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'), []);
+            const estimated: IDashboardSerieModel = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'), []);
+            const real: IDashboardSerieModel = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'), []);
             if (initKm === 0) {
                 estimated.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
                 real.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
@@ -362,14 +362,14 @@ export class DashboardService {
         return result;
     }
 
-    mapWearToDashboardTimeRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): any[] {
-        let result: any[] = [];
+    mapWearToDashboardTimeRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): IDashboardSerieModel[] {
+        let result: IDashboardSerieModel[] = [];
         if (!!data && data.listWearMaintenance.length > 0) {
             const firstMain: WearMaintenanceProgressBarViewModel = data.listWearMaintenance[0];
             const lastMain: WearMaintenanceProgressBarViewModel = data.listWearMaintenance[data.listWearMaintenance.length - 1];
             const initKm: number = firstMain.fromKmMaintenance;
-            const estimated: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'), []);
-            const real: any = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'), []);
+            const estimated: IDashboardSerieModel = this.getDataSeriesDashboard(this.translator.instant('COMMON.ESTIMATED'), []);
+            const real: IDashboardSerieModel = this.getDataSeriesDashboard(this.translator.instant('COMMON.REAL'), []);
             if (initKm === 0) {
                 estimated.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
                 real.series = [...estimated.series, this.getDataDashboard(`0${measure.value}`, 0 )];
@@ -402,17 +402,120 @@ export class DashboardService {
         return result;
     }
 
-    getDataDashboard(n: string, v: any, i: number = -1): any {
+    getDataDashboard(n: string, v: any, i: number = -1): IDashboardModel {
         return { id: i, name: n, value: v};
     }
 
-    getDataSeriesDashboard(n: string, s: any[], i: number = -1): any {
+    getDataSeriesDashboard(n: string, s: any[], i: number = -1): IDashboardSerieModel {
         return { id: i, name: n, series: s};
     }
 
+    //#region INFO VEHICLE
+
     // CHART INFO VEHICLE
-    getDashboardInfoVehicle(view: any[], data: InfoVehicleConfigurationModel): DashboardModel {
-        let result: any[] = [];
+    getDashboardInformationVehicle(view: number[], vehicle: VehicleModel, operations: OperationModel[]): DashboardModel<IDashboardModel> {
+        return new DashboardModel<IDashboardModel>({
+            view: view,
+            data: this.calculaterKmPerYear(vehicle, operations)
+        });
+    }
+
+    calculaterKmPerYear(vehicle: VehicleModel, operations: OperationModel[]): IDashboardModel[] {
+        let result: IDashboardModel[] = this.calculateKmPerYearWithOperations(vehicle, operations);
+        return this.calculateKmPerYearWithOutOperations(result, vehicle);
+    }
+
+    calculateKmPerYearWithOperations(vehicle: VehicleModel, operations: OperationModel[]): IDashboardModel[] {
+        let result: IDashboardModel[] = [];
+        const datePurchase: Date = new Date(vehicle.datePurchase);
+        const initYear: number = datePurchase.getFullYear();
+        const todayYear: number = new Date().getFullYear();
+        const kmPerMonth: number = this.calendarService.calculateKmsPerMonth(vehicle);
+        for (let i = initYear; i <= todayYear; i++) {
+            let averageKm: number = -1;
+            let operationsYear: OperationModel[] = operations.filter(x => x.date && new Date(x.date).getFullYear() === i);
+            if (operationsYear.length > 0) {
+                averageKm = this.calculateInitalkmSumPerYear(datePurchase, operationsYear[0].date, kmPerMonth, i) + // INIT
+                            (operationsYear[operationsYear.length - 1].km - operationsYear[0].km) + // MEDIA
+                            this.calculateFinalkmSumPerYear(operationsYear[operationsYear.length - 1].date, kmPerMonth, i); // END
+            }
+            result = [...result, this.getDataDashboard(i.toString(), averageKm)];
+        }
+        return result;
+    }
+
+    calculateKmPerYearWithOutOperations(result: IDashboardModel[], vehicle: VehicleModel): IDashboardModel[] {
+        const countYearsWithoutOperation: number = result.filter(x => x.value === -1).length;
+        if (countYearsWithoutOperation > 0) {
+            const model = <IDashboardModel>{};
+            const kmCounted: number = this.commonService.sum(result.filter(x => x.value !== -1), this.commonService.nameOf(() => model.value));
+            let kmRemains: number = (vehicle.kmEstimated - kmCounted);
+            const kmPerYear: number = Math.floor(kmRemains / countYearsWithoutOperation);
+            result.filter(x => x.value === -1).forEach((x: IDashboardModel) => {
+                const index: number = result.findIndex(data => data.name === x.name);
+                if (index < result.length - 1) {
+                    const averagePrev: number = this.calculateAveragekm(result, index - 5, index);
+                    const averagePost: number = this.calculateAveragekm(result, index + 1, index + 5);
+                    const sumAverage: number = Math.floor(averagePost + averagePrev / 2);
+                    if (sumAverage > 0 && (countYearsWithoutOperation * sumAverage) < kmRemains) {
+                        x.value = (sumAverage > kmRemains ? kmRemains : sumAverage);
+                    } else {
+                        x.value = kmPerYear;
+                    }
+                } else {
+                    const kmPerMonth: number = this.calendarService.calculateKmsPerMonth(vehicle);
+                    x.value = Math.floor(this.calendarService.dayDiff(new Date(Number(x.name), 0, 1), new Date()) * (kmPerMonth / 30));
+                }
+                kmRemains -= x.value;
+            });
+
+            result = this.calculateRemainKm(result, kmRemains);
+        }
+        return result;
+    }
+
+    calculateRemainKm(result: IDashboardModel[], kmRemains: number): IDashboardModel[] {
+        if (kmRemains > 0) {
+            const remainTotal: number = Math.floor(kmRemains / (result.length - 1));
+            result.forEach((x: IDashboardModel, index: number) => {
+                if (index < result.length - 1){
+                    x.value += remainTotal;
+                }
+            });
+        }
+        return result;
+    }
+
+    calculateAveragekm(result: IDashboardModel[], init: number, end: number): number {
+        let sum: number = 0;
+        const initial: number = (init < 0 ? 0 : init);
+        const final: number = (result.length < end ? result.length : end);
+        let items: number = 0;
+        for(let i = initial; i < final; i++) {
+            if (result[i].value !== -1){
+                sum += result[i].value;
+                items += 1;
+            }
+        }
+        return Math.floor(sum / (items === 0 ? 1 : items));
+    }
+
+    calculateInitalkmSumPerYear(datePurchase: Date, dateOperation: Date, kmPerMonth: number, year: number): number {
+        const initialDate: Date = new Date(year, 0, 1);
+        const initDate: Date = (datePurchase > initialDate ? datePurchase : initialDate);
+        return Math.floor(this.calendarService.dayDiff(initDate, new Date(dateOperation)) * (kmPerMonth / 30));
+    }
+
+    calculateFinalkmSumPerYear(dateOperation: Date, kmPerMonth: number, year: number): number {
+        const finalDate: Date = new Date(year, 11, 31);
+        const finDate: Date = (new Date() < finalDate ? new Date() : finalDate);
+        return Math.floor(this.calendarService.dayDiff(new Date(dateOperation), finDate) * (kmPerMonth / 30));
+    }
+
+    // CHART CONFIGURATION VEHICLE
+
+    getDashboardConfigurationVehicle(view: number[], data: InfoVehicleConfigurationModel): DashboardModel<IDashboardModel> {
+        let result: IDashboardModel[] = [];
         let colors: string[] = [];
         const dataFiltered = data.listMaintenance.filter(x => x.active);
         const windows: boolean = this.platform.is('desktop');
@@ -441,12 +544,14 @@ export class DashboardService {
             result = [...result, this.getDataDashboard(this.translator.instant('COMMON.INACTIVE'), numInactive)];
             colors = [...colors, '#7D7D7D'];
         }
-        return new DashboardModel({
+        return new DashboardModel<IDashboardModel>({
             view: view,
             data: result,
             colorScheme: colors
         });
     }
+
+    //#endregion INFO VEHICLE
 
     //#region GET OBSERVER SEARCHER
 

@@ -16,7 +16,7 @@ import { HomeService } from '../pages/home.service';
 import { CalendarService, ControlService, CommonService, IconService } from '../common/index';
 
 // UTILS
-import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
+import { Constants, ConstantsColumns, IDashboardModel, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -109,6 +109,12 @@ export class InfoVehicleService {
     }
 
     // INFO SUMMARY VEHICLE
+
+    getLabelAverageKmVehicle(data: IDashboardModel[], measure: any) {
+        const model = <IDashboardModel>{};
+        const sum: number = this.commonService.sum(data, this.commonService.nameOf(() => model.value));
+        return this.translator.instant('PAGE_HOME.VehicleAverageKm', { km1: Math.floor(sum / data.length), km2: data[data.length - 1].value, measure: measure.value });
+    }
 
     getLabelKmVehicle(km: number, kmEstimated: number, measure: any): string {
         let labelVehicleKm = this.translator.instant('PAGE_HOME.VehicleKm', { km, measure: measure.value });

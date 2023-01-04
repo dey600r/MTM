@@ -109,8 +109,9 @@
     "PAGE_HOME": {
         "HOME": "Home",
         "WearReplacement": "Wear of spare parts",
-        "VehicleKm": "The distance traveled of the vehicle are {{km}} {{measure}}.",
-        "VehicleEstimatedKm": "The distance estimated are {{km}} {{measure}}.",
+        "VehicleKm": "The traveled distance of the vehicle are {{km}} {{measure}}.",
+        "VehicleEstimatedKm": "The estimated distance is {{km}} {{measure}}.",
+        "VehicleAverageKm": "The average distance per year is {{km1}} {{measure}}. The distance from the current year is {{km2}} {{measure}}",
         "RELIABILITY": "Reliability",
         "RELIABILITY_VEHICLE": "Reliability of the vehicle",
         "NextChangeKm": "Next change of {{maintenance}} is at {{km}} {{measure}} on schedule {{date}}",

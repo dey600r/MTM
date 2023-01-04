@@ -12,7 +12,7 @@ import {
   ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
   InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel
 } from '@models/index';
-import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, IDashboardModel, IDashboardSerieModel, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // SERVICES
 import {
@@ -35,8 +35,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-  dashboardVehicleExpenses: DashboardModel = new DashboardModel();
-  dashboardRecordsMaintenance: DashboardModel = new DashboardModel();
+  dashboardVehicleExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardRecordsMaintenance: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   currentPopover = null;
   hideGraph = true;
   hideSummary = false;

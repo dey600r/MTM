@@ -26,14 +26,9 @@
         <h3 class="info-text-notification-empty padding-info-title">{{ 'ALERT.NoDataFound' | translate }}</h3>
     </div>
   </div>
-  <!-- CHART -->
-  <ngx-charts-pie-grid *ngIf="vehicles.length > 0" class="justify-center"
-    [view]="dashboard.view"
-    [scheme]="dashboard.colorScheme"
-    [results]="dashboard.data">
-  </ngx-charts-pie-grid>
   <!-- VEHICLE SUMMARY -->
   <ion-list *ngIf="vehicles.length > 0">
+    <!-- INFORMATION VEHICLE -->
     <ion-list-header (click)="hideVehicleSummary = !hideVehicleSummary" class="padding-list-header">
       <ion-icon size="large" name="analytics"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.INFORMATION_VEHICLE' | translate }}</h3>
@@ -42,13 +37,34 @@
         <ion-icon *ngIf="!hideVehicleSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
+    <!-- CHART INFORMATION VEHICLE-->
+    <ngx-charts-bar-vertical *ngIf="!hideVehicleSummary" class="justify-center"
+            [view]="dashboardInformationVehicle.view"
+            [scheme]="dashboardInformationVehicle.colorScheme"
+            [results]="dashboardInformationVehicle.data"
+            [gradient]="dashboardInformationVehicle.gradient"
+            [xAxis]="dashboardInformationVehicle.showXAxis"
+            [yAxis]="dashboardInformationVehicle.showYAxis"
+            [legend]="dashboardInformationVehicle.showLegend"
+            [legendTitle]="dashboardInformationVehicle.legendTitle"
+            [legendPosition]="dashboardInformationVehicle.legendPosition"
+            [showXAxisLabel]="dashboardInformationVehicle.showXAxisLabel"
+            [showYAxisLabel]="dashboardInformationVehicle.showYAxisLabel"
+            [showDataLabel]="dashboardInformationVehicle.showDataLabel"
+            [xAxisLabel]="dashboardInformationVehicle.xAxisLabel"
+            [yAxisLabel]="dashboardInformationVehicle.yAxisLabel">
+        </ngx-charts-bar-vertical>
+    <!-- ITEMS INFORMATION VEHICLE -->
+    <ion-item *ngIf="!hideVehicleSummary">
+      <p class="ion-color-info-summary">{{ labelVehicleAverageKm }}</p>
+    </ion-item>
     <ion-item *ngIf="!hideVehicleSummary" button (click)="showInfoVehicle()">
       <p class="ion-color-info-summary">{{ labelVehicleKm }}</p>
     </ion-item>
     <ion-item *ngIf="!hideVehicleSummary">
       <p class="ion-color-info-summary">{{ 'PAGE_HOME.RELIABILITY_VEHICLE' | translate }}</p>
       <p class="ion-color-info-summary" slot="end">{{ labelPercent }} %</p>
-      <ion-icon slot="end" size="small" [class]="getIconPercent('color')" [color]="getIconPercent('color')" [name]="getIconPercent('icon')"></ion-icon>
+      <ion-icon slot="end" size="small" [class]="labelIconClassPercent" [color]="labelIconClassPercent" [name]="labelIconPercent"></ion-icon>
     </ion-item>
   </ion-list>
   <!-- CONFIGURATION SUMMARY -->
@@ -62,6 +78,13 @@
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideConfigurationSummary">
+      <!-- CHART -->
+      <ngx-charts-pie-grid class="justify-center"
+        [view]="dashboardConfigurationVehicle.view"
+        [scheme]="dashboardConfigurationVehicle.colorScheme"
+        [results]="dashboardConfigurationVehicle.data">
+      </ngx-charts-pie-grid>
+      <!-- CONFIGURATION VEHICLE -->
       <ion-item button *ngFor="let m of selectedInfoVehicleConfiguration.listMaintenance; let i = index;"
         [ngClass]="{ 'disable-item-color': !m.active }" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
         <div class="main-item-div">

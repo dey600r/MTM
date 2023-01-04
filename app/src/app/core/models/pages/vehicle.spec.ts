@@ -14,7 +14,7 @@ describe('VehicleModels', () => {
         expect(base.km).toEqual(null);
         expect(base.dateKms.toDateString()).toEqual(date.toDateString());
         expect(base.datePurchase.toDateString()).toEqual(date.toDateString());
-        expect(base.kmEstimated).toEqual(undefined);
+        expect(base.kmEstimated).toEqual(null);
         expect(base.kmsPerMonth).toEqual(null);
         expect(base.active).toEqual(true);
         const date1 = new Date(2022, 11, 10);
@@ -24,6 +24,7 @@ describe('VehicleModels', () => {
             brand: 'brand',
             year: 2005,
             km: 2000,
+            kmEstimated: 2500,
             configuration: new ConfigurationModel({ name: 'name' }),
             vehicleType: new VehicleTypeModel('code'), 
             kmsPerMonth: 200,
@@ -41,7 +42,7 @@ describe('VehicleModels', () => {
         expect(base.dateKms.toDateString()).toEqual(date1.toDateString());
         expect(base.datePurchase.toDateString()).toEqual(date2.toDateString());
         expect(base.km).toEqual(2000);
-        expect(base.kmEstimated).toEqual(undefined);
+        expect(base.kmEstimated).toEqual(2500);
         expect(base.kmsPerMonth).toEqual(200);
         expect(base.active).toEqual(false);
     });
