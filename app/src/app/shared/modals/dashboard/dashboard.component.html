@@ -24,7 +24,7 @@
             <ion-icon *ngIf="isParentPageOperation()" size="large" [name]="this.operations[0].vehicle.vehicleType.icon"></ion-icon>
             <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }} {{ vehicleModel }}</h3>
         </ion-list-header>
-        <ngx-charts-bar-vertical class="justify-center"
+        <ngx-charts-bar-vertical *ngIf="!showSpinner" class="justify-center"
             [view]="dashboardVehicleExpenses.view"
             [scheme]="dashboardVehicleExpenses.colorScheme"
             [results]="dashboardVehicleExpenses.data"
@@ -40,11 +40,14 @@
             [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
             [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
         </ngx-charts-bar-vertical>
+        <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
+            <ion-spinner class="spinner" name="lines"></ion-spinner>
+        </div>
         <ion-list-header class="padding-list-header">
             <ion-icon size="large" name="construct"></ion-icon>
             <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerOperationType' | translate }}</h3>
         </ion-list-header>
-        <ngx-charts-pie-chart class="justify-center"
+        <ngx-charts-pie-chart *ngIf="!showSpinner" class="justify-center"
             [view]="dashboardOpTypeExpenses.view"
             [scheme]="dashboardOpTypeExpenses.colorScheme"
             [results]="dashboardOpTypeExpenses.data"
@@ -55,11 +58,14 @@
             [labels]="dashboardOpTypeExpenses.showLabels"
             [doughnut]="dashboardOpTypeExpenses.isDoughnut">
         </ngx-charts-pie-chart>
+        <div *ngIf="showSpinner" [style.height.px]="dashboardOpTypeExpenses.view[1]" class="div-spinner">
+            <ion-spinner class="spinner" name="lines"></ion-spinner>
+        </div>
         <ion-list-header class="padding-list-header" *ngIf="dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0">
             <ion-icon size="large" name="cog"></ion-icon>
             <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerReplacement' | translate }}</h3>
         </ion-list-header>
-        <ngx-charts-pie-chart *ngIf="dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0" class="justify-center"
+        <ngx-charts-pie-chart *ngIf="!showSpinner && (dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0)" class="justify-center"
             [view]="dashboardReplacementExpenses.view"
             [scheme]="dashboardReplacementExpenses.colorScheme"
             [results]="dashboardReplacementExpenses.data"
@@ -70,5 +76,8 @@
             [labels]="dashboardReplacementExpenses.showLabels"
             [doughnut]="dashboardReplacementExpenses.isDoughnut">
         </ngx-charts-pie-chart>
+        <div *ngIf="showSpinner" [style.height.px]="dashboardReplacementExpenses.view[1]" class="div-spinner">
+            <ion-spinner class="spinner" name="lines"></ion-spinner>
+        </div>
     </div>
 </ion-content>

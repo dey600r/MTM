@@ -38,6 +38,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     operations: OperationModel[] = [];
     vehicleModel = '';
     iconFilter = 'filter';
+    showSpinner = false;
+    openningPopover = false;
 
     // SUBSCRIPTION
     searchSubscription: Subscription = new Subscription();
@@ -68,21 +70,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.vehicleModel = (!!this.operations && this.operations.length > 0 ?
         `${this.operations[0].vehicle.brand} ${this.operations[0].vehicle.model}` : '');
     this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
-      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-      if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
-        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
-      } else { // VEHICLE EXPENSES PER MONTH
-        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize, this.operations, filter);
+      if (!this.openningPopover) { // Windows: Fix refresh chart :(
+        this.showSpinner = true;
+        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
+          this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
+        } else { // VEHICLE EXPENSES PER MONTH
+          this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize, this.operations, filter);
+        }
+        // VEHICLE EXPENSES PER OPERATION TYPE
+        this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
+        this.dashboardReplacementExpenses = this.dashboardService.getDashboardModelReplacementExpenses(windowsSize, this.operations, filter);
+        this.loadIconSearch();
+        setTimeout(() => {
+          this.showSpinner = false;
+          this.changeDetector.detectChanges();
+        }, 100);
       }
-      // VEHICLE EXPENSES PER OPERATION TYPE
-      this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
-      this.dashboardReplacementExpenses = this.dashboardService.getDashboardModelReplacementExpenses(windowsSize, this.operations, filter);
-      this.loadIconSearch();
-      this.changeDetector.detectChanges();
     });
 
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize: number[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardVehicleExpenses.view = windowSize;
       this.dashboardOpTypeExpenses.view = windowSize;
       this.dashboardReplacementExpenses.view = windowSize;
@@ -114,8 +122,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   showPopover(ev: any) {
+    this.openningPopover = true;
     const parentPage: PageEnum = this.getParent(this.modalInputModel.parentPage);
     this.controlService.showPopover(parentPage, ev, SearchDashboardPopOverComponent, new ModalInputModel({ parentPage: parentPage }));
+    setTimeout(() => { // Windows: Fix refresh chart :(
+      this.openningPopover = false;
+    }, 200);
   }
 
   isParentPageVehicle() {

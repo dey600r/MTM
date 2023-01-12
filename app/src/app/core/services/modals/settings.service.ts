@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // UTILS
-import { Constants, ConstantsTable } from '@utils/index';
+import { Constants, ConstantsTable, ISettingModel } from '@utils/index';
 import { DataBaseService, SqlService, CalendarService } from '../common/index';
 
 // MODALS
@@ -26,7 +26,7 @@ export class SettingsService {
 
     /** SETTINGS */
 
-    getListDistance(): any[] {
+    getListDistance(): ISettingModel[] {
         return [
             this.mapToAnyCustomSetting(Constants.SETTING_DISTANCE_KM,
                 this.translator.instant(`COMMON.${Constants.SETTING_DISTANCE_KM}`),
@@ -36,7 +36,7 @@ export class SettingsService {
                 this.translator.instant(`COMMON.${Constants.SETTING_DISTANCE_MILES}`))];
     }
 
-    getListMoney(): any[] {
+    getListMoney(): ISettingModel[] {
         return [
             this.mapToAnyCustomSetting(Constants.SETTING_MONEY_EURO, '€',
                 this.translator.instant(`COMMON.${Constants.SETTING_MONEY_EURO}`)),
@@ -46,7 +46,7 @@ export class SettingsService {
                 this.translator.instant(`COMMON.${Constants.SETTING_MONEY_POUND}`))];
     }
 
-    getListThemes(): any[] {
+    getListThemes(): ISettingModel[] {
         return [
             this.mapToAnyCustomSetting(Constants.SETTING_THEME_LIGHT,
                 this.translator.instant(`COMMON.${Constants.SETTING_THEME_LIGHT_DESC}`), Constants.SETTING_THEME_LIGHT),
@@ -57,18 +57,18 @@ export class SettingsService {
           ];
     }
 
-    getDistanceSelected(settings: SystemConfigurationModel[]): any {
+    getDistanceSelected(settings: SystemConfigurationModel[]): ISettingModel {
         const select: any = this.getListDistance().find(x => x.code === settings.find(y => y.key === Constants.KEY_CONFIG_DISTANCE).value);
         return this.mapToAnyCustomSetting(select.code, select.value, select.valueLarge);
     }
 
-    getMoneySelected(settings: SystemConfigurationModel[]): any {
+    getMoneySelected(settings: SystemConfigurationModel[]): ISettingModel {
         const select: any = this.getListMoney().find(x => x.code === settings.find(y => y.key === Constants.KEY_CONFIG_MONEY).value);
         return this.mapToAnyCustomSetting(select.code, select.value, select.valueLarge);
     }
 
-    getThemeSelected(settings: SystemConfigurationModel[]): any {
-        const select: any = this.getListThemes().find(x => x.code === settings.find(y => y.key === Constants.KEY_CONFIG_THEME).value);
+    getThemeSelected(settings: SystemConfigurationModel[]): ISettingModel {
+        const select: ISettingModel = this.getListThemes().find(x => x.code === settings.find(y => y.key === Constants.KEY_CONFIG_THEME).value);
         return this.mapToAnyCustomSetting(select.code, select.value, select.valueLarge);
     }
 
@@ -115,7 +115,7 @@ export class SettingsService {
         }
     }
 
-    mapToAnyCustomSetting(c: string, v: string, vl: string): any {
+    mapToAnyCustomSetting(c: string, v: string, vl: string): ISettingModel {
         return { code: c, value: v, valueLarge: vl };
     }
 

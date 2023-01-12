@@ -14,7 +14,7 @@ import { DashboardService, CommonService, DataBaseService, SettingsService, Conf
 
 // UTILS
 import { 
-    FilterMonthsEnum, ConstantsColumns, PageEnum, ISearcherControlModel, IDisplaySearcherControlModel
+    FilterMonthsEnum, ConstantsColumns, PageEnum, ISearcherControlModel, IDisplaySearcherControlModel, ISettingModel
 } from '@utils/index';
 
 @Component({
@@ -29,8 +29,8 @@ import {
 
     // DATA
     config: ISearcherControlModel;
-    measure: any = {};
-    coin: any = {};
+    measure: ISettingModel;
+    coin: ISettingModel;
     refresh = true;
     vehicles: VehicleModel[] = [];
     operationTypes: OperationTypeModel[] = [];

@@ -15,7 +15,7 @@ import {
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -49,7 +49,7 @@ export class HomePage extends BasePage implements OnInit {
   loadedBody = false;
   hideOpButton = false;
   hideFabButton = false;
-  measure: any = {};
+  measure: ISettingModel;
   modalSettings: any = null;
 
   showInfoMaintenance: boolean[] = [];

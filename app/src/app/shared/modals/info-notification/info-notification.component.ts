@@ -12,7 +12,7 @@ import {
   ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
   InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel
 } from '@models/index';
-import { Constants, IDashboardModel, IDashboardSerieModel, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, IDashboardModel, IDashboardSerieModel, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // SERVICES
 import {
@@ -55,9 +55,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   labelNextChange = '';
   labelLifeReplacement = '';
   labelNotRecord = '';
-  measure: any = {};
+  measure: ISettingModel;
   iconMaintenanceElement = '';
   iconFilter = 'filter';
+  showSpinner = false;
+  openningPopover = false;
 
   // SUBSCRIPTION
   searchDashboardSubscription: Subscription = new Subscription();
@@ -123,14 +125,20 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getObserverSearchDashboard() {
     this.searchDashboardSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
-      this.calculateDashboardExpenses(filter);
-      this.calculateDashboad(false, filter);
+      if (!this.openningPopover) {
+        this.showSpinner = true; // Windows: Fix refresh chart :(
+        this.calculateDashboardExpenses(filter);
+        this.calculateDashboad(false, filter);
+        setTimeout(() => { this.showSpinner = false; }, 150);
+      }
     });
   }
 
   getObserverSearchDashboardRecords() {
     this.searchDashboardRecordsSubscription = this.dashboardService.getObserverSearchDashboardRecords().subscribe(filter => {
-      this.calculateDashboad(true, filter);
+      if (!this.openningPopover) {
+        this.calculateDashboad(true, filter);
+      }
     });
   }
 
@@ -363,7 +371,9 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   showPopover(ev: any) {
+    this.openningPopover = true;
     this.controlService.showPopover(PageEnum.MODAL_INFO, ev, SearchDashboardPopOverComponent, this.modalInputModel);
+    setTimeout(() => this.openningPopover = false, 200);
   }
 
   loadIconSearch() {

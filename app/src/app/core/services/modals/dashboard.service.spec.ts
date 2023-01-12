@@ -1,8 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
+import { Platform } from '@ionic/angular';
 
 // SERVICES
 import { DashboardService } from './dashboard.service';
+import { InfoVehicleService } from './info-vehicle.service';
+import { SettingsService } from './settings.service';
+import { HomeService } from '../pages/index';
 
 // CONFIGURATIONS
 import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
@@ -11,11 +15,14 @@ import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/inde
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { DashboardModel, SearchDashboardModel, VehicleModel } from '@models/index';
-import { FilterMonthsEnum, Constants, PageEnum, FilterKmTimeEnum, IDashboardModel } from '@utils/index';
+import { DashboardModel, InfoVehicleConfigurationModel, MaintenanceElementModel, MaintenanceModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel } from '@models/index';
+import { FilterMonthsEnum, Constants, PageEnum, FilterKmTimeEnum, IDashboardModel, IDashboardSerieModel, ISettingModel } from '@utils/index';
 
 describe('DashboardService', () => {
     let service: DashboardService;
+    let homeService: HomeService;
+    let serviceInfoVehicle: InfoVehicleService;
+    let settingService: SettingsService;
     let translate: TranslateService;
 
     beforeEach(async () => {
@@ -24,6 +31,9 @@ describe('DashboardService', () => {
             providers: SpyMockConfig.ProvidersServices
         }).compileComponents();
         service = TestBed.inject(DashboardService);
+        serviceInfoVehicle = TestBed.inject(InfoVehicleService);
+        homeService = TestBed.inject(HomeService);
+        settingService = TestBed.inject(SettingsService);
         translate = TestBed.inject(TranslateService);
         await firstValueFrom(translate.use('es'));
     });
@@ -399,8 +409,9 @@ describe('DashboardService', () => {
         expect(result[6].value).toEqual(-1);
     });
 
-    it('should calculate km per year without operation', () => {
-        const year: number = new Date().getFullYear();
+    it('should calculate km per year without operation 1', () => {
+        const today: Date = new Date();
+        const year: number = today.getFullYear();
         const data: IDashboardModel[] = [
             { id: 1, name: (year-6).toString(), value: -1 },
             { id: 1, name: (year-5).toString(), value: 200 },
@@ -413,16 +424,43 @@ describe('DashboardService', () => {
         let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, new VehicleModel({ 
             km: 9500,
             kmEstimated: 10000,
-            dateKms: new Date(new Date().getFullYear(), new Date().getMonth() - 2, new Date().getDay()),
-            datePurchase: new Date(2015, 10, 12)
+            dateKms: new Date(year, today.getMonth() - 2, today.getDay()),
+            datePurchase: new Date(year - 8, today.getMonth() - 3, today.getDay())
         }));
-        expect(result[0].value).toEqual(1498);
-        expect(result[1].value).toEqual(1298);
-        expect(result[2].value).toEqual(1498);
-        expect(result[3].value).toEqual(1698);
-        expect(result[4].value).toEqual(2098);
-        expect(result[5].value).toEqual(1898);
-        expect(result[6].value).toEqual(11);
+        expect(result[0].value).toEqual(1493);
+        expect(result[1].value).toEqual(1293);
+        expect(result[2].value).toEqual(1493);
+        expect(result[3].value).toEqual(1693);
+        expect(result[4].value).toEqual(2093);
+        expect(result[5].value).toEqual(1893);
+        expect(result[6].value).toEqual(39);
+    });
+
+    it('should calculate km per year without operation 2', () => {
+        const today: Date = new Date();
+        const year: number = today.getFullYear();
+        const data: IDashboardModel[] = [
+            { id: 1, name: (year-6).toString(), value: 9000 },
+            { id: 1, name: (year-5).toString(), value: 600 },
+            { id: 1, name: (year-4).toString(), value: -1 },
+            { id: 1, name: (year-3).toString(), value: -1 },
+            { id: 1, name: (year-2).toString(), value: -1 },
+            { id: 1, name: (year-1).toString(), value: -1 },
+            { id: 1, name: year.toString(), value: -1 },
+        ];
+        let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, new VehicleModel({ 
+            km: 9500,
+            kmEstimated: 10000,
+            dateKms: new Date(year, today.getMonth() - 2, today.getDay()),
+            datePurchase: new Date(year - 8, today.getMonth() - 3, today.getDay())
+        }));
+        expect(result[0].value).toEqual(9006);
+        expect(result[1].value).toEqual(606);
+        expect(result[2].value).toEqual(86);
+        expect(result[3].value).toEqual(86);
+        expect(result[4].value).toEqual(86);
+        expect(result[5].value).toEqual(86);
+        expect(result[6].value).toEqual(39);
     });
 
     it('should calculate km per year with operation', () => {
@@ -466,5 +504,107 @@ describe('DashboardService', () => {
         let result: DashboardModel<IDashboardModel> = service.getDashboardInformationVehicle([1, 2], dataVehicle, MockData.Operations.filter(x => x.vehicle.id === dataVehicle.id));
         expect(result.data.length).toEqual(new Date().getFullYear() - new Date(dataVehicle.datePurchase).getFullYear() + 1);
         expect(result.view).toEqual([1, 2]);
+    });
+
+    it('should get dashboard configuration vehicle - windows', () => {
+        const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(true);
+        const data: InfoVehicleConfigurationModel[] = serviceInfoVehicle.calculateInfoVehicleConfiguration(MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+        let result: DashboardModel<IDashboardModel> = service.getDashboardConfigurationVehicle([1, 2], data[1]);
+        expect(spyPlatform).toHaveBeenCalled();
+        expect(result.view).toEqual([1, 2]);
+        expect(result.data[0].name).toEqual(MockTranslate.ES.COMMON.SUCCESS);
+        expect(result.data[0].value).toEqual(2);
+        expect(result.colorScheme.domain[0]).toEqual('#387F57');
+        expect(result.data[1].name).toEqual(MockTranslate.ES.COMMON.WARNING);
+        expect(result.data[1].value).toEqual(2);
+        expect(result.colorScheme.domain[1]).toEqual('#B69B57');
+        expect(result.data[2].name).toEqual(MockTranslate.ES.COMMON.UNUSABLE);
+        expect(result.data[2].value).toEqual(4);
+        expect(result.colorScheme.domain[2]).toEqual('#7F4339');
+        expect(result.data[3].name).toEqual(MockTranslate.ES.COMMON.INACTIVE);
+        expect(result.data[3].value).toEqual(1);
+        expect(result.colorScheme.domain[3]).toEqual('#7D7D7D');
+    });
+
+    it('should get dashboard configuration vehicle - android', () => {
+        const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(false);
+        const data: InfoVehicleConfigurationModel[] = serviceInfoVehicle.calculateInfoVehicleConfiguration(MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+        const result: DashboardModel<IDashboardModel> = service.getDashboardConfigurationVehicle([1, 2], data[1]);
+        expect(spyPlatform).toHaveBeenCalled();
+        expect(result.view).toEqual([1, 2]);
+        expect(result.data[0].name).toEqual(MockTranslate.ES.COMMON.SUCCESS);
+        expect(result.data[0].value).toEqual(2);
+        expect(result.colorScheme.domain[0]).toEqual('rgba(var(--ion-color-progressbar-success-progress), 0.7)');
+        expect(result.data[1].name).toEqual(MockTranslate.ES.COMMON.WARNING);
+        expect(result.data[1].value).toEqual(2);
+        expect(result.colorScheme.domain[1]).toEqual('rgba(var(--ion-color-progressbar-warning-progress), 0.7)');
+        expect(result.data[2].name).toEqual(MockTranslate.ES.COMMON.UNUSABLE);
+        expect(result.data[2].value).toEqual(4);
+        expect(result.colorScheme.domain[2]).toEqual('rgba(var(--ion-color-progressbar-danger-progress), 1)');
+        expect(result.data[3].name).toEqual(MockTranslate.ES.COMMON.INACTIVE);
+        expect(result.data[3].value).toEqual(1);
+        expect(result.colorScheme.domain[3]).toEqual('#7D7D7D');
+    });
+
+    it('should get dashboard record maintenance - km', () => {
+        const mockVehicle: VehicleModel[] = MockData.Vehicles;
+        const mockOperation: OperationModel[] = MockData.Operations;
+        const mockMaintenance: MaintenanceModel[] = MockData.Maintenances;
+        const wear: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(mockOperation, mockVehicle, MockData.Configurations, mockMaintenance);
+        const filter: SearchDashboardModel = new SearchDashboardModel();
+        const measure: ISettingModel = settingService.getDistanceSelected(MockData.SystemConfigurations);
+        const result: DashboardModel<IDashboardSerieModel> = service.getDashboardRecordMaintenances([1, 2], wear[0], filter, measure);
+        expect(result.barPadding).toEqual(2);
+        expect(result.colorScheme).toEqual({ domain: ['#D91CF6', '#1CEAF6','#5FF61C']});
+        expect(result.gradient).toEqual(true);
+        expect(result.isDoughnut).toEqual(false);
+        expect(result.legendPosition).toEqual('below');
+        expect(result.showDataLabel).toEqual(false);
+        expect(result.showLabels).toEqual(true);
+        expect(result.showLegend).toEqual(false);
+        expect(result.showXAxis).toEqual(true);
+        expect(result.showXAxisLabel).toEqual(false);
+        expect(result.showYAxis).toEqual(true);
+        expect(result.showYAxisLabel).toEqual(false);
+        expect(result.xAxisLabel).toEqual(MockTranslate.ES.PAGE_CONFIGURATION.MAINTENANCES);
+        expect(result.yAxisLabel).toEqual(measure.valueLarge);
+        expect(result.legendTitle).toEqual(MockTranslate.ES.COMMON.OPERATIONS);
+        expect(result.data.length).toEqual(2);
+        expect(result.data[0].name).toEqual(MockTranslate.ES.COMMON.ESTIMATED);
+        expect(result.data[1].name).toEqual(MockTranslate.ES.COMMON.REAL);
+    });
+
+    it('should get dashboard record maintenance - time', async () => {
+        await firstValueFrom(translate.use('en'));
+        const mockVehicle: VehicleModel[] = MockData.Vehicles;
+        const mockOperation: OperationModel[] = MockData.Operations;
+        const mockMaintenance: MaintenanceModel[] = MockData.Maintenances;
+        const wear: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(mockOperation, mockVehicle, MockData.Configurations, mockMaintenance);
+        const filter: SearchDashboardModel = new SearchDashboardModel({
+            filterKmTime: FilterKmTimeEnum.TIME,
+            doghnut: true,
+            showLegend: true,
+            showAxis: false
+        });
+        const measure: ISettingModel = settingService.getDistanceSelected(MockData.SystemConfigurations);
+        const result: DashboardModel<IDashboardSerieModel> = service.getDashboardRecordMaintenances([1, 2], wear[0], filter, measure);
+        expect(result.barPadding).toEqual(2);
+        expect(result.colorScheme).toEqual({ domain: ['#D91CF6', '#1CEAF6','#5FF61C']});
+        expect(result.gradient).toEqual(true);
+        expect(result.isDoughnut).toEqual(true);
+        expect(result.legendPosition).toEqual('below');
+        expect(result.showDataLabel).toEqual(false);
+        expect(result.showLabels).toEqual(true);
+        expect(result.showLegend).toEqual(true);
+        expect(result.showXAxis).toEqual(false);
+        expect(result.showXAxisLabel).toEqual(false);
+        expect(result.showYAxis).toEqual(false);
+        expect(result.showYAxisLabel).toEqual(false);
+        expect(result.xAxisLabel).toEqual(MockTranslate.EN.PAGE_CONFIGURATION.MAINTENANCES);
+        expect(result.yAxisLabel).toEqual(MockTranslate.EN.COMMON.MONTHS);
+        expect(result.legendTitle).toEqual(MockTranslate.EN.COMMON.OPERATIONS);
+        expect(result.data.length).toEqual(2);
+        expect(result.data[0].name).toEqual(MockTranslate.EN.COMMON.ESTIMATED);
+        expect(result.data[1].name).toEqual(MockTranslate.EN.COMMON.REAL);
     });
 });

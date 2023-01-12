@@ -51,7 +51,7 @@ export class MockVehicle {
             model: 'Ninja 1000sx',
             brand: 'Kawasaki',
             year: 2021,
-            km: 12000,
+            km: 28000,
             configuration: MockConfiguration.Configurations[2],
             vehicleType: MockVehicle.VehicleTypes[0],
             kmsPerMonth: 600, 

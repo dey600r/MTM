@@ -38,7 +38,7 @@
       </ion-button>
     </ion-list-header>
     <!-- CHART INFORMATION VEHICLE-->
-    <ngx-charts-bar-vertical *ngIf="!hideVehicleSummary" class="justify-center"
+    <ngx-charts-bar-vertical *ngIf="!hideVehicleSummary && !showSpinner" class="justify-center"
             [view]="dashboardInformationVehicle.view"
             [scheme]="dashboardInformationVehicle.colorScheme"
             [results]="dashboardInformationVehicle.data"
@@ -54,6 +54,9 @@
             [xAxisLabel]="dashboardInformationVehicle.xAxisLabel"
             [yAxisLabel]="dashboardInformationVehicle.yAxisLabel">
         </ngx-charts-bar-vertical>
+    <div *ngIf="showSpinner" [style.height.px]="dashboardInformationVehicle.view[1]" class="div-spinner">
+      <ion-spinner class="spinner" name="lines"></ion-spinner>
+    </div>
     <!-- ITEMS INFORMATION VEHICLE -->
     <ion-item *ngIf="!hideVehicleSummary">
       <p class="ion-color-info-summary">{{ labelVehicleAverageKm }}</p>

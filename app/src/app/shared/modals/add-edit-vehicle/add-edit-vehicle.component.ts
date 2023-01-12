@@ -6,7 +6,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum, ISettingModel } from '@utils/index';
 import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel } from '@models/index';
 import {
   DataBaseService, VehicleService, CommonService, CalendarService, ControlService, SettingsService
@@ -31,7 +31,7 @@ export class AddEditVehicleComponent implements OnInit {
   operations: OperationModel[] = [];
   vehicleTypes: VehicleTypeModel[] = [];
   formatDate = this.calendarService.getFormatCalendar();
-  measure: any = {};
+  measure: ISettingModel;
 
   // TRANSLATE
   translateYearBetween = '';

@@ -16,7 +16,7 @@ import { HomeService } from '../pages/home.service';
 import { CalendarService, ControlService, CommonService, IconService } from '../common/index';
 
 // UTILS
-import { Constants, ConstantsColumns, IDashboardModel, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
+import { Constants, ConstantsColumns, IDashboardModel, ISettingModel, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -110,13 +110,13 @@ export class InfoVehicleService {
 
     // INFO SUMMARY VEHICLE
 
-    getLabelAverageKmVehicle(data: IDashboardModel[], measure: any) {
+    getLabelAverageKmVehicle(data: IDashboardModel[], measure: ISettingModel) {
         const model = <IDashboardModel>{};
         const sum: number = this.commonService.sum(data, this.commonService.nameOf(() => model.value));
         return this.translator.instant('PAGE_HOME.VehicleAverageKm', { km1: Math.floor(sum / data.length), km2: data[data.length - 1].value, measure: measure.value });
     }
 
-    getLabelKmVehicle(km: number, kmEstimated: number, measure: any): string {
+    getLabelKmVehicle(km: number, kmEstimated: number, measure: ISettingModel): string {
         let labelVehicleKm = this.translator.instant('PAGE_HOME.VehicleKm', { km, measure: measure.value });
         if (km !== kmEstimated) {
             labelVehicleKm += '\n' + this.translator.instant('PAGE_HOME.VehicleEstimatedKm', { km: kmEstimated, measure: measure.value  });
@@ -145,13 +145,14 @@ export class InfoVehicleService {
         }
       }
 
-    showInfoVehicle(dateKmsVehicle: Date, measure: any) {
+    showInfoVehicle(dateKmsVehicle: Date, measure: ISettingModel) {
         const msg = this.translator.instant('ALERT.LastUpdateVehicleKm',
           { date: this.calendarService.getDateString(new Date(dateKmsVehicle)), measurelarge: measure.valueLarge });
         this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
     }
 
-    showToastInfoReplacement(rep: InfoVehicleHistoricReplacementModel, subRep: InfoVehicleReplacementModel, measure: any, coin: any) {
+    showToastInfoReplacement(rep: InfoVehicleHistoricReplacementModel, subRep: InfoVehicleReplacementModel,
+                            measure: ISettingModel, coin: ISettingModel) {
         const msg = this.translator.instant('ALERT.InfoVehicleReplacement', {
                 replacement: rep.name,
                 operation: subRep.opName,

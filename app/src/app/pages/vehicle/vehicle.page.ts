@@ -5,7 +5,7 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
 import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
 import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
 
@@ -32,7 +32,7 @@ export class VehiclePage extends BasePage implements OnInit {
   initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
-  measure: any = {};
+  measure: ISettingModel;
   iconNameHeaderLeft = '';
 
   constructor(public platform: Platform,

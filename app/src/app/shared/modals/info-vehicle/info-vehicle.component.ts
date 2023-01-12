@@ -19,7 +19,7 @@ import {
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, IDashboardModel } from '@utils/index';
+import { ConstantsColumns, IDashboardModel, ISettingModel } from '@utils/index';
 
 @Component({
   selector: 'app-info-vehicle',
@@ -35,8 +35,8 @@ export class InfoVehicleComponent implements OnInit {
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
   vehicleSelected: VehicleModel = new VehicleModel();
-  measure: any = {};
-  coin: any = {};
+  measure: ISettingModel;
+  coin: ISettingModel;
   showInfoMaintenance: boolean[] = [];
   showInfoReplacement: boolean[] = [];
 
@@ -56,6 +56,7 @@ export class InfoVehicleComponent implements OnInit {
   loadedBodyConfigurationSummary = true;
   hideReplacementSummary = true;
   loadedBodyReplacementSummary = true;
+  showSpinner = false;
   labelVehicleKm = '';
   labelPercent = 0;
   labelIconClassPercent = '';
@@ -241,10 +242,13 @@ export class InfoVehicleComponent implements OnInit {
   // SEGMENT
 
   segmentChanged(event: any): void {
+    this.showSpinner = true; // Windows 10: Fix no change good the data of the chart when the tabs is changed
     this.initDataSelected(Number(event.detail.value));
     this.initShowInfo(this.vehicleSelected);
     this.initVehicleSummary();
     this.resetList();
+    this.changeDetector.detectChanges();
+    setTimeout(() => { this.showSpinner = false; }, 150);
   }
 
   activeSegmentScroll(): boolean {

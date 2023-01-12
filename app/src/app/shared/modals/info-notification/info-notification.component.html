@@ -54,7 +54,7 @@
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideGraph" class="justify-center">
-      <ngx-charts-bar-vertical
+      <ngx-charts-bar-vertical *ngIf="!showSpinner"
         [view]="dashboardVehicleExpenses.view"
         [scheme]="dashboardVehicleExpenses.colorScheme"
         [results]="dashboardVehicleExpenses.data"
@@ -70,6 +70,9 @@
         [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
         [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
       </ngx-charts-bar-vertical>
+      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
+        <ion-spinner class="spinner" name="lines"></ion-spinner>
+      </div>
     </div>
   </ion-list>
   <!-- List Records Maintenance -->

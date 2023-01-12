@@ -18,7 +18,7 @@ import { CommonService, CalendarService } from '../common/index';
 // UTILS
 import { 
     ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum, PageEnum,
-    IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel, IDashboardModel, IDashboardSerieModel
+    IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel, IDashboardModel, IDashboardSerieModel, ISettingModel
 } from '@utils/index';
 
 @Injectable({
@@ -295,7 +295,7 @@ export class DashboardService {
 
     // RECORDS MAINTENANCES
     getDashboardRecordMaintenances(view: number[], data: WearVehicleProgressBarViewModel, filter: SearchDashboardModel,
-                                   measure: any): DashboardModel<IDashboardSerieModel> {
+                                   measure: ISettingModel): DashboardModel<IDashboardSerieModel> {
         let dataDashboard: IDashboardSerieModel[] = [];
         let translateY = measure.valueLarge;
         if (filter.filterKmTime === FilterKmTimeEnum.KM) {
@@ -322,7 +322,7 @@ export class DashboardService {
         });
     }
 
-    mapWearToDashboardKmRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): IDashboardSerieModel[] {
+    mapWearToDashboardKmRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: ISettingModel): IDashboardSerieModel[] {
         let result: IDashboardSerieModel[] = [];
         if (!!data && data.listWearMaintenance.length > 0) {
             const firstMain: WearMaintenanceProgressBarViewModel = data.listWearMaintenance[0];
@@ -362,7 +362,7 @@ export class DashboardService {
         return result;
     }
 
-    mapWearToDashboardTimeRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: any): IDashboardSerieModel[] {
+    mapWearToDashboardTimeRecordMaintenances(data: WearVehicleProgressBarViewModel, measure: ISettingModel): IDashboardSerieModel[] {
         let result: IDashboardSerieModel[] = [];
         if (!!data && data.listWearMaintenance.length > 0) {
             const firstMain: WearMaintenanceProgressBarViewModel = data.listWearMaintenance[0];
@@ -452,26 +452,33 @@ export class DashboardService {
             let kmRemains: number = (vehicle.kmEstimated - kmCounted);
             const kmPerYear: number = Math.floor(kmRemains / countYearsWithoutOperation);
             result.filter(x => x.value === -1).forEach((x: IDashboardModel) => {
-                const index: number = result.findIndex(data => data.name === x.name);
-                if (index < result.length - 1) {
-                    const averagePrev: number = this.calculateAveragekm(result, index - 5, index);
-                    const averagePost: number = this.calculateAveragekm(result, index + 1, index + 5);
-                    const sumAverage: number = Math.floor(averagePost + averagePrev / 2);
-                    if (sumAverage > 0 && (countYearsWithoutOperation * sumAverage) < kmRemains) {
-                        x.value = (sumAverage > kmRemains ? kmRemains : sumAverage);
-                    } else {
-                        x.value = kmPerYear;
-                    }
-                } else {
-                    const kmPerMonth: number = this.calendarService.calculateKmsPerMonth(vehicle);
-                    x.value = Math.floor(this.calendarService.dayDiff(new Date(Number(x.name), 0, 1), new Date()) * (kmPerMonth / 30));
-                }
+                x.value = this.calculateValueKm(x, result, kmRemains, kmPerYear, countYearsWithoutOperation, vehicle);
                 kmRemains -= x.value;
             });
 
             result = this.calculateRemainKm(result, kmRemains);
         }
         return result;
+    }
+
+    calculateValueKm(x: IDashboardModel, result: IDashboardModel[], kmRemains: number, kmPerYear: number, 
+                    countYearsWithoutOperation: number, vehicle: VehicleModel): number {
+        let value: number = 0;
+        const index: number = result.findIndex(data => data.name === x.name);
+        if (index < result.length - 1) {
+            const averagePrev: number = this.calculateAveragekm(result, index - 5, index);
+            const averagePost: number = this.calculateAveragekm(result, index + 1, index + 5);
+            const sumAverage: number = Math.floor(averagePost + averagePrev / 2);
+            if (sumAverage > 0 && (countYearsWithoutOperation * sumAverage) < kmRemains) {
+                value = (sumAverage > kmRemains ? kmRemains : sumAverage);
+            } else {
+                value = kmPerYear;
+            }
+        } else {
+            const kmPerMonth: number = this.calendarService.calculateKmsPerMonth(vehicle);
+            value = Math.floor(this.calendarService.dayDiff(new Date(Number(x.name), 0, 1), new Date()) * (kmPerMonth / 30));
+        }
+        return value;
     }
 
     calculateRemainKm(result: IDashboardModel[], kmRemains: number): IDashboardModel[] {

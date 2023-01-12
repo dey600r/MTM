@@ -38,7 +38,7 @@ describe('InfoCalendarService', () => {
         expect(result[0].nameVehicle).toEqual(`${MockData.Vehicles[1].brand} ${MockData.Vehicles[1].model}`);
         expect(result[0].listInfoCalendarMaintenance[0].codeMaintenanceFreq).toEqual(Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
         expect(result[0].listInfoCalendarMaintenance[0].wearMaintenance).toEqual(false);
-        expect(result[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement[0].km).toEqual(76770);
+        expect(result[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement[0].km).toEqual(6000);
         expect(service.getInfoCalendar([])).toEqual([]);
     });
 
@@ -92,26 +92,26 @@ describe('InfoCalendarService', () => {
                                                                 allWears[0].listWearMaintenance[3], 
                                                                 allWears[0].listWearMaintenance[3].listWearReplacement[1], true);
         
-        expect(result.idReplacement).toEqual(1);
-        expect(result.nameReplacement).toEqual(MockData.MaintenanceElementsAux[0].name);
-        expect(result.km).toEqual(22000);
+        expect(result.idReplacement).toEqual(3);
+        expect(result.nameReplacement).toEqual(MockData.MaintenanceElementsAux[2].name);
+        expect(result.km).toEqual(24000);
         expect(result.price).toEqual(235);
         expect(result.time).toEqual(0);
-        expect(result.warning).toEqual(WarningWearEnum.WARNING);
-        expect(result.date.toDateString()).toEqual(new Date(new Date().getFullYear() - 12, new Date().getMonth() - 2, 15).toDateString());
+        expect(result.warning).toEqual(WarningWearEnum.SKULL);
+        expect(result.date.toDateString()).toEqual(new Date(new Date().getFullYear() - 11, new Date().getMonth() - 9, 15).toDateString());
 
         allWears[1].listWearMaintenance[0].listWearReplacement[0].priceOperation = null;
         result = service.createInfoCalendarReplacement(allWears[1], 
                                                         allWears[1].listWearMaintenance[0], 
                                                         allWears[1].listWearMaintenance[0].listWearReplacement[0], true);
 
-        expect(result.idReplacement).toEqual(2);
-        expect(result.nameReplacement).toEqual(MockData.MaintenanceElementsAux[1].name);
-        expect(result.km).toEqual(8000);
+        expect(result.idReplacement).toEqual(4);
+        expect(result.nameReplacement).toEqual(MockData.MaintenanceElementsAux[3].name);
+        expect(result.km).toEqual(2000);
         expect(result.price).toEqual(0);
         expect(result.time).toEqual(0);
         expect(result.warning).toEqual(WarningWearEnum.SKULL);
-        expect(result.date.toDateString()).toEqual(new Date(new Date().getFullYear() - 1, new Date().getMonth() - 2, 5).toDateString());
+        expect(result.date.toDateString()).toEqual(new Date(new Date().getFullYear() - 1, new Date().getMonth() - 8, 5).toDateString());
     });
 
     it('should get date from km', () => {
@@ -120,7 +120,7 @@ describe('InfoCalendarService', () => {
         const date: Date = service.getDateCalculatingKm(allWears[0], 
                                                         allWears[0].listWearMaintenance[3], 
                                                         allWears[0].listWearMaintenance[3].listWearReplacement[1]);
-        expect(date).toEqual(new Date(new Date().getFullYear() - 12, new Date().getMonth() - 2, 15));
+        expect(date).toEqual(new Date(new Date().getFullYear() - 11, new Date().getMonth() - 9, 15));
     });
 
     it('should get date from time', () => {
@@ -129,7 +129,7 @@ describe('InfoCalendarService', () => {
         const date: Date = service.getDateCalculatingTime(allWears[0], 
                                                         allWears[0].listWearMaintenance[3], 
                                                         allWears[0].listWearMaintenance[3].listWearReplacement[1]);
-        expect(date).toEqual(new Date(new Date().getFullYear() - 12, new Date().getMonth() - 1, 15));
+        expect(date).toEqual(new Date(new Date().getFullYear() - 16, new Date().getMonth() - 1, 15));
     });
 
     it('should calculate km info notification', () => {

@@ -192,6 +192,32 @@ export class MockMaintenance {
             toKm: null,
             master: false,
             id: 7
+        }),
+        new MaintenanceModel({
+            description: 'REVIEWS AIR FILTER - 1', 
+            listMaintenanceElement: [MockMaintenance.MaintenanceElements[3]],
+            maintenanceFreq: MockMaintenance.MaintenanceFreqs[1],
+            km: 5000,
+            time: 24,
+            init: false,
+            wear: false,
+            fromKm: 0,
+            toKm: 12000,
+            master: false,
+            id: 8
+        }),
+        new MaintenanceModel({
+            description: 'REVIEWS AIR FILTER - 2', 
+            listMaintenanceElement: [MockMaintenance.MaintenanceElements[3]],
+            maintenanceFreq: MockMaintenance.MaintenanceFreqs[1],
+            km: 2000,
+            time: 18,
+            init: false,
+            wear: false,
+            fromKm: 12000,
+            toKm: null,
+            master: false,
+            id: 9
         })
     ];
 }

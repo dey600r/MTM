@@ -12,7 +12,7 @@ import {
 import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, IInfoModel, InfoButtonEnum } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
@@ -45,8 +45,8 @@ export class OperationPage extends BasePage implements OnInit {
   loadedBody = false;
   iconNameHeaderLeft = 'bar-chart';
   iconFilter = 'filter';
-  measure: any = {};
-  coin: any = {};
+  measure: ISettingModel;
+  coin: ISettingModel;
 
   constructor(public platform: Platform,
               private dbService: DataBaseService,

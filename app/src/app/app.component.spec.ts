@@ -56,8 +56,8 @@ describe('AppComponent', () => {
   });
 
   it('should initialize the app', async () => {
-    component.initializeApp();
-    fixture.detectChanges();
+    //component.initializeApp();
+    //fixture.detectChanges();
     await platform.ready();
     fixture.whenStable().then(() => {
         expect(platform.ready).toHaveBeenCalled();

@@ -18,7 +18,7 @@ import {
 } from '@services/index';
 
 // UTILS
-import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
+import { Constants, ConstantsColumns, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Component({
   selector: 'info-calendar',
@@ -44,8 +44,8 @@ export class InfoCalendarComponent implements OnInit {
   monthSelect = new Date().getMonth();
   activeSpinner = false;
   hideVehicles: boolean[] = [];
-  measure: any = {};
-  coin: any = {};
+  measure: ISettingModel;
+  coin: ISettingModel;
 
   // TRANSLATE
   notificationEmpty = '';

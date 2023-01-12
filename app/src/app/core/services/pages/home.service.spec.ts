@@ -58,10 +58,6 @@ describe('HomeService', () => {
                 // VALIDATE MAINTENANCE
                 const maintenance: MaintenanceModel = mockMaintenance.find(x => x.id === m.idMaintenance);
                 validateWearMaintenance(m, maintenance);
-                expect(m.fromKmMaintenance).toBeLessThanOrEqual(vehicle.kmEstimated);
-                if (m.toKmMaintenance !== null) {
-                    expect(m.toKmMaintenance).toBeGreaterThanOrEqual(vehicle.kmEstimated);
-                }
                 m.listWearReplacement.forEach(r => {
                     // VALIDATE REPLACEMENT
                     const maintenanceElement: MaintenanceElementModel = mockMaintenanceElement.find(x => x.id === r.idMaintenanceElement);
@@ -302,6 +298,8 @@ describe('HomeService', () => {
         expect(data.timeMaintenance).toEqual(maintenance.time);
         expect(data.iconMaintenance).toEqual(maintenance.maintenanceFreq.icon);
         expect(data.wearMaintenance).toEqual(maintenance.wear);
+        expect(data.fromKmMaintenance).toEqual(maintenance.fromKm);
+        expect(data.toKmMaintenance).toEqual(maintenance.toKm);
     }
 
     function validateWearMaintenanceElement(data: WearReplacementProgressBarViewModel, maintenanceElement: MaintenanceElementModel) {

@@ -1,3 +1,5 @@
+import { IDashboardColorModel } from "@utils/index";
+
 export class DashboardModel<T> {
     view: any[];
     data: T[];
@@ -10,7 +12,7 @@ export class DashboardModel<T> {
     showYAxisLabel: boolean;
     yAxisLabel: string;
     legendTitle: string;
-    colorScheme: any[];
+    colorScheme: any;
     showLabels: boolean;
     isDoughnut: boolean;
     legendPosition: string;
@@ -46,7 +48,7 @@ export class DashboardModel<T> {
         this.groupPadding = (data.groupPadding !== undefined ? data.groupPadding : 4);
     }
 
-    getColorSchemeDefault(): any {
+    getColorSchemeDefault(): IDashboardColorModel {
         return this.mapColorScheme([
             'var(--ion-color-chart-first)',
             'var(--ion-color-chart-second)',
@@ -62,7 +64,7 @@ export class DashboardModel<T> {
             'var(--ion-color-chart-twelve)']);
     }
 
-    mapColorScheme(colors: any[]): any {
+    mapColorScheme(colors: any[]): IDashboardColorModel {
         return { domain: colors };
     }
 }

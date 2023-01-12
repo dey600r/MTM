@@ -6,7 +6,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum, ISettingModel } from '@utils/index';
 import {
   ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
@@ -38,8 +38,8 @@ export class AddEditOperationComponent implements OnInit {
   idMaintenanceElementSelect: number[] = [];
   owners: any [] = [];
   formatDate = this.calendarService.getFormatCalendar();
-  measure: any = {};
-  coin: any = {};
+  measure: ISettingModel;
+  coin: ISettingModel;
 
   // Translate
   translateWorkshop = '';

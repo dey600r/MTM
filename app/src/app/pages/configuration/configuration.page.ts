@@ -16,7 +16,7 @@ import {
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, IInfoModel, InfoButtonEnum } from '@utils/index';
+import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
@@ -49,7 +49,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   allMaintenanceElements: MaintenanceElementModel[] = [];
   maintenanceElements: MaintenanceElementModel[] = [];
   maxKm = 0;
-  measure: any = {};
+  measure: ISettingModel;
   segmentHeader: any[] = [];
   segmentSelected = 1;
   iconFilter = 'filter';

@@ -425,3 +425,16 @@
     color: var(--ion-color-step-600,#666);
     font-size: 14px;
   }
+
+  .div-spinner {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+  }
+
+  .spinner {
+    width: 100px;
+    height: 40px;
+  }

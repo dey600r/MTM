@@ -10,7 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ModalInputModel, SystemConfigurationModel, WearVehicleProgressBarViewModel } from '@models/index';
 
 // UTILS
-import { Constants, PageEnum, ToastTypeEnum, ISqlitePorterModel } from '@utils/index';
+import { Constants, PageEnum, ToastTypeEnum, ISqlitePorterModel, ISettingModel } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // SERVICES
@@ -32,11 +32,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     listSettings: SystemConfigurationModel[] = [];
     listDistances: any[] = [];
     distanceSelected: any = {};
-    listMoney: any[] = [];
+    listMoney: ISettingModel[] = [];
     moneySelected: any = {};
 
     // DATA THEMES
-    listThemes: string [] = [];
+    listThemes: ISettingModel[] = [];
     themeSelected: any = { code: 'L'};
 
     // DATA EXPORTS AND IMPORTS

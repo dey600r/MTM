@@ -49,7 +49,9 @@ export class MockConfiguration {
             listMaintenance: [
                 MockMaintenance.Maintenances[1],
                 MockMaintenance.Maintenances[3],
-                MockMaintenance.Maintenances[6]
+                MockMaintenance.Maintenances[6],
+                MockMaintenance.Maintenances[7],
+                MockMaintenance.Maintenances[8]
             ],
             id: 3
         })

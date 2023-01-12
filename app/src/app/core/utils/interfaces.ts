@@ -51,3 +51,13 @@ export interface IDashboardSerieModel {
     name: string;
     series: any[];
 }
+
+export interface IDashboardColorModel {
+    domain: any[];
+}
+
+export interface ISettingModel {
+    code: string;
+    value: string;
+    valueLarge: string;
+}

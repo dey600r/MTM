@@ -6,7 +6,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, Constants, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
   ModalInputModel, MaintenanceModel,
   MaintenanceFreqModel, MaintenanceElementModel
@@ -34,7 +34,7 @@ export class AddEditMaintenanceComponent implements OnInit {
   valueRange: any = { lower: 0 , upper: 100000 };
   showRange = '';
   maintenanceElementSelect: number[] = [];
-  measure: any = {};
+  measure: ISettingModel;
 
   // TRANSLATE
   translateSelect = '';

@@ -13,12 +13,14 @@ import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 
 // MODELS
 import { InfoVehicleConfigurationModel, InfoVehicleHistoricModel } from '@models/index';
-import { IDashboardModel, WarningWearEnum } from '@utils/index';
+import { IDashboardModel, ISettingModel, WarningWearEnum } from '@utils/index';
 
 describe('InfoVehicleService', () => {
     let service: InfoVehicleService;
     let translate: TranslateService;
     let controlService: ControlService;
+
+    let measure: ISettingModel = { code: 'km', value: 'km', valueLarge: 'kilometer' };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -60,7 +62,7 @@ describe('InfoVehicleService', () => {
             { id: 1, name: (year-1).toString(), value: 800 },
             { id: 1, name: year.toString(), value: 12 },
         ];
-        const label: string = service.getLabelAverageKmVehicle(data, { value: 'km' });
+        const label: string = service.getLabelAverageKmVehicle(data, measure);
         expect(label).toContain('330');
         expect(label).toContain('12');
         expect(label).toContain('km');
@@ -73,14 +75,14 @@ describe('InfoVehicleService', () => {
     });
 
     it('should get label km vehicle', () => {
-        expect(service.getLabelKmVehicle(1000, 1000, { value: 'km' })).toContain('1000');
-        expect(service.getLabelKmVehicle(1000, 1000, { value: 'km' })).not.toContain('2000');
-        expect(service.getLabelKmVehicle(1000, 2000, { value: 'km' })).toContain('2000');
+        expect(service.getLabelKmVehicle(1000, 1000, measure)).toContain('1000');
+        expect(service.getLabelKmVehicle(1000, 1000, measure)).not.toContain('2000');
+        expect(service.getLabelKmVehicle(1000, 2000, measure)).toContain('2000');
     });
 
     it('should show toast message', () => {
         const showToast = spyOn(controlService, 'showMsgToast').and.returnValue(Promise.resolve());
-        service.showInfoVehicle(new Date(), { valueLarge: 'km'});
+        service.showInfoVehicle(new Date(), measure);
         expect(showToast).toHaveBeenCalled();
     });
 
