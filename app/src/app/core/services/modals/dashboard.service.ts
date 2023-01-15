@@ -430,18 +430,65 @@ export class DashboardService {
         const datePurchase: Date = new Date(vehicle.datePurchase);
         const initYear: number = datePurchase.getFullYear();
         const todayYear: number = new Date().getFullYear();
-        const kmPerMonth: number = this.calendarService.calculateKmsPerMonth(vehicle);
+        const kmPerDayVehicle: number = Math.floor(this.calendarService.calculateKmsPerMonth(vehicle) / 30);
+        let kmRemains: number = vehicle.km;
         for (let i = initYear; i <= todayYear; i++) {
             let averageKm: number = -1;
-            let operationsYear: OperationModel[] = operations.filter(x => x.date && new Date(x.date).getFullYear() === i);
+            const operationsYear: OperationModel[] = this.commonService.orderBy(
+                operations.filter(x => x.date && new Date(x.date).getFullYear() === i),
+                this.commonService.nameOf(() => new OperationModel().km));
             if (operationsYear.length > 0) {
-                averageKm = this.calculateInitalkmSumPerYear(datePurchase, operationsYear[0].date, kmPerMonth, i) + // INIT
+                const kmPerDay: number = this.calculateKmsPerDayPast(operations, operationsYear, i, kmPerDayVehicle);
+                averageKm = this.calculateInitalkmSumPerYear(datePurchase, operationsYear[0].date, kmPerDay, i) + // INIT
                             (operationsYear[operationsYear.length - 1].km - operationsYear[0].km) + // MEDIA
-                            this.calculateFinalkmSumPerYear(operationsYear[operationsYear.length - 1].date, kmPerMonth, i); // END
+                            this.calculateFinalkmSumPerYear(operationsYear[operationsYear.length - 1].date, kmPerDay, i); // END
+                if (averageKm > kmRemains) {
+                    averageKm = kmRemains;
+                }
+                kmRemains -= averageKm;
             }
             result = [...result, this.getDataDashboard(i.toString(), averageKm)];
         }
         return result;
+    }
+
+    calculateKmsPerDayPast(operations: OperationModel[], operationYear: OperationModel[], year: number, kmPerDay: number): number {
+        let kmBefore: number = kmPerDay;
+        let kmMiddle: number = kmPerDay;
+        let kmAfter: number = kmPerDay;
+        const modelDate: string = this.commonService.nameOf(() => new OperationModel().date);
+
+        // CALCULATE KM PER DAY USING OLD OPERATIONS
+        const operationYearBefore: OperationModel[] = this.commonService.orderBy(operations.filter(x => 
+            x.date && (new Date(x.date).getFullYear() < year && new Date(x.date).getFullYear() > year - 2)), modelDate);
+        if (operationYearBefore.length > 0) {
+            kmBefore = this.calculateKmPerDayOperation(operationYearBefore[operationYearBefore.length - 1], operationYear[0]);
+        }
+
+        // CALCULATE KM PER DAY USING OLD NEW OPERATION
+        const operationYearAfter: OperationModel[] = this.commonService.orderBy(operations.filter(x => 
+            x.date && (new Date(x.date).getFullYear() > year && new Date(x.date).getFullYear() < year + 2)), modelDate);
+        if (operationYearAfter.length > 0) {
+            kmAfter = this.calculateKmPerDayOperation(operationYear[operationYear.length - 1], operationYearAfter[0]);
+        }
+
+        // CALCULATE KM PER DAY USING OPERATION ON THE CURRENT YEAR
+        if (operationYear.length > 1) {
+            kmMiddle = this.calculateKmPerDayOperation(operationYear[0], operationYear[operationYear.length - 1]);
+        }
+
+        // AVERAGE KM
+        const result = Math.floor((kmBefore + kmMiddle + kmAfter) / 3);
+        return (result === 0 ? 1 : result);
+    }
+
+    calculateKmPerDayOperation(initialOperation: OperationModel, finalOperation: OperationModel): number {
+        return this.calculateKmPerDay(initialOperation.date, finalOperation.date, initialOperation.km, finalOperation.km);
+    }
+
+    calculateKmPerDay(initialDate: Date, finalDate: Date, initialKm: number, finalKm: number): number {
+        const difDays: number = this.calendarService.dayDiff(new Date(initialDate), new Date(finalDate));
+        return Math.abs(Math.floor((finalKm - initialKm) / difDays));
     }
 
     calculateKmPerYearWithOutOperations(result: IDashboardModel[], vehicle: VehicleModel): IDashboardModel[] {
@@ -464,19 +511,21 @@ export class DashboardService {
     calculateValueKm(x: IDashboardModel, result: IDashboardModel[], kmRemains: number, kmPerYear: number, 
                     countYearsWithoutOperation: number, vehicle: VehicleModel): number {
         let value: number = 0;
-        const index: number = result.findIndex(data => data.name === x.name);
-        if (index < result.length - 1) {
-            const averagePrev: number = this.calculateAveragekm(result, index - 5, index);
-            const averagePost: number = this.calculateAveragekm(result, index + 1, index + 5);
-            const sumAverage: number = Math.floor(averagePost + averagePrev / 2);
-            if (sumAverage > 0 && (countYearsWithoutOperation * sumAverage) < kmRemains) {
-                value = (sumAverage > kmRemains ? kmRemains : sumAverage);
+        if (kmRemains > 0) {
+            const index: number = result.findIndex(data => data.name === x.name);
+            if (index < result.length - 1) {
+                const averagePrev: number = this.calculateAveragekm(result, index - 5, index);
+                const averagePost: number = this.calculateAveragekm(result, index + 1, index + 5);
+                const sumAverage: number = Math.floor(averagePost + averagePrev / 2);
+                if (sumAverage > 0 && (countYearsWithoutOperation * sumAverage) < kmRemains) {
+                    value = (sumAverage > kmRemains ? kmRemains : sumAverage);
+                } else {
+                    value = kmPerYear;
+                }
             } else {
-                value = kmPerYear;
+                const kmPerMonth: number = this.calendarService.calculateKmsPerMonth(vehicle);
+                value = Math.floor(this.calendarService.dayDiff(new Date(Number(x.name), 0, 1), new Date()) * (kmPerMonth / 30));
             }
-        } else {
-            const kmPerMonth: number = this.calendarService.calculateKmsPerMonth(vehicle);
-            value = Math.floor(this.calendarService.dayDiff(new Date(Number(x.name), 0, 1), new Date()) * (kmPerMonth / 30));
         }
         return value;
     }
@@ -507,16 +556,16 @@ export class DashboardService {
         return Math.floor(sum / (items === 0 ? 1 : items));
     }
 
-    calculateInitalkmSumPerYear(datePurchase: Date, dateOperation: Date, kmPerMonth: number, year: number): number {
+    calculateInitalkmSumPerYear(datePurchase: Date, dateOperation: Date, kmPerDay: number, year: number): number {
         const initialDate: Date = new Date(year, 0, 1);
         const initDate: Date = (datePurchase > initialDate ? datePurchase : initialDate);
-        return Math.floor(this.calendarService.dayDiff(initDate, new Date(dateOperation)) * (kmPerMonth / 30));
+        return Math.floor(this.calendarService.dayDiff(initDate, new Date(dateOperation)) * kmPerDay);
     }
 
-    calculateFinalkmSumPerYear(dateOperation: Date, kmPerMonth: number, year: number): number {
+    calculateFinalkmSumPerYear(dateOperation: Date, kmPerDay: number, year: number): number {
         const finalDate: Date = new Date(year, 11, 31);
         const finDate: Date = (new Date() < finalDate ? new Date() : finalDate);
-        return Math.floor(this.calendarService.dayDiff(new Date(dateOperation), finDate) * (kmPerMonth / 30));
+        return Math.floor(this.calendarService.dayDiff(new Date(dateOperation), finDate) * kmPerDay);
     }
 
     // CHART CONFIGURATION VEHICLE

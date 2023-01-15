@@ -15,7 +15,7 @@ import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/inde
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { DashboardModel, InfoVehicleConfigurationModel, MaintenanceElementModel, MaintenanceModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel } from '@models/index';
+import { DashboardModel, InfoVehicleConfigurationModel, MaintenanceModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel } from '@models/index';
 import { FilterMonthsEnum, Constants, PageEnum, FilterKmTimeEnum, IDashboardModel, IDashboardSerieModel, ISettingModel } from '@utils/index';
 
 describe('DashboardService', () => {
@@ -96,7 +96,7 @@ describe('DashboardService', () => {
         const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
         const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
-        expect(vehicle1.value).toEqual(1955);
+        expect(vehicle1.value).toEqual(2772);
         expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
         const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(5007);
@@ -113,7 +113,7 @@ describe('DashboardService', () => {
         const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
         const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
-        expect(vehicle1.value).toEqual(0.08);
+        expect(vehicle1.value).toEqual(0.07);
         expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
         const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(0);
@@ -141,7 +141,7 @@ describe('DashboardService', () => {
         const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
         const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
-        expect(vehicle1.value).toEqual(417);
+        expect(vehicle1.value).toEqual(1234);
         expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
         const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(1225);
@@ -157,7 +157,7 @@ describe('DashboardService', () => {
         const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
         const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
-        expect(vehicle1.value).toEqual(1301);
+        expect(vehicle1.value).toEqual(2007);
         expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
         const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(452);
@@ -246,7 +246,7 @@ describe('DashboardService', () => {
         expect(opt1.value).toEqual(3500);
         expect(opt1.name).toEqual(MockData.OperationTypes[5].description);
         const opt2: any = dashboard.data.find(x => x.id === MockData.OperationTypes[0].id);
-        expect(opt2.value).toEqual(1642);
+        expect(opt2.value).toEqual(2459);
         expect(opt2.name).toEqual(MockData.OperationTypes[0].description);
         const opt3: any = dashboard.data.find(x => x.id === MockData.OperationTypes[6].id);
         expect(opt3.value).toEqual(1820);
@@ -363,13 +363,13 @@ describe('DashboardService', () => {
     });
 
     it('should calculate initial km sum per year', () => {
-        expect(service.calculateInitalkmSumPerYear(new Date(2021, 10, 12), new Date(2021, 11, 15), 500, 2021)).toEqual(550);
-        expect(service.calculateInitalkmSumPerYear(new Date(2021, 10, 12), new Date(2022, 11, 15), 500, 2022)).toEqual(5800);
+        expect(service.calculateInitalkmSumPerYear(new Date(2021, 10, 12), new Date(2021, 11, 15), 17, 2021)).toEqual(561);
+        expect(service.calculateInitalkmSumPerYear(new Date(2021, 10, 12), new Date(2022, 11, 15), 17, 2022)).toEqual(5916);
     });
 
     it('should calculate final km sum per year', () => {
-        expect(service.calculateFinalkmSumPerYear(new Date(2021, 11, 15), 500, 2021)).toEqual(266);
-        expect(service.calculateFinalkmSumPerYear(new Date(new Date().getFullYear(), new Date().getMonth() - 2, new Date().getDay()), 500, new Date().getFullYear())).toBeGreaterThanOrEqual(500 * 2);
+        expect(service.calculateFinalkmSumPerYear(new Date(2021, 11, 15), 17, 2021)).toEqual(272);
+        expect(service.calculateFinalkmSumPerYear(new Date(new Date().getFullYear(), new Date().getMonth() - 2, new Date().getDay()), 17, new Date().getFullYear())).toBeGreaterThanOrEqual(17 * 2);
     });
 
     it('should calculate average km', () => {
@@ -429,13 +429,13 @@ describe('DashboardService', () => {
             dateKms: new Date(year, month - 2, day),
             datePurchase: new Date(year - 8, month - 3, day)
         }));
-        expect(result[0].value).toEqual(1492);
-        expect(result[1].value).toEqual(1292);
-        expect(result[2].value).toEqual(1492);
-        expect(result[3].value).toEqual(1692);
-        expect(result[4].value).toEqual(2092);
-        expect(result[5].value).toEqual(1892);
-        expect(result[6].value).toEqual(45);
+        expect(result[0].value).toEqual(1491);
+        expect(result[1].value).toEqual(1291);
+        expect(result[2].value).toEqual(1491);
+        expect(result[3].value).toEqual(1691);
+        expect(result[4].value).toEqual(2091);
+        expect(result[5].value).toEqual(1891);
+        expect(result[6].value).toEqual(49);
     });
 
     it('should calculate km per year without operation 2', () => {
@@ -464,7 +464,7 @@ describe('DashboardService', () => {
         expect(result[3].value).toEqual(85);
         expect(result[4].value).toEqual(85);
         expect(result[5].value).toEqual(85);
-        expect(result[6].value).toEqual(45);
+        expect(result[6].value).toEqual(49);
     });
 
     it('should calculate km per year with operation', () => {
@@ -494,13 +494,32 @@ describe('DashboardService', () => {
         expect(result[10].name).toEqual('2016');
         expect(result[10].value).toEqual(7300);
         expect(result[11].name).toEqual('2017');
-        expect(result[11].value).toEqual(7280);
+        expect(result[11].value).toEqual(25116);
         expect(result[12].name).toEqual('2018');
-        expect(result[12].value).toEqual(7280);
+        expect(result[12].value).toEqual(26536);
         expect(result[13].name).toEqual('2019');
         expect(result[13].value).toEqual(-1);
         expect(result[14].name).toEqual('2020');
         expect(result[15].value).toEqual(-1);
+    });
+
+    it('should calculate km per day', () => {
+        const dataVehicle: VehicleModel = MockData.Vehicles[0];
+        const dataOperation: OperationModel[] = MockData.Operations.filter(x => x.vehicle.id === dataVehicle.id);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === 2006), 2006, 25)).toEqual(25);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === 2008), 2008, 120)).toEqual(120);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === 2016), 2016, 34)).toEqual(30);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === 2017), 2017, 15)).toEqual(67);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === 2018), 2018, 12)).toEqual(79);
+    });
+
+    it('should calculate km per day using operations', () => {
+        expect(service.calculateKmPerDayOperation(
+            new OperationModel({date: new Date(2020, 1, 1), km: 500}),
+            new OperationModel({date: new Date(2020, 2, 1), km: 2000}))).toEqual(51);
+        expect(service.calculateKmPerDayOperation(
+            new OperationModel({date: new Date(2020, 2, 1), km: 2000}),
+            new OperationModel({date: new Date(2020, 1, 1), km: 500}))).toEqual(52);
     });
 
     it('should get dashboard information vehicle', () => {

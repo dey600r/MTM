@@ -25,7 +25,7 @@ export class MockVehicle {
             model: 'R6',
             brand: 'Yamaha',
             year: 2005,
-            km: 100200,
+            km: 111200,
             configuration: MockConfiguration.Configurations[0],
             vehicleType: MockVehicle.VehicleTypes[0],
             kmsPerMonth: 600,

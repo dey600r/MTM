@@ -206,6 +206,25 @@ export class MockOperation {
                 MockMaintenance.MaintenanceElements[5],
                 MockMaintenance.MaintenanceElements[6]
             ]
+        }),
+        new OperationModel({
+            description: 'Revisión8',
+            details: 'Filtro aceite, aceite motor, residuos',
+            operationType: MockOperation.OperationTypes[0],
+            vehicle: MockVehicle.Vehicles[0],
+            km: 110300,
+            date: new Date(2018, 7, 24),
+            location: 'Madrid (Motos Cortes)',
+            owner: 'Yo',
+            price: 700,
+            document: '',
+            id: 11,
+            listMaintenanceElement: [
+                MockMaintenance.MaintenanceElements[2],
+                MockMaintenance.MaintenanceElements[4],
+                MockMaintenance.MaintenanceElements[5],
+                MockMaintenance.MaintenanceElements[6]
+            ]
         })
     ];
 }
