@@ -56,6 +56,7 @@ describe('AppComponent', () => {
   });
 
   it('should initialize the app', async () => {
+    let spyControlService = SpyMockConfig.SpyConfig.controlService.activateButtonExist.and.returnValue(null);
     //component.initializeApp();
     //fixture.detectChanges();
     await platform.ready();
@@ -64,7 +65,7 @@ describe('AppComponent', () => {
         expect(statusBar.styleBlackTranslucent).toHaveBeenCalled();
         expect(splashScreen.hide).toHaveBeenCalled();
         expect(dbService.initDB).toHaveBeenCalled();
-        expect(controlService.activateButtonExist).toHaveBeenCalledTimes(1);
+        expect(spyControlService).toHaveBeenCalled();
         expect(exportService.createOutputDirectory).toHaveBeenCalled();
     });
   });

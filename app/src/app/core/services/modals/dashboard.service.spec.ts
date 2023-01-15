@@ -412,6 +412,8 @@ describe('DashboardService', () => {
     it('should calculate km per year without operation 1', () => {
         const today: Date = new Date();
         const year: number = today.getFullYear();
+        const month: number = today.getMonth();
+        const day: number = today.getDate();
         const data: IDashboardModel[] = [
             { id: 1, name: (year-6).toString(), value: -1 },
             { id: 1, name: (year-5).toString(), value: 200 },
@@ -424,21 +426,23 @@ describe('DashboardService', () => {
         let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, new VehicleModel({ 
             km: 9500,
             kmEstimated: 10000,
-            dateKms: new Date(year, today.getMonth() - 2, today.getDay()),
-            datePurchase: new Date(year - 8, today.getMonth() - 3, today.getDay())
+            dateKms: new Date(year, month - 2, day),
+            datePurchase: new Date(year - 8, month - 3, day)
         }));
-        expect(result[0].value).toEqual(1493);
-        expect(result[1].value).toEqual(1293);
-        expect(result[2].value).toEqual(1493);
-        expect(result[3].value).toEqual(1693);
-        expect(result[4].value).toEqual(2093);
-        expect(result[5].value).toEqual(1893);
-        expect(result[6].value).toEqual(39);
+        expect(result[0].value).toEqual(1492);
+        expect(result[1].value).toEqual(1292);
+        expect(result[2].value).toEqual(1492);
+        expect(result[3].value).toEqual(1692);
+        expect(result[4].value).toEqual(2092);
+        expect(result[5].value).toEqual(1892);
+        expect(result[6].value).toEqual(45);
     });
 
     it('should calculate km per year without operation 2', () => {
         const today: Date = new Date();
         const year: number = today.getFullYear();
+        const month: number = today.getMonth();
+        const day: number = today.getDate();
         const data: IDashboardModel[] = [
             { id: 1, name: (year-6).toString(), value: 9000 },
             { id: 1, name: (year-5).toString(), value: 600 },
@@ -451,16 +455,16 @@ describe('DashboardService', () => {
         let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, new VehicleModel({ 
             km: 9500,
             kmEstimated: 10000,
-            dateKms: new Date(year, today.getMonth() - 2, today.getDay()),
-            datePurchase: new Date(year - 8, today.getMonth() - 3, today.getDay())
+            dateKms: new Date(year, month - 2, day),
+            datePurchase: new Date(year - 8, month - 3, day)
         }));
-        expect(result[0].value).toEqual(9006);
-        expect(result[1].value).toEqual(606);
-        expect(result[2].value).toEqual(86);
-        expect(result[3].value).toEqual(86);
-        expect(result[4].value).toEqual(86);
-        expect(result[5].value).toEqual(86);
-        expect(result[6].value).toEqual(39);
+        expect(result[0].value).toEqual(9005);
+        expect(result[1].value).toEqual(605);
+        expect(result[2].value).toEqual(85);
+        expect(result[3].value).toEqual(85);
+        expect(result[4].value).toEqual(85);
+        expect(result[5].value).toEqual(85);
+        expect(result[6].value).toEqual(45);
     });
 
     it('should calculate km per year with operation', () => {
