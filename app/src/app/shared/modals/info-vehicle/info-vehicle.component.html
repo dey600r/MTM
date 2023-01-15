@@ -20,12 +20,8 @@
 </ion-header>
 
 <ion-content>
-  <div class="info-main padding-info" *ngIf="vehicles.length === 0">
-    <div class="p-color">
-        <ion-icon class="font-size26" name="analytics"></ion-icon>
-        <h3 class="info-text-notification-empty padding-info-title">{{ 'ALERT.NoDataFound' | translate }}</h3>
-    </div>
-  </div>
+  <!-- INFO VEHICLE -->
+  <app-info *ngIf="vehicles.length === 0" [inputInfo]="input"></app-info>
   <!-- VEHICLE SUMMARY -->
   <ion-list *ngIf="vehicles.length > 0">
     <!-- INFORMATION VEHICLE -->

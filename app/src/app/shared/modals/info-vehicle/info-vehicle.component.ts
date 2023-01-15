@@ -19,7 +19,7 @@ import {
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, IDashboardModel, ISettingModel } from '@utils/index';
+import { ConstantsColumns, IDashboardModel, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
 
 @Component({
   selector: 'app-info-vehicle',
@@ -30,6 +30,7 @@ export class InfoVehicleComponent implements OnInit {
 
   // MODAL MODELS
   modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
+  input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
   // DATA
   vehicles: VehicleModel[] = [];
@@ -86,6 +87,14 @@ export class InfoVehicleComponent implements OnInit {
 
   initSummary() {
     this.modalInputModel = new ModalInputModel<any, VehicleModel>(this.navParams.data);
+    this.input = new ModalInputModel<IInfoModel>({
+      parentPage: this.modalInputModel.parentPage,
+      data: {
+        text: 'ALERT.NoDataFound',
+        icon: 'analytics',
+        info: InfoButtonEnum.NONE
+      }
+    });
 
     const settings = this.dbService.getSystemConfigurationData();
     this.measure = this.settingsService.getDistanceSelected(settings);
