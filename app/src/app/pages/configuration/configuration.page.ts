@@ -4,13 +4,19 @@ import { IonSelect, Platform } from '@ionic/angular';
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
-// UTILS
-import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService } from '@services/index';
-import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum } from '@utils/index';
+// SERVICES
+import { 
+  DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService, DashboardService, IconService
+} from '@services/index';
+
+// MODELS
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
-  VehicleModel, OperationModel, ListModalModel, ListDataModalModel
+  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel
 } from '@models/index';
+
+// UTILS
+import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
@@ -18,6 +24,7 @@ import { AddEditMaintenanceComponent } from '@modals/add-edit-maintenance/add-ed
 import { AddEditMaintenanceElementComponent } from '@modals/add-edit-maintenance-element/add-edit-maintenance-element.component';
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 import { BasePage } from '@pages/base.page';
+import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
   selector: 'app-configuration',
@@ -27,25 +34,29 @@ import { BasePage } from '@pages/base.page';
 export class ConfigurationPage extends BasePage implements OnInit {
 
   // MODAL
+  inputConfiguration: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  inputMaintenance: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  inputMaintenanceElement: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   dataReturned: ModalOutputModel;
-
-  // MODEL FORM
-  rowConfSelected: ConfigurationModel = new ConfigurationModel();
-  rowMainSelected: MaintenanceModel = new MaintenanceModel();
-  rowReplSelected: MaintenanceElementModel = new MaintenanceElementModel();
 
   // DATA
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
+  allConfigurations: ConfigurationModel[] = [];
   configurations: ConfigurationModel[] = [];
+  allMaintenances: MaintenanceModel[] = [];
   maintenances: MaintenanceModel[] = [];
+  allMaintenanceElements: MaintenanceElementModel[] = [];
   maintenanceElements: MaintenanceElementModel[] = [];
   maxKm = 0;
-  measure: any = {};
+  measure: ISettingModel;
   segmentHeader: any[] = [];
   segmentSelected = 1;
+  iconFilter = 'filter';
 
-  loaded = false;
+  initLoaded = true;
+  loadedHeader = false;
+  loadedBody = false;
 
   @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
@@ -57,6 +68,8 @@ export class ConfigurationPage extends BasePage implements OnInit {
               private configurationService: ConfigurationService,
               private settingsService: SettingsService,
               private vehicleService: VehicleService,
+              private dashboardService: DashboardService,
+              private iconService: IconService,
               private detector: ChangeDetectorRef) {
     super(platform, translator);
   }
@@ -66,7 +79,17 @@ export class ConfigurationPage extends BasePage implements OnInit {
   }
 
   initPage() {
+    this.initInfoData();
+    this.initData();
+  }
 
+  ionViewDidEnter() {
+    if (this.initLoaded) {
+      this.showSkeleton();
+    }
+  }
+
+  initInfoData() {
     this.segmentSelected = 1;
     this.segmentHeader = [
       { id: 1, title: 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS', icon: 'cog'},
@@ -74,12 +97,39 @@ export class ConfigurationPage extends BasePage implements OnInit {
       { id: 3, title: 'PAGE_CONFIGURATION.REPLACEMENTS', icon: 'repeat'}
     ];
 
+    this.inputConfiguration = new ModalInputModel<IInfoModel>({
+      parentPage: PageEnum.CONFIGURATION,
+      data: {
+        text: 'ALERT.ConfigurationEmpty',
+        icon: this.segmentHeader[0].icon,
+        info: InfoButtonEnum.NONE
+      }
+    });
+    this.inputMaintenance = new ModalInputModel<IInfoModel>({
+        parentPage: PageEnum.CONFIGURATION,
+        data: {
+          text: 'ALERT.MaintenanceEmpty',
+          icon: this.segmentHeader[1].icon,
+          info: InfoButtonEnum.NONE
+        }
+      });
+    this.inputMaintenanceElement = new ModalInputModel({
+        parentPage: PageEnum.CONFIGURATION,
+        data: {
+          text: 'ALERT.MaintenanceElementEmpty',
+          icon: this.segmentHeader[2].icon,
+          info: InfoButtonEnum.NONE
+        }
+      });
+
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
       }
     });
+  }
 
+  initData() {
     this.dbService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
@@ -94,33 +144,38 @@ export class ConfigurationPage extends BasePage implements OnInit {
     });
 
     this.dbService.getConfigurations().subscribe(data => {
+      this.allConfigurations = data; 
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+      this.dashboardService.setSearchConfiguration();
+      this.showSkeletonBodyNotInit(500);
       this.detector.detectChanges();
     });
 
     this.dbService.getMaintenance().subscribe(data => {
+      this.allMaintenances = data;
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+      this.dashboardService.setSearchConfiguration();
+      this.showSkeletonBodyNotInit(500);
       this.detector.detectChanges();
     });
 
     this.dbService.getMaintenanceElement().subscribe(data => {
-      this.maintenanceElements = this.configurationService.orderMaintenanceElement(data);
+      this.allMaintenanceElements = data;
+      this.maintenanceElements = this.configurationService.orderMaintenanceElement(data); 
+      this.dashboardService.setSearchConfiguration();
+      this.showSkeletonBodyNotInit(500);
+      this.detector.detectChanges();
+    });
+
+    this.dashboardService.getObserverSearchConfiguration().subscribe(filter => {
+      this.filterConfiguration(filter);
       this.detector.detectChanges();
     });
   }
 
-  ionViewDidEnter() {
-    if (document.getElementById('custom-overlay').style.display === 'flex' ||
-    document.getElementById('custom-overlay').style.display === '') {
-      document.getElementById('custom-overlay').style.display = 'none';
-    }
-    if (!this.loaded) {
-      setTimeout(() => { this.loaded = true; }, 1200);
-    }
-  }
-
   segmentChanged(event: any): void {
     this.segmentSelected = Number(event.detail.value);
+    this.showSkeletonBodyNotInit(500);
   }
 
   openModalSegmentSelected() {
@@ -141,7 +196,6 @@ export class ConfigurationPage extends BasePage implements OnInit {
   }
 
   async openListModalConfiguration(itemSliding: any, configuration: ConfigurationModel) {
-    this.rowConfSelected = configuration;
     let listDataModel: ListDataModalModel[] = [];
     this.vehicles.forEach(x => {
       listDataModel = [...listDataModel,
@@ -150,26 +204,27 @@ export class ConfigurationPage extends BasePage implements OnInit {
           `${x.brand} ${x.model}`,
           x.configuration.name,
           `${x.km} ${this.measure.value}`,
-          this.vehicleService.getIconVehicle(x),
+          x.vehicleType.icon,
           (x.configuration.id === configuration.id)
         )];
     });
     const listModel: ListModalModel = new ListModalModel(this.translator.instant('PAGE_CONFIGURATION.AssignConfigurationToVehicle',
       { configuration : configuration.name }), true, listDataModel);
     const modal = await this.controlService.openModal(PageEnum.CONFIGURATION,
-      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>(true, listModel, [], PageEnum.CONFIGURATION));
+      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>({
+          data: listModel,
+          parentPage: PageEnum.CONFIGURATION
+        }));
 
     const { data } = await modal.onWillDismiss();
     if (itemSliding) { itemSliding.close(); }
     if (data && data.data && data.action === ModalOutputEnum.SAVE) {
-      this.showConfirmSaveVehiclesAssociatedToConfiguration(data.data);
+      this.showConfirmSaveVehiclesAssociatedToConfiguration(data.data, configuration);
     }
   }
 
   async openListModalMaintenance(itemSliding: any, maintenance: MaintenanceModel) {
-    this.rowMainSelected = maintenance;
     let listDataModel: ListDataModalModel[] = [];
-
     this.configurations.forEach(x => {
       listDataModel = [...listDataModel,
         new ListDataModalModel(
@@ -185,39 +240,76 @@ export class ConfigurationPage extends BasePage implements OnInit {
     const listModel: ListModalModel = new ListModalModel(this.translator.instant('PAGE_CONFIGURATION.AssignMaintenanceToConfiguration',
       { maintenance : maintenance.description }), true, listDataModel);
     const modal = await this.controlService.openModal(PageEnum.CONFIGURATION,
-      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>(true, listModel, [], PageEnum.CONFIGURATION));
+      ListDataToUpdateComponent, new ModalInputModel<ListModalModel>({
+        data: listModel,
+        parentPage: PageEnum.CONFIGURATION
+      }));
 
     const { data } = await modal.onWillDismiss();
     if (itemSliding) { itemSliding.close(); }
     if (data && data.data && data.action === ModalOutputEnum.SAVE) {
-      this.showConfirmSaveMaintenancesAssociatedToConfiguration(data.data);
+      this.showConfirmSaveMaintenancesAssociatedToConfiguration(data.data, maintenance);
     }
+  }
+
+  showPopover(ev: any) {
+    this.controlService.showPopover(PageEnum.CONFIGURATION, ev, SearchDashboardPopOverComponent,
+      new ModalInputModel({ parentPage: PageEnum.CONFIGURATION }));
+  }
+
+  filterConfiguration(filter: SearchDashboardModel) {
+    const filteredText: string = filter.searchText.toLowerCase();
+
+    // FILTER CONFIGURATION
+    const filteredVehicles: VehicleModel[] = this.vehicles.filter(x => filter.searchVehicle.some(y => x.id === y.id));
+    this.configurations = this.commonService.orderBy(this.allConfigurations.filter(x => 
+      (filteredVehicles.length === 0 || filteredVehicles.some(y => x.id === y.configuration.id)) &&
+      (x.name.toLowerCase().includes(filteredText) || x.description.toLowerCase().includes(filteredText))),
+      ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+    
+    // FILTER MAINTENANCE
+    this.maintenances = this.commonService.orderBy(this.allMaintenances.filter(x =>
+      (filteredVehicles.length === 0 || this.configurations.some(y => y.listMaintenance.some(z => x.id === z.id))) &&
+      (x.description.toLowerCase().includes(filteredText))),
+      ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+
+    // FILTER MAINTENANCE ELEMENT
+    this.maintenanceElements = this.configurationService.orderMaintenanceElement(this.allMaintenanceElements.filter(x =>
+      (filteredVehicles.length === 0 || this.maintenances.some(y => y.listMaintenanceElement.some(z => x.id === z.id))) &&
+      (x.name.toLowerCase().includes(filteredText) || x.description.toLowerCase().includes(filteredText))));
+
+    this.loadIconSearch();
+  }
+
+  loadIconSearch() {
+    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.CONFIGURATION));
   }
 
   /** CONFIGURATION */
 
   openConfigurationModal(row: ConfigurationModel = new ConfigurationModel(), create: boolean = true) {
-    this.rowConfSelected = row;
-    this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditConfigurationComponent, new ModalInputModel(create, this.rowConfSelected, [], PageEnum.CONFIGURATION));
+    this.controlService.openModal(PageEnum.CONFIGURATION, AddEditConfigurationComponent, new ModalInputModel<ConfigurationModel>({
+          isCreate: create, 
+          data: row,
+          parentPage: PageEnum.CONFIGURATION
+        }));
   }
 
   deleteConfiguration(row: ConfigurationModel) {
-    this.rowConfSelected = row;
-    this.showConfirmDeleteConfiguration();
+    this.showConfirmDeleteConfiguration(row);
   }
 
-  showConfirmDeleteConfiguration() {
-    const vehiclesDeleteConfig: VehicleModel[] = this.vehicles.filter(x => x.configuration.id === this.rowConfSelected.id);
+  showConfirmDeleteConfiguration(row: ConfigurationModel) {
+    const vehiclesDeleteConfig: VehicleModel[] = this.vehicles.filter(x => x.configuration.id === row.id);
     let msg: string = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfiguration',
-      {configuration: this.rowConfSelected.name});
+      {configuration: row.name});
     if (!!vehiclesDeleteConfig && vehiclesDeleteConfig.length > 0) {
       let vehiclesName = '';
       vehiclesDeleteConfig.forEach((x, index) => {
         vehiclesName += x.model + ((index + 1) < vehiclesDeleteConfig.length ? ',' : '');
       });
       msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmDeleteConfigurationMoveVehicle',
-        { configuration: this.rowConfSelected.name, vehicle: vehiclesName });
+        { configuration: row.name, vehicle: vehiclesName });
     }
 
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,
@@ -227,9 +319,9 @@ export class ConfigurationPage extends BasePage implements OnInit {
           vehiclesDeleteConfig.forEach((x, index) => {
             x.configuration.id = 1;
           });
-          this.configurationService.saveConfiguration(this.rowConfSelected, ActionDBEnum.DELETE, vehiclesDeleteConfig).then(x => {
+          this.configurationService.saveConfiguration(row, ActionDBEnum.DELETE, vehiclesDeleteConfig).then(x => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
-               'PAGE_CONFIGURATION.DeleteSaveConfiguration', { configuration: this.rowConfSelected.name });
+               'PAGE_CONFIGURATION.DeleteSaveConfiguration', { configuration: row.name });
           }).catch(e => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
           });
@@ -238,21 +330,21 @@ export class ConfigurationPage extends BasePage implements OnInit {
     );
   }
 
-  showConfirmSaveVehiclesAssociatedToConfiguration(data: ListModalModel) {
+  showConfirmSaveVehiclesAssociatedToConfiguration(data: ListModalModel, configuration: ConfigurationModel) {
     const msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmSaveVehiclesAssociatedToConfiguration',
-      { configuration: this.rowConfSelected.name });
+      { configuration: configuration.name });
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.CONFIGURATION'), msg,
     {
       text: this.translator.instant('COMMON.ACCEPT'),
       handler: () => {
-        this.saveVehiclesAssociatedToConfiguration(data);
+        this.saveVehiclesAssociatedToConfiguration(data, configuration);
       }
     });
   }
 
-  saveVehiclesAssociatedToConfiguration(data: ListModalModel) {
+  saveVehiclesAssociatedToConfiguration(data: ListModalModel, configuration: ConfigurationModel) {
     const vehiclesAssociatedToConfigurationSelected: VehicleModel[] =
-      this.vehicles.filter(x => x.configuration.id === this.rowConfSelected.id);
+      this.vehicles.filter(x => x.configuration.id === configuration.id);
     const vehiclesChangeToConfigurationDefault: VehicleModel[] = vehiclesAssociatedToConfigurationSelected.filter(x =>
       data.listData.some(y => y.id === x.id && !y.selected));
     const vehiclesChangeToConfigurationSelected: VehicleModel[] = this.vehicles.filter(x =>
@@ -266,7 +358,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
     }
     if (vehiclesChangeToConfigurationSelected.length > 0) {
       vehiclesChangeToConfigurationSelected.forEach(x => {
-        x.configuration.id = this.rowConfSelected.id;
+        x.configuration.id = configuration.id;
         vehiclesToSave = [...vehiclesToSave, x];
       });
     }
@@ -282,32 +374,35 @@ export class ConfigurationPage extends BasePage implements OnInit {
   /** MAINTENANCE */
 
   openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
-    this.rowMainSelected = row;
     this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditMaintenanceComponent, new ModalInputModel(create, this.rowMainSelected, [this.maxKm], PageEnum.CONFIGURATION));
+      AddEditMaintenanceComponent, new ModalInputModel<MaintenanceModel, number>({
+          isCreate: create,
+          data: row,
+          dataList: [this.maxKm],
+          parentPage: PageEnum.CONFIGURATION
+        }));
   }
 
   deleteMaintenance(row: MaintenanceModel) {
-    this.rowMainSelected = row;
-    this.showConfirmDeleteMaintenance();
+    this.showConfirmDeleteMaintenance(row);
   }
 
-  showConfirmDeleteMaintenance() {
+  showConfirmDeleteMaintenance(row: MaintenanceModel) {
     let msg = 'PAGE_CONFIGURATION.ConfirmDeleteMaintenance';
     const configurationWithMaintenance: ConfigurationModel[] =
-      this.configurations.filter(x => x.listMaintenance.some(y => y.id === this.rowMainSelected.id));
+      this.configurations.filter(x => x.listMaintenance.some(y => y.id === row.id));
     if (!!configurationWithMaintenance && configurationWithMaintenance.length > 0) {
       msg = 'PAGE_CONFIGURATION.ConfirmDeleteMaintenanceWithConfigururation';
     }
-    msg = this.translator.instant(msg, { maintenance: this.rowMainSelected.description });
+    msg = this.translator.instant(msg, { maintenance: row.description });
 
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.MAINTENANCE'), msg,
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.configurationService.saveMaintenance(this.rowMainSelected, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
+          this.configurationService.saveMaintenance(row, ActionDBEnum.DELETE, configurationWithMaintenance).then(x => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
-              'PAGE_CONFIGURATION.DeleteSaveMaintenance', { maintenance: this.rowMainSelected.description });
+              'PAGE_CONFIGURATION.DeleteSaveMaintenance', { maintenance: row.description });
           }).catch(e => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
           });
@@ -316,41 +411,47 @@ export class ConfigurationPage extends BasePage implements OnInit {
     );
   }
 
-  getIconMaintenance(maintenance: MaintenanceModel): string {
-    return this.configurationService.getIconMaintenance(maintenance);
-  }
-
   getReplacementCommas(replacements: MaintenanceElementModel[]): string {
     return this.configurationService.getReplacement(replacements);
   }
 
-  showConfirmSaveMaintenancesAssociatedToConfiguration(data: ListModalModel) {
+  showConfirmSaveMaintenancesAssociatedToConfiguration(data: ListModalModel, maintenance: MaintenanceModel) {
     const msg = this.translator.instant('PAGE_CONFIGURATION.ConfirmSaveMaintenancesAssociatedToConfiguration',
-      { maintenance: this.rowMainSelected.description });
+      { maintenance: maintenance.description });
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.MAINTENANCE'), msg,
     {
       text: this.translator.instant('COMMON.ACCEPT'),
       handler: () => {
-        this.saveMaintenanceAssociatedToConfiguration(data);
+        this.saveMaintenanceAssociatedToConfiguration(data, maintenance);
       }
     });
   }
 
-  saveMaintenanceAssociatedToConfiguration(data: ListModalModel) {
+  saveMaintenanceAssociatedToConfiguration(data: ListModalModel, maintenance: MaintenanceModel) {
     let configurationSave: ConfigurationModel[] = [];
     let configurationDelete: ConfigurationModel[] = [];
     this.configurations.forEach(c => {
       if (c.listMaintenance && c.listMaintenance.length > 0) {
         c.listMaintenance.forEach(m => {
-          if (this.rowMainSelected.id === m.id && data.listData.some(x => x.id === c.id && !x.selected)) {
-            configurationDelete = [...configurationDelete, new ConfigurationModel(c.name, c.description, c.master, [m], c.id)];
+          if (maintenance.id === m.id && data.listData.some(x => x.id === c.id && !x.selected)) {
+            configurationDelete = [...configurationDelete, new ConfigurationModel({
+              name: c.name, 
+              description: c.description,
+              master: c.master,
+              listMaintenance: [m],
+              id: c.id
+            })];
           }
         });
       }
     });
     data.listData.forEach(x => {
-      if (x.selected && this.configurations.some(c => c.id === x.id && !c.listMaintenance.some(m => m.id === this.rowMainSelected.id))) {
-        configurationSave = [...configurationSave, new ConfigurationModel('', '', true, [this.rowMainSelected], x.id)];
+      if (x.selected && this.configurations.some(c => c.id === x.id && !c.listMaintenance.some(m => m.id === maintenance.id))) {
+        configurationSave = [...configurationSave, new ConfigurationModel({
+          master: true,
+          listMaintenance: [maintenance],
+          id: x.id
+        })];
       }
     });
     this.configurationService.saveConfigurationMaintenance(configurationSave, configurationDelete).then(res => {
@@ -364,32 +465,33 @@ export class ConfigurationPage extends BasePage implements OnInit {
   /** MAINTENANCE ELEMENTS / REPLACEMENT */
 
   openReplacementModal(row: MaintenanceElementModel = new MaintenanceElementModel(), create: boolean = true) {
-    this.rowReplSelected = row;
-    this.controlService.openModal(PageEnum.CONFIGURATION,
-      AddEditMaintenanceElementComponent, new ModalInputModel(create, this.rowReplSelected, [], PageEnum.CONFIGURATION));
+    this.controlService.openModal(PageEnum.CONFIGURATION, AddEditMaintenanceElementComponent, new ModalInputModel<MaintenanceElementModel>({
+          isCreate: create,
+          data: row,
+          parentPage: PageEnum.CONFIGURATION
+        }));
   }
 
   deleteReplacement(row: MaintenanceElementModel) {
-    this.rowReplSelected = row;
-    this.showConfirmDeleteReplacement();
+    this.showConfirmDeleteReplacement(row);
   }
 
-  showConfirmDeleteReplacement() {
+  showConfirmDeleteReplacement(row: MaintenanceElementModel) {
     let msg = 'PAGE_CONFIGURATION.ConfirmDeleteReplacement';
     const operationsWithReplacement: OperationModel[] =
-      this.operations.filter(x => x.listMaintenanceElement.some(y => y.id === this.rowReplSelected.id));
+      this.operations.filter(x => x.listMaintenanceElement.some(y => y.id ===row.id));
     if (!!operationsWithReplacement && operationsWithReplacement.length > 0) {
       msg = 'PAGE_CONFIGURATION.ConfirmDeleteReplacementWithOperations';
     }
-    msg = this.translator.instant(msg, {replacement: this.rowReplSelected.name});
+    msg = this.translator.instant(msg, {replacement: row.name});
     this.controlService.showConfirm(PageEnum.CONFIGURATION, this.translator.instant('COMMON.REPLACEMENT'), msg,
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.configurationService.saveMaintenanceElement(this.rowReplSelected,
+          this.configurationService.saveMaintenanceElement(row,
               ActionDBEnum.DELETE, operationsWithReplacement).then(x => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
-              'PAGE_CONFIGURATION.DeleteSaveReplacement', { replacement: this.rowReplSelected.name });
+              'PAGE_CONFIGURATION.DeleteSaveReplacement', { replacement: row.name });
           }).catch(e => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
           });
@@ -402,7 +504,26 @@ export class ConfigurationPage extends BasePage implements OnInit {
     return !replacement.master && this.maintenances.some(x => x.listMaintenanceElement.some(y => y.id === replacement.id));
   }
 
-  getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
-    return this.configurationService.getIconReplacement(maintenanceElement);
+  /* SKELETON */
+
+  showSkeleton() {
+    this.showSkeletonHeader(1200);
+    this.showSkeletonBody(1200);
+  }
+
+  showSkeletonHeader(time: number) {
+    this.loadedHeader = false;
+    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
+  }
+
+  showSkeletonBodyNotInit(time: number) {
+    this.loadedBody = false;
+    if(!this.initLoaded) {
+      this.showSkeletonBody(time);
+    }
+  }
+
+  showSkeletonBody(time: number) {
+    setTimeout(() => { this.loadedBody = true; }, time);
   }
 }

@@ -9,18 +9,19 @@ import * as shape from 'd3-shape';
 
 // UTILS
 import {
-  ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceFreqModel, MaintenanceModel, MaintenanceElementModel, DashboardModel, VehicleModel,
-  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel
+  ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
+  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel
 } from '@models/index';
+import { Constants, IDashboardModel, IDashboardSerieModel, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
+
+// SERVICES
 import {
-  DashboardService, ConfigurationService, ControlService, CalendarService,
-  SettingsService, DataBaseService, HomeService, InfoVehicleService
+  DashboardService, ControlService, CalendarService,
+  SettingsService, DataBaseService, HomeService, InfoVehicleService, InfoCalendarService, IconService
 } from '@services/index';
-import { WarningWearEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // COMPONENTS
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
   selector: 'info-notification',
@@ -30,12 +31,12 @@ import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popo
 export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<WearVehicleProgressBarViewModel, OperationModel> = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>();
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-  dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
-  dashboardRecordsMaintenance: DashboardModel = new DashboardModel([], []);
+  dashboardVehicleExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardRecordsMaintenance: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   currentPopover = null;
   hideGraph = true;
   hideSummary = false;
@@ -45,7 +46,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // DATA
   dataMaintenance: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-  vehicleKmEstimated = 0;
   nameMaintenanceElement = '';
   nameMaintenance = '';
   labelNameVehicle = '';
@@ -55,7 +55,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   labelNextChange = '';
   labelLifeReplacement = '';
   labelNotRecord = '';
-  measure: any = {};
+  measure: ISettingModel;
+  iconMaintenanceElement = '';
+  iconFilter = 'filter';
+  showSpinner = false;
+  openningPopover = false;
 
   // SUBSCRIPTION
   searchDashboardSubscription: Subscription = new Subscription();
@@ -66,8 +70,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
               public navParams: NavParams,
               private modalController: ModalController,
               private dashboardService: DashboardService,
-              private configurationService: ConfigurationService,
               private calendarService: CalendarService,
+              private infoCalendarService: InfoCalendarService,
               private controlService: ControlService,
               private screenOrientation: ScreenOrientation,
               private changeDetector: ChangeDetectorRef,
@@ -75,12 +79,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
               private settingsService: SettingsService,
               private dbService: DataBaseService,
               private homeService: HomeService,
-              private infoVehicleService: InfoVehicleService) {
+              private infoVehicleService: InfoVehicleService,
+              private iconService: IconService) {
   }
 
   ngOnInit() {
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-        this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>(this.navParams.data);
 
     this.getSettings();
 
@@ -105,9 +109,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       this.getObserverSearchDashboard();
       this.getObserverOrientationChange();
       this.getObserverSearchDashboardRecords();
+      this.iconMaintenanceElement = this.getMaintenanceNow(this.wear.listWearMaintenance).listWearReplacement[0].iconMaintenanceElement;
     } else {
       const wear: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
       this.isCalendar = false;
+      this.iconMaintenanceElement = '';
       this.labelPercent = Math.round((1 - (wear.timeMaintenance === 0 || wear.timeMaintenance === null ?
           wear.listWearReplacement[0].percentKms :
           (wear.listWearReplacement[0].percentKms + wear.listWearReplacement[0].percentMonths) / 2)) * 100);
@@ -119,14 +125,20 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getObserverSearchDashboard() {
     this.searchDashboardSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
-      this.calculateDashboardExpenses(filter);
-      this.calculateDashboad(false, filter);
+      if (!this.openningPopover) {
+        this.showSpinner = true; // Windows: Fix refresh chart :(
+        this.calculateDashboardExpenses(filter);
+        this.calculateDashboad(false, filter);
+        setTimeout(() => { this.showSpinner = false; }, 150);
+      }
     });
   }
 
   getObserverSearchDashboardRecords() {
     this.searchDashboardRecordsSubscription = this.dashboardService.getObserverSearchDashboardRecords().subscribe(filter => {
-      this.calculateDashboad(true, filter);
+      if (!this.openningPopover) {
+        this.calculateDashboad(true, filter);
+      }
     });
   }
 
@@ -148,6 +160,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       this.dashboardRecordsMaintenance =
         this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter, this.measure);
     }
+    this.loadIconSearch();
   }
 
   getObserverOrientationChange() {
@@ -175,17 +188,14 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   configureResume() {
     this.dataMaintenance = this.modalInputModel.data;
-    const vehicle: VehicleModel = new VehicleModel(null, null, 0, this.dataMaintenance.kmVehicle,
-      null, null, this.dataMaintenance.kmsPerMonthVehicle, this.dataMaintenance.dateKmsVehicle, this.dataMaintenance.datePurchaseVehicle);
-    this.vehicleKmEstimated = this.calendarService.calculateKmVehicleEstimated(vehicle);
     const wearMain: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
     const wearRep: WearReplacementProgressBarViewModel = wearMain.listWearReplacement[0];
     this.labelNameVehicle = this.dataMaintenance.nameVehicle;
     this.nameMaintenance = wearMain.descriptionMaintenance;
     this.nameMaintenanceElement = wearRep.nameMaintenanceElement;
-    this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.dataMaintenance.kmVehicle, this.vehicleKmEstimated, this.measure);
+    this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.dataMaintenance.kmVehicle, this.dataMaintenance.kmEstimatedVehicle, this.measure);
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
-    let kmLife = this.vehicleKmEstimated;
+    let kmLife = this.dataMaintenance.kmEstimatedVehicle;
     const today: Date = new Date();
     if (wearRep.kmOperation !== null) {
       kmLife -= wearRep.kmOperation;
@@ -193,7 +203,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     if (wearMain.timeMaintenance !== 0) {
       let timeLife = 0;
       if (wearRep.kmOperation === null) {
-        timeLife = this.calendarService.monthDiff(new Date(vehicle.datePurchase), today);
+        timeLife = this.calendarService.monthDiff(new Date(this.dataMaintenance.datePurchaseVehicle), today);
       } else {
         timeLife = this.calendarService.monthDiff(new Date(wearRep.dateOperation), today);
       }
@@ -204,15 +214,15 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
         { replacement: this.nameMaintenanceElement, km: kmLife, measure: this.measure.value });
     }
     const calendarKm: InfoCalendarReplacementViewModel =
-      this.calendarService.createInfoCalendarReplacement(this.dataMaintenance, wearMain, wearRep, true);
+      this.infoCalendarService.createInfoCalendarReplacement(this.dataMaintenance, wearMain, wearRep, true);
     const calendarTime: InfoCalendarReplacementViewModel =
-      this.calendarService.createInfoCalendarReplacement(this.dataMaintenance, wearMain, wearRep, false);
+      this.infoCalendarService.createInfoCalendarReplacement(this.dataMaintenance, wearMain, wearRep, false);
     const dateMaintenance: Date = (calendarKm.date < calendarTime.date || wearMain.timeMaintenance === null ?
       calendarKm.date : calendarTime.date);
     this.labelNextChange = this.translator.instant('PAGE_HOME.NextChangeKm',
       {
         maintenance: this.nameMaintenanceElement,
-        km: (calendarKm.km > this.vehicleKmEstimated ? calendarKm.km : this.vehicleKmEstimated),
+        km: (calendarKm.km > this.dataMaintenance.kmEstimatedVehicle ? calendarKm.km : this.dataMaintenance.kmEstimatedVehicle),
         date: this.calendarService.getDateString(dateMaintenance),
         measure: this.measure.value
       });
@@ -231,29 +241,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     if (!this.hideGraph) {
       this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
     }
-  }
-
-  getClassProgressbar(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassProgressbar(warning, styles);
-  }
-
-  getClassIcon(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassIcon(warning, styles);
-  }
-
-  getIconKms(warning: WarningWearEnum): string {
-    return this.homeService.getIconKms(warning);
-  }
-
-  getIconMaintenance(wear: WearMaintenanceProgressBarViewModel): string {
-    return this.configurationService.getIconMaintenance(
-      new MaintenanceModel(null, null, new MaintenanceFreqModel(wear.codeMaintenanceFreq)));
-  }
-
-  getIconReplacement(): string {
-    return (!!this.wear && this.wear.listWearMaintenance.length > 0 ? this.configurationService.getIconReplacement(
-      new MaintenanceElementModel(null, null, null, 0,
-        this.getMaintenanceNow(this.wear.listWearMaintenance).listWearReplacement[0].idMaintenanceElement)) : '');
   }
 
   getKmPercent(wear: WearReplacementProgressBarViewModel): string {
@@ -375,8 +362,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getMaintenanceNow(wears: WearMaintenanceProgressBarViewModel[]): WearMaintenanceProgressBarViewModel {
-    let result: WearMaintenanceProgressBarViewModel = wears.find(x => x.fromKmMaintenance <= this.vehicleKmEstimated &&
-      (x.toKmMaintenance === null || x.toKmMaintenance >= this.vehicleKmEstimated));
+    let result: WearMaintenanceProgressBarViewModel = wears.find(x => x.fromKmMaintenance <= this.dataMaintenance.kmEstimatedVehicle &&
+      (x.toKmMaintenance === null || x.toKmMaintenance >= this.dataMaintenance.kmEstimatedVehicle));
     if (!!!result) {
       result = wears[wears.length - 1];
     }
@@ -384,7 +371,13 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   showPopover(ev: any) {
+    this.openningPopover = true;
     this.controlService.showPopover(PageEnum.MODAL_INFO, ev, SearchDashboardPopOverComponent, this.modalInputModel);
+    setTimeout(() => this.openningPopover = false, 200);
+  }
+
+  loadIconSearch() {
+    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(this.modalInputModel.parentPage));
   }
 
   closeModal() {

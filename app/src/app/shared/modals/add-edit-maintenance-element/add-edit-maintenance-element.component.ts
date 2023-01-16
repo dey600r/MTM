@@ -15,7 +15,7 @@ import { ConfigurationService, ControlService } from '@services/index';
 export class AddEditMaintenanceElementComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<MaintenanceElementModel> = new ModalInputModel<MaintenanceElementModel>();
 
   // MODEL FORM
   maintenanceElement: MaintenanceElementModel = new MaintenanceElementModel();
@@ -31,8 +31,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
 
   ngOnInit() {
 
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<MaintenanceElementModel>(this.navParams.data);
     this.maintenanceElement = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.maintenanceElement.id = -1;

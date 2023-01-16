@@ -7,18 +7,18 @@ import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
 import {
-  ModalInputModel, InfoCalendarMaintenanceViewModel, InfoCalendarVehicleViewModel,
-  MaintenanceModel, MaintenanceFreqModel, VehicleModel, VehicleTypeModel, InfoCalendarReplacementViewModel, MaintenanceElementModel
+  ModalInputModel, InfoCalendarVehicleViewModel,
+  InfoCalendarReplacementViewModel,
+  WearVehicleProgressBarViewModel
 } from '@models/index';
 
 // SERVICES
 import {
-  CalendarService, CommonService, ConfigurationService, VehicleService,
-  ControlService, SettingsService, DataBaseService, HomeService
+  CalendarService, CommonService, ControlService, SettingsService, DataBaseService, InfoCalendarService
 } from '@services/index';
 
 // UTILS
-import { Constants, ConstantsColumns, WarningWearEnum, PageEnum, ToastTypeEnum } from '@app/core/utils';
+import { Constants, ConstantsColumns, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Component({
   selector: 'info-calendar',
@@ -28,7 +28,7 @@ import { Constants, ConstantsColumns, WarningWearEnum, PageEnum, ToastTypeEnum }
 export class InfoCalendarComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
 
   // DATA
   listInfoCalendar: InfoCalendarVehicleViewModel[] = [];
@@ -44,8 +44,8 @@ export class InfoCalendarComponent implements OnInit {
   monthSelect = new Date().getMonth();
   activeSpinner = false;
   hideVehicles: boolean[] = [];
-  measure: any = {};
-  coin: any = {};
+  measure: ISettingModel;
+  coin: ISettingModel;
 
   // TRANSLATE
   notificationEmpty = '';
@@ -53,22 +53,19 @@ export class InfoCalendarComponent implements OnInit {
   constructor(public navParams: NavParams,
               private modalController: ModalController,
               private calendarService: CalendarService,
+              private infoCalendarService: InfoCalendarService,
               private commonService: CommonService,
-              private configurationService: ConfigurationService,
               private translator: TranslateService,
-              private vehicleService: VehicleService,
               private controlService: ControlService,
               private settingsService: SettingsService,
-              private dbService: DataBaseService,
-              private homeService: HomeService) {
+              private dbService: DataBaseService) {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }
 
   ngOnInit() {
     this.activeSpinner = true;
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>(this.navParams.data);
 
     // GET SETTINGS
     const settings = this.dbService.getSystemConfigurationData();
@@ -83,7 +80,7 @@ export class InfoCalendarComponent implements OnInit {
   }
 
   initCalendar() {
-    this.listInfoCalendar = this.calendarService.getInfoCalendar(this.modalInputModel.dataList);
+    this.listInfoCalendar = this.infoCalendarService.getInfoCalendar(this.modalInputModel.dataList);
     let days: DayConfig[] = [];
     let dateInit: Date = new Date();
     if (!!this.listInfoCalendar && this.listInfoCalendar.length) {
@@ -97,7 +94,7 @@ export class InfoCalendarComponent implements OnInit {
                 date: z.date,
                 title: '',
                 subTitle: ``,
-                cssClass: `day-text-config ${this.calendarService.getCircleColor(this.listInfoCalendar, z)}`
+                cssClass: `day-text-config ${this.infoCalendarService.getCircleColor(this.listInfoCalendar, z)}`
                 }];
             }
           });
@@ -204,7 +201,7 @@ export class InfoCalendarComponent implements OnInit {
       rangeDate = [...rangeDate, dateFin];
     }
     this.hideVehicles = [];
-    this.listInfoCalendarSelected = this.calendarService.getInfoCalendarReplacementDate(this.listInfoCalendar, rangeDate);
+    this.listInfoCalendarSelected = this.infoCalendarService.getInfoCalendarReplacementDate(this.listInfoCalendar, rangeDate);
     if (!this.listInfoCalendarSelected || this.listInfoCalendarSelected.length === 0) {
       this.notificationEmpty = this.translator.instant('ALERT.NotificationEmptyBetween',
         { dateIni: this.calendarService.getDateString(dateIni),
@@ -231,12 +228,12 @@ export class InfoCalendarComponent implements OnInit {
         notifications.forEach(x => {
           x.listInfoCalendarMaintenance.forEach(y => {
             y.listInfoCalendarReplacement.forEach(z => {
-              const colorMonth: string = this.calendarService.getCircleColor(this.listInfoCalendar, z);
+              const colorMonth: string = this.infoCalendarService.getCircleColor(this.listInfoCalendar, z);
               const monthFind: any = monthsUsed.find(m => m.month === z.date.getMonth());
               if (!monthFind) {
                 monthsUsed = [...monthsUsed, { month: z.date.getMonth(), color: colorMonth }];
               } else if (monthFind.color !== colorMonth ) {
-                monthFind.color = this.calendarService.getCircleColor([], z);
+                monthFind.color = this.infoCalendarService.getCircleColor([], z);
               }
             });
           });
@@ -255,30 +252,6 @@ export class InfoCalendarComponent implements OnInit {
       msg = this.translator.instant('ALERT.InfoCalendarTime', {replacement: repl.nameReplacement, date: repl.dateFormat});
     }
     this.controlService.showMsgToast(PageEnum.MODAL_CALENDAR, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
-  }
-
-  // ICONS
-
-  getIconKms(warning: WarningWearEnum): string {
-    return this.homeService.getIconKms(warning);
-  }
-
-  getClassIcon(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassIcon(warning, styles);
-  }
-
-  getIconMaintenance(maint: InfoCalendarMaintenanceViewModel): string {
-    return this.configurationService.getIconMaintenance(
-      new MaintenanceModel(null, null, new MaintenanceFreqModel(maint.codeMaintenanceFreq)));
-  }
-
-  getIconReplacement(rep: InfoCalendarReplacementViewModel): string {
-    return this.configurationService.getIconReplacement(new MaintenanceElementModel(null, null, null, 0, rep.idReplacement));
-  }
-
-  getIconVehicle(infoVehicle: InfoCalendarVehicleViewModel): string {
-    return this.vehicleService.getIconVehicle(new VehicleModel(null, null, null, null, null,
-      new VehicleTypeModel(infoVehicle.typeVehicle)));
   }
 
   closeModal() {

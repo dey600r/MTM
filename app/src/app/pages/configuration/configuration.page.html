@@ -1,8 +1,14 @@
-<ion-header [hidden]="!loaded">
+<ion-header [hidden]="!loadedHeader">
   <ion-toolbar>
+    <!-- Button filter -->
+    <ion-button slot="start" fill="clear" class="btn-width-header"></ion-button>
     <ion-title>
       <ion-title color="text-header" class="align-center">{{ 'COMMON.CONFIGURATIONS' | translate }}</ion-title>
     </ion-title>
+    <!-- Button filter -->
+    <ion-button slot="end" fill="clear" (click)="showPopover($event)" class="btn-width-header">
+      <ion-icon size="large" [name]="iconFilter"></ion-icon>
+    </ion-button>
   </ion-toolbar>
   <!-- SEGMENT -->
   <ion-segment class="segment-button-fixed ion-segment-color" [scrollable]="activeSegmentScroll()" [value]="segmentSelected" 
@@ -13,7 +19,9 @@
     </ion-segment-button>
   </ion-segment>
 </ion-header>
-<ion-content [hidden]="!loaded">
+<ion-content [hidden]="!loadedBody">
+  <!-- INFO MAINTENANCES -->
+  <app-info *ngIf="segmentSelected === 1 && configurations.length === 0" [inputInfo]="inputConfiguration"></app-info>
   <!-- CONFIGURATIONS -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 1">
     <ion-item-sliding *ngFor="let c of configurations" #slidingItemConf>
@@ -31,22 +39,20 @@
         </ion-label>
         <!-- Buttons edit / create -->
         <ion-label *ngIf="c.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-              <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-            </ion-button>
-          </ion-label>
+          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+          </ion-button>
         </ion-label>
-        <ion-label *ngIf="!c.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
-              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-            </ion-button>
-          </ion-label>
-        </ion-label>
+        <div *ngIf="!c.master" class="align-right fix-width69">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteConfiguration(c)">
+            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+          </ion-button>
+        </div>
       </ion-item>
     </ion-item-sliding>
   </ion-list>
+  <!-- INFO MAINTENANCES -->
+  <app-info *ngIf="segmentSelected === 2 && maintenances.length === 0" [inputInfo]="inputMaintenance"></app-info>
   <!-- MAINTENANCES -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 2">
     <ion-item-sliding *ngFor="let m of maintenances" #slidingItemMain>
@@ -59,7 +65,7 @@
       <ion-item button>
         <!-- Icons -->
         <ion-avatar slot="start" class="max-width10" (click)="openMaintenanceModal(m, false)">
-          <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(m)"></ion-icon>
+          <ion-icon size="large" class="icon-color" [name]="m.maintenanceFreq.icon"></ion-icon>
         </ion-avatar>
         <!-- Labels -->
         <ion-label class="auto-width label-event-force" (click)="openMaintenanceModal(m, false)">
@@ -78,28 +84,26 @@
         </ion-label>
         <!-- Buttons edit / delete -->
         <ion-label *ngIf="m.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-              <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-            </ion-button>
-          </ion-label>
+          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+          </ion-button>
         </ion-label>
-        <ion-label *ngIf="!m.master" class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row" fill="clear" (click)="deleteMaintenance(m)">
-              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-            </ion-button>
-          </ion-label>
-        </ion-label>
+        <div *ngIf="!m.master" class="align-right fix-width69">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteMaintenance(m)">
+            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+          </ion-button>
+        </div>
       </ion-item>
     </ion-item-sliding>
   </ion-list>
+  <!-- INFO MAINTENANCE ELEMNTS / REPLACEMENT -->
+  <app-info *ngIf="segmentSelected === 3 && maintenanceElements.length === 0" [inputInfo]="inputMaintenanceElement"></app-info>
   <!-- MAINTENANCE ELEMNTS / REPLACEMENT -->
   <ion-list class="segment-top margin-bottom45" *ngIf="segmentSelected === 3">
     <ion-item button *ngFor="let me of maintenanceElements">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width10" (click)="openReplacementModal(me, false)">
-        <ion-icon size="large" class="icon-color" [name]="this.getIconReplacement(me)"></ion-icon>
+        <ion-icon size="large" class="icon-color" [name]="me.icon"></ion-icon>
       </ion-avatar>
       <!-- Labels -->
       <ion-label class="min-width70 label-event-force" (click)="openReplacementModal(me, false)">
@@ -108,19 +112,15 @@
       </ion-label>
       <!-- Buttons edit / delete -->
       <ion-label *ngIf="me.master" class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
-            <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
-          </ion-button>
-        </ion-label>
+        <ion-button class="btn-width-row min-height29" fill="clear" disabled="true">
+          <ion-icon size="large" class="icon-color" name="lock-closed"></ion-icon>
+        </ion-button>
       </ion-label>
-      <ion-label *ngIf="!me.master" class="align-right fix-width69">
-        <ion-label>
-          <ion-button class="btn-width-row" fill="clear" (click)="deleteReplacement(me)" [disabled]="isNotValidToDeleteReplacement(me)">
-            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-          </ion-button>
-        </ion-label>
-      </ion-label>
+      <div *ngIf="!me.master" class="align-right fix-width69">
+        <ion-button class="btn-width-row" fill="clear" (click)="deleteReplacement(me)" [disabled]="isNotValidToDeleteReplacement(me)">
+          <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+        </ion-button>
+      </div>
     </ion-item>
   </ion-list>
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">
@@ -131,11 +131,11 @@
 </ion-content>
 
 <!-- SKELETON LOADER INITAL -->
-<ion-header *ngIf="!loaded">
+<ion-header *ngIf="!loadedHeader">
   <app-header-skeleton [input]="[2, 4, 2, 4]"></app-header-skeleton>
 </ion-header>
 
-<ion-content *ngIf="!loaded">
+<ion-content *ngIf="!loadedBody">
   <ion-list>
     <ion-item *ngFor="let i of [1, 2, 3, 4]">
       <ion-label>

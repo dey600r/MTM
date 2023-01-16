@@ -40,7 +40,10 @@ describe('ListDataToUpdateComponent', () => {
     const listModel: ListModalModel = new ListModalModel('TEST_TITLE', true, listDataModel);
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel(true, listModel, [], PageEnum.CONFIGURATION)));
+      SpyMockConfig.getProviderNavParams(new ModalInputModel<ListModalModel>({
+        data: listModel, 
+        parentPage: PageEnum.CONFIGURATION
+      })));
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);

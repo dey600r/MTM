@@ -23,16 +23,21 @@ export class ListDataToUpdateComponent {
   constructor(private controlService: ControlService,
               private modalController: ModalController,
               private navParams: NavParams) {
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel(this.navParams.data);
   }
 
   save() {
-    this.controlService.closeModal(this.modalController, new ModalOutputModel(ModalOutputEnum.SAVE, this.modalInputModel.data));
+    this.controlService.closeModal(this.modalController, new ModalOutputModel<ListModalModel>({
+        action: ModalOutputEnum.SAVE, 
+        data: this.modalInputModel.data
+      }));
   }
 
   closeModal() {
-    this.controlService.closeModal(this.modalController, new ModalOutputModel(ModalOutputEnum.CANCEL));
+    this.controlService.closeModal(this.modalController, new ModalOutputModel<ListModalModel>({
+      action: ModalOutputEnum.CANCEL, 
+      data: this.modalInputModel.data
+    }));
   }
 
 }

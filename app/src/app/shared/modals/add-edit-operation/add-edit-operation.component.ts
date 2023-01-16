@@ -6,7 +6,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum, ISettingModel } from '@utils/index';
 import {
   ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
 } from '@models/index';
@@ -23,7 +23,7 @@ import {
 export class AddEditOperationComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<OperationModel> = new ModalInputModel<OperationModel>();
 
   // MODEL FORM
   operation: OperationModel = new OperationModel();
@@ -38,8 +38,8 @@ export class AddEditOperationComponent implements OnInit {
   idMaintenanceElementSelect: number[] = [];
   owners: any [] = [];
   formatDate = this.calendarService.getFormatCalendar();
-  measure: any = {};
-  coin: any = {};
+  measure: ISettingModel;
+  coin: ISettingModel;
 
   // Translate
   translateWorkshop = '';
@@ -70,8 +70,7 @@ export class AddEditOperationComponent implements OnInit {
 
   ngOnInit() {
 
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<OperationModel>(this.navParams.data);
 
     this.operation = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
@@ -200,16 +199,20 @@ export class AddEditOperationComponent implements OnInit {
   }
 
   changeReplacement() {
+    const oldList: MaintenanceElementModel[] = Object.assign([], this.maintenanceElementSelect);
     this.maintenanceElementSelect = [];
     this.idMaintenanceElementSelect.forEach(x => {
       const replacement: MaintenanceElementModel = this.maintenanceElement.find(y => y.id === x);
-      this.maintenanceElementSelect = [...this.maintenanceElementSelect,
-        new MaintenanceElementModel(replacement.name, replacement.description, false, null, replacement.id)];
+      const oldReplacement: MaintenanceElementModel = oldList.find(y => y.id === x);
+      this.maintenanceElementSelect = [...this.maintenanceElementSelect, {
+        id: replacement.id,
+        name: replacement.name,
+        description: replacement.description,
+        master: replacement.master,
+        price: (oldReplacement ? oldReplacement.price : null),
+        icon: replacement.icon
+      }];
     });
-  }
-
-  getIconReplacement(maintenanceElement: MaintenanceElementModel): string {
-    return this.configurationService.getIconReplacement(maintenanceElement);
   }
 
   showConfirmSaveWithDelete() {

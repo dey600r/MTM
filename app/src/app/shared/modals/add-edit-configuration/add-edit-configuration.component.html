@@ -42,7 +42,7 @@
         <ion-item *ngFor="let m of maintenances; let i = index">
           <!-- Icons -->
           <ion-avatar slot="start" class="max-width10">
-            <ion-icon size="large" class="icon-color" [name]="this.getIconMaintenance(m)"></ion-icon>
+            <ion-icon size="large" class="icon-color" [name]="m.maintenanceFreq.icon"></ion-icon>
           </ion-avatar>
           <!-- Labels -->
           <ion-label>

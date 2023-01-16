@@ -17,7 +17,10 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
 import { DataBaseService, CommonService } from '@services/index';
-import { PipeModule } from '@app/shared/modules/pipes.module';
+
+// MODULES
+import { PipeModule } from '@modules/pipes.module';
+import { SharedModule } from '@modules/shared.module';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
@@ -29,7 +32,7 @@ import { DashboardComponent } from '@modals/dashboard/dashboard.component';
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
 import { SettingsComponent } from '@modals/settings/settings.component';
 import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.component';
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@modals/search-dashboard-popover/search-dashboard-popover.component';
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 
@@ -57,6 +60,7 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
     CalendarModule,
     NgxChartsModule,
     PipeModule,
+    SharedModule,
     TranslateModule.forChild()
   ],
   exports: [
