@@ -9,11 +9,16 @@ case $prod in
   *free*)
     free="_Free_";
 esac
-echo "----> BUILDING ANDROID APK ON VERSION $version USING $prod WITH PATH $path AND $free <----";
+echo "----> BUILDING ANDROID ON VERSION $version USING $prod WITH PATH $path AND $free <----";
+path_version=$path/Utils/Versions/Android/MtM$free$version
+path_key=$path/Utils/Versions/Android
+path_release=$path/app/platforms/android/app/build/outputs/bundle/release
 cd $path/app;
-rm -f -r $path/Utils/Versions/Android/MtM$free$version;
-mkdir $path/Utils/Versions/Android/MtM$free$version;
+rm -f -r $path_version;
+mkdir $path_version;
 ionic cordova build android --release --configuration=$prod && \
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass "$pass" -keystore $path/Utils/Versions/Android/mtm-release-prod-key.keystore $path/app/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk $alias && \
-zipalign -v -f 4 $path/app/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk $path/Utils/Versions/Android/MtM$free$version/MtM$free$version.apk;
-echo "----> END ANDROID APK $prod <----";
+echo "--- SIGNING BUNDLE ANDROID ---"
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass "$pass" -keystore $path_key/mtm-release-prod-key.keystore $path_release/app-release.aab $alias && \
+echo "--- ZIPPING BUNDLE ANDROID ---"
+zipalign -v -f 4 $path_release/app-release.aab $path_version/MtM$free$version.aab;
+echo "----> END ANDROID $prod <----";
