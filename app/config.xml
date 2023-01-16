@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="330" id="mtm.free.ionic.dey125r" version="3.3.0" windows-packageVersion="3.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="340" id="mtm.free.ionic.dey125r" version="3.4.0" windows-packageVersion="3.4.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM Free</name>
     <description>Motor Track Manager Free</description>
     <author email="deyhome.mtm@gmail.com" href="https://mtmweb-cd867.web.app/home">DeyHome</author>
