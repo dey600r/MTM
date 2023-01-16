@@ -11,6 +11,6 @@ echo "----> BUILDING WINDOWS APPX ON VERSION $version USING $prod WITH PATH $pat
 cd $path/app;
 rm -f -r $path/Utils/Versions/Windows/MtM$free$version;
 mkdir $path/Utils/Versions/Windows/MtM$free$version;
-ionic cordova build windows --release --configuration=$prod-windows --buildConfig=build-deploy.json -- --arch=x64 --appx=uap --platform=x64 && \
+ionic cordova build windows --release --configuration=$prod --buildConfig=build-deploy.json -- --arch=x64 --appx=uap --platform=x64 && \
 mv $path/app/platforms/windows/AppPackages/* $path/Utils/Versions/Windows/MtM$free$version;
 echo "----> END WINDOWS APPX $prod <----";
