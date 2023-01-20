@@ -7,6 +7,7 @@ import { DashboardService } from './dashboard.service';
 import { InfoVehicleService } from './info-vehicle.service';
 import { SettingsService } from './settings.service';
 import { HomeService } from '../pages/index';
+import { CalendarService } from '../common/index';
 
 // CONFIGURATIONS
 import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
@@ -16,11 +17,12 @@ import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
 import { DashboardModel, InfoVehicleConfigurationModel, MaintenanceModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel } from '@models/index';
-import { FilterMonthsEnum, Constants, PageEnum, FilterKmTimeEnum, IDashboardModel, IDashboardSerieModel, ISettingModel } from '@utils/index';
+import { FilterMonthsEnum, Constants, PageEnum, FilterKmTimeEnum, IDashboardModel, IDashboardSerieModel, ISettingModel, IDashboardExpensesModel } from '@utils/index';
 
 describe('DashboardService', () => {
     let service: DashboardService;
     let homeService: HomeService;
+    let calendarService: CalendarService;
     let serviceInfoVehicle: InfoVehicleService;
     let settingService: SettingsService;
     let translate: TranslateService;
@@ -33,6 +35,7 @@ describe('DashboardService', () => {
         service = TestBed.inject(DashboardService);
         serviceInfoVehicle = TestBed.inject(InfoVehicleService);
         homeService = TestBed.inject(HomeService);
+        calendarService = TestBed.inject(CalendarService);
         settingService = TestBed.inject(SettingsService);
         translate = TestBed.inject(TranslateService);
         await firstValueFrom(translate.use('es'));
@@ -172,19 +175,45 @@ describe('DashboardService', () => {
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const operationVehicle = MockData.Operations.filter(x => x.vehicle.id === MockData.Vehicles[0].id);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehiclePerTime(windows, operationVehicle, filter);
-        expect(dashboard.isDoughnut).toBeFalsy();
-        expect(dashboard.showLegend).toBeFalsy();
-        expect(dashboard.data.length).toBeGreaterThanOrEqual(3);
-        expect(dashboard.legendTitle).toEqual(MockTranslate.ES.COMMON.DATE);
-        expect(dashboard.xAxisLabel).toEqual(MockTranslate.ES.COMMON.DATE);
-        expect(dashboard.yAxisLabel).toEqual(MockTranslate.ES.COMMON.EXPENSE);
-        expect(dashboard.data[0].name).toEqual('02/2016');
-        expect(dashboard.data[0].value).toEqual(1012);
-        expect(dashboard.data[1].name).toEqual('08/2017');
-        expect(dashboard.data[1].value).toEqual(526);
-        expect(dashboard.data[2].name).toEqual('03/2018');
-        expect(dashboard.data[2].value).toEqual(417);
+        const dashboard: IDashboardExpensesModel<DashboardModel<IDashboardModel>> = service.getDashboardModelVehiclePerTime(windows, operationVehicle, filter);
+        expect(dashboard.allSum.isDoughnut).toBeFalsy();
+        expect(dashboard.allSum.showLegend).toBeFalsy();
+        expect(dashboard.allSum.data.length).toBeGreaterThanOrEqual(3);
+        expect(dashboard.allSum.legendTitle).toEqual(MockTranslate.ES.COMMON.DATE);
+        expect(dashboard.allSum.xAxisLabel).toEqual(MockTranslate.ES.COMMON.DATE);
+        expect(dashboard.allSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.EXPENSE);
+        expect(dashboard.allSum.data[0].name).toEqual('02/2016');
+        expect(dashboard.allSum.data[0].value).toEqual(dashboard.operationSum.data[0].value + dashboard.replacementSum.data[0].value);
+        expect(dashboard.allSum.data[1].name).toEqual('08/2017');
+        expect(dashboard.allSum.data[1].value).toEqual(dashboard.operationSum.data[1].value + dashboard.replacementSum.data[1].value);
+        expect(dashboard.allSum.data[2].name).toEqual('03/2018');
+        expect(dashboard.allSum.data[2].value).toEqual(dashboard.operationSum.data[2].value + dashboard.replacementSum.data[2].value);
+
+        expect(dashboard.operationSum.isDoughnut).toBeFalsy();
+        expect(dashboard.operationSum.showLegend).toBeFalsy();
+        expect(dashboard.operationSum.data.length).toBeGreaterThanOrEqual(3);
+        expect(dashboard.operationSum.legendTitle).toEqual(MockTranslate.ES.COMMON.DATE);
+        expect(dashboard.operationSum.xAxisLabel).toEqual(MockTranslate.ES.COMMON.DATE);
+        expect(dashboard.operationSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.LABOR_EXPENSE);
+        expect(dashboard.operationSum.data[0].name).toEqual('02/2016');
+        expect(dashboard.operationSum.data[0].value).toEqual(650);
+        expect(dashboard.operationSum.data[1].name).toEqual('08/2017');
+        expect(dashboard.operationSum.data[1].value).toEqual(333);
+        expect(dashboard.operationSum.data[2].name).toEqual('03/2018');
+        expect(dashboard.operationSum.data[2].value).toEqual(300);
+
+        expect(dashboard.replacementSum.isDoughnut).toBeFalsy();
+        expect(dashboard.replacementSum.showLegend).toBeFalsy();
+        expect(dashboard.replacementSum.data.length).toBeGreaterThanOrEqual(3);
+        expect(dashboard.replacementSum.legendTitle).toEqual(MockTranslate.ES.COMMON.DATE);
+        expect(dashboard.replacementSum.xAxisLabel).toEqual(MockTranslate.ES.COMMON.DATE);
+        expect(dashboard.replacementSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.REPLACEMENT_EXPENSE);
+        expect(dashboard.replacementSum.data[0].name).toEqual('02/2016');
+        expect(dashboard.replacementSum.data[0].value).toEqual(362);
+        expect(dashboard.replacementSum.data[1].name).toEqual('08/2017');
+        expect(dashboard.replacementSum.data[1].value).toEqual(193);
+        expect(dashboard.replacementSum.data[2].name).toEqual('03/2018');
+        expect(dashboard.replacementSum.data[2].value).toEqual(117);
     });
 
     it('should calculate other vehicle per month expenses dashboard - EN', async () => {
@@ -194,11 +223,13 @@ describe('DashboardService', () => {
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
         const operationVehicle = MockData.Operations.filter(x => x.vehicle.id === MockData.Vehicles[0].id);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehiclePerTime(windows, operationVehicle, filter);
-        expect(dashboard.data.length).toBeGreaterThanOrEqual(3);
-        expect(dashboard.legendTitle).toEqual(MockTranslate.EN.COMMON.DATE);
-        expect(dashboard.xAxisLabel).toEqual(MockTranslate.EN.COMMON.DATE);
-        expect(dashboard.yAxisLabel).toEqual(MockTranslate.EN.COMMON.EXPENSE);
+        const dashboard: IDashboardExpensesModel<DashboardModel<IDashboardModel>> = service.getDashboardModelVehiclePerTime(windows, operationVehicle, filter);
+        expect(dashboard.allSum.data.length).toBeGreaterThanOrEqual(3);
+        expect(dashboard.allSum.legendTitle).toEqual(MockTranslate.EN.COMMON.DATE);
+        expect(dashboard.allSum.xAxisLabel).toEqual(MockTranslate.EN.COMMON.DATE);
+        expect(dashboard.allSum.yAxisLabel).toEqual(MockTranslate.EN.COMMON.EXPENSE);
+        expect(dashboard.operationSum.yAxisLabel).toEqual(MockTranslate.EN.COMMON.LABOR_EXPENSE);
+        expect(dashboard.replacementSum.yAxisLabel).toEqual(MockTranslate.EN.COMMON.REPLACEMENT_EXPENSE);
     });
 
     it('should get range dates per months, quarter and years', () => {
@@ -416,26 +447,28 @@ describe('DashboardService', () => {
         const day: number = today.getDate();
         const data: IDashboardModel[] = [
             { id: 1, name: (year-6).toString(), value: -1 },
-            { id: 1, name: (year-5).toString(), value: 200 },
-            { id: 1, name: (year-4).toString(), value: 400 },
-            { id: 1, name: (year-3).toString(), value: 600 },
-            { id: 1, name: (year-2).toString(), value: -1 },
-            { id: 1, name: (year-1).toString(), value: 800 },
-            { id: 1, name: year.toString(), value: -1 },
+            { id: 2, name: (year-5).toString(), value: 200 },
+            { id: 3, name: (year-4).toString(), value: 400 },
+            { id: 4, name: (year-3).toString(), value: 600 },
+            { id: 5, name: (year-2).toString(), value: -1 },
+            { id: 6, name: (year-1).toString(), value: 800 },
+            { id: 7, name: year.toString(), value: -1 },
         ];
-        let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, new VehicleModel({ 
+        let vehicleMock: VehicleModel = new VehicleModel({ 
             km: 9500,
-            kmEstimated: 10000,
-            dateKms: new Date(year, month - 2, day),
+            kmsPerMonth: 300,
+            dateKms: new Date(year, month - 3, day),
             datePurchase: new Date(year - 8, month - 3, day)
-        }));
-        expect(result[0].value).toEqual(1491);
-        expect(result[1].value).toEqual(1291);
-        expect(result[2].value).toEqual(1491);
-        expect(result[3].value).toEqual(1691);
-        expect(result[4].value).toEqual(2091);
-        expect(result[5].value).toEqual(1891);
-        expect(result[6].value).toEqual(49);
+        });
+        vehicleMock.kmEstimated = calendarService.calculateKmVehicleEstimated(vehicleMock);
+        let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, vehicleMock);
+        expect(result[0].value).toEqual(1538);
+        expect(result[1].value).toEqual(1338);
+        expect(result[2].value).toEqual(1538);
+        expect(result[3].value).toEqual(1738);
+        expect(result[4].value).toEqual(2138);
+        expect(result[5].value).toEqual(1938);
+        expect(result[6].value).toEqual(200);
     });
 
     it('should calculate km per year without operation 2', () => {
@@ -452,19 +485,21 @@ describe('DashboardService', () => {
             { id: 1, name: (year-1).toString(), value: -1 },
             { id: 1, name: year.toString(), value: -1 },
         ];
-        let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, new VehicleModel({ 
+        let vehicleMock: VehicleModel = new VehicleModel({ 
             km: 9500,
-            kmEstimated: 10000,
-            dateKms: new Date(year, month - 2, day),
+            kmsPerMonth: 300,
+            dateKms: new Date(year, month - 3, day),
             datePurchase: new Date(year - 8, month - 3, day)
-        }));
-        expect(result[0].value).toEqual(9005);
-        expect(result[1].value).toEqual(605);
-        expect(result[2].value).toEqual(85);
-        expect(result[3].value).toEqual(85);
-        expect(result[4].value).toEqual(85);
-        expect(result[5].value).toEqual(85);
-        expect(result[6].value).toEqual(49);
+        });
+        vehicleMock.kmEstimated = calendarService.calculateKmVehicleEstimated(vehicleMock);
+        let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, vehicleMock);
+        expect(result[0].value).toEqual(9000);
+        expect(result[1].value).toEqual(600);
+        expect(result[2].value).toEqual(166);
+        expect(result[3].value).toEqual(166);
+        expect(result[4].value).toEqual(166);
+        expect(result[5].value).toEqual(166);
+        expect(result[6].value).toEqual(200);
     });
 
     it('should calculate km per year with operation', () => {

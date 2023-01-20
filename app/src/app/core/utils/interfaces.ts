@@ -61,3 +61,9 @@ export interface ISettingModel {
     value: string;
     valueLarge: string;
 }
+
+export interface IDashboardExpensesModel<T> {
+    allSum: T;
+    operationSum: T;
+    replacementSum: T;
+}

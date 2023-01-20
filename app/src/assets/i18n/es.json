@@ -49,6 +49,8 @@
         "CHARTS": "Gráficos",
         "EXPENSE": "Gasto",
         "EXPENSES": "Gastos",
+        "LABOR_EXPENSE": "Gasto mano de obra",
+        "REPLACEMENT_EXPENSE": "Gasto recambio",
         "DATE_PURCHASE": "Fecha compra",
         "SHOW_AXIS": "Mostrar ejes",
         "SHOW_LEGEND": "Mostrar leyenda",

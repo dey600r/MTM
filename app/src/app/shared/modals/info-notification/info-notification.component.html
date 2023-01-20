@@ -55,22 +55,43 @@
     </ion-list-header>
     <div *ngIf="!hideGraph" class="justify-center">
       <ngx-charts-bar-vertical *ngIf="!showSpinner"
-        [view]="dashboardVehicleExpenses.view"
-        [scheme]="dashboardVehicleExpenses.colorScheme"
-        [results]="dashboardVehicleExpenses.data"
-        [gradient]="dashboardVehicleExpenses.gradient"
-        [xAxis]="dashboardVehicleExpenses.showXAxis"
-        [yAxis]="dashboardVehicleExpenses.showYAxis"
-        [legend]="dashboardVehicleExpenses.showLegend"
-        [legendTitle]="dashboardVehicleExpenses.legendTitle"
-        [legendPosition]="dashboardVehicleExpenses.legendPosition"
-        [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
-        [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
-        [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
-        [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
-        [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
+        [view]="dashboardVehicleOperationExpenses.view"
+        [scheme]="dashboardVehicleOperationExpenses.colorScheme"
+        [results]="dashboardVehicleOperationExpenses.data"
+        [gradient]="dashboardVehicleOperationExpenses.gradient"
+        [xAxis]="dashboardVehicleOperationExpenses.showXAxis"
+        [yAxis]="dashboardVehicleOperationExpenses.showYAxis"
+        [legend]="dashboardVehicleOperationExpenses.showLegend"
+        [legendTitle]="dashboardVehicleOperationExpenses.legendTitle"
+        [legendPosition]="dashboardVehicleOperationExpenses.legendPosition"
+        [showXAxisLabel]="dashboardVehicleOperationExpenses.showXAxisLabel"
+        [showYAxisLabel]="dashboardVehicleOperationExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardVehicleOperationExpenses.showDataLabel"
+        [xAxisLabel]="dashboardVehicleOperationExpenses.xAxisLabel"
+        [yAxisLabel]="dashboardVehicleOperationExpenses.yAxisLabel">
       </ngx-charts-bar-vertical>
-      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
+      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleOperationExpenses.view[1]" class="div-spinner">
+        <ion-spinner class="spinner" name="lines"></ion-spinner>
+      </div>
+    </div>
+    <div *ngIf="!hideGraph" class="justify-center">
+      <ngx-charts-bar-vertical *ngIf="!showSpinner"
+        [view]="dashboardVehicleReplacementExpenses.view"
+        [scheme]="dashboardVehicleReplacementExpenses.colorScheme"
+        [results]="dashboardVehicleReplacementExpenses.data"
+        [gradient]="dashboardVehicleReplacementExpenses.gradient"
+        [xAxis]="dashboardVehicleReplacementExpenses.showXAxis"
+        [yAxis]="dashboardVehicleReplacementExpenses.showYAxis"
+        [legend]="dashboardVehicleReplacementExpenses.showLegend"
+        [legendTitle]="dashboardVehicleReplacementExpenses.legendTitle"
+        [legendPosition]="dashboardVehicleReplacementExpenses.legendPosition"
+        [showXAxisLabel]="dashboardVehicleReplacementExpenses.showXAxisLabel"
+        [showYAxisLabel]="dashboardVehicleReplacementExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardVehicleReplacementExpenses.showDataLabel"
+        [xAxisLabel]="dashboardVehicleReplacementExpenses.xAxisLabel"
+        [yAxisLabel]="dashboardVehicleReplacementExpenses.yAxisLabel">
+      </ngx-charts-bar-vertical>
+      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleReplacementExpenses.view[1]" class="div-spinner">
         <ion-spinner class="spinner" name="lines"></ion-spinner>
       </div>
     </div>
