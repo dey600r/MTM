@@ -49,6 +49,8 @@
         "CHARTS": "Boards",
         "EXPENSE": "Expense",
         "EXPENSES": "Expenses",
+        "LABOR_EXPENSE": "Labor Expense",
+        "REPLACEMENT_EXPENSE": "Replacement Expense",
         "DATE_PURCHASE": "Date Purchase",
         "SHOW_AXIS": "Show axis",
         "SHOW_LEGEND": "Show legend",

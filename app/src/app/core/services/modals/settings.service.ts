@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
-import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // UTILS
 import { Constants, ConstantsTable, ISettingModel } from '@utils/index';
@@ -20,8 +19,7 @@ export class SettingsService {
     constructor(private translator: TranslateService,
                 private sqlService: SqlService,
                 private calendarService: CalendarService,
-                private dbService: DataBaseService,
-                private file: File) {
+                private dbService: DataBaseService) {
     }
 
     /** SETTINGS */

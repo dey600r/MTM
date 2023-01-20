@@ -18,7 +18,7 @@ import { CommonService, CalendarService } from '../common/index';
 // UTILS
 import { 
     ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum, PageEnum,
-    IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel, IDashboardModel, IDashboardSerieModel, ISettingModel
+    IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel, IDashboardModel, IDashboardSerieModel, ISettingModel, IDashboardExpensesModel
 } from '@utils/index';
 
 @Injectable({
@@ -94,10 +94,19 @@ export class DashboardService {
     }
 
     // VEHICLE PER MONTH EXPENSES
-    getDashboardModelVehiclePerTime(view: number[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+    getDashboardModelVehiclePerTime(view: number[], data: OperationModel[], filter: SearchDashboardModel): IDashboardExpensesModel<DashboardModel<IDashboardModel>> {
+        const result: IDashboardExpensesModel<IDashboardModel[]> = this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter);
+        return {
+            allSum: this.initDashboardModelVehiclePerTime(view, result.allSum, filter, 'COMMON.EXPENSE'),
+            operationSum: this.initDashboardModelVehiclePerTime(view, result.operationSum, filter, 'COMMON.LABOR_EXPENSE'),
+            replacementSum: this.initDashboardModelVehiclePerTime(view, result.replacementSum, filter, 'COMMON.REPLACEMENT_EXPENSE')
+        };
+    }
+
+    initDashboardModelVehiclePerTime(view: number[], data: IDashboardModel[], filter: SearchDashboardModel, translateY: string): DashboardModel<IDashboardModel> {
         return new DashboardModel<IDashboardModel>({
             view: view,
-            data: this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter), 
+            data: data, 
             showXAxis: filter.showAxis, 
             showYAxis: filter.showAxis,
             showLegend: filter.showLegend,
@@ -105,15 +114,17 @@ export class DashboardService {
             showXAxisLabel: filter.showAxisLabel,
             xAxisLabel: this.translator.instant('COMMON.DATE'),
             showYAxisLabel: filter.showAxisLabel,
-            yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
+            yAxisLabel: this.translator.instant(translateY),
             isDoughnut: filter.doghnut,
             legendPosition: 'below',
             showDataLabel: filter.showDataLabel
         });
     }
 
-    mapOperationToDashboardVehiclePerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
+    mapOperationToDashboardVehiclePerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardExpensesModel<IDashboardModel[]> {
         let result: IDashboardModel[] = [];
+        let resultOperation: IDashboardModel[] = [];
+        let resultReplacement: IDashboardModel[] = [];
         if (!!data && data.length > 0) {
             const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
             if (!!operationPreFilter && operationPreFilter.length > 0) {
@@ -129,25 +140,33 @@ export class DashboardService {
                             new Date(x.date).getFullYear() === i &&
                             this.getFilterOperationType(x, filter));
                         if (!!ops && ops.length > 0) {
-                            let sumPrice = 0;
+                            let sumPriceOperation = 0;
+                            let sumPriceReplacement = 0;
                             ops.forEach(os => {
-                                sumPrice += os.price;
+                                sumPriceOperation += os.price;
                                 if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
                                     const sumPriceRepl: MaintenanceElementModel[] =
                                         this.getFilterReplacement(os.listMaintenanceElement, filter);
                                     if (!!sumPriceRepl && sumPriceRepl.length > 0) {
-                                        sumPrice += this.commonService.sum(sumPriceRepl,
+                                        sumPriceReplacement += this.commonService.sum(sumPriceRepl,
                                             ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
                                     }
                                 }
                             });
-                            result = [...result, this.getDataDashboard(this.getRangeDates(i, j, iterator), sumPrice)];
+                            const dataAxis: string = this.getRangeDates(i, j, iterator);
+                            result = [...result, this.getDataDashboard(dataAxis, sumPriceOperation + sumPriceReplacement)];
+                            resultOperation = [...resultOperation, this.getDataDashboard(dataAxis, sumPriceOperation)];
+                            resultReplacement = [...resultReplacement, this.getDataDashboard(dataAxis, sumPriceReplacement)];
                         }
                     }
                 }
             }
         }
-        return result;
+        return {
+            allSum: result,
+            operationSum: resultOperation,
+            replacementSum: resultReplacement
+        };
     }
 
     getRangeDates(i: number, j: number, iterator: number): string {

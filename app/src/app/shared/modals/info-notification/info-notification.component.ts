@@ -10,9 +10,9 @@ import * as shape from 'd3-shape';
 // UTILS
 import {
   ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
-  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel
+  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel, MaintenanceElementModel
 } from '@models/index';
-import { Constants, IDashboardModel, IDashboardSerieModel, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, IDashboardExpensesModel, IDashboardModel, IDashboardSerieModel, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // SERVICES
 import {
@@ -35,7 +35,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-  dashboardVehicleExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardVehicleOperationExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardVehicleReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
   dashboardRecordsMaintenance: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   currentPopover = null;
   hideGraph = true;
@@ -145,9 +146,15 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   calculateDashboardExpenses(filter: SearchDashboardModel) {
     if (!this.hideGraph) {
       const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-      this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,
+      const wearMain: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
+      const oldData: MaintenanceElementModel[] = [...filter.searchMaintenanceElement];
+      filter.searchMaintenanceElement = [new MaintenanceElementModel({ id: wearMain.listWearReplacement[0].idMaintenanceElement })];
+      const results: IDashboardExpensesModel<DashboardModel<IDashboardModel>> = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,
         this.modalInputModel.dataList.filter(x =>
           this.wear.listWearMaintenance.some(y => y.listWearReplacement[0].idOperation === x.id)), filter);
+      filter.searchMaintenanceElement = oldData;
+      this.dashboardVehicleOperationExpenses = results.operationSum;
+      this.dashboardVehicleReplacementExpenses = results.replacementSum;
     }
   }
 
@@ -166,12 +173,14 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   getObserverOrientationChange() {
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
       let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
-      this.dashboardVehicleExpenses.view = windowSize;
+      this.dashboardVehicleOperationExpenses.view = windowSize;
+      this.dashboardVehicleReplacementExpenses.view = windowSize;
       this.dashboardRecordsMaintenance.view = windowSize;
       setTimeout(() => {
         windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (windowSize[0] === windowSize[1]) {
-          this.dashboardVehicleExpenses.view = windowSize;
+          this.dashboardVehicleOperationExpenses.view = windowSize;
+          this.dashboardVehicleReplacementExpenses.view = windowSize;
           this.dashboardRecordsMaintenance.view = windowSize;
           this.changeDetector.detectChanges();
         }
