@@ -15,7 +15,6 @@ android {
 	defaultConfig {
         ndk {
             debugSymbolLevel 'FULL'
-            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
     }
 }
