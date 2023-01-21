@@ -1,0 +1,26 @@
+android {
+    ndkVersion "23.1.7779620" 
+    buildTypes {
+        release {
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'     
+        }   
+    }
+	defaultConfig {
+        ndk {
+            debugSymbolLevel 'FULL'
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
+    }
+}
+
+ext.postBuildExtras = {
+    android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
+    android.buildTypes.release.ndk.debugSymbolLevel = 'FULL'
+}
