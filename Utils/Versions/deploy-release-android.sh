@@ -31,7 +31,7 @@ tar -cvf native-libs-symbols-all.zip *
 mv native-libs-symbols-all.zip $path_trace_store
 rm -r $path/app/platforms/android/app/build/intermediates/merged_native_libs/release/out/lib/armeabi
 tar -cvf native-libs-symbols.zip *
-mv native-libs-symbols-all.zip $path_trace_store
+mv native-libs-symbols.zip $path_trace_store
 echo "--- SAVING BUNDLE RETRACE R8 ---"
 cp $path_retrace_r8/* $path_trace_store
 echo "----> END ANDROID $prod <----";
