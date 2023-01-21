@@ -27,10 +27,10 @@ zipalign -v -f 4 $path_release/app-release.aab $path_version/MtM$free$version.aa
 echo "--- SAVING BUNDLE NATIVE LIBS ---"
 cd $path_native_lib
 mkdir $path_trace_store
-tar -cvf native-libs-symbols-all.zip *
+zip -rv native-libs-symbols-all.zip *
 mv native-libs-symbols-all.zip $path_trace_store
 rm -r $path/app/platforms/android/app/build/intermediates/merged_native_libs/release/out/lib/armeabi
-tar -cvf native-libs-symbols.zip *
+zip -rv native-libs-symbols.zip *
 mv native-libs-symbols.zip $path_trace_store
 echo "--- SAVING BUNDLE RETRACE R8 ---"
 cp $path_retrace_r8/* $path_trace_store
