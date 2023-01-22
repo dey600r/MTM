@@ -1,6 +1,13 @@
 android {
     ndkVersion "23.1.7779620" 
     buildTypes {
+        debug {
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
+            minifyEnabled false
+            shrinkResources false
+        }   
         release {
             ndk {
                 debugSymbolLevel 'FULL'
@@ -12,15 +19,4 @@ android {
                     'proguard-rules.pro'     
         }   
     }
-	defaultConfig {
-        ndk {
-            debugSymbolLevel 'FULL'
-            abiFilters "armeabi", "armeabi-v7a", "x86", "arm64-v8a", "x86_64", "mips"
-        }
-    }
-}
-
-ext.postBuildExtras = {
-    android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
-    android.buildTypes.release.ndk.debugSymbolLevel = 'FULL'
 }
