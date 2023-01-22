@@ -17,3 +17,4 @@ INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (5,'configPrivacy','N','20
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (6,'configSyncEmail','','2006-09-12 12:32:00');
 **->nextDeployDB_v3.4.0**>
 **->nextDeployDB_v3.4.1**>
+**->nextDeployDB_v3.4.2**>

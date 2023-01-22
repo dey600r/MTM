@@ -1,7 +1,7 @@
 {
   "name": "MtM",
-  "version": "v3.4.1",
-  "dateVersion": "2023-01-21 11:00:00",
+  "version": "v3.4.2",
+  "dateVersion": "2023-01-22 10:00:00",
   "author": "David Jimenez Galiana",
   "homepage": "deyhome.mtm@gmail.com",
   "scripts": {
@@ -90,6 +90,7 @@
     "cordova-plugin-inappbrowser": "^4.1.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
+    "cordova-plugin-proguard": "^2.2.0",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "cordova-plugin-splashscreen": "^5.0.4",
     "cordova-plugin-statusbar": "^2.4.3",
@@ -125,7 +126,8 @@
       "cordova-plugin-file": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-inappbrowser": {},
-      "cordova-plugin-androidx-adapter": {}
+      "cordova-plugin-androidx-adapter": {},
+      "cordova-plugin-proguard": {}
     },
     "platforms": [
       "windows",
