@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 // COMPONENTS
@@ -15,7 +15,7 @@ import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
-import { ModalInputModel } from '@models/index';
+import { ModalInputModel, WearVehicleProgressBarViewModel } from '@models/index';
 
 describe('InfoCalendarComponent', () => {
   let component: InfoCalendarComponent;
@@ -23,7 +23,7 @@ describe('InfoCalendarComponent', () => {
   let translate: TranslateService;
   let homeService: HomeService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));
@@ -38,7 +38,10 @@ describe('InfoCalendarComponent', () => {
     component = fixture.componentInstance;
     const allWears = homeService.getWearReplacementToVehicle(
       MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
-    component.navParams.data = new ModalInputModel(true, null, allWears, PageEnum.HOME);
+    component.navParams.data = new ModalInputModel<any, WearVehicleProgressBarViewModel>({
+        dataList: allWears,
+        parentPage: PageEnum.HOME
+      });
     fixture.detectChanges();
   });
 

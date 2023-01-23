@@ -8,7 +8,7 @@ import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, ControlService, SettingsService } from '@services/index';
+import { DataBaseService, ControlService, ExportService } from '@services/index';
 import { PageEnum } from './core/utils';
 
 @Component({
@@ -25,7 +25,7 @@ export class AppComponent {
     private dbService: DataBaseService,
     private translator: TranslateService,
     private controlService: ControlService,
-    private settingsService: SettingsService
+    private exportService: ExportService
   ) {
     this.initializeApp();
   }
@@ -46,7 +46,7 @@ export class AppComponent {
       this.controlService.activateButtonExist(PageEnum.HOME);
 
       // FILES
-      this.settingsService.createOutputDirectory();
+      this.exportService.createOutputDirectory();
     });
   }
 

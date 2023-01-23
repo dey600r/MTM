@@ -1,4 +1,4 @@
-<ion-header [hidden]="!loaded">
+<ion-header [hidden]="!loadedHeader">
   <ion-toolbar>
     <!-- Button chart -->
     <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openDashboardVehicle()">
@@ -19,7 +19,7 @@
     </ion-segment-button>
   </ion-segment>
 </ion-header>
-<ion-content [hidden]="!loaded">
+<ion-content [hidden]="!loadedBody">
   <!-- INFO -->
   <app-info *ngIf="vehicles.length === 0" [inputInfo]="input"></app-info>
   <!-- LIST -->
@@ -35,7 +35,7 @@
       <ion-item button [ngClass]="{ 'disable-item-color': !v.active }">
         <!-- Icons -->
         <ion-avatar slot="start" class="max-width10" (click)="openVehicleModal(v, false)">
-          <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !v.active, 'icon-color': v.active }" [name]="getIconVehicle(v)"></ion-icon>
+          <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !v.active, 'icon-color': v.active }" [name]="v.vehicleType.icon"></ion-icon>
         </ion-avatar>
         <!-- Labels -->
         <ion-label class="min-width40 label-event-force" (click)="openVehicleModal(v, false)">
@@ -45,19 +45,18 @@
         </ion-label>
         <ion-label class="padding-left10 label-event-force" (click)="openVehicleModal(v, false)">
           <h3>{{ v.km }} {{measure.value}}</h3>
+          <h4 *ngIf="v.km !== v.kmEstimated" class="disable-item-color">{{ v.kmEstimated }} {{measure.value}}</h4>
           <ion-label class="row-block flex-items-center">
             <ion-icon name="cog"></ion-icon>
-            <p [ngClass]="{ 'icon-label disable-item-color': !v.active, 'icon-label': v.active }">{{ v.configuration.name }}</p>
+            <p [ngClass]="{ 'icon-label margin-top-conf disable-item-color': !v.active, 'icon-label margin-top-conf': v.active }">{{ v.configuration.name }}</p>
           </ion-label>
         </ion-label>
         <!-- Buttons edit / delete -->
-        <ion-label class="align-right fix-width69">
-          <ion-label>
-            <ion-button class="btn-width-row" fill="clear" (click)="deleteVehicle(v)">
-              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-            </ion-button>
-          </ion-label>
-        </ion-label>
+        <div class="align-right fix-width69">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteVehicle(v)">
+            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+          </ion-button>
+        </div>
       </ion-item>
     </ion-item-sliding>
   </ion-list>
@@ -69,11 +68,11 @@
 </ion-content>
 
 <!-- SKELETON LOADER INITAL -->
-<ion-header *ngIf="!loaded">
+<ion-header *ngIf="!loadedHeader">
   <app-header-skeleton [input]="[4, 8]"></app-header-skeleton>
 </ion-header>
 
-<ion-content *ngIf="!loaded">
+<ion-content *ngIf="!loadedBody">
   <ion-list>
     <ion-item *ngFor="let i of [1, 2, 3]">
       <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>

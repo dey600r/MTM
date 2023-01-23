@@ -2,7 +2,7 @@
     <ion-toolbar>
         <!-- Button show filter -->
         <ion-button *ngIf="isCalendar" slot="start" fill="clear" (click)="showPopover($event)" class="btn-width-header">
-            <ion-icon size="large" class="btn-color" name="filter"></ion-icon>
+            <ion-icon size="large" class="btn-color" [name]="iconFilter"></ion-icon>
         </ion-button>
         <!-- Title -->
         <ion-title color="text-header" class="align-center">{{ labelNameVehicle }}</ion-title>
@@ -54,28 +54,52 @@
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideGraph" class="justify-center">
-      <ngx-charts-bar-vertical
-        [view]="dashboardVehicleExpenses.view"
-        [scheme]="dashboardVehicleExpenses.colorScheme"
-        [results]="dashboardVehicleExpenses.data"
-        [gradient]="dashboardVehicleExpenses.gradient"
-        [xAxis]="dashboardVehicleExpenses.showXAxis"
-        [yAxis]="dashboardVehicleExpenses.showYAxis"
-        [legend]="dashboardVehicleExpenses.showLegend"
-        [legendTitle]="dashboardVehicleExpenses.legendTitle"
-        [legendPosition]="dashboardVehicleExpenses.legendPosition"
-        [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
-        [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
-        [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
-        [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
-        [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
+      <ngx-charts-bar-vertical *ngIf="!showSpinner"
+        [view]="dashboardVehicleOperationExpenses.view"
+        [scheme]="dashboardVehicleOperationExpenses.colorScheme"
+        [results]="dashboardVehicleOperationExpenses.data"
+        [gradient]="dashboardVehicleOperationExpenses.gradient"
+        [xAxis]="dashboardVehicleOperationExpenses.showXAxis"
+        [yAxis]="dashboardVehicleOperationExpenses.showYAxis"
+        [legend]="dashboardVehicleOperationExpenses.showLegend"
+        [legendTitle]="dashboardVehicleOperationExpenses.legendTitle"
+        [legendPosition]="dashboardVehicleOperationExpenses.legendPosition"
+        [showXAxisLabel]="dashboardVehicleOperationExpenses.showXAxisLabel"
+        [showYAxisLabel]="dashboardVehicleOperationExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardVehicleOperationExpenses.showDataLabel"
+        [xAxisLabel]="dashboardVehicleOperationExpenses.xAxisLabel"
+        [yAxisLabel]="dashboardVehicleOperationExpenses.yAxisLabel">
       </ngx-charts-bar-vertical>
+      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleOperationExpenses.view[1]" class="div-spinner">
+        <ion-spinner class="spinner" name="lines"></ion-spinner>
+      </div>
+    </div>
+    <div *ngIf="!hideGraph" class="justify-center">
+      <ngx-charts-bar-vertical *ngIf="!showSpinner"
+        [view]="dashboardVehicleReplacementExpenses.view"
+        [scheme]="dashboardVehicleReplacementExpenses.colorScheme"
+        [results]="dashboardVehicleReplacementExpenses.data"
+        [gradient]="dashboardVehicleReplacementExpenses.gradient"
+        [xAxis]="dashboardVehicleReplacementExpenses.showXAxis"
+        [yAxis]="dashboardVehicleReplacementExpenses.showYAxis"
+        [legend]="dashboardVehicleReplacementExpenses.showLegend"
+        [legendTitle]="dashboardVehicleReplacementExpenses.legendTitle"
+        [legendPosition]="dashboardVehicleReplacementExpenses.legendPosition"
+        [showXAxisLabel]="dashboardVehicleReplacementExpenses.showXAxisLabel"
+        [showYAxisLabel]="dashboardVehicleReplacementExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardVehicleReplacementExpenses.showDataLabel"
+        [xAxisLabel]="dashboardVehicleReplacementExpenses.xAxisLabel"
+        [yAxisLabel]="dashboardVehicleReplacementExpenses.yAxisLabel">
+      </ngx-charts-bar-vertical>
+      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleReplacementExpenses.view[1]" class="div-spinner">
+        <ion-spinner class="spinner" name="lines"></ion-spinner>
+      </div>
     </div>
   </ion-list>
   <!-- List Records Maintenance -->
   <ion-list *ngIf="isCalendar">
     <ion-list-header (click)="refreshChart()" class="padding-list-header">
-      <ion-icon size="large" [name]="getIconReplacement()"></ion-icon>
+      <ion-icon size="large" [name]="iconMaintenanceElement"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ nameMaintenanceElement }}</h3>
       <ion-button fill="clear">
         <ion-icon *ngIf="hideRecords" size="small" color="primary" name="caret-down-circle"></ion-icon>
@@ -105,7 +129,7 @@
       <ion-item button *ngFor="let wm of wear.listWearMaintenance" (click)="showInfo(wm)">
         <!-- Ivatar -->
         <ion-avatar slot="start" class="max-width10 avatar-row">
-          <ion-icon size="large" class="icon-color" [name]="getIconMaintenance(wm)"></ion-icon>
+          <ion-icon size="large" class="icon-color" [name]="wm.iconMaintenance"></ion-icon>
         </ion-avatar>
         <div class="main-div">
           <div>
@@ -117,33 +141,34 @@
             <div class="table-row">
               <!-- KMS -->
               <div class="margin-right5 table-row">
-                <ion-icon [class]="getClassIcon(wm.listWearReplacement[0].warningKms, 'icon-row')" [color]="getClassIcon(wm.listWearReplacement[0].warningKms, '')" size="small"
-                  [name]="getIconKms(wm.listWearReplacement[0].warningKms)"></ion-icon>
+                <ion-icon [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" 
+                  [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
+                  [name]="wm.listWearReplacement[0].warningKmsIcon"></ion-icon>
                 <p class="p-row">{{ getKmPercent(wm.listWearReplacement[0]) }} {{measure.value}}</p>
               </div>
               <!-- ICON -->
               <div class="icon-notification">
-                <ion-icon *ngIf="wm.initMaintenance" [color]="getClassIcon(wm.listWearReplacement[0].warningKms, '')" size="small"
-                [class]="getClassIcon(wm.listWearReplacement[0].warningKms, 'icon-row')" name="navigate-circle"></ion-icon>
+                <ion-icon *ngIf="wm.initMaintenance" [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
+                [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" name="navigate-circle"></ion-icon>
                 <ion-icon *ngIf="!wm.initMaintenance && wm.wearMaintenance"
-                  [color]="getClassIcon(wm.listWearReplacement[0].warningKms, '')" size="small"
-                  [class]="getClassIcon(wm.listWearReplacement[0].warningKms, 'icon-row')" name="notifications-circle"></ion-icon>
+                  [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
+                  [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" name="notifications-circle"></ion-icon>
               </div>
             </div>
               <!-- Progress bar maintenace -->
-            <div [class]="getClassProgressbar(wm.listWearReplacement[0].warningKms, '')">
+            <div [class]="wm.listWearReplacement[0].warningKmsProgressBarIcon">
               <ion-progress-bar [value]="wm.listWearReplacement[0].percentKms"></ion-progress-bar>
             </div>
             <div *ngIf="wm.timeMaintenance > 0" class="table-row">
               <!-- MONTHS -->
               <div class="margin-right5 table-row">
-                <ion-icon [color]="getClassIcon(wm.listWearReplacement[0].warningMonths, '')" size="small"
-                  [class]="getClassIcon(wm.listWearReplacement[0].warningMonths, 'icon-row')" [name]="getIconKms(wm.listWearReplacement[0].warningMonths)"></ion-icon>
+                <ion-icon [color]="wm.listWearReplacement[0].warningMonthsIconClass" size="small"
+                  [class]="'icon-row' + wm.listWearReplacement[0].warningMonthsIconClass" [name]="wm.listWearReplacement[0].warningMonthsIcon"></ion-icon>
                 <p class="p-row">{{ getTimePercent(wm.listWearReplacement[0]) }}</p>
               </div>
             </div>
               <!-- Progress bar maintenace -->
-            <div *ngIf="wm.timeMaintenance > 0" [class]="getClassProgressbar(wm.listWearReplacement[0].warningMonths, '')">
+            <div *ngIf="wm.timeMaintenance > 0" [class]="wm.listWearReplacement[0].warningMonthsProgressBarIcon">
               <ion-progress-bar [value]="wm.listWearReplacement[0].percentMonths"></ion-progress-bar>
             </div>
           </div>

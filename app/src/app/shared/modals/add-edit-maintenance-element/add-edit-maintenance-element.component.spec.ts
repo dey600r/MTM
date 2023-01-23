@@ -15,17 +15,20 @@ import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
-import { ModalInputModel } from '@models/index';
+import { MaintenanceElementModel, ModalInputModel } from '@models/index';
 
 describe('AddEditMaintenanceElementComponent', () => {
   let component: AddEditMaintenanceElementComponent;
   let fixture: ComponentFixture<AddEditMaintenanceElementComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel(true, MockData.MaintenanceElements[0], [], PageEnum.CONFIGURATION)));
+      SpyMockConfig.getProviderNavParams(new ModalInputModel<MaintenanceElementModel>({
+        data: MockData.MaintenanceElements[0],
+        parentPage: PageEnum.CONFIGURATION
+      })));
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);

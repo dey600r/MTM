@@ -7,20 +7,19 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 
 // SERVICES
 import {
-  CommonService, ConfigurationService, ControlService, DashboardService,
-  DataBaseService, HomeService, InfoVehicleService, SettingsService, VehicleService
+  CommonService, ControlService, DashboardService, DataBaseService,  InfoVehicleService, SettingsService
 } from '@services/index';
 
 // MODELS
 import {
   ConfigurationModel,
-  DashboardModel, InfoVehicleHistoricModel, InfoVehicleConfigurationMaintenanceModel,
+  DashboardModel, InfoVehicleHistoricModel,
   InfoVehicleConfigurationModel, InfoVehicleHistoricReplacementModel, MaintenanceElementModel,
-  MaintenanceFreqModel, MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel
+  MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, WarningWearEnum } from '@utils/index';
+import { ConstantsColumns, IDashboardModel, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
 
 @Component({
   selector: 'app-info-vehicle',
@@ -30,31 +29,40 @@ import { ConstantsColumns, WarningWearEnum } from '@utils/index';
 export class InfoVehicleComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
+  input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
   // DATA
   vehicles: VehicleModel[] = [];
+  operations: OperationModel[] = [];
   vehicleSelected: VehicleModel = new VehicleModel();
-  measure: any = {};
-  coin: any = {};
+  measure: ISettingModel;
+  coin: ISettingModel;
   showInfoMaintenance: boolean[] = [];
   showInfoReplacement: boolean[] = [];
+
+  // CHARTS
+  dataDashboardInformationVehicle: any[] = [];
+  dashboardInformationVehicle: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dataDashboardConfigurationVehicle: any[] = [];
+  dashboardConfigurationVehicle: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
 
   // MODELS
   listInfoVehicleConfiguration: InfoVehicleConfigurationModel[] = [];
   selectedInfoVehicleConfiguration: InfoVehicleConfigurationModel = new InfoVehicleConfigurationModel();
   listInfoVehicleReplacement: InfoVehicleHistoricModel[] = [];
   selectedInfoReplacement: InfoVehicleHistoricReplacementModel[] = [];
-  hideVehicleSummary = true;
+  hideVehicleSummary = false;
   hideConfigurationSummary = true;
   loadedBodyConfigurationSummary = true;
   hideReplacementSummary = true;
   loadedBodyReplacementSummary = true;
-  dashboard: DashboardModel = new DashboardModel([], []);
-  windowsSize: any[] = [];
-  dataDashboard: any[] = [];
+  showSpinner = false;
   labelVehicleKm = '';
   labelPercent = 0;
+  labelIconClassPercent = '';
+  labelIconPercent = '';
+  labelVehicleAverageKm = '';
 
   // SUSBSCRIPTION
   screenSubscription: Subscription = new Subscription();
@@ -64,13 +72,10 @@ export class InfoVehicleComponent implements OnInit {
               private screenOrientation: ScreenOrientation,
               private modalController: ModalController,
               private controlService: ControlService,
-              private vehicleService: VehicleService,
               private dbService: DataBaseService,
               private commonService: CommonService,
               private infoVehicleService: InfoVehicleService,
-              private configurationService: ConfigurationService,
               private settingsService: SettingsService,
-              private homeService: HomeService,
               private dashboardService: DashboardService,
               private changeDetector: ChangeDetectorRef) { }
 
@@ -81,8 +86,15 @@ export class InfoVehicleComponent implements OnInit {
   // INIT DATA
 
   initSummary() {
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<any, VehicleModel>(this.navParams.data);
+    this.input = new ModalInputModel<IInfoModel>({
+      parentPage: this.modalInputModel.parentPage,
+      data: {
+        text: 'ALERT.NoDataFound',
+        icon: 'analytics',
+        info: InfoButtonEnum.NONE
+      }
+    });
 
     const settings = this.dbService.getSystemConfigurationData();
     this.measure = this.settingsService.getDistanceSelected(settings);
@@ -102,6 +114,9 @@ export class InfoVehicleComponent implements OnInit {
       const data = this.listInfoVehicleConfiguration.find(x => x.idVehicle === this.vehicleSelected.id);
       this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.vehicleSelected.km, data.kmEstimated, this.measure);
       this.labelPercent = this.infoVehicleService.getPercentKmVehicle(this.selectedInfoVehicleConfiguration);
+      this.labelIconClassPercent = this.infoVehicleService.getIconPercent(this.labelPercent, 'color');
+      this.labelIconPercent = this.infoVehicleService.getIconPercent(this.labelPercent, 'icon');
+      this.labelVehicleAverageKm = this.infoVehicleService.getLabelAverageKmVehicle(this.dashboardInformationVehicle.data, this.measure);
     }
   }
 
@@ -111,63 +126,79 @@ export class InfoVehicleComponent implements OnInit {
       this.dbService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
     const maintenances: MaintenanceModel[] = this.commonService.orderBy(
       this.dbService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
-    const operations: OperationModel[] = this.dbService.getOperationsData();
     const maintenanceElements: MaintenanceElementModel[] = this.dbService.getMaintenanceElementData();
+    this.operations = this.dbService.getOperationsData();
     this.vehicles = this.modalInputModel.dataList.filter(v =>
       configurations.find(c => c.id === v.configuration.id).listMaintenance.length > 0);
 
     if (this.vehicles && this.vehicles.length > 0) {
       this.vehicleSelected = this.vehicles[0];
 
+      // INFO CONFIGURATION VEHICLE
       this.listInfoVehicleConfiguration = this.infoVehicleService.calculateInfoVehicleConfiguration(
-        operations, this.vehicles, configurations, maintenances);
+        this.operations, this.vehicles, configurations, maintenances);
 
       // INFO VEHICLE REPLACEMENTS
       this.listInfoVehicleReplacement = this.infoVehicleService.calculateInfoReplacementHistoric(
-        this.vehicles, maintenances, operations, configurations, maintenanceElements);
+        this.vehicles, maintenances, this.operations, configurations, maintenanceElements);
 
-      this.initShowInfo();
+      this.initShowInfo(this.vehicleSelected);
     }
   }
 
   initChartSummary() {
-    // CHART
     let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-    this.listInfoVehicleConfiguration.forEach(x => {
-      this.dataDashboard = [...this.dataDashboard, {
-        id: x.idVehicle,
-        data: this.dashboardService.getDashboardInfoVehicle(windowSize, x) }];
-    });
+    this.initChartInformationVehicle(windowSize);
+    this.initChartConfigurationVehicle(windowSize);
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
       windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
-      this.dataDashboard.forEach(x => x.data.view = windowSize);
-      this.dashboard.view = windowSize;
+      this.dataDashboardInformationVehicle.forEach(x => x.data.view = windowSize);
+      this.dashboardInformationVehicle.view = windowSize;
+      this.dataDashboardConfigurationVehicle.forEach(x => x.data.view = windowSize);
+      this.dashboardConfigurationVehicle.view = windowSize;
       this.changeDetector.detectChanges();
     });
   }
 
-  initShowInfo() {
-    this.initShowInfoMaintenance();
-    this.initShowInfoReplacement();
+  initChartInformationVehicle(windowSize: any[]) {
+    this.vehicles.forEach(x => {
+      this.dataDashboardInformationVehicle = [...this.dataDashboardInformationVehicle, {
+        id: x.id,
+        data: this.dashboardService.getDashboardInformationVehicle(windowSize, x, this.operations.filter(o => o.vehicle.id === x.id)) }];
+    });
+    
+  }
+
+  initChartConfigurationVehicle(windowSize: any[]) {
+    this.listInfoVehicleConfiguration.forEach(x => {
+      this.dataDashboardConfigurationVehicle = [...this.dataDashboardConfigurationVehicle, {
+        id: x.idVehicle,
+        data: this.dashboardService.getDashboardConfigurationVehicle(windowSize, x) }];
+    });
+  }
+
+  initShowInfo(vehicleSelected: VehicleModel) {
+    this.initShowInfoMaintenance(vehicleSelected);
+    this.initShowInfoReplacement(vehicleSelected);
   }
 
   resetList() {
-    this.hideVehicleSummary = true;
+    this.hideVehicleSummary = false;
     this.hideConfigurationSummary = true;
     this.hideReplacementSummary = true;
   }
 
-  initShowInfoMaintenance() {
+  initShowInfoMaintenance(vehicleSelected: VehicleModel) {
     this.showInfoMaintenance = [];
-    if (this.vehicleSelected) {
+    if (vehicleSelected) {
       this.selectedInfoVehicleConfiguration.listMaintenance.forEach(x =>
         this.showInfoMaintenance = [...this.showInfoMaintenance, true]);
     }
   }
 
-  initShowInfoReplacement() {
+  initShowInfoReplacement(vehicleSelected: VehicleModel) {
     this.showInfoReplacement = [];
-    if (this.vehicleSelected) {
+    if (vehicleSelected) {
       this.selectedInfoReplacement.forEach(x =>
         this.showInfoReplacement = [...this.showInfoReplacement, true]);
     }
@@ -178,23 +209,12 @@ export class InfoVehicleComponent implements OnInit {
       this.vehicleSelected = this.vehicles.find(x => x.id === idVehicle);
       this.selectedInfoVehicleConfiguration = this.listInfoVehicleConfiguration.find(x => x.idVehicle === idVehicle);
       this.selectedInfoReplacement = this.listInfoVehicleReplacement.find(x => x.id === idVehicle).listHistoricReplacements;
-      this.dashboard = this.dataDashboard.find(x => x.id === this.selectedInfoVehicleConfiguration.idVehicle).data;
+      this.dashboardInformationVehicle = this.dataDashboardInformationVehicle.find(x => x.id === this.selectedInfoVehicleConfiguration.idVehicle).data;
+      this.dashboardConfigurationVehicle = this.dataDashboardConfigurationVehicle.find(x => x.id === this.selectedInfoVehicleConfiguration.idVehicle).data;
     }
   }
 
   // METHODS
-
-  getIconMaintenance(maintenance: InfoVehicleConfigurationMaintenanceModel): string {
-    return this.configurationService.getIconMaintenance(new MaintenanceModel('', [], new MaintenanceFreqModel(maintenance.codeFrequency)));
-  }
-
-  getIconPercent(type: string): string {
-    return this.infoVehicleService.getIconPercent(this.labelPercent, type);
-  }
-
-  getIconPlanned(rep: InfoVehicleHistoricReplacementModel): string {
-    return rep.planned ? 'build' : 'construct';
-  }
 
   showInfoVehicle() {
     this.infoVehicleService.showInfoVehicle(this.vehicleSelected.dateKms, this.measure);
@@ -228,31 +248,16 @@ export class InfoVehicleComponent implements OnInit {
     }
   }
 
-  // ICONS
-
-  getIconReplacement(replacementId: number): string {
-    return this.configurationService.getIconReplacement(new MaintenanceElementModel(null, null, false, 0, replacementId));
-  }
-
-  getClassIcon(warning: WarningWearEnum, styles: string): string {
-    return this.homeService.getClassIcon(warning, styles);
-  }
-
-  getIconVehicle(vehicle: VehicleModel): string {
-    return this.vehicleService.getIconVehicle(vehicle);
-  }
-
-  getIconKms(warning: WarningWearEnum): string {
-    return this.homeService.getIconKms(warning);
-  }
-
   // SEGMENT
 
   segmentChanged(event: any): void {
+    this.showSpinner = true; // Windows 10: Fix no change good the data of the chart when the tabs is changed
     this.initDataSelected(Number(event.detail.value));
-    this.initShowInfo();
+    this.initShowInfo(this.vehicleSelected);
     this.initVehicleSummary();
     this.resetList();
+    this.changeDetector.detectChanges();
+    setTimeout(() => { this.showSpinner = false; }, 150);
   }
 
   activeSegmentScroll(): boolean {

@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS "mtmOperationType" (
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (1,'M','MOTORBIKE');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (2,'C','CAR');
 INSERT OR IGNORE INTO "mtmVehicleType" VALUES (3,'O','OTHER');
-INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','v3.3.0','2022-01-08 19:00:00');
+INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (1,'lastUpdate','-','-');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (2,'configDistance','KM','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (3,'configMoney','EURO','2006-09-12 12:32:00');
 INSERT OR IGNORE INTO "mtmSystemConfiguration" VALUES (4,'configTheme','D','2006-09-12 12:32:00');

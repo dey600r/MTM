@@ -5,13 +5,17 @@ import { Subscription } from 'rxjs';
 // LIBRARIES
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 
-// UTILS
-import { DashboardService, ControlService, VehicleService } from '@services/index';
+// SERVICES
+import { DashboardService, ControlService, IconService } from '@services/index';
+
+// MODELS
 import { DashboardModel, OperationModel, ModalInputModel } from '@models/index';
-import { PageEnum } from '@utils/index';
+
+// UTILS
+import { IDashboardModel, IInfoModel, InfoButtonEnum, PageEnum } from '@utils/index';
 
 // COMPONENTS
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
   selector: 'dashboard',
@@ -21,17 +25,21 @@ import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popo
 export class DashboardComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel = new ModalInputModel();
+    modalInputModel: ModalInputModel<any, OperationModel> = new ModalInputModel<any, OperationModel>();
+    input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
     // MODEL FORM
-    dashboardOpTypeExpenses: DashboardModel = new DashboardModel([], []);
-    dashboardReplacementExpenses: DashboardModel = new DashboardModel([], []);
-    dashboardVehicleExpenses: DashboardModel = new DashboardModel([], []);
+    dashboardOpTypeExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+    dashboardReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+    dashboardVehicleExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
     currentPopover = null;
 
     // DATA
     operations: OperationModel[] = [];
     vehicleModel = '';
+    iconFilter = 'filter';
+    showSpinner = false;
+    openningPopover = false;
 
     // SUBSCRIPTION
     searchSubscription: Subscription = new Subscription();
@@ -44,31 +52,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 private dashboardService: DashboardService,
                 private modalController: ModalController,
                 private controlService: ControlService,
-                private vehicleService: VehicleService) {
+                private iconService: IconService) {
   }
 
   ngOnInit() {
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-        this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<any, OperationModel>(this.navParams.data);
+    this.input = new ModalInputModel<IInfoModel>({
+      parentPage: this.getParent(this.modalInputModel.parentPage),
+      data: {
+        text: 'ALERT.NoDataFound',
+        icon: 'bar-chart',
+        info: InfoButtonEnum.NONE
+      }
+    });
 
     this.operations = this.modalInputModel.dataList;
     this.vehicleModel = (!!this.operations && this.operations.length > 0 ?
         `${this.operations[0].vehicle.brand} ${this.operations[0].vehicle.model}` : '');
     this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
-      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-      if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
-        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
-      } else { // VEHICLE EXPENSES PER MONTH
-        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize, this.operations, filter);
+      if (!this.openningPopover) { // Windows: Fix refresh chart :(
+        this.showSpinner = true;
+        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
+          this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
+        } else { // VEHICLE EXPENSES PER MONTH
+          this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize, this.operations, filter).allSum;
+        }
+        // VEHICLE EXPENSES PER OPERATION TYPE
+        this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
+        this.dashboardReplacementExpenses = this.dashboardService.getDashboardModelReplacementExpenses(windowsSize, this.operations, filter);
+        this.loadIconSearch();
+        setTimeout(() => {
+          this.showSpinner = false;
+          this.changeDetector.detectChanges();
+        }, 100);
       }
-      // VEHICLE EXPENSES PER OPERATION TYPE
-      this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
-      this.dashboardReplacementExpenses = this.dashboardService.getDashboardModelReplacementExpenses(windowsSize, this.operations, filter);
-      this.changeDetector.detectChanges();
     });
 
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize: number[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardVehicleExpenses.view = windowSize;
       this.dashboardOpTypeExpenses.view = windowSize;
       this.dashboardReplacementExpenses.view = windowSize;
@@ -100,9 +122,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   showPopover(ev: any) {
-    this.controlService.showPopover(this.getParent(this.modalInputModel.parentPage), ev, SearchDashboardPopOverComponent,
-      new ModalInputModel(this.modalInputModel.isCreate, this.modalInputModel.data, this.modalInputModel.dataList,
-        this.getParent(this.modalInputModel.parentPage)));
+    this.openningPopover = true;
+    const parentPage: PageEnum = this.getParent(this.modalInputModel.parentPage);
+    this.controlService.showPopover(parentPage, ev, SearchDashboardPopOverComponent, new ModalInputModel({ parentPage: parentPage }));
+    setTimeout(() => { // Windows: Fix refresh chart :(
+      this.openningPopover = false;
+    }, 200);
   }
 
   isParentPageVehicle() {
@@ -113,7 +138,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.modalInputModel.parentPage === PageEnum.OPERATION;
   }
 
-  getIconVehicle(): string {
-    return this.vehicleService.getIconVehicle(this.operations[0].vehicle);
+  loadIconSearch() {
+    const parentPage: PageEnum = this.getParent(this.modalInputModel.parentPage);
+    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(parentPage));
   }
 }

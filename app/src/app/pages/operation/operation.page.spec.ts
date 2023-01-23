@@ -18,7 +18,7 @@ describe('OperationPage', () => {
   let fixture: ComponentFixture<OperationPage>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService, VehicleService);
     await TestBed.configureTestingModule(config).compileComponents();

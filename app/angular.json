@@ -19,6 +19,9 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "ion5-calendar"
+            ],
             "assets": [
               {
                 "glob": "**/*",
@@ -58,6 +61,7 @@
               { "glob": "**/*information-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*eye.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*filter.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*filter-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*construct.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*build.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*hammer.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
@@ -117,7 +121,7 @@
             "namedChunks": true
           },
           "configurations": {
-            "production": {
+            "production-android": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -145,7 +149,42 @@
                 }
               ]
             },
-            "production-free": {
+            "production-windows": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": false,
+                  "inlineCritical": true
+                },
+                "fonts": true
+              },
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "production-free-android": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -153,6 +192,41 @@
                 }
               ],
               "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "production-free-windows": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment-free.prod.ts"
+                }
+              ],
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": false,
+                  "inlineCritical": true
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -185,11 +259,17 @@
             "browserTarget": "app:build"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "app:build:production"
+            "production-android": {
+              "browserTarget": "app:build:production-android"
             },
-            "production-free": {
-              "browserTarget": "app:build:production-free"
+            "production-windows": {
+              "browserTarget": "app:build:production-windows"
+            },
+            "production-free-android": {
+              "browserTarget": "app:build:production-free-android"
+            },
+            "production-free-windows": {
+              "browserTarget": "app:build:production-free-windows"
             },
             "ci": {
             }
@@ -254,6 +334,7 @@
               { "glob": "**/*information-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*eye.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*filter.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*filter-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*construct.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*build.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*hammer.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
@@ -322,11 +403,17 @@
             "devServerTarget": "app:serve"
           },
           "configurations": {
-            "production": {
-              "devServerTarget": "app:serve:production"
+            "production-android": {
+              "devServerTarget": "app:serve:production-android"
             },
-            "production-free": {
-              "devServerTarget": "app:serve:production-free"
+            "production-windows": {
+              "devServerTarget": "app:serve:production-windows"
+            },
+            "production-free-android": {
+              "devServerTarget": "app:serve:production-free-android"
+            },
+            "production-free-windows": {
+              "devServerTarget": "app:serve:production-free-windows"
             },
             "ci": {
               "devServerTarget": "app:serve:ci"
@@ -334,32 +421,46 @@
           }
         },
         "ionic-cordova-build": {
-          "builder": "@ionic/angular-toolkit:cordova-build",
+          "builder": "@ionic/cordova-builders:cordova-build",
           "options": {
             "browserTarget": "app:build"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "app:build:production"
+            "production-android": {
+              "browserTarget": "app:build:production-android"
             },
-            "production-free": {
-              "browserTarget": "app:build:production-free"
+            "production-windows": {
+              "browserTarget": "app:build:production-windows"
+            },
+            "production-free-android": {
+              "browserTarget": "app:build:production-free-android"
+            },
+            "production-free-windows": {
+              "browserTarget": "app:build:production-free-windows"
             }
           }
         },
         "ionic-cordova-serve": {
-          "builder": "@ionic/angular-toolkit:cordova-serve",
+          "builder": "@ionic/cordova-builders:cordova-serve",
           "options": {
             "cordovaBuildTarget": "app:ionic-cordova-build",
             "devServerTarget": "app:serve"
           },
           "configurations": {
-            "production": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:production",
+            "production-android": {
+              "cordovaBuildTarget": "app:ionic-cordova-build:production-android",
               "devServerTarget": "app:serve:production"
             },
-            "production-free": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:production-free",
+            "production-windows": {
+              "cordovaBuildTarget": "app:ionic-cordova-build:production-windows",
+              "devServerTarget": "app:serve:production"
+            },
+            "production-free-android": {
+              "cordovaBuildTarget": "app:ionic-cordova-build:production-free-android",
+              "devServerTarget": "app:serve:production-free"
+            },
+            "production-free-windows": {
+              "cordovaBuildTarget": "app:ionic-cordova-build:production-free-windows",
               "devServerTarget": "app:serve:production-free"
             }
           }
@@ -368,13 +469,13 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/angular-toolkit"
+    "defaultCollection": "@ionic/cordova-builders"
   },
   "schematics": {
-    "@ionic/angular-toolkit:component": {
+    "@ionic/cordova-builders:component": {
       "styleext": "scss"
     },
-    "@ionic/angular-toolkit:page": {
+    "@ionic/cordova-builders:page": {
       "styleext": "scss"
     }
   }

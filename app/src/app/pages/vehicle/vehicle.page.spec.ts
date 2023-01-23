@@ -18,7 +18,7 @@ describe('VehiclePage', () => {
   let fixture: ComponentFixture<VehiclePage>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
@@ -30,7 +30,8 @@ describe('VehiclePage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(VehiclePage);
     component = fixture.componentInstance;
-    component.loaded = true;
+    component.loadedHeader = true;
+    component.loadedBody = true;
     //fixture.detectChanges();
   });
 

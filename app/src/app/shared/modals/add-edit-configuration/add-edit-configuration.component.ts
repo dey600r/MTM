@@ -3,7 +3,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
+import { ActionDBEnum, ConstantsColumns, ISettingModel, PageEnum, ToastTypeEnum } from '@app/core/utils';
 import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel } from '@models/index';
 import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
@@ -15,7 +15,7 @@ import { DataBaseService, CommonService, ConfigurationService, ControlService, S
 export class AddEditConfigurationComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<ConfigurationModel> = new ModalInputModel<ConfigurationModel>();
 
   // MODEL FORM
   configuration: ConfigurationModel = new ConfigurationModel();
@@ -24,7 +24,7 @@ export class AddEditConfigurationComponent implements OnInit {
   // DATA
   maintenances: MaintenanceModel[] = [];
   toggleMaintenaces: boolean[] = [];
-  measure: any = {};
+  measure: ISettingModel;
 
   constructor(
     private modalController: ModalController,
@@ -44,8 +44,7 @@ export class AddEditConfigurationComponent implements OnInit {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
 
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<ConfigurationModel>(this.navParams.data);
     this.configuration = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.configuration.id = -1;
@@ -101,9 +100,5 @@ export class AddEditConfigurationComponent implements OnInit {
 
   isValidDescription(f: any): boolean {
     return f.configurationDescription !== undefined && f.configurationDescription.validity.valid;
-  }
-
-  getIconMaintenance(maintenance: MaintenanceModel): string {
-    return this.configurationService.getIconMaintenance(maintenance);
   }
 }

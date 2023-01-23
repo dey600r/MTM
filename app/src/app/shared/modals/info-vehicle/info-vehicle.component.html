@@ -14,26 +14,17 @@
       <ion-label>
         {{ v.brand + ' ' + v.model }}
       </ion-label>
-      <ion-icon size="small" [name]="getIconVehicle(v)"></ion-icon>
+      <ion-icon size="small" [name]="v.vehicleType.icon"></ion-icon>
     </ion-segment-button>
   </ion-segment>
 </ion-header>
 
 <ion-content>
-  <div class="info-main padding-info" *ngIf="vehicles.length === 0">
-    <div class="p-color">
-        <ion-icon class="font-size26" name="analytics"></ion-icon>
-        <h3 class="info-text-notification-empty padding-info-title">{{ 'ALERT.NoDataFound' | translate }}</h3>
-    </div>
-  </div>
-  <!-- CHART -->
-  <ngx-charts-pie-grid *ngIf="vehicles.length > 0" class="justify-center"
-    [view]="dashboard.view"
-    [scheme]="dashboard.colorScheme"
-    [results]="dashboard.data">
-  </ngx-charts-pie-grid>
+  <!-- INFO VEHICLE -->
+  <app-info *ngIf="vehicles.length === 0" [inputInfo]="input"></app-info>
   <!-- VEHICLE SUMMARY -->
   <ion-list *ngIf="vehicles.length > 0">
+    <!-- INFORMATION VEHICLE -->
     <ion-list-header (click)="hideVehicleSummary = !hideVehicleSummary" class="padding-list-header">
       <ion-icon size="large" name="analytics"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.INFORMATION_VEHICLE' | translate }}</h3>
@@ -42,13 +33,37 @@
         <ion-icon *ngIf="!hideVehicleSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
       </ion-button>
     </ion-list-header>
+    <!-- CHART INFORMATION VEHICLE-->
+    <ngx-charts-bar-vertical *ngIf="!hideVehicleSummary && !showSpinner" class="justify-center"
+            [view]="dashboardInformationVehicle.view"
+            [scheme]="dashboardInformationVehicle.colorScheme"
+            [results]="dashboardInformationVehicle.data"
+            [gradient]="dashboardInformationVehicle.gradient"
+            [xAxis]="dashboardInformationVehicle.showXAxis"
+            [yAxis]="dashboardInformationVehicle.showYAxis"
+            [legend]="dashboardInformationVehicle.showLegend"
+            [legendTitle]="dashboardInformationVehicle.legendTitle"
+            [legendPosition]="dashboardInformationVehicle.legendPosition"
+            [showXAxisLabel]="dashboardInformationVehicle.showXAxisLabel"
+            [showYAxisLabel]="dashboardInformationVehicle.showYAxisLabel"
+            [showDataLabel]="dashboardInformationVehicle.showDataLabel"
+            [xAxisLabel]="dashboardInformationVehicle.xAxisLabel"
+            [yAxisLabel]="dashboardInformationVehicle.yAxisLabel">
+        </ngx-charts-bar-vertical>
+    <div *ngIf="showSpinner" [style.height.px]="dashboardInformationVehicle.view[1]" class="div-spinner">
+      <ion-spinner class="spinner" name="lines"></ion-spinner>
+    </div>
+    <!-- ITEMS INFORMATION VEHICLE -->
+    <ion-item *ngIf="!hideVehicleSummary">
+      <p class="ion-color-info-summary">{{ labelVehicleAverageKm }}</p>
+    </ion-item>
     <ion-item *ngIf="!hideVehicleSummary" button (click)="showInfoVehicle()">
       <p class="ion-color-info-summary">{{ labelVehicleKm }}</p>
     </ion-item>
     <ion-item *ngIf="!hideVehicleSummary">
       <p class="ion-color-info-summary">{{ 'PAGE_HOME.RELIABILITY_VEHICLE' | translate }}</p>
       <p class="ion-color-info-summary" slot="end">{{ labelPercent }} %</p>
-      <ion-icon slot="end" size="small" [class]="getIconPercent('color')" [color]="getIconPercent('color')" [name]="getIconPercent('icon')"></ion-icon>
+      <ion-icon slot="end" size="small" [class]="labelIconClassPercent" [color]="labelIconClassPercent" [name]="labelIconPercent"></ion-icon>
     </ion-item>
   </ion-list>
   <!-- CONFIGURATION SUMMARY -->
@@ -62,6 +77,13 @@
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideConfigurationSummary">
+      <!-- CHART -->
+      <ngx-charts-pie-grid class="justify-center"
+        [view]="dashboardConfigurationVehicle.view"
+        [scheme]="dashboardConfigurationVehicle.colorScheme"
+        [results]="dashboardConfigurationVehicle.data">
+      </ngx-charts-pie-grid>
+      <!-- CONFIGURATION VEHICLE -->
       <ion-item button *ngFor="let m of selectedInfoVehicleConfiguration.listMaintenance; let i = index;"
         [ngClass]="{ 'disable-item-color': !m.active }" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
         <div class="main-item-div">
@@ -70,7 +92,7 @@
               <!-- Icons -->
               <ion-avatar slot="start" class="main-avatar">
                 <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
-                  [name]="this.getIconMaintenance(m)"></ion-icon>
+                  [name]="m.iconMaintenance"></ion-icon>
               </ion-avatar>
             </div>
             <div class="main-div">
@@ -79,8 +101,8 @@
                 <div class="table-row">
                   <h2 class="text-overflow">{{ m.description }}</h2>
                   <div class="icon-notification">
-                    <ion-icon *ngIf="m.active" [class]="getClassIcon(m.warning, '')" [color]="getClassIcon(m.warning, '')"
-                      size="small" [name]="getIconKms(m.warning)"></ion-icon>
+                    <ion-icon *ngIf="m.active" [class]="m.warningIconClass" [color]="m.warningIconClass"
+                      size="small" [name]="m.warningIcon"></ion-icon>
                   </div>
                 </div>
                 <div class="table-row">
@@ -104,11 +126,11 @@
             <ion-list class="second-item-div">
               <ion-item *ngFor="let r of m.listReplacement" [ngClass]="{ 'disable-item-color': !m.active }">
                 <ion-avatar slot="start" class="second-avatar">
-                  <ion-icon size="small" class="icon-color" [name]="getIconReplacement(r.id)"></ion-icon>
+                  <ion-icon size="small" class="icon-color" [name]="r.iconReplacement"></ion-icon>
                 </ion-avatar>
-                <ion-label [ngClass]="{ 'disable-item-color': !m.active }">{{ r.name }}</ion-label>
-                <ion-icon *ngIf="m.active" [class]="getClassIcon(r.warning, 'icon-row')" [color]="getClassIcon(r.warning, '')"
-                  size="small" [name]="getIconKms(r.warning)"></ion-icon>
+                <ion-label [ngClass]="{ 'disable-item-color second-div-title': !m.active, 'second-div-title': m.active }">{{ r.name }}</ion-label>
+                <ion-icon *ngIf="m.active" [class]="'icon-row' + r.warningIconClass" [color]="r.warningIconClass"
+                  size="small" [name]="r.warningIcon"></ion-icon>
               </ion-item>
             </ion-list>
           </div>
@@ -145,14 +167,14 @@
             <div>
               <!-- Icons -->
               <ion-avatar slot="start" class="main-avatar">
-                <ion-icon size="large" class="icon-color" [name]="this.getIconReplacement(rep.id)"></ion-icon>
+                <ion-icon size="large" class="icon-color" [name]="rep.iconReplacement"></ion-icon>
               </ion-avatar>
             </div>
             <div class="main-div">
               <ion-label class="auto-width label-event-force">
                 <div class="table-row">
                   <div class="second-div">
-                    <h2>{{ rep.name }}</h2>
+                    <h2 class="second-div-title">{{ rep.name }}</h2>
                     <div class="table-row">
                       <ion-icon size="large" class="icon-color sub-main-icon" [name]="rep.planned ? 'build' : 'construct'"></ion-icon>
                       <p class="icon-color">{{ rep.km }}{{ measure.value }} / {{ rep.time }} {{ 'COMMON.MONTHS' | translate }}</p>
@@ -191,7 +213,7 @@
                     <ion-label class="auto-width label-event-force">
                       <div class="table-row">
                         <div class="second-div">
-                          <h2>{{ subRep.opName }}</h2>
+                          <h2 class="second-div-title">{{ subRep.opName }}</h2>
                           <p class="icon-color">{{ subRep.date | dateFormatCalendarPipe }} {{ (subRep.priceOp === 0 ? '' : '- ' + subRep.priceOp + coin.value) }}</p>
                         </div>
                         <div class="subthird-div">

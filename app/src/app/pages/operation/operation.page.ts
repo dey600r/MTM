@@ -7,17 +7,16 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   DataBaseService, CommonService, OperationService, ControlService,
-  DashboardService, SettingsService, VehicleService
+  DashboardService, SettingsService, IconService
 } from '@services/index';
 import {
-  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel,
-  OperationTypeModel, SearchDashboardModel
+  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
-import { SearchDashboardPopOverComponent } from '@popovers/search-dashboard-popover/search-dashboard-popover.component';
+import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.component';
 import { BasePage } from '@pages/base.page';
 
@@ -29,11 +28,10 @@ import { BasePage } from '@pages/base.page';
 export class OperationPage extends BasePage implements OnInit {
 
   // MODAL
-  input: ModalInputModel = new ModalInputModel();
+  input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   dataReturned: ModalOutputModel;
 
   // MODEL
-  rowSelected: OperationModel = new OperationModel();
   filterDashboard: SearchDashboardModel = new SearchDashboardModel();
 
   // DATA
@@ -42,22 +40,24 @@ export class OperationPage extends BasePage implements OnInit {
   allOperations: OperationModel[] = [];
   vehicles: VehicleModel[] = [];
   vehicleSelected = -1;
+  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
   iconNameHeaderLeft = 'bar-chart';
-  measure: any = {};
-  coin: any = {};
+  iconFilter = 'filter';
+  measure: ISettingModel;
+  coin: ISettingModel;
 
   constructor(public platform: Platform,
               private dbService: DataBaseService,
               public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
-              private vehicleService: VehicleService,
               private operationService: OperationService,
               private dashboardService: DashboardService,
               private settingsService: SettingsService,
-              private detector: ChangeDetectorRef) {
+              private detector: ChangeDetectorRef,
+              private iconService: IconService) {
     super(platform, translator);
   }
 
@@ -69,7 +69,14 @@ export class OperationPage extends BasePage implements OnInit {
 
   initPage() {
 
-    this.input = new ModalInputModel(false, null, [], PageEnum.HOME, Constants.STATE_INFO_OPERATION_EMPTY);
+    this.input = new ModalInputModel<IInfoModel>({
+      parentPage: PageEnum.OPERATION,
+      data: {
+        text: 'ALERT.OperationEmpty',
+        icon: 'construct',
+        info: InfoButtonEnum.NONE
+      }
+    });
 
     this.dbService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
@@ -97,60 +104,57 @@ export class OperationPage extends BasePage implements OnInit {
       this.filterDashboard = this.dashboardService.getSearchDashboard();
       if (!!data && data.length > 0) {
         this.allOperations = data;
-        this.operationsVehicle = this.allOperations.filter(x => x.vehicle.id === this.vehicleSelected);
+        this.loadOperationVehicles();
       } else {
         this.allOperations = [];
         this.operationsVehicle = [];
       }
       this.dashboardService.setSearchOperation();
+      this.showSkeletonBodyNotInit(500);
     });
 
     this.dashboardService.getObserverSearchOperation().subscribe(filter => {
       this.loadOperationVehicles();
       this.loadIconDashboard(this.operationsVehicle);
+      this.loadIconSearch();
       this.filterDashboard = filter;
-      this.operations = this.commonService.orderBy(this.filterOperations(filter, this.operationsVehicle),
-        ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
+      this.operations = this.filterOperations(filter, this.operationsVehicle);
       this.detector.detectChanges();
     });
   }
 
   ionViewDidEnter() {
-    if (document.getElementById('custom-overlay').style.display === 'flex' ||
-    document.getElementById('custom-overlay').style.display === '') {
-      document.getElementById('custom-overlay').style.display = 'none';
-    }
-    if (!this.loadedHeader || !this.loadedBody) {
-      setTimeout(() => {
-        this.loadedHeader = true;
-        this.loadedBody = true;
-      }, 1000);
+    if (this.initLoaded) {
+      this.showSkeleton();
     }
   }
 
   /** MODALS */
 
   openOperationModal(
-      row: OperationModel = new OperationModel(null, null, new OperationTypeModel(),
-      this.vehicles.find(x => x.id === this.vehicleSelected)),
-      create: boolean = true) {
-    this.rowSelected = row;
-    this.controlService.openModal(PageEnum.OPERATION,
-      AddEditOperationComponent, new ModalInputModel(create, this.rowSelected, [], PageEnum.OPERATION));
+      row: OperationModel = new OperationModel({
+          vehicle: this.vehicles.find(x => x.id === this.vehicleSelected)
+        }), create: boolean = true) {
+    this.controlService.openModal(PageEnum.OPERATION, AddEditOperationComponent, new ModalInputModel<OperationModel>({
+        isCreate: create,
+        data: row,
+        parentPage: PageEnum.OPERATION
+      }));
   }
 
   openDashboardOperation() {
     if (this.operationsVehicle.length === 0) {
       this.showModalInfoOperation();
     } else {
-      this.controlService.openModal(PageEnum.OPERATION,
-        DashboardComponent, new ModalInputModel(true, null, this.operationsVehicle, PageEnum.OPERATION));
+      this.controlService.openModal(PageEnum.OPERATION, DashboardComponent, new ModalInputModel<any, OperationModel>({
+          dataList: this.operationsVehicle,
+          parentPage: PageEnum.OPERATION
+        }));
     }
   }
 
   deleteOperation(row: OperationModel) {
-    this.rowSelected = row;
-    this.showConfirmDelete();
+    this.showConfirmDelete(row);
   }
 
   showModalInfoVehicle() {
@@ -161,15 +165,15 @@ export class OperationPage extends BasePage implements OnInit {
     this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.INFO, 'ALERT.AddOperationToExpenses', Constants.DELAY_TOAST_NORMAL);
   }
 
-  showConfirmDelete() {
+  showConfirmDelete(row: OperationModel) {
     this.controlService.showConfirm(PageEnum.OPERATION, this.translator.instant('COMMON.OPERATION'),
-      this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation', {operation: this.rowSelected.description}),
+      this.translator.instant('PAGE_OPERATION.ConfirmDeleteOperation', {operation: row.description}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
-          this.operationService.saveOperation(this.rowSelected, ActionDBEnum.DELETE).then(x => {
+          this.operationService.saveOperation(row, ActionDBEnum.DELETE).then(x => {
             this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.SUCCESS,
-              'PAGE_OPERATION.DeleteSaveOperation', {operation: this.rowSelected.description});
+              'PAGE_OPERATION.DeleteSaveOperation', {operation: row.description});
           }).catch(e => {
             this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
           });
@@ -180,7 +184,7 @@ export class OperationPage extends BasePage implements OnInit {
 
   showPopover(ev: any) {
     this.controlService.showPopover(PageEnum.OPERATION, ev, SearchDashboardPopOverComponent,
-      new ModalInputModel(true, null, [], PageEnum.OPERATION));
+      new ModalInputModel({ parentPage: PageEnum.OPERATION }));
   }
 
   /** METHODS */
@@ -190,19 +194,14 @@ export class OperationPage extends BasePage implements OnInit {
     if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
       totalPrice += this.commonService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
     }
-    return Math.round(totalPrice * 100) / 100;
+    return this.commonService.round(totalPrice, 100);
   }
 
   segmentChanged(event: any): void {
-    this.loadedBody = false;
-    setTimeout(() => {
-      this.loadedBody = true;
-    }, 500);
+    this.showSkeletonBodyNotInit(500);
     this.vehicleSelected = Number(event.detail.value);
     this.loadOperationVehicles();
-    this.operations = this.commonService.orderBy(this.filterOperations(this.filterDashboard,
-      this.allOperations.filter(x => x.vehicle.id === Number(event.detail.value))),
-        ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
+    this.operations = this.filterOperations(this.filterDashboard, this.allOperations.filter(x => x.vehicle.id === Number(event.detail.value)));
     this.loadIconDashboard(this.operations);
   }
 
@@ -212,13 +211,14 @@ export class OperationPage extends BasePage implements OnInit {
 
   filterOperations(filter: SearchDashboardModel, operations: OperationModel[]): OperationModel[] {
     const filteredText: string = filter.searchText.toLowerCase();
-    return operations.filter(op =>
+    const dataFiltered: OperationModel[] = operations.filter(op =>
       (op.description.toLowerCase().includes(filteredText) || op.details.toLowerCase().includes(filteredText) ||
-      op.owner.toLowerCase().includes(filteredText) || op.location.toLowerCase().includes(filteredText)) &&
+      op.owner.toLowerCase().includes(filteredText) || (op.location !== null && op.location.toLowerCase().includes(filteredText))) &&
       (filter.searchOperationType.length === 0 || filter.searchOperationType.some(y => y.id === op.operationType.id)) &&
       (filter.searchMaintenanceElement.length === 0 ||
         filter.searchMaintenanceElement.some(y => op.listMaintenanceElement.some(z => y.id === z.id)))
     );
+    return this.commonService.orderBy(dataFiltered, ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
   }
 
   loadOperationVehicles(): void {
@@ -228,39 +228,33 @@ export class OperationPage extends BasePage implements OnInit {
   /** ICONS */
 
   loadIconDashboard(operations: OperationModel[]): void {
-    this.iconNameHeaderLeft = this.vehicleService.loadIconDashboard<OperationModel>(operations);
+    this.iconNameHeaderLeft = this.iconService.loadIconDashboard<OperationModel>(operations);
   }
 
-  getIconInfoDashboard(): string {
-    return this.operationsVehicle.length > 0 ? 'bar-chart' : 'information-circle';
+  loadIconSearch() {
+    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.OPERATION));
   }
 
-  getIconVehicle(vehicle: VehicleModel): string {
-    return this.vehicleService.getIconVehicle(vehicle);
+  /* SKELETON */
+
+  showSkeleton() {
+    this.showSkeletonHeader(1000);
+    this.showSkeletonBody(1000);
   }
 
-  geClassIconOperationType(operation: OperationModel): string {
-    return `${Constants.CLASS_ION_ICON_OPERATION_TYPE}${operation.operationType.code}`;
+  showSkeletonHeader(time: number) {
+    this.loadedHeader = false;
+    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
   }
 
-  getIconOperationType(operation: OperationModel): string {
-    switch (operation.operationType.code) {
-      case Constants.OPERATION_TYPE_MAINTENANCE_HOME:
-      case Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP:
-        return 'build';
-      case Constants.OPERATION_TYPE_FAILURE_HOME:
-      case Constants.OPERATION_TYPE_FAILURE_WORKSHOP:
-        return 'hammer';
-      case Constants.OPERATION_TYPE_CLOTHES:
-        return 'shirt';
-      case Constants.OPERATION_TYPE_ACCESSORIES:
-        return 'gift';
-      case Constants.OPERATION_TYPE_TOOLS:
-        return 'construct';
-      case Constants.OPERATION_TYPE_OTHER:
-        return 'body';
-      case Constants.OPERATION_TYPE_SPARE_PARTS:
-        return 'repeat';
+  showSkeletonBodyNotInit(time: number) {
+    this.loadedBody = false;
+    if(!this.initLoaded) {
+      this.showSkeletonBody(time);
     }
+  }
+
+  showSkeletonBody(time: number) {
+    setTimeout(() => { this.loadedBody = true; }, time);
   }
 }

@@ -6,7 +6,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum, ISettingModel } from '@utils/index';
 import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel } from '@models/index';
 import {
   DataBaseService, VehicleService, CommonService, CalendarService, ControlService, SettingsService
@@ -20,7 +20,7 @@ import {
 export class AddEditVehicleComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<VehicleModel> = new ModalInputModel<VehicleModel>();
 
   // MODEL FORM
   vehicle: VehicleModel = new VehicleModel();
@@ -31,7 +31,7 @@ export class AddEditVehicleComponent implements OnInit {
   operations: OperationModel[] = [];
   vehicleTypes: VehicleTypeModel[] = [];
   formatDate = this.calendarService.getFormatCalendar();
-  measure: any = {};
+  measure: ISettingModel;
 
   // TRANSLATE
   translateYearBetween = '';
@@ -54,8 +54,7 @@ export class AddEditVehicleComponent implements OnInit {
 
   ngOnInit() {
 
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<VehicleModel>(this.navParams.data);
     this.vehicle = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.isCreate) {
       this.vehicle.id = -1;

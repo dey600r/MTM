@@ -6,7 +6,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, Constants, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
   ModalInputModel, MaintenanceModel,
   MaintenanceFreqModel, MaintenanceElementModel
@@ -21,7 +21,7 @@ import { DataBaseService, ConfigurationService, ControlService, SettingsService 
 export class AddEditMaintenanceComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel = new ModalInputModel();
+  modalInputModel: ModalInputModel<MaintenanceModel, number> = new ModalInputModel<MaintenanceModel, number>();
 
   // MODEL FORM
   maintenance: MaintenanceModel = new MaintenanceModel();
@@ -34,7 +34,7 @@ export class AddEditMaintenanceComponent implements OnInit {
   valueRange: any = { lower: 0 , upper: 100000 };
   showRange = '';
   maintenanceElementSelect: number[] = [];
-  measure: any = {};
+  measure: ISettingModel;
 
   // TRANSLATE
   translateSelect = '';
@@ -65,8 +65,7 @@ export class AddEditMaintenanceComponent implements OnInit {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
 
-    this.modalInputModel = new ModalInputModel(this.navParams.data.isCreate,
-      this.navParams.data.data, this.navParams.data.dataList, this.navParams.data.parentPage);
+    this.modalInputModel = new ModalInputModel<MaintenanceModel, number>(this.navParams.data);
     this.maintenance = Object.assign({}, this.modalInputModel.data);
     this.maxKm = (this.modalInputModel.dataList[0] === null ? 100000 : Math.round(this.modalInputModel.dataList[0] / 1000) * 1000 + 30000);
     this.valueRange.lower = this.maintenance.fromKm;

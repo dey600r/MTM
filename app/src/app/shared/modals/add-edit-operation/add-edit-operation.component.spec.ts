@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 // COMPONENTS
@@ -15,17 +15,20 @@ import { SetupTest, SpyMockConfig, MockData } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
-import { ModalInputModel } from '@models/index';
+import { ModalInputModel, OperationModel } from '@models/index';
 
 describe('AddEditOperationComponent', () => {
   let component: AddEditOperationComponent;
   let fixture: ComponentFixture<AddEditOperationComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
-        SpyMockConfig.getProviderNavParams(new ModalInputModel(true, MockData.Operations[0], [], PageEnum.OPERATION)));
+        SpyMockConfig.getProviderNavParams(new ModalInputModel<OperationModel>({
+          data: MockData.Operations[0],
+          parentPage: PageEnum.OPERATION
+        })));
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);

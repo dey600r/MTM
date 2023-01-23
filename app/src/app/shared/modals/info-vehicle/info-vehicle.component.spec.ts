@@ -15,14 +15,14 @@ import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
-import { ModalInputModel } from '@models/index';
+import { ModalInputModel, VehicleModel } from '@models/index';
 
 describe('InfoVehicleComponent', () => {
   let component: InfoVehicleComponent;
   let fixture: ComponentFixture<InfoVehicleComponent>;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach((async () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataBaseService, ControlService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));
@@ -34,7 +34,10 @@ describe('InfoVehicleComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(InfoVehicleComponent);
     component = fixture.componentInstance;
-    component.navParams.data = new ModalInputModel(true, null, MockData.Vehicles, PageEnum.VEHICLE);
+    component.navParams.data = new ModalInputModel<VehicleModel>({
+        dataList: MockData.Vehicles,
+        parentPage: PageEnum.VEHICLE
+      });
     fixture.detectChanges();
   });
 
