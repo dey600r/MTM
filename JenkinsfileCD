@@ -6,34 +6,30 @@ node {
     sh 'git checkout develop'
     sh 'git pull'
   }
-  //stage('Angular - Install') { 
-  //  nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
-  //    dir('./app') {
-  //      sh 'npm install'
-  //    }
-  //  }
-  //}
-  //stage('Android - Install') {
-  //  sh 'echo "Running on $WORKSPACE"'
-  //  sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-11 bash -c "cd ./workspace/$JOB_NAME/app && ionic cordova platform rm android && ionic cordova platform add android@11.0.0"'
-  //}
+  stage('Angular - Install') { 
+    nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
+      dir('./app') {
+        sh 'npm install'
+      }
+    }
+  }
+  stage('Android - Install') {
+    sh 'echo "Running on $WORKSPACE"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-11 bash -c "cd ./workspace/$JOB_NAME/app && ionic cordova platform rm android && ionic cordova platform add android@11.0.0"'
+  }
   stage('Android - Build MtM') {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-11 bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-jenkins"'
   }
-  //stage('GIT - develop-free') {
-  //  sh 'git restore .'
-  //  sh 'git checkout develop-free'
-  //  sh 'git pull'
-  //}
-  //stage('Android - Build MtM Free') {
-  //  sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-11 bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-free-jenkins"'
-  //  sh 'git restore .'
-  //}
-  //stage('Save Artifacts') {
-  //  archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
-  //  dir('./app') {
-  //    junit 'coverage/junit/**/*.xml'
-  //    cobertura coberturaReportFile: 'coverage/*coverage.xml'
-  //  }
-  //}
+  stage('GIT - develop-free') {
+    sh 'git restore .'
+    sh 'git checkout develop-free'
+    sh 'git pull'
+  }
+  stage('Android - Build MtM Free') {
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-11 bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-free-jenkins"'
+    sh 'git restore .'
+  }
+  stage('Save Artifacts') {
+    archiveArtifacts artifacts: 'Utils/Versions/Android/**/*.apk, Utils/Versions/Android/**/*.aab'
+  }
 }
