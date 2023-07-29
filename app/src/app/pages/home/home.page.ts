@@ -8,14 +8,14 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import {
   DataBaseService, DashboardService, ConfigurationService, ControlService,
-  SettingsService, ThemeService, HomeService
+  SettingsService, ThemeService, HomeService, StorageService
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceModel, ModalInputModel, OperationModel, VehicleModel,
+  MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -69,12 +69,14 @@ export class HomePage extends BasePage implements OnInit {
               private themeService: ThemeService,
               private homeService: HomeService,
               private modalController: ModalController,
-              private detector: ChangeDetectorRef) {
+              private detector: ChangeDetectorRef,
+              private storageService: StorageService) {
     super(platform, translator);
   }
 
   ngOnInit() {
     this.initPage();
+    
   }
 
   /** INIT */

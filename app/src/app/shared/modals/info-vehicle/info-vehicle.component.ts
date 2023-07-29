@@ -12,14 +12,14 @@ import {
 
 // MODELS
 import {
-  ConfigurationModel,
+  ConfigurationModel, IDashboardModel, IInfoModel, ISettingModel,
   DashboardModel, InfoVehicleHistoricModel,
   InfoVehicleConfigurationModel, InfoVehicleHistoricReplacementModel, MaintenanceElementModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, IDashboardModel, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
+import { ConstantsColumns, InfoButtonEnum } from '@utils/index';
 
 @Component({
   selector: 'app-info-vehicle',

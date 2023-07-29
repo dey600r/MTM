@@ -38,6 +38,7 @@
     "@awesome-cordova-plugins/core": "^6.2.0",
     "@awesome-cordova-plugins/file": "^6.2.0",
     "@awesome-cordova-plugins/in-app-browser": "^6.2.0",
+    "@awesome-cordova-plugins/native-storage": "^6.3.0",
     "@awesome-cordova-plugins/screen-orientation": "^6.2.0",
     "@awesome-cordova-plugins/splash-screen": "^6.2.0",
     "@awesome-cordova-plugins/sqlite": "^6.2.0",
@@ -90,6 +91,7 @@
     "cordova-plugin-inappbrowser": "^4.1.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
+    "cordova-plugin-nativestorage": "^2.3.2",
     "cordova-plugin-proguard": "^2.2.0",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "cordova-plugin-splashscreen": "^5.0.4",
@@ -127,7 +129,8 @@
       "cordova-sqlite-storage": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-androidx-adapter": {},
-      "cordova-plugin-proguard": {}
+      "cordova-plugin-proguard": {},
+      "cordova-plugin-nativestorage": {}
     },
     "platforms": [
       "windows",

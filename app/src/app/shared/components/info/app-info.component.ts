@@ -3,8 +3,7 @@ import { Component, Input } from '@angular/core';
 // LIBRARIES
 
 // UTILS
-import { ModalInputModel } from '@models/index';
-import { IInfoModel } from '@utils/index';
+import { ModalInputModel, IInfoModel } from '@models/index';
 
 @Component({
   selector: 'app-info',

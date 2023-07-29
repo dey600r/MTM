@@ -9,6 +9,8 @@ import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
 // SERVICES
 import { DataBaseService } from './data-base.service';
 import { SqlService } from './sql.service';
+import { StorageService } from './storage.service';
+import { MapService } from './map.service';
 
 // CONFIGURATIONS
 import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
@@ -20,6 +22,8 @@ import { SystemConfigurationModel } from '@models/index';
 
 describe('DataBaseService', () => {
     let service: DataBaseService;
+    let serviceStorage: StorageService;
+    let mapService: MapService;
     let sqlLite: SQLite;
     let httpClient: HttpClient;
     let platform: Platform;
@@ -35,6 +39,8 @@ describe('DataBaseService', () => {
 
     beforeEach(() => {
         service = TestBed.inject(DataBaseService);
+        serviceStorage = TestBed.inject(StorageService);
+        mapService = TestBed.inject(MapService);
         sqlLite = TestBed.inject(SQLite);
         httpClient = TestBed.inject(HttpClient);
         platform = TestBed.inject(Platform);
@@ -62,7 +68,7 @@ describe('DataBaseService', () => {
 
     it('should be next delopy DB', fakeAsync(() => {
         const sqlPorter = new SQLitePorter();
-        const service2 = new DataBaseService(platform, sqlPorter, sqlLite, httpClient, TestBed.inject(SqlService));
+        const service2 = new DataBaseService(platform, sqlPorter, sqlLite, httpClient, TestBed.inject(SqlService), serviceStorage, mapService);
         const spySqlite = spyOn(sqlLite, 'create').and.returnValue(Promise.resolve(SpyMockConfig.SpyConfig.sqliteObject));
         const spyHttp = spyOn(httpClient, 'get').and.returnValue(of(''));
         const spyDataBase = SpyMockConfig.SpyConfig.sqliteObject.executeSql.and.returnValue(Promise.resolve());
@@ -158,7 +164,7 @@ describe('DataBaseService', () => {
 
     it('should check next deploy empty and init DB', fakeAsync(() => {
         const sqlPorter = new SQLitePorter();
-        const service2 = new DataBaseService(platform, sqlPorter, sqlLite, httpClient, TestBed.inject(SqlService));
+        const service2 = new DataBaseService(platform, sqlPorter, sqlLite, httpClient, TestBed.inject(SqlService), serviceStorage, mapService);
         const spyDataBase: any =  { executeSql: jasmine.createSpy().and.returnValue(Promise.resolve({})) };
         const spyHttp = spyOn(httpClient, 'get').and.returnValue(of(''));
         const spySqlitePorter = spyOn(sqlPorter, 'importSqlToDb').and.returnValue(Promise.resolve({ data : { rows: []}}));
@@ -175,7 +181,7 @@ describe('DataBaseService', () => {
 
     it('should check next deploy with SQL and init DB', fakeAsync(() => {
         const sqlPorter = new SQLitePorter();
-        const service2 = new DataBaseService(platform, sqlPorter, sqlLite, httpClient, TestBed.inject(SqlService));
+        const service2 = new DataBaseService(platform, sqlPorter, sqlLite, httpClient, TestBed.inject(SqlService), serviceStorage, mapService);
         const sqlNextDeploy = '**->nextDeployDB_v3.0.1**>alter table "mtmVehicle" add "active" TEXT not null default `Y`;**->nextDeployDB_v3.1.0**>';
         const spyDataBase: any =  { executeSql: jasmine.createSpy().and.returnValue(Promise.resolve({})) };
         const spyHttp = spyOn(httpClient, 'get').and.returnValue(of(sqlNextDeploy));

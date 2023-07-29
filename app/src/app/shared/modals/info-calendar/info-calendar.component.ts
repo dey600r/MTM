@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // MODELS
 import {
   ModalInputModel, InfoCalendarVehicleViewModel,
-  InfoCalendarReplacementViewModel,
+  InfoCalendarReplacementViewModel, ISettingModel,
   WearVehicleProgressBarViewModel
 } from '@models/index';
 
@@ -18,7 +18,7 @@ import {
 } from '@services/index';
 
 // UTILS
-import { Constants, ConstantsColumns, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Component({
   selector: 'info-calendar',

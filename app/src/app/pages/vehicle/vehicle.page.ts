@@ -5,9 +5,9 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
 import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
-import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
+import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel } from '@models/index';
 
 // COMPONENTS
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';

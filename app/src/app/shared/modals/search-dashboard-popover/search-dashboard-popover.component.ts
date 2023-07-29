@@ -6,7 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
 import { 
-    SearchDashboardModel, OperationTypeModel, ModalInputModel, MaintenanceElementModel, VehicleModel
+    SearchDashboardModel, OperationTypeModel, ModalInputModel, MaintenanceElementModel, VehicleModel,
+    ISearcherControlModel, IDisplaySearcherControlModel, ISettingModel
 } from '@models/index';
 
 // SERVICES
@@ -14,7 +15,7 @@ import { DashboardService, CommonService, DataBaseService, SettingsService, Conf
 
 // UTILS
 import { 
-    FilterMonthsEnum, ConstantsColumns, PageEnum, ISearcherControlModel, IDisplaySearcherControlModel, ISettingModel
+    FilterMonthsEnum, ConstantsColumns, PageEnum
 } from '@utils/index';
 
 @Component({

@@ -16,8 +16,12 @@ import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/inde
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { DashboardModel, InfoVehicleConfigurationModel, MaintenanceModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel } from '@models/index';
-import { FilterMonthsEnum, Constants, PageEnum, FilterKmTimeEnum, IDashboardModel, IDashboardSerieModel, ISettingModel, IDashboardExpensesModel } from '@utils/index';
+import {
+    DashboardModel, InfoVehicleConfigurationModel, MaintenanceModel, OperationModel, SearchDashboardModel, 
+    VehicleModel, WearVehicleProgressBarViewModel,
+    IDashboardModel, IDashboardSerieModel, ISettingModel, IDashboardExpensesModel
+} from '@models/index';
+import { FilterMonthsEnum, Constants, PageEnum, FilterKmTimeEnum } from '@utils/index';
 
 describe('DashboardService', () => {
     let service: DashboardService;

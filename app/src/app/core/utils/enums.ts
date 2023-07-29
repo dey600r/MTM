@@ -58,3 +58,9 @@ export enum InfoButtonEnum {
     OPERATIONS = 3,
     CONFIGURATIONS = 4
 }
+
+export enum TypeOfTableEnum {
+    MASTER = 0,
+    DATA = 1,
+    RELATION = 2
+}

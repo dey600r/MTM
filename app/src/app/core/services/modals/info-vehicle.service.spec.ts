@@ -12,8 +12,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 
 // MODELS
-import { InfoVehicleConfigurationModel, InfoVehicleHistoricModel } from '@models/index';
-import { IDashboardModel, ISettingModel, WarningWearEnum } from '@utils/index';
+import { InfoVehicleConfigurationModel, InfoVehicleHistoricModel, IDashboardModel, ISettingModel } from '@models/index';
+import {  WarningWearEnum } from '@utils/index';
 
 describe('InfoVehicleService', () => {
     let service: InfoVehicleService;

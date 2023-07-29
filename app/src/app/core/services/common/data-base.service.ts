@@ -8,7 +8,7 @@ import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 
 // UTILS
-import { ConstantsTable, Constants } from '@utils/index';
+import { ConstantsTable, Constants, TypeOfTableEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // MODELS
@@ -19,6 +19,8 @@ import {
 
 // SERVICES
 import { SqlService } from './sql.service';
+import { StorageService } from './storage.service';
+import { MapService } from './map.service';
 
 
 @Injectable({
@@ -42,7 +44,9 @@ export class DataBaseService {
               private sqlitePorter: SQLitePorter,
               private sqlite: SQLite,
               private http: HttpClient,
-              private sqlService: SqlService) { }
+              private sqlService: SqlService,
+              private storageService: StorageService,
+              private mapService: MapService) { }
 
   getDB(): SQLiteObject {
     return this.database;
@@ -62,9 +66,21 @@ export class DataBaseService {
         .then((db: SQLiteObject) => {
             this.setDB(db);
             this.seedDatabase();
+            this.migrateToSqlLite();
         }).catch(e => {
           console.log('ERROR ' + e);
         });
+    });
+  }
+
+  migrateToSqlLite() {
+    this.sqlitePorter.exportDbToJson(this.getDB()).then(async (json: any) => {
+      const syncdata: any = {};
+      this.getAllTables().forEach(x => {
+          syncdata[x] = JSON.stringify(json.data.inserts[x]);
+          this.storageService.setData(x, json.data.inserts[x]);
+      });
+      this.loadListKeysStorage(this.getAllTables());
     });
   }
 
@@ -154,7 +170,7 @@ export class DataBaseService {
   }
 
   getVehicleType(): Observable<VehicleTypeModel[]> {
-    return this.vehicleType.asObservable();
+    return this.mapService.getVehicleType();
   }
 
   getConfigurations(): Observable<ConfigurationModel[]> {
@@ -229,7 +245,7 @@ export class DataBaseService {
   }
 
   getVehicleTypeData(): VehicleTypeModel[] {
-    return this.filterNull<VehicleTypeModel>(this.vehicleType);
+    return this.mapService.getVehicleTypeData()
   }
 
   getConfigurationsData(): ConfigurationModel[] {
@@ -268,31 +284,20 @@ export class DataBaseService {
     this.loadListTables(this.getTablesLoadInit());
   }
 
+  private getTables(type: TypeOfTableEnum): string[] {
+    return this.mapService.getMapperConfiguration().filter(x => x.type === type).map(x => x.table);
+  }
+
   private getTablesMaster(): string[] {
-    return [
-      ConstantsTable.TABLE_MTM_VEHICLE_TYPE,
-      ConstantsTable.TABLE_MTM_OPERATION_TYPE,
-      ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ
-    ];
+    return this.getTables(TypeOfTableEnum.MASTER);
   }
 
   private getTablesData(): string[] {
-    return [
-      ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
-      ConstantsTable.TABLE_MTM_VEHICLE,
-      ConstantsTable.TABLE_MTM_CONFIGURATION,
-      ConstantsTable.TABLE_MTM_OPERATION,
-      ConstantsTable.TABLE_MTM_MAINTENANCE,
-      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT
-    ];
+    return this.getTables(TypeOfTableEnum.DATA);
   }
 
   private getTablesRef(): string[] {
-    return [
-      ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-      ConstantsTable.TABLE_MTM_CONFIG_MAINT,
-      ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL
-    ];
+    return this.getTables(TypeOfTableEnum.RELATION);
   }
 
   getTablesLoadInit(): string[] {
@@ -314,11 +319,22 @@ export class DataBaseService {
       });
     }
   }
-
+  
   loadAllDataTable(table: string) {
     return this.executeSql(table).then(data => {
       this.loadDataOnObserver(table, data);
     });
+  }
+
+  async loadListKeysStorage(list: string[]) {
+    if (!!list && list.length > 0) {
+      let storage: any = {};
+      for(const element of list) {
+        storage[element] = await this.storageService.getData(element);
+      }
+
+      this.mapService.mapperDataStorage(storage);
+    }
   }
 
   executeSql(table: string): Promise<any> {

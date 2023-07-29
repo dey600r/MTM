@@ -6,17 +6,20 @@ import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
 import { 
-  DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService, DashboardService, IconService
+  DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService,
+  DashboardService, IconService
 } from '@services/index';
 
 // MODELS
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
-  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel
+  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel, ISettingModel, IInfoModel
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
+import { 
+  ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, InfoButtonEnum 
+} from '@utils/index';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';

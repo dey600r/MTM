@@ -6,9 +6,9 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum, ISettingModel } from '@utils/index';
+import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
-  ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel
+  ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, ISettingModel
 } from '@models/index';
 import {
   DataBaseService, OperationService, CommonService, ConfigurationService, ControlService,

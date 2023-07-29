@@ -3,8 +3,8 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { Form } from '@angular/forms';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, ISettingModel, PageEnum, ToastTypeEnum } from '@app/core/utils';
-import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel } from '@models/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
+import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel, ISettingModel } from '@models/index';
 import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({

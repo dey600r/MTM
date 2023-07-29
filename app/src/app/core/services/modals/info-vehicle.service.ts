@@ -8,7 +8,8 @@ import {
     ConfigurationModel, MaintenanceModel, InfoVehicleConfigurationModel, InfoVehicleConfigurationMaintenanceModel,
     InfoVehicleConfigurationMaintenanceElementModel, VehicleModel, OperationModel, WearVehicleProgressBarViewModel,
     WearMaintenanceProgressBarViewModel, WearReplacementProgressBarViewModel, InfoVehicleHistoricModel,
-    InfoVehicleHistoricReplacementModel, InfoVehicleReplacementModel, MaintenanceElementModel
+    InfoVehicleHistoricReplacementModel, InfoVehicleReplacementModel, MaintenanceElementModel,
+    IDashboardModel, ISettingModel
 } from '@models/index';
 
 // SERVICES
@@ -16,7 +17,7 @@ import { HomeService } from '../pages/home.service';
 import { CalendarService, ControlService, CommonService, IconService } from '../common/index';
 
 // UTILS
-import { Constants, ConstantsColumns, IDashboardModel, ISettingModel, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
+import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'

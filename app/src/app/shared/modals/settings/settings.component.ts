@@ -7,10 +7,13 @@ import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
-import { ModalInputModel, SystemConfigurationModel, WearVehicleProgressBarViewModel } from '@models/index';
+import {
+  ModalInputModel, SystemConfigurationModel, WearVehicleProgressBarViewModel,
+  ISqlitePorterModel, ISettingModel
+} from '@models/index';
 
 // UTILS
-import { Constants, PageEnum, ToastTypeEnum, ISqlitePorterModel, ISettingModel } from '@utils/index';
+import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // SERVICES

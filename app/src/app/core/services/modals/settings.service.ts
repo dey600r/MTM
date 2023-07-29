@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ConstantsTable, ISettingModel } from '@utils/index';
+import { Constants, ConstantsTable } from '@utils/index';
 import { DataBaseService, SqlService, CalendarService } from '../common/index';
 
 // MODALS
-import { SystemConfigurationModel } from '@models/index';
+import { SystemConfigurationModel, ISettingModel } from '@models/index';
 
 
 @Injectable({

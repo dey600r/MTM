@@ -10,9 +10,9 @@ import {
   DashboardService, SettingsService, IconService
 } from '@services/index';
 import {
-  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel
+  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel, IInfoModel, ISettingModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';

@@ -1,4 +1,4 @@
-import { InfoButtonEnum, PageEnum } from "./enums";
+import { InfoButtonEnum, PageEnum } from "@utils/enums";
 
 export interface ISqlitePorterModel {
     structure: any;

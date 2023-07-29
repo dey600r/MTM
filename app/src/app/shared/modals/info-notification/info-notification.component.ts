@@ -10,9 +10,10 @@ import * as shape from 'd3-shape';
 // UTILS
 import {
   ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
-  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel, MaintenanceElementModel
+  InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel, MaintenanceElementModel,
+  IDashboardExpensesModel, IDashboardModel, IDashboardSerieModel, ISettingModel
 } from '@models/index';
-import { Constants, IDashboardExpensesModel, IDashboardModel, IDashboardSerieModel, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // SERVICES
 import {
