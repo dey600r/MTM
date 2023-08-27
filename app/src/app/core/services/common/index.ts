@@ -9,3 +9,4 @@ export * from './export.service';
 export * from './sync.service';
 export * from './storage.service';
 export * from './map.service';
+export * from './data.service';

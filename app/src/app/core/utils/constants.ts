@@ -60,6 +60,7 @@ export class Constants {
     static PATH_FILE_DB = 'assets/db/';
     static FILE_NAME_INIT_DB = 'initTableDB';
     static FILE_NAME_NEXT_DEPLOY_DB = 'nextDeployDB';
+    static FILE_NAME_INIT_DB_STORAGE = 'initDBStorage.json';
 
     static TOAST_POSITION_TOP = 'top';
     static TOAST_POSITION_MIDDLE = 'middle';

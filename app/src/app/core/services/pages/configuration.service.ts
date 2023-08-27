@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 
 // MODELS
 import {
-    MaintenanceElementModel, ConfigurationModel, VehicleModel, MaintenanceModel, OperationModel
+    MaintenanceElementModel, ConfigurationModel, VehicleModel, MaintenanceModel, OperationModel, ISaveBehaviourModel
 } from '@models/index';
 
 // UTILS
 import { ConstantsColumns, ActionDBEnum, ConstantsTable } from '@utils/index';
 
 // SERVICES
-import { CommonService, DataBaseService, SqlService } from '../common/index';
+import { CommonService, DataBaseService, MapService, SqlService } from '../common/index';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +18,8 @@ export class ConfigurationService {
 
     constructor(private commonService: CommonService,
                 private dbService: DataBaseService,
-                private sqlService: SqlService) {
+                private sqlService: SqlService,
+                private mapService: MapService) {
     }
 
     // COMMON
@@ -104,6 +105,40 @@ export class ConfigurationService {
 
     /** MAINTENANCE */
     saveMaintenance(maintenance: MaintenanceModel, action: ActionDBEnum, configurations: ConfigurationModel[] = []) {
+        let listActions: ISaveBehaviourModel[] = [];
+        let listTablesToRefresh: string[] = [];
+        switch(action) {
+            case ActionDBEnum.CREATE:
+                listActions = [
+                    { action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE, data: [maintenance]},
+                    { action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: this.mapService.saveMapMaintenanceElementRel(maintenance)}
+                ];
+                break;
+            case ActionDBEnum.UPDATE:
+                listActions = [
+                    { action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE, data: [maintenance]},
+                    { action: ActionDBEnum.DELETE, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: [maintenance.id], prop: ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE},
+                    { action: ActionDBEnum.CREATE, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: this.mapService.saveMapMaintenanceElementRel(maintenance)}
+                ];
+                break;
+            case ActionDBEnum.DELETE:
+                listActions = [
+                    { action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: [maintenance.id], prop: ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE},
+                    { action: action, table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, data: [maintenance.id], prop: ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE},
+                    { action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE, data: [maintenance.id]}
+                ];
+                listTablesToRefresh = [ConstantsTable.TABLE_MTM_CONFIG_MAINT];
+                break;
+        }
+
+        listTablesToRefresh.push(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL);
+        listTablesToRefresh.push(ConstantsTable.TABLE_MTM_MAINTENANCE);
+        
+        
+        return this.dbService.saveDataStorage(listActions, listTablesToRefresh);
+        
+        
+        
         let sqlDB = '';
         let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_MAINTENANCE];
         switch (action) {
@@ -142,26 +177,19 @@ export class ConfigurationService {
 
     /** MAINTENANCE ELEMENT / REPLACEMENT */
     saveMaintenanceElement(replacement: MaintenanceElementModel, action: ActionDBEnum, operations: OperationModel[] = []) {
-        let sqlDB = '';
-        let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT];
-        switch (action) {
-            case ActionDBEnum.CREATE:
-                sqlDB = this.sqlService.insertSqlMaintenanceElement([replacement]);
-                break;
-            case ActionDBEnum.UPDATE:
-                sqlDB = this.sqlService.updateSqlMaintenanceElement([replacement]);
-                break;
-            case ActionDBEnum.DELETE:
-                if (!!operations && operations.length > 0) {
-                    sqlDB = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                        ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT, [replacement.id]);
-                    listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT];
-                }
-                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT,
-                    ConstantsColumns.COLUMN_MTM_ID, [replacement.id]);
-                break;
+        let listActions: ISaveBehaviourModel[] = [{ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT, data: [replacement]}];
+        let listTablesToRefresh: string[] = [];
+        if(ActionDBEnum.DELETE === action) {
+            listActions = [{ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT, data: [replacement.id]}];
+            if (!!operations && operations.length > 0) {
+                listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT, data: [replacement.id], prop: ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT});
+                listTablesToRefresh = [ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT];
+            }
         }
-        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+
+        listTablesToRefresh.push(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT);
+
+        return this.dbService.saveDataStorage(listActions, listTablesToRefresh);
     }
 
     /** OTHERS */

@@ -216,11 +216,13 @@ export class SqlService {
       id: Number(data.idVehicleType),
       code: data.codeVehicleType,
       description: (!!data.descriptionVehicleType ? this.translator.instant(`DB.${data.descriptionVehicleType}`) : ''),
+      descriptionKey: data.descriptionVehicleType,
       icon: this.iconService.getIconVehicle(data.codeVehicleType)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE],
       description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_DESCRIPTION]}`),
+      descriptionKey: data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_DESCRIPTION],
       icon: this.iconService.getIconVehicle(data[ConstantsColumns.COLUMN_MTM_VEHICLE_TYPE_CODE])
     });
   }
@@ -250,7 +252,9 @@ export class SqlService {
       result = {
         id: Number(data.idConfiguration),
         name: (masterConf ? this.translator.instant(`DB.${data.nameConfiguration}`) : data.nameConfiguration),
+        nameKey: data.nameConfiguration,
         description: (masterConf ? this.translator.instant(`DB.${data.descriptionConfiguration}`) : data.descriptionConfiguration),
+        descriptionKey: data.descriptionConfiguration,
         master: masterConf,
         listMaintenance: []
       };
@@ -261,8 +265,10 @@ export class SqlService {
         id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
         name: (masterConf ? this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME]}`) :
           data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME]),
+        nameKey: data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME],
         description: (masterConf ? this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION]}`) :
           data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION]),
+        descriptionKey: data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_DESCRIPTION],
         master: (data[ConstantsColumns.COLUMN_MTM_CONFIGURATION_MASTER] === Constants.DATABASE_YES),
         listMaintenance: (!!maintenance && maintenance.description !== null ? [maintenance] : [])
       };
@@ -285,6 +291,7 @@ export class SqlService {
           operationsDB = [...operationsDB, {
             id: Number(row[ConstantsColumns.COLUMN_MTM_ID]),
             description: row[ConstantsColumns.COLUMN_MTM_OPERATION_DESCRIPTION],
+            descriptionKey: '',
             details: row[ConstantsColumns.COLUMN_MTM_OPERATION_DETAILS],
             operationType: this.getMapOperationType(row, true),
             vehicle: new VehicleModel({
@@ -327,11 +334,13 @@ export class SqlService {
       id: Number(data.idOperationType),
       code: data.codeOperationType,
       description: this.translator.instant(`DB.${data.descriptionOperationType}`),
+      descriptionKey: data.descriptionOperationType,
       icon: this.iconService.getIconOperationType(data.codeOperationType)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE],
       description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION]}`),
+      descriptionKey: data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION],
       icon: this.iconService.getIconOperationType(data[ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_CODE])
     });
   }
@@ -362,6 +371,7 @@ export class SqlService {
         description: (data.masterMaintenance === Constants.DATABASE_YES ?
           this.translator.instant(`DB.${data.descriptionMaintenance}`)
           : data.descriptionMaintenance),
+        descriptionKey: data.descriptionMaintenance,
         listMaintenanceElement: [],
         maintenanceFreq: this.getMapMaintenanceFreq(data, true),
         km: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM]),
@@ -370,7 +380,8 @@ export class SqlService {
         wear: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR] === Constants.DATABASE_YES,
         fromKm: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FROM],
         toKm: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_TO],
-        master: data.masterMaintenance === Constants.DATABASE_YES
+        master: data.masterMaintenance === Constants.DATABASE_YES,
+        idConfigurationRel: 0
       };
     } else {
       const maintElement: MaintenanceElementModel = this.getMapMaintenanceElement(data, true);
@@ -379,6 +390,7 @@ export class SqlService {
         description: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_MASTER] === Constants.DATABASE_YES ?
           this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION]}`)
           : data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION]),
+        descriptionKey: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_DESCRIPTION],
         listMaintenanceElement: (!!maintElement && maintElement.description !== null ? [maintElement] : []),
         maintenanceFreq: this.getMapMaintenanceFreq(data, true),
         km: Number(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM]),
@@ -387,7 +399,8 @@ export class SqlService {
         wear: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_WEAR] === Constants.DATABASE_YES,
         fromKm: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FROM],
         toKm: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_TO],
-        master: data.master === Constants.DATABASE_YES
+        master: data.master === Constants.DATABASE_YES,
+        idConfigurationRel: 0
       };
     }
     return result;
@@ -409,23 +422,31 @@ export class SqlService {
       name: (data.masterMaintenanceElement === Constants.DATABASE_YES ?
         this.translator.instant(`DB.${data.nameMaintenanceElement}`) :
         data.nameMaintenanceElement),
+      nameKey: data.nameMaintenanceElement,
       description: (data.masterMaintenanceElement === Constants.DATABASE_YES ?
         this.translator.instant(`DB.${data.descriptionMaintenanceElement}`) :
         data.descriptionMaintenanceElement),
+      descriptionKey: data.descriptionMaintenanceElement,
       master: (data.masterMaintenanceElement === Constants.DATABASE_YES),
       price: (!!data.priceOpMaintenanceElement ? data.priceOpMaintenanceElement : 0),
-      icon: this.iconService.getIconReplacement(data.idMaintenanceElement)
+      icon: this.iconService.getIconReplacement(data.idMaintenanceElement),
+      idMaintenanceRel: 0,
+      idOperationRel: 0
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       name: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES ?
         this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME]}`) :
         data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME]),
+      nameKey: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME],
       description: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES ?
         this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION]}`) :
         data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION]),
+      descriptionKey: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_DESCRIPTION],
       master: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === Constants.DATABASE_YES),
       price: 0,
-      icon: this.iconService.getIconReplacement(data[ConstantsColumns.COLUMN_MTM_ID])
+      icon: this.iconService.getIconReplacement(data[ConstantsColumns.COLUMN_MTM_ID]),
+      idMaintenanceRel: 0,
+      idOperationRel: 0
     });
   }
 
@@ -444,11 +465,13 @@ export class SqlService {
       id: Number(data.idMaintenanceFreq),
       code: data.codeMaintenanceFreq,
       description: this.translator.instant(`DB.${data.descriptionMaintenanceFreq}`),
+      descriptionKey: data.descriptionMaintenanceFreq,
       icon: this.iconService.getIconMaintenance(data.codeMaintenanceFreq)
     } : {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       code: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE],
       description: this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION]}`),
+      descriptionKey: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_DESCRIPTION],
       icon: this.iconService.getIconMaintenance(data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_FREQ_CODE])
     });
   }

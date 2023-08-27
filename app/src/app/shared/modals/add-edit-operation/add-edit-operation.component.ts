@@ -207,10 +207,14 @@ export class AddEditOperationComponent implements OnInit {
       this.maintenanceElementSelect = [...this.maintenanceElementSelect, {
         id: replacement.id,
         name: replacement.name,
+        nameKey: replacement.nameKey,
         description: replacement.description,
+        descriptionKey: replacement.descriptionKey,
         master: replacement.master,
         price: (oldReplacement ? oldReplacement.price : null),
-        icon: replacement.icon
+        icon: replacement.icon,
+        idMaintenanceRel: replacement.idMaintenanceRel,
+        idOperationRel: replacement.idOperationRel
       }];
     });
   }

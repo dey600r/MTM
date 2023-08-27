@@ -1,4 +1,4 @@
-import { TypeOfTableEnum } from "../../utils";
+import { ActionDBEnum, TypeOfTableEnum } from "../../utils";
 
 /* INTERFACE BASE */
 export interface IBaseStorageModel {
@@ -18,7 +18,7 @@ export interface IBaseDescriptionStorageModel extends IBaseStorageModel {
 }
 
 export interface IBaseMasterStorageModel extends IBaseStorageModel {
-    master: string;
+    master: boolean;
 }
 
 /* MAPPERS */
@@ -26,8 +26,14 @@ export interface IBaseMasterStorageModel extends IBaseStorageModel {
 export interface IMapperModel {
     table: string;
     type: TypeOfTableEnum;
+    get: IGetBehaviourMapperModel;
+    save: ISaveBehaviourMapperModel;
+}
+
+export interface IGetBehaviourMapperModel {
+    getDataFunction: () => any;
     mapperFunction: (data: any, ...args: any) => any;
-    observerFunction: (data: any[]) => any;
+    setFunction: (data: any[]) => any;
     relatedTable: IMapperRelatedModel[];
 }
 
@@ -39,20 +45,32 @@ export interface IMapperRelatedModel {
     customMapperBeforeStorage: (data: any[], related: any[]) => any[]
 }
 
+export interface ISaveBehaviourMapperModel {
+    saveMapperFunction: (data: any) => any
+}
+
+export interface ISaveBehaviourModel {
+    action: ActionDBEnum;
+    table: string;
+    data: any[];
+    prop?: string;
+}
+
+
 /* INTERFACE RELATED DTOS STORAGE */
 
-export interface IOperationMaintenanceElementStorageModel {
+export interface IOperationMaintenanceElementStorageModel extends IBaseStorageModel {
     idOperation: number;
     idMaintenanceElement: number;
     price: number;
 }
 
-export interface IConfigurationMaintenanceStorageModel {
+export interface IConfigurationMaintenanceStorageModel extends IBaseStorageModel {
     idConfiguration: number;
     idMaintenance: number;
 }
 
-export interface IMaintenanceElementRelStorageModel {
+export interface IMaintenanceElementRelStorageModel extends IBaseStorageModel {
     idMaintenance: number;
     idMaintenanceElement: number;
 }
@@ -75,7 +93,6 @@ export interface ISystemConfigurationStorageModel extends IBaseStorageModel {
 }
 
 export interface IMaintenanceElementStorageModel extends IBaseNameStorageModel, IBaseDescriptionStorageModel, IBaseMasterStorageModel {
-    price: number;
 }
 
 export interface IConfigurationStorageModel extends IBaseNameStorageModel, IBaseDescriptionStorageModel, IBaseMasterStorageModel {}
