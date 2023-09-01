@@ -94,7 +94,7 @@ export class DataService {
   }
 
   setVehicles(vehicles: VehicleModel[]): void {
-    return this.vehiclesObservable.next(vehicles);
+    this.vehiclesObservable.next(vehicles);
   }
 
   setVehicleType(vehicleTypes: VehicleTypeModel[]): void {

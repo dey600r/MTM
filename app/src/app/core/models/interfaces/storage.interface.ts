@@ -53,7 +53,7 @@ export interface ISaveBehaviourModel {
     action: ActionDBEnum;
     table: string;
     data: any[];
-    prop?: string;
+    prop?: string[];
 }
 
 
@@ -107,7 +107,7 @@ export interface IVehicleStorageModel extends IBaseStorageModel {
     kmsPerMonth: number;
     dateKms: Date;
     datePurchase: Date;
-    active: string;
+    active: boolean;
 }
 
 export interface IMaintenanceStorageModel extends IBaseDescriptionStorageModel {

@@ -4,10 +4,10 @@ import { Injectable } from '@angular/core';
 import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
 
 // MODELS
-import { OperationModel } from '@models/index';
+import { ISaveBehaviourModel, OperationModel } from '@models/index';
 
 // SERVICES
-import { SqlService, DataBaseService } from '../common/index';
+import { DataBaseService, DataService, MapService } from '../common/index';
 
 @Injectable({
     providedIn: 'root'
@@ -15,52 +15,37 @@ import { SqlService, DataBaseService } from '../common/index';
 export class OperationService {
 
     constructor(private dbService: DataBaseService,
-                private sqlService: SqlService) {
+                private mapService: MapService,
+                private dataService: DataService) {
     }
 
     // SAVE OPERATION
 
     saveOperation(op: OperationModel, action: ActionDBEnum) {
-        let sqlDB = '';
-        const listLoadTable: string[] = [ConstantsTable.TABLE_MTM_OPERATION];
-        switch (action) {
+        let listActions: ISaveBehaviourModel[] = [];
+        switch(action) {
             case ActionDBEnum.CREATE:
-                sqlDB = this.sqlService.insertSqlOperation([op]);
-                sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
+                if(!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+                    op.id = this.dbService.getLastId(this.dataService.getOperationsData());
+                    listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT, data: this.mapService.saveMapOpMaintenanceRel(op)});
+                }
                 break;
             case ActionDBEnum.UPDATE:
-                sqlDB = this.sqlService.updateSqlOperation([op]);
-                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                    ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, [op.id]);
-                sqlDB += this.sqlService.insertSqlOpMaintenanceElement(op);
+                listActions = [
+                    { action: ActionDBEnum.DELETE, table: ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT, data: [op], prop: [ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION]},
+                    { action: ActionDBEnum.CREATE, table: ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT, data: this.mapService.saveMapOpMaintenanceRel(op)}
+                ];
                 break;
             case ActionDBEnum.DELETE:
-                sqlDB = this.getSqlDeleteOperation(op);
+                if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+                    listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT, data: [op], prop: [ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION]});
+                }
                 break;
-        }
-        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+            }
+            
+        listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_OPERATION, data: [op]});
+        
+        return this.dbService.saveDataStorage(listActions);
     }
 
-    getSqlDeleteOperation(operation: OperationModel): string {
-        let sqlDB = '';
-        if (!!operation.listMaintenanceElement && operation.listMaintenanceElement.length > 0) {
-            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                    ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION,
-                    operation.listMaintenanceElement.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
-        }
-        sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION,
-            ConstantsColumns.COLUMN_MTM_ID, [operation.id]); // DELETE OPERATION
-        return sqlDB;
-    }
-
-    getSqlDeleteVehicleOperation(operations: OperationModel[] = []): string {
-        let sqlDB = '';
-        if (!!operations && operations.length > 0) {
-            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_OPERATION, operations.map(x => x.id)); // DELETE OP_MAINT_ELEMENT
-            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OPERATION,
-                ConstantsColumns.COLUMN_MTM_OPERATION_VEHICLE, [operations[0].vehicle.id]); // DELETE OPERATION
-        }
-        return sqlDB;
-    }
 }

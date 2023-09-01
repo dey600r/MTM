@@ -15,7 +15,7 @@ import {
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ConstantsTable } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';

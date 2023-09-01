@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 // MODELS
 import { 
     ConfigurationModel, IConfigurationMaintenanceStorageModel, IConfigurationStorageModel, IMaintenanceElementRelStorageModel, IMaintenanceElementStorageModel, IMaintenanceFreqStorageModel,
-    IMaintenanceStorageModel, IOperationStorageModel, IOperationTypeStorageModel,
+    IMaintenanceStorageModel, IOperationMaintenanceElementStorageModel, IOperationStorageModel, IOperationTypeStorageModel,
     ISystemConfigurationStorageModel, IVehicleStorageModel, IVehicleTypeStorageModel, 
     MaintenanceElementModel, MaintenanceFreqModel, MaintenanceModel, OperationModel, OperationTypeModel,
     SystemConfigurationModel, VehicleModel, VehicleTypeModel
@@ -82,6 +82,17 @@ export class MapService {
     return result;
   }
 
+  saveMapOpMaintenanceRel(data: OperationModel): IOperationMaintenanceElementStorageModel[] {
+    let result: IOperationMaintenanceElementStorageModel[] = [];
+    data.listMaintenanceElement.forEach(x => result.push({
+      id: x.idOperationRel,
+      idOperation: data.id,
+      idMaintenanceElement: x.id,
+      price: x.price
+    }));
+    return result;
+  }
+
   /* APPLICATION DATA */
 
   getMapSystemConfiguration(data: ISystemConfigurationStorageModel): SystemConfigurationModel {
@@ -93,10 +104,19 @@ export class MapService {
     };
   }
 
+  saveMapSystemConfiguration(data: SystemConfigurationModel): ISystemConfigurationStorageModel {
+    return {
+      id: data.id,
+      key: data.key,
+      value: data.value,
+      updated: data.updated
+    };
+  }
+
   getMapMaintenanceElement(data: IMaintenanceElementStorageModel): MaintenanceElementModel {
     return {
         id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
-        name: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] ?
+        name: (data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_MASTER] === true ?
           this.translator.instant(`DB.${data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME]}`) :
           data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME]),
         nameKey: data[ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME],
@@ -173,6 +193,15 @@ export class MapService {
       };
   }
 
+  saveMapConfiguration(data: ConfigurationModel): IConfigurationStorageModel {
+    return {
+      id: data.id,
+      name: (data.master ? data.nameKey : data.name),
+      description: (data.master ? data.descriptionKey : data.description),
+      master: data.master
+    }
+  }
+
   getMapVehicle(data: IVehicleStorageModel, configuration: ConfigurationModel, vehicleType: VehicleTypeModel): VehicleModel {
     let vehicleMapped: VehicleModel = {
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
@@ -192,6 +221,22 @@ export class MapService {
     return vehicleMapped;
   }
 
+  saveMapVehicle(data: VehicleModel): IVehicleStorageModel {
+    return {
+      id: data.id,
+      model: data.model,
+      brand: data.brand,
+      year: data.year,
+      km: data.km,
+      idConfiguration: data.configuration.id,
+      idVehicleType: data.vehicleType.id,
+      kmsPerMonth: data.kmsPerMonth,
+      dateKms: data.dateKms,
+      datePurchase: data.datePurchase,
+      active: data.active
+    };
+  }
+
   getMapOperation(data: IOperationStorageModel, operationType: OperationTypeModel,
                   vehicle: VehicleModel, replacements: MaintenanceElementModel[]): OperationModel {
     return {
@@ -209,6 +254,22 @@ export class MapService {
       document: data[ConstantsColumns.COLUMN_MTM_OPERATION_DOCUMENT],
       listMaintenanceElement: replacements
     };
+  }
+
+  saveMapOperation(data: OperationModel): IOperationStorageModel {
+    return {
+      id: data.id,
+      description: data.description,
+      details: data.details,
+      idOperationType: data.operationType.id,
+      idVehicle: data.vehicle.id,
+      km: data.km,
+      date: data.date,
+      location: data.location,
+      owner: data.owner,
+      price: data.price,
+      document: data.document
+    }
   }
 }
 

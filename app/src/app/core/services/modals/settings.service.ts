@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ConstantsTable } from '@utils/index';
+import { ActionDBEnum, Constants, ConstantsTable } from '@utils/index';
 import { DataBaseService, SqlService, CalendarService } from '../common/index';
 
 // MODALS
@@ -86,9 +86,16 @@ export class SettingsService {
 
     saveSystemConfiguration(key: string, value: string): Promise<any> {
         if (!!value) {
-             return this.dbService.executeScriptDataBase(
-                        this.sqlService.updateSqlSystemConfiguration(key, value,
-                            this.calendarService.getDateStringToDB(new Date())), [ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
+            return this.dbService.saveDataStorage([{
+                action: ActionDBEnum.UPDATE,
+                table: ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
+                data: [{
+                    id: this.dbService.getSystemConfigurationData().find(x => x.key === key).id,
+                    key: key,
+                    value: value,
+                    updated: this.calendarService.getDateStringToDB(new Date())
+                }]
+            }]);
         }
         return null;
     }

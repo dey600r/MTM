@@ -147,7 +147,7 @@ export class DataBaseService {
         relatedTable: [],
       },
       save: {
-        saveMapperFunction: (data: any) => data,
+        saveMapperFunction: (data: SystemConfigurationModel) => this.mapService.saveMapSystemConfiguration(data),
       }
     },
     {
@@ -221,7 +221,7 @@ export class DataBaseService {
         ]
       },
       save: {
-        saveMapperFunction: () => []
+        saveMapperFunction: (data: ConfigurationModel) => this.mapService.saveMapConfiguration(data)
       }
     },
     {
@@ -249,7 +249,7 @@ export class DataBaseService {
         ],
       },
       save: {
-        saveMapperFunction: () => []
+        saveMapperFunction: (data: VehicleModel) => this.mapService.saveMapVehicle(data)
       }
     },
     {
@@ -291,7 +291,7 @@ export class DataBaseService {
         ]
       },
       save: {
-        saveMapperFunction: () => []
+        saveMapperFunction: (data: OperationModel) => this.mapService.saveMapOperation(data)
       }
     },
   ];
@@ -326,15 +326,18 @@ export class DataBaseService {
       // }).catch(e => {
       //   console.log('ERROR ' + e);
       // });
-      this.seedDataStorage();
+      setTimeout(() => {
+        this.seedDataStorage();
+      }, 100);
     });
   }
 
   saveDataIntoStorage(json: any) {
     const jsonFormated: any = JSON.parse(JSON.stringify(json).replaceAll(":\"Y\"", ":true").replaceAll(":\"N\"", ":false").replace("\"value\":false", "\"value\":\"N\""));
     this.getAllTables().forEach(x => {
-        this.storageService.setData(x, jsonFormated[x]);
+        this.storageService.setData(x, jsonFormated[x]).then(x => console.log(`Storaged ${x}`));
     });
+
     console.log('Database Storage updated sucessfully');
   }
 
@@ -356,7 +359,6 @@ export class DataBaseService {
   reviewDBToMigrateOrInit() {
     this.sqlite.create(this.databaseSqliteConfig).then((db: SQLiteObject) => { // LOAD DATABASE SQLITE
         this.setDB(db);
-        //this.seedDatabase();
         this.database.executeSql(this.sqlService.getSqlSystemConfiguration(Constants.KEY_LAST_UPDATE_DB), []).then(data => {
           console.log('Migrating Database...');
           this.migrateToSqlLite();
@@ -367,7 +369,7 @@ export class DataBaseService {
           });
         });
     }).catch(e => {
-      console.log('ERROR ' + e);
+      console.error('ERROR ' + e);
     });
   }
 
@@ -411,7 +413,7 @@ export class DataBaseService {
     }
   }
 
-  saveDataStorage(listBehaviour: ISaveBehaviourModel[], listOfDataToRefresh: string[]): Promise<boolean[]> {
+  saveDataStorage(listBehaviour: ISaveBehaviourModel[]): Promise<boolean[]> {
     let listPromises: any[] = [];
     listBehaviour.forEach(behaviour => {
       switch(behaviour.action) {
@@ -424,11 +426,11 @@ export class DataBaseService {
         case ActionDBEnum.DELETE:
           listPromises.push(this.launchActionDataStorage(behaviour, this.deleteItemToList));
           break;
+        case ActionDBEnum.REFRESH:
+          this.loadListKeysStorage([behaviour.table]);
+          break;
       }
-
     });
-
-    this.loadListKeysStorage(listOfDataToRefresh);
 
     return Promise.all(listPromises);
   }
@@ -437,11 +439,17 @@ export class DataBaseService {
     return new Promise<boolean>((resolve, reject) => {
       const mapper: IMapperModel = this.databaseBehaviourConfiguration.find(x => x.table === saver.table);
       if(mapper !== null) {
-        let listData: any[] = actionDataStorage(saver, mapper.get.getDataFunction());
         let listDataToSave: any[] = [];
-        listData.forEach(x => listDataToSave.push(mapper.save.saveMapperFunction(x)));
-        this.storageService.setData(saver.table, listDataToSave).then(value => {
-          resolve(value);
+        mapper.get.getDataFunction().forEach(x => listDataToSave.push(mapper.save.saveMapperFunction(x)));
+        if (saver.action !== ActionDBEnum.DELETE) {
+          let newData: any[] = [];
+          saver.data.forEach(x => newData.push(mapper.save.saveMapperFunction(x)));
+          saver.data = newData;
+        }
+        listDataToSave = actionDataStorage(saver, listDataToSave);
+        this.mapperDataStorage({[saver.table]: listDataToSave});
+        this.storageService.setData(saver.table, listDataToSave).then(saved => {
+          resolve(saved);
         }).catch(e => reject(e));
       } else {
         reject('Behaviour not found');
@@ -449,6 +457,9 @@ export class DataBaseService {
     });
   }
 
+  getLastId(listData: any[]): number {
+    return (listData.length === 0 ? 1 : listData[listData.length - 1].id + 1);
+  }
 
   addItemToList(saver: ISaveBehaviourModel, listDataStorage: any[]): any[] {
     let dataToSave: any[] = saver.data;
@@ -461,18 +472,25 @@ export class DataBaseService {
   }
 
   updateItemToList(saver: ISaveBehaviourModel, listDataStorage: any[]): any[] {
-    let dataToUpdate: any = saver.data[0];
+    let dataToUpdate: any[] = saver.data;
     let listData: any[] = listDataStorage;
-    let indexDataToUpdate = listData.findIndex(x => x.id === dataToUpdate.id);
-    listData[indexDataToUpdate] = dataToUpdate;
+    dataToUpdate.forEach(item => {
+      let indexDataToUpdate = listData.findIndex(x => x.id === item.id);
+      listData[indexDataToUpdate] = item;
+    });
     return listData;
   }
 
   deleteItemToList(saver: ISaveBehaviourModel, listDataStorage: any[]): any[] {
-    let idToDelete: any = saver.data[0];
+    let idToDelete: any[] = saver.data;
     let listData: any[] = listDataStorage;
-    let prop: string = (saver.prop ? saver.prop: ConstantsColumns.COLUMN_MTM_ID);
-    let listDataToDelete: any[] = listData.filter(x => x[prop] === idToDelete);
+    let prop: string[] = (!!saver.prop && saver.prop.length > 0 ? saver.prop: [ConstantsColumns.COLUMN_MTM_ID]);
+    let listDataToDelete: any[] = [];
+    if (prop.length === 1) {
+      listDataToDelete = listData.filter(x => idToDelete.some(y => y[ConstantsColumns.COLUMN_MTM_ID] === x[prop[0]]));
+    } else {
+      listDataToDelete = listData.filter(x => prop.every((y, index) => x[y] === idToDelete[index][ConstantsColumns.COLUMN_MTM_ID]));
+    }
     listDataToDelete.forEach(item => {
       let index: number = listData.findIndex(x => x.id === item.id);
       listData.splice(index, 1);
@@ -607,39 +625,39 @@ export class DataBaseService {
   // SETS
 
   setVehicles(vehicles: VehicleModel[]): void {
-    return this.vehicles.next(vehicles);
+    this.dataService.setVehicles(vehicles);
   }
 
   setVehicleType(vehicleTypes: VehicleTypeModel[]): void {
-    this.vehicles.next(vehicleTypes);
+    this.dataService.setVehicleType(vehicleTypes);
   }
 
   setConfigurations(configurations: ConfigurationModel[]): void {
-    this.configuration.next(configurations);
+    this.dataService.setConfigurations(configurations);
   }
 
   setOperations(operations: OperationModel[]): void {
-    this.operation.next(operations);
+    this.dataService.setOperations(operations);
   }
 
   setOperationType(operationTypes: OperationTypeModel[]): void {
-    this.operationType.next(operationTypes);
+    this.dataService.setOperationType(operationTypes);
   }
 
   setMaintenance(maintenances: MaintenanceModel[]): void {
-    this.maintenance.next(maintenances);
+    this.dataService.setMaintenance(maintenances);
   }
 
   setMaintenanceElement(maintenanceElements: MaintenanceElementModel[]): void {
-    this.maintenanceElement.next(maintenanceElements);
+    this.dataService.setMaintenanceElement(maintenanceElements);
   }
 
   setMaintenanceFreq(maintenanceFreq: MaintenanceFreqModel[]): void {
-    this.maintenanceFreq.next(maintenanceFreq);
+    this.dataService.setMaintenanceFreq(maintenanceFreq);
   }
 
   setSystemConfiguration(systemConfigurations: SystemConfigurationModel[]): void {
-    this.systemConfiguration.next(systemConfigurations);
+    this.dataService.setSystemConfiguration(systemConfigurations);
   }
 
   // GETS DATA

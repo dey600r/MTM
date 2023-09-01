@@ -94,7 +94,8 @@
           <ion-icon *ngIf="this.submited && !isValidPrice(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidPrice(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddPrice' | translate }}</ion-text>
         </ion-label>
-        <ion-input #opPrice name="opPrice" placeholder="10 {{coin.value}}" required inputmode="decimal" min="0" [(ngModel)]="operation.price"></ion-input>
+        <ion-input #opPrice name="opPrice" placeholder="10 {{coin.value}}" type="number" required 
+        inputmode="decimal" min="0" [(ngModel)]="operation.price"></ion-input>
       </ion-item>
       <ion-item *ngFor="let me of this.maintenanceElementSelect; let i = index">
         <ion-avatar slot="start" class="max-width10">
@@ -103,7 +104,7 @@
         <ion-label position="stacked">
           <ion-text>{{ 'COMMON.PRICE' | translate }} {{ me.name }}</ion-text>
         </ion-label>
-        <ion-input [name]="'opMaintElemPrice' + i" placeholder="10 {{coin.value}}" required [disabled]="!isOperationTypeWithReplacement()"
+        <ion-input [name]="'opMaintElemPrice' + i" placeholder="10 {{coin.value}}" type="number" required [disabled]="!isOperationTypeWithReplacement()"
           inputmode="decimal" min="0" [(ngModel)]="me.price"></ion-input>
       </ion-item>
       <ion-item>

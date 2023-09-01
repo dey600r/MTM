@@ -1,7 +1,8 @@
 export enum ActionDBEnum {
     CREATE= 1,
     UPDATE = 2,
-    DELETE = 3
+    DELETE = 3,
+    REFRESH = 4
 }
 
 export enum FilterMonthsEnum {
