@@ -10,7 +10,8 @@ import {
 import { ConstantsColumns, ActionDBEnum, ConstantsTable } from '@utils/index';
 
 // SERVICES
-import { CommonService, DataBaseService, DataService, MapService } from '../common/index';
+import { CommonService } from '../common/index';
+import { CRUDService, DataService, MapService } from '../data/index';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,7 @@ import { CommonService, DataBaseService, DataService, MapService } from '../comm
 export class ConfigurationService {
 
     constructor(private commonService: CommonService,
-                private dbService: DataBaseService,
+                private crudService: CRUDService,
                 private mapService: MapService,
                 private dataService: DataService) {
     }
@@ -47,7 +48,7 @@ export class ConfigurationService {
         switch(action) {
             case ActionDBEnum.CREATE:
                 if(!!configuration.listMaintenance && configuration.listMaintenance.length > 0) {
-                    configuration.id = this.dbService.getLastId(this.dataService.getConfigurationsData());
+                    configuration.id = this.crudService.getLastId(this.dataService.getConfigurationsData());
                     listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, data: this.mapService.saveMapConfigMaintenanceRel(configuration)});
                 }
                 break;
@@ -69,7 +70,7 @@ export class ConfigurationService {
 
         listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_CONFIGURATION, data: [configuration]});
             
-        return this.dbService.saveDataStorage(listActions);
+        return this.crudService.saveDataStorage(listActions);
     }
 
     saveConfigurationMaintenance(maintenancesNew: ConfigurationModel[], maintenancesDelete: ConfigurationModel[]) {
@@ -97,11 +98,11 @@ export class ConfigurationService {
 
         listActions.push({ action: ActionDBEnum.REFRESH, table: ConstantsTable.TABLE_MTM_CONFIGURATION, data: [] });
 
-        return this.dbService.saveDataStorage(listActions);
+        return this.crudService.saveDataStorage(listActions);
     }
 
     deleteConfigManintenance(idConfiguration: number, idMaintenance: number) {
-        return this.dbService.saveDataStorage([{ 
+        return this.crudService.saveDataStorage([{ 
                 action: ActionDBEnum.DELETE,
                 table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, 
                 data: [{ id: idConfiguration} , { id: idMaintenance }], 
@@ -121,7 +122,7 @@ export class ConfigurationService {
         switch(action) {
             case ActionDBEnum.CREATE:
                 if(!!maintenance.listMaintenanceElement && maintenance.listMaintenanceElement.length > 0) {
-                    maintenance.id = this.dbService.getLastId(this.dataService.getMaintenanceData());
+                    maintenance.id = this.crudService.getLastId(this.dataService.getMaintenanceData());
                     listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: this.mapService.saveMapMaintenanceElementRel(maintenance)});
                 }
                 break;
@@ -143,7 +144,7 @@ export class ConfigurationService {
         
         listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE, data: [maintenance]});
             
-        return this.dbService.saveDataStorage(listActions);
+        return this.crudService.saveDataStorage(listActions);
     }
 
     /** MAINTENANCE ELEMENT / REPLACEMENT */
@@ -155,7 +156,7 @@ export class ConfigurationService {
         
         listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT, data: [replacement]});
 
-        return this.dbService.saveDataStorage(listActions);
+        return this.crudService.saveDataStorage(listActions);
     }
 
     /** OTHERS */

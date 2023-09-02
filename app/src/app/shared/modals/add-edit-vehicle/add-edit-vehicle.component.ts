@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel, ISettingModel } from '@models/index';
 import {
-  DataBaseService, VehicleService, CommonService, CalendarService, ControlService, SettingsService
+  DataService, VehicleService, CommonService, CalendarService, ControlService, SettingsService
 } from '@services/index';
 
 @Component({
@@ -40,7 +40,7 @@ export class AddEditVehicleComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
-    private dbService: DataBaseService,
+    private dataService: DataService,
     private translator: TranslateService,
     private vehicleService: VehicleService,
     private commonService: CommonService,
@@ -62,17 +62,17 @@ export class AddEditVehicleComponent implements OnInit {
     }
 
     // GET SETTINGS
-    const settings = this.dbService.getSystemConfigurationData();
+    const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
 
     // GET CONFIGURATIONS
     this.configurations = this.commonService.orderBy(
-      this.dbService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+      this.dataService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
 
     // GET VEHICLE TYPE
-    const dataVehicleType = this.dbService.getVehicleTypeData();
+    const dataVehicleType = this.dataService.getVehicleTypeData();
     if (!!dataVehicleType && dataVehicleType.length > 0 && this.modalInputModel.isCreate) {
       this.vehicle.vehicleType = new VehicleTypeModel(dataVehicleType[0].code, dataVehicleType[0].description, dataVehicleType[0].id);
     }
@@ -80,7 +80,7 @@ export class AddEditVehicleComponent implements OnInit {
 
     // GET OPERATIONS
     // Filter to get less elemnts to better perfomance
-    this.operations = this.dbService.getOperationsData().filter(x => x.vehicle.id === this.vehicle.id);
+    this.operations = this.dataService.getOperationsData().filter(x => x.vehicle.id === this.vehicle.id);
   }
 
   saveData(f: Form) {

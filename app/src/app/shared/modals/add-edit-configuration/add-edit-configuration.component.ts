@@ -5,7 +5,7 @@ import { Form } from '@angular/forms';
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
 import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel, ISettingModel } from '@models/index';
-import { DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
+import { DataService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-configuration',
@@ -29,7 +29,7 @@ export class AddEditConfigurationComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
-    private dbService: DataBaseService,
+    private dataService: DataService,
     private commonService: CommonService,
     private controlService: ControlService,
     private settingsService: SettingsService,
@@ -39,7 +39,7 @@ export class AddEditConfigurationComponent implements OnInit {
 
   ngOnInit() {
 
-    const settings = this.dbService.getSystemConfigurationData();
+    const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
@@ -50,7 +50,7 @@ export class AddEditConfigurationComponent implements OnInit {
       this.configuration.id = -1;
     }
 
-    this.maintenances = this.commonService.orderBy(this.dbService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+    this.maintenances = this.commonService.orderBy(this.dataService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
     if (this.modalInputModel.isCreate) {
       this.maintenances.forEach(x => this.toggleMaintenaces = [...this.toggleMaintenaces, false]);
     } else {

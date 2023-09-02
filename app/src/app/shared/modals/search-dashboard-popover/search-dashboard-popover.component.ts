@@ -11,7 +11,7 @@ import {
 } from '@models/index';
 
 // SERVICES
-import { DashboardService, CommonService, DataBaseService, SettingsService, ConfigurationService } from '@services/index';
+import { DashboardService, CommonService, DataService, SettingsService, ConfigurationService } from '@services/index';
 
 // UTILS
 import { 
@@ -78,7 +78,7 @@ import {
 
     constructor(private popoverController: PopoverController,
                 private navParams: NavParams,
-                private dbService: DataBaseService,
+                private dataService: DataService,
                 private dashboardService: DashboardService,
                 private commonService: CommonService,
                 private configurationService: ConfigurationService,
@@ -97,21 +97,21 @@ import {
 
         // FILTER VEHICLES
         this.filterVehicle = [];
-        this.vehicles = this.commonService.orderBy(this.dbService.getVehiclesData(), ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
+        this.vehicles = this.commonService.orderBy(this.dataService.getVehiclesData(), ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
         this.searchDashboard.searchVehicle.forEach(x => this.filterVehicle = [...this.filterVehicle, x.id]);
 
         // FILTER OPERATION TYPE
         this.filterOpType = [];
         this.operationTypes = this.commonService.orderBy(
-            this.dbService.getOperationTypeData(), ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
+            this.dataService.getOperationTypeData(), ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
         this.searchDashboard.searchOperationType.forEach(x => this.filterOpType = [...this.filterOpType, x.id]);
 
         // FILTER MAINTENANCE ELEMENT
         this.filterMaintElement = [];
-        this.maintenanceElements = this.configurationService.orderMaintenanceElement(this.dbService.getMaintenanceElementData());
+        this.maintenanceElements = this.configurationService.orderMaintenanceElement(this.dataService.getMaintenanceElementData());
         this.searchDashboard.searchMaintenanceElement.forEach(x => this.filterMaintElement = [...this.filterMaintElement, x.id]);
 
-        const settings = this.dbService.getSystemConfigurationData();
+        const settings = this.dataService.getSystemConfigurationData();
         if (!!settings && settings.length > 0) {
             this.measure = this.settingsService.getDistanceSelected(settings);
             this.coin = this.settingsService.getMoneySelected(settings);

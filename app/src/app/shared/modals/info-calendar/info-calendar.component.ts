@@ -14,7 +14,7 @@ import {
 
 // SERVICES
 import {
-  CalendarService, CommonService, ControlService, SettingsService, DataBaseService, InfoCalendarService
+  CalendarService, CommonService, ControlService, SettingsService, DataService, InfoCalendarService
 } from '@services/index';
 
 // UTILS
@@ -58,7 +58,7 @@ export class InfoCalendarComponent implements OnInit {
               private translator: TranslateService,
               private controlService: ControlService,
               private settingsService: SettingsService,
-              private dbService: DataBaseService) {
+              private dataService: DataService) {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }
@@ -68,7 +68,7 @@ export class InfoCalendarComponent implements OnInit {
     this.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>(this.navParams.data);
 
     // GET SETTINGS
-    const settings = this.dbService.getSystemConfigurationData();
+    const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {
       this.measure = this.settingsService.getDistanceSelected(settings);
       this.coin = this.settingsService.getMoneySelected(settings);

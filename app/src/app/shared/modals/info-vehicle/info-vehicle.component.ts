@@ -7,7 +7,7 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 
 // SERVICES
 import {
-  CommonService, ControlService, DashboardService, DataBaseService,  InfoVehicleService, SettingsService
+  CommonService, ControlService, DashboardService, DataService,  InfoVehicleService, SettingsService
 } from '@services/index';
 
 // MODELS
@@ -72,7 +72,7 @@ export class InfoVehicleComponent implements OnInit {
               private screenOrientation: ScreenOrientation,
               private modalController: ModalController,
               private controlService: ControlService,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               private commonService: CommonService,
               private infoVehicleService: InfoVehicleService,
               private settingsService: SettingsService,
@@ -96,7 +96,7 @@ export class InfoVehicleComponent implements OnInit {
       }
     });
 
-    const settings = this.dbService.getSystemConfigurationData();
+    const settings = this.dataService.getSystemConfigurationData();
     this.measure = this.settingsService.getDistanceSelected(settings);
     this.coin = this.settingsService.getMoneySelected(settings);
 
@@ -123,11 +123,11 @@ export class InfoVehicleComponent implements OnInit {
   initConfigurationSummary() {
     // INFO VEHICLE CONFIGURATION
     const configurations: ConfigurationModel[] = this.commonService.orderBy(
-      this.dbService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+      this.dataService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
     const maintenances: MaintenanceModel[] = this.commonService.orderBy(
-      this.dbService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
-    const maintenanceElements: MaintenanceElementModel[] = this.dbService.getMaintenanceElementData();
-    this.operations = this.dbService.getOperationsData();
+      this.dataService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+    const maintenanceElements: MaintenanceElementModel[] = this.dataService.getMaintenanceElementData();
+    this.operations = this.dataService.getOperationsData();
     this.vehicles = this.modalInputModel.dataList.filter(v =>
       configurations.find(c => c.id === v.configuration.id).listMaintenance.length > 0);
 

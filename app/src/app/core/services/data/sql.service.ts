@@ -11,8 +11,8 @@ import {
 import { ConstantsTable, ConstantsColumns, Constants } from '@utils/index';
 
 // SERVICES
-import { CalendarService } from './calendar.service';
-import { IconService } from './icon.service';
+import { CalendarService } from '../common/calendar.service';
+import { IconService } from '../common/icon.service';
 
 @Injectable({
   providedIn: 'root'

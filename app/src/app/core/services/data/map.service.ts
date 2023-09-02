@@ -13,8 +13,8 @@ import {
 } from '@models/index';
 
 // SERVICES
-import { IconService } from './icon.service';
-import { CalendarService } from './calendar.service';
+import { IconService } from '../common/icon.service';
+import { CalendarService } from '../common/calendar.service';
 
 // UTILS
 import { ConstantsColumns } from '@utils/index';

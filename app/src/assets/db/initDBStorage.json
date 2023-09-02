@@ -7,7 +7,7 @@
             {"id":2,"code":"C","description":"CAR"},
             {"id":3,"code":"O","description":"OTHER"}],
         "mtmSystemConfiguration":[
-            {"id":1,"key":"lastUpdate","value":"v3.4.2","updated":"2023-01-22 10:00:00"},
+            {"id":1,"key":"lastUpdate","value":"v3.5.0","updated":"2023-09-01 10:00:00"},
             {"id":2,"key":"configDistance","value":"KM","updated":"2006-09-12 12:32:00"},
             {"id":3,"key":"configMoney","value":"EURO","updated":"2006-09-12 12:32:00"},
             {"id":4,"key":"configTheme","value":"D","updated":"2006-09-12 12:32:00"},

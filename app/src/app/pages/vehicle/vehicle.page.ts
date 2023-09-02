@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
-import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
+import { DataService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
 import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel } from '@models/index';
 
 // COMPONENTS
@@ -36,7 +36,7 @@ export class VehiclePage extends BasePage implements OnInit {
   iconNameHeaderLeft = '';
 
   constructor(public platform: Platform,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               public translator: TranslateService,
               private vehicleService: VehicleService,
               private commonService: CommonService,
@@ -71,13 +71,13 @@ export class VehiclePage extends BasePage implements OnInit {
         }
       });
 
-    this.dbService.getSystemConfiguration().subscribe(settings => {
+    this.dataService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
       }
     });
 
-    this.dbService.getVehicles().subscribe(data => {
+    this.dataService.getVehicles().subscribe(data => {
       if (!data || data.length === 0) {
         this.dashboardService.setSearchOperation();
       }
@@ -87,7 +87,7 @@ export class VehiclePage extends BasePage implements OnInit {
       this.detector.detectChanges();
     });
 
-    this.dbService.getOperations().subscribe(op => {
+    this.dataService.getOperations().subscribe(op => {
       this.operations = op;
     });
   }

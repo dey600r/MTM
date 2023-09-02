@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import {
-  DataBaseService, CommonService, OperationService, ControlService,
+  DataService, CommonService, OperationService, ControlService,
   DashboardService, SettingsService, IconService
 } from '@services/index';
 import {
@@ -49,7 +49,7 @@ export class OperationPage extends BasePage implements OnInit {
   coin: ISettingModel;
 
   constructor(public platform: Platform,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
@@ -78,14 +78,14 @@ export class OperationPage extends BasePage implements OnInit {
       }
     });
 
-    this.dbService.getSystemConfiguration().subscribe(settings => {
+    this.dataService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
         this.coin = this.settingsService.getMoneySelected(settings);
       }
     });
 
-    this.dbService.getVehicles().subscribe(data => {
+    this.dataService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
         if (this.vehicleSelected === -1) {
@@ -100,7 +100,7 @@ export class OperationPage extends BasePage implements OnInit {
       }
     });
 
-    this.dbService.getOperations().subscribe(data => {
+    this.dataService.getOperations().subscribe(data => {
       this.filterDashboard = this.dashboardService.getSearchDashboard();
       if (!!data && data.length > 0) {
         this.allOperations = data;

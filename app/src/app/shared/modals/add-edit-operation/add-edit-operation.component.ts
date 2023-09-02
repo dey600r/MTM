@@ -11,7 +11,7 @@ import {
   ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, ISettingModel
 } from '@models/index';
 import {
-  DataBaseService, OperationService, CommonService, ConfigurationService, ControlService,
+  DataService, OperationService, CommonService, ConfigurationService, ControlService,
   CalendarService, SettingsService, VehicleService
 } from '@services/index';
 
@@ -51,7 +51,7 @@ export class AddEditOperationComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
-    private dbService: DataBaseService,
+    private dataService: DataService,
     private translator: TranslateService,
     private operationService: OperationService,
     private commonService: CommonService,
@@ -80,21 +80,21 @@ export class AddEditOperationComponent implements OnInit {
     }
 
     // GET SETTINGS
-    const settings = this.dbService.getSystemConfigurationData();
+    const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {
       this.measure = this.settingsService.getDistanceSelected(settings);
       this.coin = this.settingsService.getMoneySelected(settings);
     }
 
     // GET VEHICLES
-    this.vehicles = this.dbService.getVehiclesData();
+    this.vehicles = this.dataService.getVehiclesData();
 
     // GET OPERATION TYPE
     this.operationType = this.commonService.orderBy(
-      this.dbService.getOperationTypeData(), ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
+      this.dataService.getOperationTypeData(), ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
 
     // GET MAINTENANCE ELEMENT
-    this.maintenanceElement = this.configurationService.orderMaintenanceElement(this.dbService.getMaintenanceElementData());
+    this.maintenanceElement = this.configurationService.orderMaintenanceElement(this.dataService.getMaintenanceElementData());
     this.idMaintenanceElementSelect = [];
     this.maintenanceElementSelect = [];
     if (!!this.operation.listMaintenanceElement && this.operation.listMaintenanceElement.length > 0) {
@@ -103,7 +103,7 @@ export class AddEditOperationComponent implements OnInit {
     }
 
     // GET OPERATIONS
-    this.operations = this.dbService.getOperationsData();
+    this.operations = this.dataService.getOperationsData();
 
     // OWNERS
     this.loadOwner();
@@ -115,13 +115,10 @@ export class AddEditOperationComponent implements OnInit {
       const result = this.validateDateToKm();
       if (result !== '') {
         this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.WARNING, result, null, Constants.DELAY_TOAST_HIGHER);
+      } else if (!this.modalInputModel.isCreate && this.idMaintenanceElementSelect.length > 0 && !this.isOperationTypeWithReplacement()) {
+        this.showConfirmSaveWithDelete();
       } else {
-        if (!this.modalInputModel.isCreate && this.idMaintenanceElementSelect.length > 0 &&
-          !this.isOperationTypeWithReplacement()) {
-          this.showConfirmSaveWithDelete();
-        } else {
-          this.checkUpdateBeforeSaveOperation();
-        }
+        this.checkUpdateBeforeSaveOperation();
       }
     }
   }

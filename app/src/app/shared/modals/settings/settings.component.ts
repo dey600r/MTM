@@ -17,7 +17,7 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // SERVICES
-import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService, ExportService } from '@services/index';
+import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService, ExportService, DataService, CRUDService } from '@services/index';
 
 @Component({
   selector: 'settings',
@@ -67,6 +67,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 private changeDetector: ChangeDetectorRef,
                 private modalController: ModalController,
                 private dbService: DataBaseService,
+                private crudService: CRUDService,
+                private dataService: DataService,
                 private settingsService: SettingsService,
                 private exportService: ExportService,
                 private file: File,
@@ -88,7 +90,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.listMoney = this.settingsService.getListMoney();
     this.listThemes = this.settingsService.getListThemes();
 
-    this.listSettings = this.dbService.getSystemConfigurationData();
+    this.listSettings = this.dataService.getSystemConfigurationData();
     if (!!this.listSettings && this.listSettings.length > 0) {
       this.distanceSelected = this.settingsService.getDistanceSelected(this.listSettings);
       this.moneySelected = this.settingsService.getMoneySelected(this.listSettings);
@@ -128,7 +130,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   changePrivacy() {
-    const settings = this.dbService.getSystemConfigurationData();
+    const settings = this.dataService.getSystemConfigurationData();
     const policyDB = this.settingsService.getPrivacySelected(settings);
     if (policyDB !== this.acceptPrivacyPolicy) {
       this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_PRIVACY,
@@ -193,7 +195,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const contentFile: string = e.target.result;
-      if (this.exportService.validateStructureJsonDB(contentFile, this.dbService.getAllTables())) {
+      if (this.exportService.validateStructureJsonDB(contentFile, this.crudService.getAllTables())) {
         this.pathImports = file.name;
         this.importData(contentFile, event);
       } else {

@@ -13,9 +13,6 @@ import {
 // SERVICES
 import { StorageService } from './storage.service';
 
-// UTILS
-import { ConstantsTable } from '@utils/index';
-
 @Injectable({
   providedIn: 'root'
 })

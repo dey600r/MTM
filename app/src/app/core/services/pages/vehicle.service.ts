@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { VehicleModel, OperationModel, ISaveBehaviourModel } from '@models/index';
 
 // SERVICES
-import { DataBaseService } from '../common/index';
+import { CRUDService } from '../data/index';
 
 // UTILS
 import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
@@ -14,7 +14,7 @@ import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
 })
 export class VehicleService {
 
-    constructor(private dbService: DataBaseService) {
+    constructor(private crudService: CRUDService) {
     }
 
     saveVehicle(vehicles: VehicleModel[], action: ActionDBEnum, operations: OperationModel[] = []) {
@@ -26,6 +26,6 @@ export class VehicleService {
         
         listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_VEHICLE, data: vehicles});
 
-        return this.dbService.saveDataStorage(listActions);
+        return this.crudService.saveDataStorage(listActions);
     }
 }

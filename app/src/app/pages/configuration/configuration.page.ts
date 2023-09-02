@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
 import { 
-  DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService,
+  DataService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService,
   DashboardService, IconService
 } from '@services/index';
 
@@ -64,7 +64,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
   constructor(public platform: Platform,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
@@ -125,7 +125,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
         }
       });
 
-    this.dbService.getSystemConfiguration().subscribe(settings => {
+    this.dataService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
       }
@@ -133,7 +133,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   }
 
   initData() {
-    this.dbService.getVehicles().subscribe(data => {
+    this.dataService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
       }
@@ -141,12 +141,12 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.vehicles = data;
     });
 
-    this.dbService.getOperations().subscribe(data => {
+    this.dataService.getOperations().subscribe(data => {
       // Filter to get less elemnts to better perfomance
       this.operations = data.filter(x => !!x.listMaintenanceElement && x.listMaintenanceElement.length > 0);
     });
 
-    this.dbService.getConfigurations().subscribe(data => {
+    this.dataService.getConfigurations().subscribe(data => {
       this.allConfigurations = data; 
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
       this.dashboardService.setSearchConfiguration();
@@ -154,7 +154,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.detector.detectChanges();
     });
 
-    this.dbService.getMaintenance().subscribe(data => {
+    this.dataService.getMaintenance().subscribe(data => {
       this.allMaintenances = data;
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
       this.dashboardService.setSearchConfiguration();
@@ -162,7 +162,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.detector.detectChanges();
     });
 
-    this.dbService.getMaintenanceElement().subscribe(data => {
+    this.dataService.getMaintenanceElement().subscribe(data => {
       this.allMaintenanceElements = data;
       this.maintenanceElements = this.configurationService.orderMaintenanceElement(data); 
       this.dashboardService.setSearchConfiguration();

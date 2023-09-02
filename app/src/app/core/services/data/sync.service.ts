@@ -9,8 +9,10 @@ import { getAuth, signInWithEmailAndPassword, signOut, UserCredential } from 'fi
 
 // SERVICES
 import { DataBaseService } from './data-base.service';
-import { ControlService } from './control.service';
 import { ExportService } from './export.service';
+import { DataService } from './data.service';
+import { CRUDService } from './crud.service';
+import { ControlService } from '../common/control.service';
 import { SettingsService } from '../modals/index';
 
 // UTILS
@@ -29,6 +31,8 @@ export class SyncService {
 
   constructor(private sqlitePorter: SQLitePorter,
               private dbService: DataBaseService,
+              private dataService: DataService,
+              private crudService: CRUDService,
               private exportService: ExportService,
               private controlService: ControlService,
               private settingsService: SettingsService,
@@ -91,7 +95,7 @@ export class SyncService {
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
           });
           const dataImport: ISqlitePorterModel = json;
-          this.dbService.getSyncTables().forEach(x => {
+          this.crudService.getSyncTables().forEach(x => {
               dataImport.data.inserts[x] = JSON.parse(data[x]);
           });
           // IMPORT DB
@@ -130,7 +134,7 @@ export class SyncService {
     // EXPORT DB
     await this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then(async (json: any) => {
       const syncdata: any = {};
-      this.dbService.getSyncTables().forEach(x => {
+      this.crudService.getSyncTables().forEach(x => {
           syncdata[x] = JSON.stringify(json.data.inserts[x]);
       });
       // SAVE DATA
@@ -155,9 +159,9 @@ export class SyncService {
     if (data) {
       const settings: SystemConfigurationModel[] = JSON.parse(data[ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
       if (settings && settings.length >= 6 &&
-          this.exportService.validateStructureJsonDB(JSON.stringify(data), this.dbService.getSyncTables())) {
+          this.exportService.validateStructureJsonDB(JSON.stringify(data), this.crudService.getSyncTables())) {
         const syncVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(settings);
-        const appVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(this.dbService.getSystemConfigurationData());
+        const appVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(this.dataService.getSystemConfigurationData());
         if (syncVersion && syncVersion.value === appVersion.value) {
           return true;
         } else {

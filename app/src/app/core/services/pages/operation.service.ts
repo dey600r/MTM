@@ -7,14 +7,14 @@ import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
 import { ISaveBehaviourModel, OperationModel } from '@models/index';
 
 // SERVICES
-import { DataBaseService, DataService, MapService } from '../common/index';
+import { CRUDService, DataService, MapService } from '../data/index';
 
 @Injectable({
     providedIn: 'root'
 })
 export class OperationService {
 
-    constructor(private dbService: DataBaseService,
+    constructor(private crudService: CRUDService,
                 private mapService: MapService,
                 private dataService: DataService) {
     }
@@ -26,7 +26,7 @@ export class OperationService {
         switch(action) {
             case ActionDBEnum.CREATE:
                 if(!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
-                    op.id = this.dbService.getLastId(this.dataService.getOperationsData());
+                    op.id = this.crudService.getLastId(this.dataService.getOperationsData());
                     listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT, data: this.mapService.saveMapOpMaintenanceRel(op)});
                 }
                 break;
@@ -45,7 +45,7 @@ export class OperationService {
             
         listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_OPERATION, data: [op]});
         
-        return this.dbService.saveDataStorage(listActions);
+        return this.crudService.saveDataStorage(listActions);
     }
 
 }

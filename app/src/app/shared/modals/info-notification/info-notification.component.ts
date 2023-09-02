@@ -18,7 +18,7 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 // SERVICES
 import {
   DashboardService, ControlService, CalendarService,
-  SettingsService, DataBaseService, HomeService, InfoVehicleService, InfoCalendarService, IconService
+  SettingsService, DataService, HomeService, InfoVehicleService, InfoCalendarService, IconService
 } from '@services/index';
 
 // COMPONENTS
@@ -79,7 +79,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
               private changeDetector: ChangeDetectorRef,
               private translator: TranslateService,
               private settingsService: SettingsService,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               private homeService: HomeService,
               private infoVehicleService: InfoVehicleService,
               private iconService: IconService) {
@@ -190,7 +190,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   getSettings() {
-    const settings = this.dbService.getSystemConfigurationData();
+    const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
