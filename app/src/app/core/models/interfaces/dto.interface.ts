@@ -1,10 +1,5 @@
 import { InfoButtonEnum, PageEnum } from "@utils/enums";
 
-export interface ISqlitePorterModel {
-    structure: any;
-    data: any;
-}
-
 export interface IInfoModel {
     text: string;
     icon: string;

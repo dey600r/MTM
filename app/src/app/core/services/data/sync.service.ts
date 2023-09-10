@@ -20,7 +20,7 @@ import * as loginData from '@assets/data/login-firebase.json';
 import { Constants, ConstantsTable, PageEnum, ToastTypeEnum } from '@utils/index';
 
 // MODALS
-import { SystemConfigurationModel, ISqlitePorterModel } from '@models/index';
+import { SystemConfigurationModel } from '@models/index';
 
 @Injectable({
   providedIn: 'root'
@@ -85,21 +85,21 @@ export class SyncService {
       const data = snapshot.val();
       if (this.validSyncDownloadData(data)) {
         // EXPORT DB
-        await this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then(async (json: ISqlitePorterModel) => {
+        await this.crudService.getAllDataFromStorage().then(async (json: any) => {
           const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_SYNC_FILE_NAME);
           // WRITE BACKUP FILE
           await this.file.writeFile(this.exportService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
-            JSON.stringify(json.data), { replace : true}).then(() => {
+            JSON.stringify(json), { replace : true}).then(() => {
               // This is intentional
           }).catch(err => {
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
           });
-          const dataImport: ISqlitePorterModel = json;
+          const dataImport: any = json;
           this.crudService.getSyncTables().forEach(x => {
-              dataImport.data.inserts[x] = JSON.parse(data[x]);
+              dataImport[x] = JSON.parse(data[x]);
           });
           // IMPORT DB
-          await this.sqlitePorter.importJsonToDb(this.dbService.getDB(), dataImport).then(() => {
+          await this.dbService.saveDataIntoStorage(dataImport).then(() => {
             this.crudService.loadAllTables();
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SyncDownload');
           }).catch(e => {
@@ -132,10 +132,10 @@ export class SyncService {
 
   private async syncUploadData(userCredential: UserCredential) {
     // EXPORT DB
-    await this.sqlitePorter.exportDbToJson(this.dbService.getDB()).then(async (json: any) => {
+    await this.crudService.getAllDataFromStorage().then(async (json: any) => {
       const syncdata: any = {};
       this.crudService.getSyncTables().forEach(x => {
-          syncdata[x] = JSON.stringify(json.data.inserts[x]);
+          syncdata[x] = JSON.stringify(json[x]);
       });
       // SAVE DATA
       await set(ref(getDatabase(), this.getPathUser(userCredential.user.uid)), syncdata).then(() => {
