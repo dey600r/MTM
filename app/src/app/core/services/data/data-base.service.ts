@@ -54,23 +54,27 @@ export class DataBaseService {
     });
   }
 
-  saveDataIntoStorage(json: any) {
-    const jsonFormated: any = JSON.parse(JSON.stringify(json).replaceAll(":\"Y\"", ":true").replaceAll(":\"N\"", ":false").replace("\"value\":false", "\"value\":\"N\""));
-    this.crudService.getAllTables().forEach(x => {
-        this.storageService.setData(x, jsonFormated[x]).then(x => console.log(`Storaged ${x}`));
-    });
+  formatBooleanJSON(json: string): string {
+    return json.replaceAll(":\"Y\"", ":true").replaceAll(":\"N\"", ":false").replace("\"value\":false", "\"value\":\"N\"");
+  }
+
+  async saveDataIntoStorage(json: any) {
+    const jsonFormated: any = JSON.parse(this.formatBooleanJSON(JSON.stringify(json)));
+    for(const table of this.crudService.getAllTables()) {
+        await this.storageService.setData(table, jsonFormated[table]).then(x => console.log(`Storaged ${x}`));
+    };
 
     console.log('Database Storage updated sucessfully');
   }
 
-  saveAndGetDBStorage(json: any) {
-    this.saveDataIntoStorage(json);
+  async saveAndGetDBStorage(json: any) {
+    await this.saveDataIntoStorage(json);
     this.validateVersionOfDB(this.mapService.getMapSystemConfiguration(json[ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION].find(x => x.key === Constants.KEY_LAST_UPDATE_DB)));
   }
 
   migrateToSqlLite() {
     this.sqlitePorter.exportDbToJson(this.getDB()).then(async (json: any) => {
-      this.saveAndGetDBStorage(json.data.inserts);
+      await this.saveAndGetDBStorage(json.data.inserts);
 
       this.sqlite.deleteDatabase(this.databaseSqliteConfig)
         .then(data => console.log('Database deleted ', data))

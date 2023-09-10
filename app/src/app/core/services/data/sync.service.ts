@@ -100,7 +100,7 @@ export class SyncService {
           });
           // IMPORT DB
           await this.sqlitePorter.importJsonToDb(this.dbService.getDB(), dataImport).then(() => {
-            this.settingsService.finishImportLoad();
+            this.crudService.loadAllTables();
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SyncDownload');
           }).catch(e => {
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB');

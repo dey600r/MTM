@@ -89,8 +89,4 @@ export class SettingsService {
     mapToAnyCustomSetting(c: string, v: string, vl: string): ISettingModel {
         return { code: c, value: v, valueLarge: vl };
     }
-
-    finishImportLoad() {
-        this.crudService.loadAllTables();
-    }
 }
