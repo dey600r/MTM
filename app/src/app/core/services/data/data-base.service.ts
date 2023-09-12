@@ -55,7 +55,7 @@ export class DataBaseService {
   }
 
   formatBooleanJSON(json: string): string {
-    return json.replaceAll(":\"Y\"", ":true").replaceAll(":\"N\"", ":false").replace("\"value\":false", "\"value\":\"N\"");
+    return json.split(":\"Y\"").join(":true").split(":\"N\"").join(":false").replace("\"value\":false", "\"value\":\"N\"").replace("\"value\":true", "\"value\":\"Y\"");
   }
 
   async saveDataIntoStorage(json: any) {
