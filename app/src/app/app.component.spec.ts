@@ -32,6 +32,7 @@ describe('AppComponent', () => {
     const config: any = SetupTest.config;
     config.providers.push(
       SpyMockConfig.ProviderDataBaseService,
+      SpyMockConfig.ProviderDataService,
       SpyMockConfig.ProviderExportService);
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);

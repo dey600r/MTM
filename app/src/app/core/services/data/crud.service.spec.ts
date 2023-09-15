@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { CRUDService } from './crud.service';
 
 // CONFIGURATIONS
-import { SetupTest } from '@testing/index';
+import { SetupTest, SpyMockConfig } from '@testing/index';
 
 
 describe('CRUDService', () => {
@@ -13,6 +13,7 @@ describe('CRUDService', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: SetupTest.config.imports,
+            providers: SpyMockConfig.ProvidersServices
         }).compileComponents();
         service = TestBed.inject(CRUDService);
     });

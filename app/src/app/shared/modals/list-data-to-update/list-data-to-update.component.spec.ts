@@ -39,7 +39,7 @@ describe('ListDataToUpdateComponent', () => {
     });
     const listModel: ListModalModel = new ListModalModel('TEST_TITLE', true, listDataModel);
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel<ListModalModel>({
         data: listModel, 
         parentPage: PageEnum.CONFIGURATION

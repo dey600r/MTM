@@ -24,7 +24,7 @@ describe('AddEditConfigurationComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel<ConfigurationModel>({
         data: MockData.Configurations[0],
         parentPage: PageEnum.CONFIGURATION

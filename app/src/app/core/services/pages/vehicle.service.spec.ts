@@ -28,46 +28,38 @@ describe('VehicleService', () => {
     });
 
     it('should call execute query with insert vehicle sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
-        const spySqlService: any = { insertSqlVehicle: jasmine.createSpy().and.returnValues('query1;') };
-        const service2 = new VehicleService(spyDataBase, spySqlService, null);
+        const spyCRUDService: any = { saveDataStorage: jasmine.createSpy().and.returnValues(Promise.resolve([true])) };
+        const service2 = new VehicleService(spyCRUDService);
         service2.saveVehicle([new VehicleModel({
             model: 'test',
             brand: 'test',
             year: 2005,
             km: 1000
         })], ActionDBEnum.CREATE);
-        expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
-        expect(spySqlService.insertSqlVehicle).toHaveBeenCalled();
+        expect(spyCRUDService.saveDataStorage).toHaveBeenCalled();
     });
 
     it('should call execute query with update vehicle sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
-        const spySqlService: any = { updateSqlVehicle: jasmine.createSpy().and.returnValues('query1;') };
-        const service2 = new VehicleService(spyDataBase, spySqlService, null);
+        const spyCRUDService: any = { saveDataStorage: jasmine.createSpy().and.returnValues(Promise.resolve([true])) };
+        const service2 = new VehicleService(spyCRUDService);
         service2.saveVehicle([new VehicleModel({
             model: 'test',
             brand: 'test',
             year: 2005,
             km: 1000
         })], ActionDBEnum.UPDATE, []);
-        expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
-        expect(spySqlService.updateSqlVehicle).toHaveBeenCalled();
+        expect(spyCRUDService.saveDataStorage).toHaveBeenCalled();
     });
 
     it('should call execute query with delete vehicle sql', () => {
-        const spyDataBase: any =  { executeScriptDataBase: jasmine.createSpy().and.returnValues(Promise.resolve({})) };
-        const spySqlService: any = { deleteSql: jasmine.createSpy().and.returnValues('query1;') };
-        const spyOperationService: any = { getSqlDeleteVehicleOperation: jasmine.createSpy().and.returnValues('query1;') };
-        const service2 = new VehicleService(spyDataBase, spySqlService, spyOperationService);
+        const spyCRUDService: any = { saveDataStorage: jasmine.createSpy().and.returnValues(Promise.resolve([true])) };
+        const service2 = new VehicleService(spyCRUDService);
         service2.saveVehicle([new VehicleModel({
             model: 'test',
             brand: 'test',
             year: 2005,
             km: 1000
         })], ActionDBEnum.DELETE, [new OperationModel()]);
-        expect(spyDataBase.executeScriptDataBase).toHaveBeenCalled();
-        expect(spyOperationService.getSqlDeleteVehicleOperation).toHaveBeenCalled();
-        expect(spySqlService.deleteSql).toHaveBeenCalled();
+        expect(spyCRUDService.saveDataStorage).toHaveBeenCalled();
     });
 });

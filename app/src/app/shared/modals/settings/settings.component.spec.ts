@@ -8,7 +8,7 @@ import { SettingsComponent } from './settings.component';
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { ExportService, SettingsService } from '@services/index';
+import { DataBaseService, ExportService, SettingsService } from '@services/index';
 
 // CONFIGURATION
 import { SetupTest, SpyMockConfig } from '@testing/index';
@@ -24,7 +24,10 @@ describe('SettingsComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService, ExportService,
+    config.providers.push(
+      SpyMockConfig.ProviderDataBaseService,
+      SpyMockConfig.ProviderDataService, 
+      SettingsService, ExportService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel({ parentPage: PageEnum.HOME })));
     await TestBed.configureTestingModule(config).compileComponents();
 

@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { DataService } from './data.service';
 
 // CONFIGURATIONS
-import { SetupTest } from '@testing/index';
+import { SetupTest, SpyMockConfig } from '@testing/index';
 
 
 describe('DataService', () => {
@@ -13,6 +13,7 @@ describe('DataService', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: SetupTest.config.imports,
+            providers: SpyMockConfig.ProvidersServices
         }).compileComponents();
         service = TestBed.inject(DataService);
     });

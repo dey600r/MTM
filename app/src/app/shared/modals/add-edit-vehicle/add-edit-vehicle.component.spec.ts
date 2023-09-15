@@ -24,7 +24,7 @@ describe('AddEditVehicleComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel<VehicleModel>({
         data: MockData.Vehicles[0],
         parentPage: PageEnum.VEHICLE

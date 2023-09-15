@@ -3,7 +3,7 @@ import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { ExportService } from './export.service';
-import { DataBaseService } from './data-base.service';
+import { CRUDService } from './crud.service';
 
 // CONFIGURATIONS
 import { ConstantsTest, SetupTest, SpyMockConfig } from '@testing/index';
@@ -15,7 +15,7 @@ import { File } from '@awesome-cordova-plugins/file/ngx';
 
 describe('ExportService', () => {
     let service: ExportService;
-    let databaseService: DataBaseService;
+    let crudService: CRUDService;
     let translate: TranslateService;
     let file: File;
 
@@ -25,7 +25,7 @@ describe('ExportService', () => {
             providers: SpyMockConfig.ProvidersServices
         }).compileComponents();
         service = TestBed.inject(ExportService);
-        databaseService = TestBed.inject(DataBaseService);
+        crudService = TestBed.inject(CRUDService);
         translate = TestBed.inject(TranslateService);
         file = TestBed.inject(File);
         await firstValueFrom(translate.use('es'));
@@ -139,7 +139,7 @@ describe('ExportService', () => {
     });
 
     it('should validate format JSON', () => {
-        expect(service.validateStructureJsonDB('david', databaseService.getAllTables())).toBeFalsy();
+        expect(service.validateStructureJsonDB('david', crudService.getAllTables())).toBeFalsy();
         expect(service.validateStructureJsonDB(`${ConstantsTable.TABLE_MTM_VEHICLE_TYPE}
         ${ConstantsTable.TABLE_MTM_OPERATION_TYPE}
         ${ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ}
@@ -151,6 +151,6 @@ describe('ExportService', () => {
         ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT}
         ${ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT}
         ${ConstantsTable.TABLE_MTM_CONFIG_MAINT}
-        ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL}`, databaseService.getAllTables())).toBeTruthy();
+        ${ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL}`, crudService.getAllTables())).toBeTruthy();
     });
 });
