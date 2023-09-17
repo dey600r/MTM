@@ -116,7 +116,7 @@ describe('InfoVehicleService', () => {
         validateInfoVehicleConfiguration(confHyosung, 1);
         expect(confHyosung.listMaintenance[0].warning).toEqual(WarningWearEnum.SUCCESS);
         expect(confHyosung.listMaintenance[1].warning).toEqual(WarningWearEnum.SKULL);
-        expect(confHyosung.listMaintenance[2].warning).toEqual(WarningWearEnum.SUCCESS);
+        expect(confHyosung.listMaintenance[2].warning).toEqual(WarningWearEnum.DANGER);
         expect(confHyosung.listMaintenance[3].warning).toEqual(WarningWearEnum.SKULL);
         expect(confHyosung.listMaintenance[4].warning).toEqual(WarningWearEnum.SKULL);
         const confKawa: InfoVehicleConfigurationModel = data.find(x => x.idConfiguration === MockData.Configurations[2].id);

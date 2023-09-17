@@ -59,7 +59,8 @@ export class SpyMockConfig {
         controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree', 'activeSegmentScroll', 'alertCustom']),
         exportService: jasmine.createSpyObj('ExportService', ['createOutputDirectory']),
         sqliteObject: jasmine.createSpyObj('SQLiteObject', ['executeSql']),
-        sqlitePorter: jasmine.createSpyObj('SQLitePorter', ['importSqlToDb'])
+        sqlitePorter: jasmine.createSpyObj('SQLitePorter', ['importSqlToDb']),
+        nativeStorage: jasmine.createSpyObj('NativeStorage', ['getItem', 'setItem'])
     };
 
     static Providers = [
@@ -82,7 +83,7 @@ export class SpyMockConfig {
     static ProvidersServices = [
         SQLite,
         InAppBrowser,
-        NativeStorage,
+        { provide: NativeStorage, useValue: SpyMockConfig.SpyConfig.nativeStorage },
         { provide: File, useValue: SpyMockConfig.SpyConfig.file },
         { provide: SQLiteObject, useValue: SpyMockConfig.SpyConfig.sqliteObject },
         { provide: SQLitePorter, useValue: SpyMockConfig.SpyConfig.sqlitePorter }

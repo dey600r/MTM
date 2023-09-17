@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 // LIBRARIES
-import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { getDatabase, set, ref, get, child } from 'firebase/database';
 import { initializeApp } from 'firebase/app';
@@ -29,8 +28,7 @@ export class SyncService {
 
   login = false;
 
-  constructor(private sqlitePorter: SQLitePorter,
-              private dbService: DataBaseService,
+  constructor(private dbService: DataBaseService,
               private dataService: DataService,
               private crudService: CRUDService,
               private exportService: ExportService,
