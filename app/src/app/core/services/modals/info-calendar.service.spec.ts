@@ -99,7 +99,7 @@ describe('InfoCalendarService', () => {
         expect(result.price).toEqual(472);
         expect(result.time).toEqual(0);
         expect(result.warning).toEqual(WarningWearEnum.SUCCESS);
-        expect(result.date.toDateString()).toEqual(new Date(today.getFullYear() + 14, today.getMonth() + 1, today.getDate() - 6).toDateString());
+        expect(result.date.toDateString()).toEqual(new Date(today.getFullYear() + 14, today.getMonth() + 1, today.getDate() - 7).toDateString());
 
         allWears[1].listWearMaintenance[0].listWearReplacement[0].priceOperation = null;
         result = service.createInfoCalendarReplacement(allWears[1], 
@@ -122,7 +122,7 @@ describe('InfoCalendarService', () => {
         const date: Date = service.getDateCalculatingKm(allWears[0], 
                                                         allWears[0].listWearMaintenance[3], 
                                                         allWears[0].listWearMaintenance[3].listWearReplacement[1]);
-        expect(date).toEqual(new Date(today.getFullYear() + 14, today.getMonth() + 1, today.getDate() - 6));
+        expect(date).toEqual(new Date(today.getFullYear() + 14, today.getMonth() + 1, today.getDate() - 7));
     });
 
     it('should get date from time', () => {

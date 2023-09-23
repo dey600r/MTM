@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 // SERVICES
@@ -12,6 +12,7 @@ import { Constants, ConstantsTable } from '@utils/index';
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 import { File } from '@awesome-cordova-plugins/file/ngx';
+import { LogService } from '../common';
 
 describe('ExportService', () => {
     let service: ExportService;
@@ -22,7 +23,7 @@ describe('ExportService', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: SetupTest.config.imports,
-            providers: SpyMockConfig.ProvidersServices
+            providers: [...SpyMockConfig.ProvidersServices, LogService]
         }).compileComponents();
         service = TestBed.inject(ExportService);
         crudService = TestBed.inject(CRUDService);
@@ -33,34 +34,6 @@ describe('ExportService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
-    });
-
-    it('should get data directory', () => {
-        expect(service.getDataDirectory()).toEqual(ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY);
-        file.externalRootDirectory = null;
-        expect(service.getDataDirectory()).toEqual(ConstantsTest.PATH_DATA_DIRECTORY);
-        file.externalRootDirectory = ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY;
-    });
-
-    it('should get root directory', () => {
-        expect(service.getRootDirectory()).toEqual(ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY);
-        file.externalRootDirectory = null;
-        expect(service.getRootDirectory()).toEqual('');
-        file.externalRootDirectory = ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY;
-    });
-
-    it('should get root path files', () => {
-        expect(service.getRootPathFiles())
-            .toEqual(`${ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY}${Constants.OUTPUT_DIR_NAME}/`);
-        expect(service.getRootPathFiles('hola'))
-            .toEqual(`${ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY}${Constants.OUTPUT_DIR_NAME}/hola`);
-    });
-
-    it('should get root relative path', () => {
-        expect(service.getRootRelativePath())
-            .toEqual(`${Constants.OUTPUT_DIR_NAME}/`);
-        expect(service.getRootRelativePath('hola'))
-            .toEqual(`${Constants.OUTPUT_DIR_NAME}/hola`);
     });
 
     it('should get root real relative path', () => {
@@ -118,10 +91,11 @@ describe('ExportService', () => {
     }));
 
     it('should not create output directory and error and error', fakeAsync(() => {
-        SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValues(Promise.reject(), Promise.reject());
-        SpyMockConfig.SpyConfig.file.createDir = jasmine.createSpy().and.returnValues(Promise.resolve(), Promise.reject());
+        SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValues(Promise.reject(), Promise.reject(), Promise.reject());
+        SpyMockConfig.SpyConfig.file.createDir = jasmine.createSpy().and.returnValues(Promise.resolve(), Promise.reject(), Promise.reject());
         service.createOutputDirectory();
         tick();
+        flush();
         expect(SpyMockConfig.SpyConfig.file.checkDir).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.createDir).toHaveBeenCalled();
         SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValue(Promise.resolve());

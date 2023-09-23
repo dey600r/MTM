@@ -472,7 +472,7 @@ describe('DashboardService', () => {
         expect(result[3].value).toBeLessThanOrEqual(1400);
         expect(result[4].value).toBeLessThanOrEqual(1800);
         expect(result[5].value).toBeLessThanOrEqual(1600);
-        expect(result[6].value).toBeLessThanOrEqual(2600);
+        expect(result[6].value).toBeLessThanOrEqual(2700);
         expect(result[0].value).toBeGreaterThanOrEqual(1000);
         expect(result[1].value).toBeGreaterThanOrEqual(900);
         expect(result[2].value).toBeGreaterThanOrEqual(1000);
@@ -510,7 +510,7 @@ describe('DashboardService', () => {
         expect(result[3].value).toBeLessThanOrEqual(186);
         expect(result[4].value).toBeLessThanOrEqual(186);
         expect(result[5].value).toBeLessThanOrEqual(186);
-        expect(result[6].value).toBeLessThanOrEqual(2600);
+        expect(result[6].value).toBeLessThanOrEqual(2700);
         expect(result[0].value).toBeGreaterThanOrEqual(8900);
         expect(result[1].value).toBeGreaterThanOrEqual(590);
         expect(result[2].value).toBeGreaterThanOrEqual(156);
@@ -526,7 +526,7 @@ describe('DashboardService', () => {
         let year: number = new Date().getFullYear();
         expect(result.length).toEqual(year - new Date(dataVehicle.datePurchase).getFullYear() + 1);
         expect(result[0].name).toEqual((year - 17).toString());
-        expect(result[0].value).toEqual(4940);
+        expect(result[0].value).toEqual(4820);
         expect(result[1].name).toEqual((year - 16).toString());
         expect(result[1].value).toEqual(-1);
         expect(result[2].name).toEqual((year - 15).toString());

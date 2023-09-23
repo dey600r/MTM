@@ -9,13 +9,12 @@ import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
-import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { ControlService, DataBaseService, DataService, ExportService } from '@services/index';
+import { ControlService, DataBaseService, DataService, ExportService, LogService } from '@services/index';
 import { DateFormatCalendarPipe } from '@pipes/date-format-calendar.pipe';
 
 // MOCK
@@ -43,6 +42,9 @@ export class SpyMockConfig {
         },
         file: {
             checkDir: jasmine.createSpy().and.returnValue(Promise.resolve()),
+            checkFile: jasmine.createSpy().and.returnValue(Promise.resolve()),
+            readAsText: jasmine.createSpy().and.returnValue(Promise.resolve()),
+            writeExistingFile: jasmine.createSpy().and.returnValue(Promise.resolve()),
             createDir: jasmine.createSpy().and.returnValue(Promise.resolve()),
             createFile: jasmine.createSpy().and.returnValue(Promise.resolve()),
             listDir: jasmine.createSpy().and.returnValue(Promise.resolve([{ name: 'test.json' }])),
@@ -58,9 +60,12 @@ export class SpyMockConfig {
             'getMaintenanceFreq', 'getMaintenanceFreqData']),
         controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree', 'activeSegmentScroll', 'alertCustom']),
         exportService: jasmine.createSpyObj('ExportService', ['createOutputDirectory']),
+        logService: jasmine.createSpyObj('LogService', ['logInfo', 'getDataDirectory']),
         sqliteObject: jasmine.createSpyObj('SQLiteObject', ['executeSql']),
         sqlitePorter: jasmine.createSpyObj('SQLitePorter', ['importSqlToDb']),
-        nativeStorage: jasmine.createSpyObj('NativeStorage', ['getItem', 'setItem'])
+        windows: {
+            localStorage: jasmine.createSpyObj('localStorage', ['getItem', 'setItem'])
+        }
     };
 
     static Providers = [
@@ -71,7 +76,7 @@ export class SpyMockConfig {
         PopoverController,
         DateFormatCalendarPipe,
         InAppBrowser,
-        NativeStorage,
+        //{ provide: LogService, useValue: SpyMockConfig.SpyConfig.logService },
         { provide: StatusBar, useValue: SpyMockConfig.SpyConfig.statusBar },
         { provide: SplashScreen, useValue: SpyMockConfig.SpyConfig.splashScreenSpy },
         { provide: Platform, useValue: SpyMockConfig.SpyConfig.platformSpy },
@@ -83,7 +88,8 @@ export class SpyMockConfig {
     static ProvidersServices = [
         SQLite,
         InAppBrowser,
-        { provide: NativeStorage, useValue: SpyMockConfig.SpyConfig.nativeStorage },
+        //{ provide: LogService, useValue: SpyMockConfig.SpyConfig.logService },
+        { provide: Storage, useValue: SpyMockConfig.SpyConfig.windows },
         { provide: File, useValue: SpyMockConfig.SpyConfig.file },
         { provide: SQLiteObject, useValue: SpyMockConfig.SpyConfig.sqliteObject },
         { provide: SQLitePorter, useValue: SpyMockConfig.SpyConfig.sqlitePorter }
