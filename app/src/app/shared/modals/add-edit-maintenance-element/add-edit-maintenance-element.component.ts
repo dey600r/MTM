@@ -48,7 +48,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
           'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),
           { replacement: this.maintenanceElement.name });
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement', e);
       });
     }
   }

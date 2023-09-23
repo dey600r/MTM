@@ -326,7 +326,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
                'PAGE_CONFIGURATION.DeleteSaveConfiguration', { configuration: row.name });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration', e);
           });
         }
       }
@@ -369,7 +369,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.vehicleService.saveVehicle(vehiclesToSave, ActionDBEnum.UPDATE).then(res => {
         this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_CONFIGURATION.EditSaveVehiclesAssociated');
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
       });
     }
   }
@@ -407,7 +407,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
               'PAGE_CONFIGURATION.DeleteSaveMaintenance', { maintenance: row.description });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance', e);
           });
         }
       }
@@ -461,7 +461,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.controlService.showToast(PageEnum.MODAL_CONFIGURATION,
         ToastTypeEnum.SUCCESS, 'PAGE_CONFIGURATION.EditSaveMaintenancesAssociated');
     }).catch(e => {
-      this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+      this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration', e);
     });
   }
 
@@ -496,7 +496,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
               'PAGE_CONFIGURATION.DeleteSaveReplacement', { replacement: row.name });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement', e);
           });
         }
       }

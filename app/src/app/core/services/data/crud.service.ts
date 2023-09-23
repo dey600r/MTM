@@ -294,12 +294,14 @@ export class CRUDService {
           conf.get.relatedTable.forEach(step => {
               const dataTable: any[] = JSON.parse(JSON.stringify(step.getDataRelatedTableFunction()));
               if(step.getDataRelatedTableRefFunction == null) {
-              parameters = [...parameters, dataTable.find(row => row.id === element[step.foreignKey])];
+                let idRelated: number = Number(element[step.foreignKey]);
+                parameters = [...parameters, dataTable.find(row => Number(row.id) === idRelated)];
               } else {
-              const dataTableRelated: any[] = step.getDataRelatedTableRefFunction()
-                                                  .filter(row => row[step.foreignKey] === element.id);
-              parameters = [...parameters, 
-                  step.customMapperBeforeStorage(dataTable.filter(row => dataTableRelated.some(rel => row.id === rel[step.foreignKeyRel])), dataTableRelated)];
+                let idRelated: number = Number(element.id);
+                const dataTableRelated: any[] = step.getDataRelatedTableRefFunction()
+                                                    .filter(row => Number(row[step.foreignKey]) === idRelated);
+                parameters = [...parameters, step.customMapperBeforeStorage(
+                  dataTable.filter(row => dataTableRelated.some(rel => Number(row.id) === Number(rel[step.foreignKeyRel]))), dataTableRelated)];
               }
           });
   
@@ -351,16 +353,12 @@ export class CRUDService {
       return this.getTables(TypeOfTableEnum.RELATION);
   }
 
-  getTablesLoadInit(): string[] {
-      return [...this.getTablesMaster(), ...this.getTablesData()];
-  }
-
   getAllTables(): string[] {
-      return [...this.getTablesLoadInit(), ...this.getTablesRef()];
+      return [...this.getTablesMaster(),...this.getTablesRef(), ...this.getTablesData()];
   }
 
   getSyncTables(): string[] {
-      return [...this.getTablesData(), ...this.getTablesRef()];
+      return [...this.getTablesRef(), ...this.getTablesData()];
   }
 
   /* SAVER CONFIGURATION */

@@ -3,38 +3,26 @@ import { Injectable } from '@angular/core';
 // LIBRARIES
 import { File } from '@awesome-cordova-plugins/file/ngx';
 
+// SERVICES
+import { LogService } from '../common/log.service';
+
 // UTILS
-import { Constants } from '@utils/index';
+import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ExportService {
 
-    constructor(private file: File) {
+    constructor(private file: File,
+                private logService: LogService) {
     }
 
     /** EXPORTS AND IMPORTS */
 
-    getDataDirectory(): string {
-        return (!!this.file.externalRootDirectory ? this.file.externalRootDirectory : this.file.dataDirectory);
-    }
-
-    getRootDirectory(): string {
-        return (!!this.file.externalRootDirectory ? this.file.externalRootDirectory : '');
-    }
-
-    getRootPathFiles(filePath: string = ''): string {
-        return `${this.getDataDirectory()}${this.getRootRelativePath(filePath)}`;
-    }
-
-    getRootRelativePath(filePath: string = ''): string {
-        return `${Constants.OUTPUT_DIR_NAME}/${filePath}`;
-    }
-
     getRootRealRelativePath(filePath: string = ''): string {
         const dataDirectory: string = this.getRealRelativeDirectory();
-        return `${dataDirectory.substring(this.getRootDirectory().length, dataDirectory.length)}${this.getRootRelativePath(filePath)}`;
+        return `${dataDirectory.substring(this.logService.getRootDirectory().length, dataDirectory.length)}${this.logService.getRootRelativePath(filePath)}`;
     }
 
     getRealRelativeDirectory(): string {
@@ -46,36 +34,37 @@ export class ExportService {
     }
 
     getPathFile(fileName: string, filePath: string = '') {
-        return this.getRootPathFiles(filePath) + '/' + fileName;
+        return this.logService.getRootPathFiles(filePath) + '/' + fileName;
     }
 
     createOutputDirectory() {
-        this.file.checkDir(this.getDataDirectory(), Constants.OUTPUT_DIR_NAME).then(dir => {
-            console.log(`${Constants.OUTPUT_DIR_NAME} directory exists`);
+        const pathDataDirectory: string = this.logService.getDataDirectory();
+        this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
+            this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory exists`);
             this.createDiretory(Constants.EXPORT_DIR_NAME);
             this.createDiretory(Constants.IMPORT_DIR_NAME);
         }).catch(errCheck => {
-            console.log(`${Constants.OUTPUT_DIR_NAME} directory dont exists`);
-            this.file.createDir(this.getDataDirectory(), Constants.OUTPUT_DIR_NAME, false).then(newDir => {
-                console.log(`${Constants.OUTPUT_DIR_NAME} directory created`);
+            this.file.createDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME, false).then(newDir => {
+                this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory created`);
                 this.createDiretory(Constants.EXPORT_DIR_NAME);
                 this.createDiretory(Constants.IMPORT_DIR_NAME);
             }).catch(errCreate => {
-                console.log(`Error creating ${Constants.OUTPUT_DIR_NAME} directory`);
+                this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, errCreate);
             });
         });
     }
 
     createDiretory(dirName: string) {
-        this.file.checkDir(this.getRootPathFiles(), dirName).then(dir => {
-            console.log(`${dirName} directory exists`);
+        const pathRootFiles: string = this.logService.getRootPathFiles();
+        this.file.checkDir(pathRootFiles, dirName).then(dir => {
+            this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${dirName} directory exists`);
         }).catch(errCheck => {
-            console.log(`${dirName} directory dont exists`);
-            this.file.createDir(this.getRootPathFiles(), dirName, false).then(newDir => {
-                console.log(`${dirName} directory created`);
-                this.file.createFile(this.getRootPathFiles(dirName), Constants.FILE_EMPTY_NAME, true);
+            this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `${dirName} directory dont exists`);
+            this.file.createDir(pathRootFiles, dirName, false).then(newDir => {
+                this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${dirName} directory created`);
+                this.file.createFile(this.logService.getRootPathFiles(dirName), Constants.FILE_EMPTY_NAME, true);
             }).catch(errCreate => {
-                console.log(`Error creating ${dirName} directory`);
+                this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error creating ${dirName} directory`, errCreate);
             });
         });
     }

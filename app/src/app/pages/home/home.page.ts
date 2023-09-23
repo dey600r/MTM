@@ -374,7 +374,7 @@ export class HomePage extends BasePage implements OnInit {
               {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration},
               Constants.DELAY_TOAST_NORMAL);
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration', e);
           });
         }
       }
@@ -417,7 +417,7 @@ export class HomePage extends BasePage implements OnInit {
             this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_YES).then(x => {
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'ALERT.InfoAcceptPrivacyPolicy');
             }).catch(e => {
-              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings');
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings', e);
             });
           },
         }]);

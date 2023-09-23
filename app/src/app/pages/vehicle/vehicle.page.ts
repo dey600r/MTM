@@ -147,7 +147,7 @@ export class VehiclePage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_VEHICLE.DeleteSaveVehicle',
               { vehicle: `${row.brand} ${row.model}` });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
           });
         }
       }
@@ -167,7 +167,7 @@ export class VehiclePage extends BasePage implements OnInit {
           this.vehicleService.saveVehicle([vehicleToSave], ActionDBEnum.UPDATE).then(x => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, resMsg);
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
           });
         }
       }

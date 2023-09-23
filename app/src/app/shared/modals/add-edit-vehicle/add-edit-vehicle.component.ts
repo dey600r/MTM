@@ -101,7 +101,7 @@ export class AddEditVehicleComponent implements OnInit {
             (this.modalInputModel.isCreate ? 'PAGE_VEHICLE.AddSaveVehicle' : 'PAGE_VEHICLE.EditSaveVehicle'),
             { vehicle: this.vehicle.model });
         }).catch(e => {
-          this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+          this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
         });
       }
     }

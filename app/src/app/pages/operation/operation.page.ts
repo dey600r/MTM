@@ -175,7 +175,7 @@ export class OperationPage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.SUCCESS,
               'PAGE_OPERATION.DeleteSaveOperation', {operation: row.description});
           }).catch(e => {
-            this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
+            this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation', e);
           });
         }
       }

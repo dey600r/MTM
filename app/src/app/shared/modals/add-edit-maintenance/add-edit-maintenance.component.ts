@@ -107,7 +107,7 @@ export class AddEditMaintenanceComponent implements OnInit {
             'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),
           { maintenance: this.maintenance.description });
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance', e);
       });
     }
   }

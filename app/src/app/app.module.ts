@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
-import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 
 // LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
@@ -60,7 +59,6 @@ import { MapService } from './core/services';
     SplashScreen,
     TranslateStore,
     InAppBrowser,
-    NativeStorage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

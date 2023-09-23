@@ -163,7 +163,7 @@ export class AddEditOperationComponent implements OnInit {
         this.modalInputModel.isCreate ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation',
           { operation: this.operation.description });
     }).catch(e => {
-      this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
+      this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation', e);
     });
   }
 
@@ -173,9 +173,8 @@ export class AddEditOperationComponent implements OnInit {
       vehicle.km = this.operation.km;
       vehicle.dateKms = new Date();
       this.vehicleService.saveVehicle([vehicle], ActionDBEnum.UPDATE).then(res => {
-        console.log('UPDATE VEHICLE KM');
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
       });
     }
   }

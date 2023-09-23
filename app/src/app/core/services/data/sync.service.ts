@@ -12,6 +12,7 @@ import { ExportService } from './export.service';
 import { DataService } from './data.service';
 import { CRUDService } from './crud.service';
 import { ControlService } from '../common/control.service';
+import { LogService } from '../common/log.service';
 import { SettingsService } from '../modals/index';
 
 // UTILS
@@ -34,7 +35,8 @@ export class SyncService {
               private exportService: ExportService,
               private controlService: ControlService,
               private settingsService: SettingsService,
-              private file: File) { }
+              private file: File,
+              private logService: LogService) { }
 
   // syncRegisterUser(email: string, pwd: string) {
   //   const auth = getAuth();
@@ -56,7 +58,7 @@ export class SyncService {
       signOut(getAuth()).then(() => {
         this.login = false;
       }).catch((error) => {
-        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorSyncLogout', { error: error.message });
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorSyncLogout', { error: error.message }, error);
       });
     }
   }
@@ -72,7 +74,7 @@ export class SyncService {
         })
         .catch((error) => {
           resolve(false);
-          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorSyncLogin', { error: error.message });
+          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorSyncLogin', { error: error.message }, error);
         });
     });
   }
@@ -86,7 +88,7 @@ export class SyncService {
         await this.crudService.getAllDataFromStorage().then(async (json: any) => {
           const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_SYNC_FILE_NAME);
           // WRITE BACKUP FILE
-          await this.file.writeFile(this.exportService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
+          await this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
             JSON.stringify(json), { replace : true}).then(() => {
               // This is intentional
           }).catch(err => {
@@ -101,14 +103,14 @@ export class SyncService {
             this.crudService.loadAllTables();
             this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SyncDownload');
           }).catch(e => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB');
+            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB', e);
           });
         }).catch(e => {
-          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorExportDB');
+          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorExportDB', e);
         });
       }
     }).catch((error) => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorSyncDownload', { error: error.message });
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorSyncDownload', { error: error.message }, error);
     });
   }
 
@@ -140,10 +142,10 @@ export class SyncService {
           this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SyncUpload');
       })
       .catch((error) => {
-        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorSyncUpload', { error: error.message });
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorSyncUpload', { error: error.message }, error);
       });
     }).catch(e => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorExportDB');
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorExportDB', e);
     });
   }
 
