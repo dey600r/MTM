@@ -29,8 +29,8 @@ export class MockVehicle {
             configuration: MockConfiguration.Configurations[0],
             vehicleType: MockVehicle.VehicleTypes[0],
             kmsPerMonth: 600,
-            dateKms: new Date(2021, 6, 2),
-            datePurchase: new Date(2006, 3, 27),
+            dateKms: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 2, new Date().getDate() - 14),
+            datePurchase: new Date(new Date().getFullYear() - 17, new Date().getMonth() - 5, new Date().getDate() + 11),
             active: true,
             id: 1
         }),
@@ -42,8 +42,8 @@ export class MockVehicle {
             configuration: MockConfiguration.Configurations[1],
             vehicleType: MockVehicle.VehicleTypes[0],
             kmsPerMonth: 50,
-            dateKms: new Date(2021, 6, 2),
-            datePurchase: new Date(2006, 9, 12),
+            dateKms: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 2, new Date().getDate() - 14),
+            datePurchase: new Date(new Date().getFullYear() - 17, new Date().getMonth() + 1, new Date().getDate() - 4),
             active: true,
             id: 2
         }),
@@ -55,8 +55,8 @@ export class MockVehicle {
             configuration: MockConfiguration.Configurations[2],
             vehicleType: MockVehicle.VehicleTypes[0],
             kmsPerMonth: 600, 
-            dateKms: new Date(2021, 6, 2),
-            datePurchase: new Date(2021, 3, 5),
+            dateKms: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 2, new Date().getDate() - 14),
+            datePurchase: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 5, new Date().getDate() - 11),
             active: true,
             id: 3
         })

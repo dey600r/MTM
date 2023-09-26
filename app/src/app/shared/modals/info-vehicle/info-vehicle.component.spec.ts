@@ -24,7 +24,7 @@ describe('InfoVehicleComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, ControlService, SettingsService,
+    config.providers.push(SpyMockConfig.ProviderDataService, ControlService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel()));
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);

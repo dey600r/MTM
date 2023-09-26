@@ -6,6 +6,7 @@ export class MaintenanceModel extends BaseMaintenanceModel {
     listMaintenanceElement: MaintenanceElementModel[];
     maintenanceFreq: MaintenanceFreqModel;
     master: boolean;
+    idConfigurationRel: number;
     constructor(data: Partial<MaintenanceModel> = {}) {
         super({
             description: data.description,
@@ -20,5 +21,6 @@ export class MaintenanceModel extends BaseMaintenanceModel {
         this.listMaintenanceElement = (data.listMaintenanceElement !== undefined ? data.listMaintenanceElement : []);
         this.maintenanceFreq = (data.maintenanceFreq !== undefined ? data.maintenanceFreq : new MaintenanceFreqModel());
         this.master = (data.master !== undefined ? data.master : false);
+        this.idConfigurationRel = (data.idConfigurationRel !== undefined ? data.idConfigurationRel : 0);
     }
 }

@@ -7,15 +7,15 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import {
-  DataBaseService, DashboardService, ConfigurationService, ControlService,
+  DataService, DashboardService, ConfigurationService, ControlService,
   SettingsService, ThemeService, HomeService
 } from '@services/index';
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
-  MaintenanceModel, ModalInputModel, OperationModel, VehicleModel,
+  MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -60,7 +60,7 @@ export class HomePage extends BasePage implements OnInit {
   maintenanceSubscription: Subscription = new Subscription();
 
   constructor(public platform: Platform,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               public translator: TranslateService,
               private dashboardService: DashboardService,
               private configurationService: ConfigurationService,
@@ -75,6 +75,7 @@ export class HomePage extends BasePage implements OnInit {
 
   ngOnInit() {
     this.initPage();
+    
   }
 
   /** INIT */
@@ -85,7 +86,7 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   getSystemConfiguration() {
-    this.dbService.getSystemConfiguration().subscribe(settings => {
+    this.dataService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
         const theme = this.settingsService.getThemeSelected(settings);
@@ -96,14 +97,14 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   initDashboard() {
-    this.dbService.getConfigurations().subscribe(configurations => {
+    this.dataService.getConfigurations().subscribe(configurations => {
       this.maintenanceSubscription.unsubscribe();
       if (!!configurations && configurations.length > 0) {
-        this.maintenanceSubscription = this.dbService.getMaintenance().subscribe(maintenances => {
+        this.maintenanceSubscription = this.dataService.getMaintenance().subscribe(maintenances => {
           this.vehicleSubscription.unsubscribe();
           if (!!maintenances && maintenances.length > 0) {
             this.maintenances = maintenances;
-            this.vehicleSubscription = this.dbService.getVehicles().subscribe(vehicles => {
+            this.vehicleSubscription = this.dataService.getVehicles().subscribe(vehicles => {
               this.calculateVehiclesToDashboard(vehicles, configurations, maintenances);
             });
           }
@@ -120,7 +121,7 @@ export class HomePage extends BasePage implements OnInit {
     if (!!vehicles && vehicles.length > 0) {
       const vehiclesActives: VehicleModel[] = vehicles.filter(x => x.active);
       if (!!vehiclesActives && vehiclesActives.length > 0) {
-        this.operationSubscription = this.dbService.getOperations().subscribe(operations => {
+        this.operationSubscription = this.dataService.getOperations().subscribe(operations => {
           this.calculateDashboard(vehiclesActives, operations, configurations, maintenances);
         });
       } else {
@@ -176,7 +177,7 @@ export class HomePage extends BasePage implements OnInit {
     if (this.controlService.getDateLastUse().toDateString() !== new Date().toDateString()) {
       this.loadedHeader = false;
       this.loadedBody = false;
-      this.dbService.setVehicles(this.dbService.getVehiclesData());
+      this.dataService.setVehicles(this.dataService.getVehiclesData());
       this.controlService.setDateLastUse();
     }
     this.timeOutLoader();
@@ -373,7 +374,7 @@ export class HomePage extends BasePage implements OnInit {
               {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration},
               Constants.DELAY_TOAST_NORMAL);
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration', e);
           });
         }
       }
@@ -416,7 +417,7 @@ export class HomePage extends BasePage implements OnInit {
             this.settingsService.saveSystemConfiguration(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_YES).then(x => {
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'ALERT.InfoAcceptPrivacyPolicy');
             }).catch(e => {
-              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings');
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.InfoErrorSaveSettings', e);
             });
           },
         }]);

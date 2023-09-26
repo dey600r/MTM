@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ConstantsTable, ISettingModel } from '@utils/index';
-import { DataBaseService, SqlService, CalendarService } from '../common/index';
+import { Constants } from '@utils/index';
+import { CRUDService } from '../data/index';
 
 // MODALS
-import { SystemConfigurationModel } from '@models/index';
+import { SystemConfigurationModel, ISettingModel } from '@models/index';
 
 
 @Injectable({
@@ -17,9 +17,7 @@ import { SystemConfigurationModel } from '@models/index';
 export class SettingsService {
 
     constructor(private translator: TranslateService,
-                private sqlService: SqlService,
-                private calendarService: CalendarService,
-                private dbService: DataBaseService) {
+                private crudService: CRUDService) {
     }
 
     /** SETTINGS */
@@ -85,40 +83,10 @@ export class SettingsService {
     // SAVE DATA
 
     saveSystemConfiguration(key: string, value: string): Promise<any> {
-        if (!!value) {
-             return this.dbService.executeScriptDataBase(
-                        this.sqlService.updateSqlSystemConfiguration(key, value,
-                            this.calendarService.getDateStringToDB(new Date())), [ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
-        }
-        return null;
-    }
-
-    insertSystemConfiguration() {
-        const data = this.dbService.getSystemConfigurationData();
-        let sql = '';
-        if (!data.some(x => x.key === Constants.KEY_CONFIG_THEME)) {
-            sql = this.sqlService.insertSqlSystemConfiguration(
-                    [new SystemConfigurationModel(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_LIGHT, new Date(), 4)]);
-        }
-        if (!data.some(x => x.key === Constants.KEY_CONFIG_PRIVACY)) {
-            sql += this.sqlService.insertSqlSystemConfiguration(
-                    [new SystemConfigurationModel(Constants.KEY_CONFIG_PRIVACY, Constants.DATABASE_NO, new Date(), 5)]);
-        }
-        if (!data.some(x => x.key === Constants.KEY_CONFIG_SYNC_EMAIL)) {
-            sql += this.sqlService.insertSqlSystemConfiguration(
-                    [new SystemConfigurationModel(Constants.KEY_CONFIG_SYNC_EMAIL, '', new Date(), 6)]);
-        }
-        if (sql) {
-            this.dbService.executeScriptDataBase(sql);
-        }
+        return this.crudService.saveSystemConfiguration(key, value);
     }
 
     mapToAnyCustomSetting(c: string, v: string, vl: string): ISettingModel {
         return { code: c, value: v, valueLarge: vl };
-    }
-
-    finishImportLoad() {
-        this.dbService.loadAllTables();
-        setTimeout(() => { this.insertSystemConfiguration(); }, 500);
     }
 }

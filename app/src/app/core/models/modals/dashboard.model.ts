@@ -1,4 +1,4 @@
-import { IDashboardColorModel } from "@utils/index";
+import { IDashboardColorModel } from "../index";
 
 export class DashboardModel<T> {
     view: any[];

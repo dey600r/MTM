@@ -60,6 +60,7 @@ export class Constants {
     static PATH_FILE_DB = 'assets/db/';
     static FILE_NAME_INIT_DB = 'initTableDB';
     static FILE_NAME_NEXT_DEPLOY_DB = 'nextDeployDB';
+    static FILE_NAME_INIT_DB_STORAGE = 'initDBStorage.json';
 
     static TOAST_POSITION_TOP = 'top';
     static TOAST_POSITION_MIDDLE = 'middle';
@@ -87,9 +88,11 @@ export class Constants {
     static IMPORT_DIR_NAME = 'imports';
     static FILE_EMPTY_NAME = 'db.txt';
     static FORMAT_FILE_DB = 'json';
+    static FORMAT_FILE_LOG = 'txt';
     static EXPORT_FILE_NAME = 'mtmDB';
     static BACKUP_FILE_NAME = 'mtmBackup';
     static BACKUP_SYNC_FILE_NAME = 'mtmSyncBackup';
+    static LOG_FILE_NAME = 'mtmLog';
 
     // URLS
     static MTM_URL_PRIVACY_POLICY = 'https://deyapps-a0de1.web.app/infomtm/privacypolicy';

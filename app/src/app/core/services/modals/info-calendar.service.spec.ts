@@ -6,7 +6,7 @@ import { InfoCalendarService } from './info-calendar.service';
 import { HomeService } from '../pages/index';
 
 // CONFIGURATIONS
-import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
 import { Constants, WarningWearEnum } from '@utils/index';
 
 // LIBRARIES
@@ -86,19 +86,20 @@ describe('InfoCalendarService', () => {
     });
 
     it('should create info calendar replacement', () => {
+        let today: Date = new Date();
         const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
         let result: InfoCalendarReplacementViewModel = service.createInfoCalendarReplacement(allWears[0], 
                                                                 allWears[0].listWearMaintenance[3], 
                                                                 allWears[0].listWearMaintenance[3].listWearReplacement[1], true);
         
-        expect(result.idReplacement).toEqual(3);
-        expect(result.nameReplacement).toEqual(MockData.MaintenanceElementsAux[2].name);
-        expect(result.km).toEqual(24000);
-        expect(result.price).toEqual(235);
+        expect(result.idReplacement).toEqual(6);
+        expect(result.nameReplacement).toEqual(MockData.MaintenanceElementsAux[5].name);
+        expect(result.km).toEqual(88000);
+        expect(result.price).toEqual(472);
         expect(result.time).toEqual(0);
-        expect(result.warning).toEqual(WarningWearEnum.SKULL);
-        expect(result.date.toDateString()).toEqual(new Date(new Date().getFullYear() - 11, new Date().getMonth() - 9, 15).toDateString());
+        expect(result.warning).toEqual(WarningWearEnum.SUCCESS);
+        expect(result.date.toDateString()).toEqual(new Date(today.getFullYear() + 14, today.getMonth() + 1, today.getDate() - 7).toDateString());
 
         allWears[1].listWearMaintenance[0].listWearReplacement[0].priceOperation = null;
         result = service.createInfoCalendarReplacement(allWears[1], 
@@ -111,30 +112,33 @@ describe('InfoCalendarService', () => {
         expect(result.price).toEqual(0);
         expect(result.time).toEqual(0);
         expect(result.warning).toEqual(WarningWearEnum.SKULL);
-        expect(result.date.toDateString()).toEqual(new Date(new Date().getFullYear() - 1, new Date().getMonth() - 8, 5).toDateString());
+        expect(result.date.toDateString()).toEqual(new Date(today.getFullYear() - 2, today.getMonth() - 4, today.getDate() - 11).toDateString());
     });
 
     it('should get date from km', () => {
+        let today: Date = new Date();
         const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
         const date: Date = service.getDateCalculatingKm(allWears[0], 
                                                         allWears[0].listWearMaintenance[3], 
                                                         allWears[0].listWearMaintenance[3].listWearReplacement[1]);
-        expect(date).toEqual(new Date(new Date().getFullYear() - 11, new Date().getMonth() - 9, 15));
+        expect(date).toEqual(new Date(today.getFullYear() + 14, today.getMonth() + 1, today.getDate() - 7));
     });
 
     it('should get date from time', () => {
+        let today: Date = new Date();
         const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
         const date: Date = service.getDateCalculatingTime(allWears[0], 
                                                         allWears[0].listWearMaintenance[3], 
                                                         allWears[0].listWearMaintenance[3].listWearReplacement[1]);
-        expect(date).toEqual(new Date(new Date().getFullYear() - 16, new Date().getMonth() - 1, 15));
+        expect(date).toEqual(new Date(today.getFullYear(), today.getMonth() - 3, today.getDate() + 6));
     });
 
     it('should calculate km info notification', () => {
-        expect(service.calculateKmInfoNotification(MockData.Vehicles[0], 10, 1000)).toEqual(new Date(2021, 7, 21));
-        expect(service.calculateKmInfoNotification(MockData.Vehicles[1], 0, 2000)).toEqual(new Date(2024, 9, 14));
-        expect(service.calculateKmInfoNotification(MockData.Vehicles[2], 1000, 6000)).toEqual(new Date(2022, 2, 9));
+        let today: Date = new Date();
+        expect(service.calculateKmInfoNotification(MockData.Vehicles[0], 10, 1000)).toEqual(new Date(today.getFullYear() - 2, today.getMonth() -1, today.getDate() + 5));
+        expect(service.calculateKmInfoNotification(MockData.Vehicles[1], 0, 2000)).toEqual(new Date(today.getFullYear() + 1, today.getMonth() + 1, today.getDate() - 2));
+        expect(service.calculateKmInfoNotification(MockData.Vehicles[2], 1000, 6000)).toEqual(new Date(today.getFullYear() - 1, today.getMonth() - 6, today.getDate() - 7));
     });
 });

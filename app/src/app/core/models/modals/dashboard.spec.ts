@@ -1,5 +1,4 @@
 import { DashboardModel } from "@models/index";
-import { IDashboardModel } from "@utils/index";
 
 describe('DashboardModels', () => {
 

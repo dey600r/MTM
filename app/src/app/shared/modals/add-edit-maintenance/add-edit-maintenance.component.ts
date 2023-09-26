@@ -6,12 +6,12 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, Constants, ISettingModel, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
-  ModalInputModel, MaintenanceModel,
+  ModalInputModel, MaintenanceModel, ISettingModel,
   MaintenanceFreqModel, MaintenanceElementModel
 } from '@models/index';
-import { DataBaseService, ConfigurationService, ControlService, SettingsService } from '@services/index';
+import { DataService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
   selector: 'app-add-edit-maintenance',
@@ -47,7 +47,7 @@ export class AddEditMaintenanceComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private navParams: NavParams,
-    private dbService: DataBaseService,
+    private dataService: DataService,
     private configurationService: ConfigurationService,
     private translator: TranslateService,
     private controlService: ControlService,
@@ -60,7 +60,7 @@ export class AddEditMaintenanceComponent implements OnInit {
 
   ngOnInit() {
 
-    const settings = this.dbService.getSystemConfigurationData();
+    const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
@@ -77,14 +77,14 @@ export class AddEditMaintenanceComponent implements OnInit {
     }
 
     // MAINTENANCE ELEMENTS
-    this.maintenanceElements = this.configurationService.orderMaintenanceElement(this.dbService.getMaintenanceElementData());
+    this.maintenanceElements = this.configurationService.orderMaintenanceElement(this.dataService.getMaintenanceElementData());
     this.maintenanceElementSelect = [];
     if (!!this.maintenance.listMaintenanceElement && this.maintenance.listMaintenanceElement.length > 0) {
       this.maintenanceElementSelect = this.maintenance.listMaintenanceElement.map(x => x.id);
     }
 
     // MAINTENANCE FREQ
-    this.maintenanceFreqs = this.dbService.getMaintenanceFreqData();
+    this.maintenanceFreqs = this.dataService.getMaintenanceFreqData();
   }
 
   saveData(f: Form) {
@@ -107,7 +107,7 @@ export class AddEditMaintenanceComponent implements OnInit {
             'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),
           { maintenance: this.maintenance.description });
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance', e);
       });
     }
   }

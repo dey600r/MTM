@@ -9,10 +9,10 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 import { DashboardService, ControlService, IconService } from '@services/index';
 
 // MODELS
-import { DashboardModel, OperationModel, ModalInputModel } from '@models/index';
+import { IDashboardModel, IInfoModel, DashboardModel, OperationModel, ModalInputModel } from '@models/index';
 
 // UTILS
-import { IDashboardModel, IInfoModel, InfoButtonEnum, PageEnum } from '@utils/index';
+import { InfoButtonEnum, PageEnum } from '@utils/index';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';

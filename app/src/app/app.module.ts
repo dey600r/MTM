@@ -26,6 +26,7 @@ import { AppComponent } from './app.component';
 // MODULES
 import { ComponentModule } from '@modules/component.module';
 import { PipeModule } from '@modules/pipes.module';
+import { MapService } from './core/services';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { PipeModule } from '@modules/pipes.module';
   exports: [
   ],
   providers: [
+    MapService,
     StatusBar,
     SplashScreen,
     TranslateStore,

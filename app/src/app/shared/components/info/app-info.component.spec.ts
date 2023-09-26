@@ -11,10 +11,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { MockTranslate, SetupTest } from '@testing/index';
 
 // MODELS
-import { ModalInputModel } from '@models/index';
+import { ModalInputModel, IInfoModel } from '@models/index';
 
 // UTILS
-import { IInfoModel, InfoButtonEnum } from '@utils/index';
+import { InfoButtonEnum } from '@utils/index';
 
 describe('AppInfoComponent', () => {
   let component: AppInfoComponent;

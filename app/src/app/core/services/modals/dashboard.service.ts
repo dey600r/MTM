@@ -9,7 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {
     DashboardModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel,
     WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel,
-    InfoVehicleConfigurationModel
+    InfoVehicleConfigurationModel, IDisplaySearcherControlModel, IObserverSearcherControlModel,
+    ISearcherControlModel, IDashboardModel, IDashboardSerieModel, ISettingModel, IDashboardExpensesModel
 } from '@models/index';
 
 // SERVICES
@@ -18,7 +19,6 @@ import { CommonService, CalendarService } from '../common/index';
 // UTILS
 import { 
     ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum, PageEnum,
-    IDisplaySearcherControlModel, IObserverSearcherControlModel, ISearcherControlModel, IDashboardModel, IDashboardSerieModel, ISettingModel, IDashboardExpensesModel
 } from '@utils/index';
 
 @Injectable({

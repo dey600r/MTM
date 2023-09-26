@@ -6,17 +6,20 @@ import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
 import { 
-  DataBaseService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService, DashboardService, IconService
+  DataService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService,
+  DashboardService, IconService
 } from '@services/index';
 
 // MODELS
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
-  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel
+  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel, ISettingModel, IInfoModel
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
+import { 
+  ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, InfoButtonEnum 
+} from '@utils/index';
 
 // COMPONENTS
 import { AddEditConfigurationComponent } from '@modals/add-edit-configuration/add-edit-configuration.component';
@@ -61,7 +64,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
   constructor(public platform: Platform,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
@@ -122,7 +125,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
         }
       });
 
-    this.dbService.getSystemConfiguration().subscribe(settings => {
+    this.dataService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
       }
@@ -130,7 +133,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   }
 
   initData() {
-    this.dbService.getVehicles().subscribe(data => {
+    this.dataService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
       }
@@ -138,12 +141,12 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.vehicles = data;
     });
 
-    this.dbService.getOperations().subscribe(data => {
+    this.dataService.getOperations().subscribe(data => {
       // Filter to get less elemnts to better perfomance
       this.operations = data.filter(x => !!x.listMaintenanceElement && x.listMaintenanceElement.length > 0);
     });
 
-    this.dbService.getConfigurations().subscribe(data => {
+    this.dataService.getConfigurations().subscribe(data => {
       this.allConfigurations = data; 
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
       this.dashboardService.setSearchConfiguration();
@@ -151,7 +154,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.detector.detectChanges();
     });
 
-    this.dbService.getMaintenance().subscribe(data => {
+    this.dataService.getMaintenance().subscribe(data => {
       this.allMaintenances = data;
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
       this.dashboardService.setSearchConfiguration();
@@ -159,7 +162,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.detector.detectChanges();
     });
 
-    this.dbService.getMaintenanceElement().subscribe(data => {
+    this.dataService.getMaintenanceElement().subscribe(data => {
       this.allMaintenanceElements = data;
       this.maintenanceElements = this.configurationService.orderMaintenanceElement(data); 
       this.dashboardService.setSearchConfiguration();
@@ -323,7 +326,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
                'PAGE_CONFIGURATION.DeleteSaveConfiguration', { configuration: row.name });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration', e);
           });
         }
       }
@@ -366,7 +369,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.vehicleService.saveVehicle(vehiclesToSave, ActionDBEnum.UPDATE).then(res => {
         this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_CONFIGURATION.EditSaveVehiclesAssociated');
       }).catch(e => {
-        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+        this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
       });
     }
   }
@@ -404,7 +407,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
               'PAGE_CONFIGURATION.DeleteSaveMaintenance', { maintenance: row.description });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance', e);
           });
         }
       }
@@ -458,7 +461,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.controlService.showToast(PageEnum.MODAL_CONFIGURATION,
         ToastTypeEnum.SUCCESS, 'PAGE_CONFIGURATION.EditSaveMaintenancesAssociated');
     }).catch(e => {
-      this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration');
+      this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration', e);
     });
   }
 
@@ -493,7 +496,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
               'PAGE_CONFIGURATION.DeleteSaveReplacement', { replacement: row.name });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement');
+            this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement', e);
           });
         }
       }

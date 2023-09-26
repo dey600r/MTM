@@ -6,13 +6,13 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import {
-  DataBaseService, CommonService, OperationService, ControlService,
+  DataService, CommonService, OperationService, ControlService,
   DashboardService, SettingsService, IconService
 } from '@services/index';
 import {
-  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel
+  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel, IInfoModel, ISettingModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
@@ -49,7 +49,7 @@ export class OperationPage extends BasePage implements OnInit {
   coin: ISettingModel;
 
   constructor(public platform: Platform,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               public translator: TranslateService,
               private commonService: CommonService,
               private controlService: ControlService,
@@ -78,14 +78,14 @@ export class OperationPage extends BasePage implements OnInit {
       }
     });
 
-    this.dbService.getSystemConfiguration().subscribe(settings => {
+    this.dataService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
         this.coin = this.settingsService.getMoneySelected(settings);
       }
     });
 
-    this.dbService.getVehicles().subscribe(data => {
+    this.dataService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
         this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
         if (this.vehicleSelected === -1) {
@@ -100,7 +100,7 @@ export class OperationPage extends BasePage implements OnInit {
       }
     });
 
-    this.dbService.getOperations().subscribe(data => {
+    this.dataService.getOperations().subscribe(data => {
       this.filterDashboard = this.dashboardService.getSearchDashboard();
       if (!!data && data.length > 0) {
         this.allOperations = data;
@@ -175,7 +175,7 @@ export class OperationPage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.SUCCESS,
               'PAGE_OPERATION.DeleteSaveOperation', {operation: row.description});
           }).catch(e => {
-            this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation');
+            this.controlService.showToast(PageEnum.OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation', e);
           });
         }
       }
