@@ -1,7 +1,7 @@
 {
   "name": "MtM",
-  "version": "v3.5.0",
-  "dateVersion": "2023-09-01 10:00:00",
+  "version": "v3.5.1",
+  "dateVersion": "2023-09-10 10:00:00",
   "author": "David Jimenez Galiana",
   "homepage": "deyhome.mtm@gmail.com",
   "scripts": {
@@ -35,14 +35,14 @@
     "@angular/platform-browser": "^13.3.11",
     "@angular/platform-browser-dynamic": "^13.3.11",
     "@angular/router": "^13.3.11",
-    "@awesome-cordova-plugins/core": "^6.2.0",
-    "@awesome-cordova-plugins/file": "^6.2.0",
-    "@awesome-cordova-plugins/in-app-browser": "^6.2.0",
-    "@awesome-cordova-plugins/screen-orientation": "^6.2.0",
-    "@awesome-cordova-plugins/splash-screen": "^6.2.0",
-    "@awesome-cordova-plugins/sqlite": "^6.2.0",
-    "@awesome-cordova-plugins/sqlite-porter": "^6.2.0",
-    "@awesome-cordova-plugins/status-bar": "^6.2.0",
+    "@awesome-cordova-plugins/core": "6.2.0",
+    "@awesome-cordova-plugins/file": "6.2.0",
+    "@awesome-cordova-plugins/in-app-browser": "6.2.0",
+    "@awesome-cordova-plugins/screen-orientation": "6.2.0",
+    "@awesome-cordova-plugins/splash-screen": "6.2.0",
+    "@awesome-cordova-plugins/sqlite": "6.2.0",
+    "@awesome-cordova-plugins/sqlite-porter": "6.2.0",
+    "@awesome-cordova-plugins/status-bar": "6.2.0",
     "@ionic/angular": "^5.9.4",
     "@ionic/cordova-builders": "^6.1.0",
     "@ngx-translate/core": "^14.0.0",
@@ -62,9 +62,8 @@
     "ngx-moment": "^6.0.2",
     "rxjs": "^7.5.7",
     "rxjs-compat": "^6.6.7",
-    "sqlite3": "^5.1.2",
+    "sqlite3": "5.1.3",
     "tslib": "^2.4.0",
-    "uk.co.workingedge.cordova.plugin.sqliteporter": "^1.1.1",
     "webpack": "^5.74.0",
     "zone.js": "^0.11.8"
   },
@@ -94,6 +93,7 @@
     "cordova-plugin-screen-orientation": "^3.0.2",
     "cordova-plugin-splashscreen": "^5.0.4",
     "cordova-plugin-statusbar": "^2.4.3",
+    "cordova-sqlite-storage": "5.1.0",
     "cordova-windows": "^6.0.1",
     "jasmine-core": "^4.0.0",
     "jasmine-spec-reporter": "^7.0.0",
@@ -109,7 +109,8 @@
     "protractor": "^7.0.0",
     "ts-node": "^10.4.0",
     "tslint": "^6.1.3",
-    "typescript": "4.6.4"
+    "typescript": "4.6.4",
+    "uk.co.workingedge.cordova.plugin.sqliteporter": "^1.1.1"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -121,13 +122,13 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "uk.co.workingedge.cordova.plugin.sqliteporter": {},
       "cordova-plugin-screen-orientation": {},
       "cordova-plugin-file": {},
-      "cordova-sqlite-storage": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-androidx-adapter": {},
-      "cordova-plugin-proguard": {}
+      "cordova-plugin-proguard": {},
+      "uk.co.workingedge.cordova.plugin.sqliteporter": {},
+      "cordova-sqlite-storage": {}
     },
     "platforms": [
       "windows",
