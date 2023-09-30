@@ -32,10 +32,16 @@ import { ToastTypeEnum, PageEnum } from '@utils/index';
     public getData(key: string): Promise<any[]> {
         return new Promise<any[]>((resolve, reject) => {
           try {
-            resolve(JSON.parse((this.storage.getItem(key))));
+            let result: string = this.storage.getItem(key);
+            if(result === null || result === undefined) {
+              this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `Error getting item ${key}`);
+              reject(`Error getting item ${key}`);
+            } else {
+              resolve(JSON.parse(result));
+            }            
           } catch(error) {
             this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error getting item ${key}`, error);
-            resolve([]);
+            reject(error);
           }
         });
     }
