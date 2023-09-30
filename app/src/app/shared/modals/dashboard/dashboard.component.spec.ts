@@ -24,7 +24,7 @@ describe('DashboardComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel<any, OperationModel>({
          dataList: MockData.Operations, 
          parentPage: PageEnum.OPERATION

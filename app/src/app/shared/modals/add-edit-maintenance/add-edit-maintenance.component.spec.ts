@@ -24,7 +24,7 @@ describe('AddEditMaintenanceComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService,
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel<MaintenanceModel, number>({
         data: MockData.Maintenances[0],
         dataList: [MockData.Vehicles[0].km],

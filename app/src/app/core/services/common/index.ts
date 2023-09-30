@@ -3,7 +3,4 @@ export * from './icon.service';
 export * from './calendar.service';
 export * from './control.service';
 export * from './theme.service';
-export * from './sql.service';
-export * from './data-base.service';
-export * from './export.service';
-export * from './sync.service';
+export * from './log.service';

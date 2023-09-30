@@ -5,9 +5,9 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, IInfoModel, InfoButtonEnum, ISettingModel } from '@utils/index';
-import { DataBaseService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
-import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel } from '@models/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
+import { DataService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
+import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel } from '@models/index';
 
 // COMPONENTS
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
@@ -36,7 +36,7 @@ export class VehiclePage extends BasePage implements OnInit {
   iconNameHeaderLeft = '';
 
   constructor(public platform: Platform,
-              private dbService: DataBaseService,
+              private dataService: DataService,
               public translator: TranslateService,
               private vehicleService: VehicleService,
               private commonService: CommonService,
@@ -71,13 +71,13 @@ export class VehiclePage extends BasePage implements OnInit {
         }
       });
 
-    this.dbService.getSystemConfiguration().subscribe(settings => {
+    this.dataService.getSystemConfiguration().subscribe(settings => {
       if (!!settings && settings.length > 0) {
         this.measure = this.settingsService.getDistanceSelected(settings);
       }
     });
 
-    this.dbService.getVehicles().subscribe(data => {
+    this.dataService.getVehicles().subscribe(data => {
       if (!data || data.length === 0) {
         this.dashboardService.setSearchOperation();
       }
@@ -87,7 +87,7 @@ export class VehiclePage extends BasePage implements OnInit {
       this.detector.detectChanges();
     });
 
-    this.dbService.getOperations().subscribe(op => {
+    this.dataService.getOperations().subscribe(op => {
       this.operations = op;
     });
   }
@@ -147,7 +147,7 @@ export class VehiclePage extends BasePage implements OnInit {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_VEHICLE.DeleteSaveVehicle',
               { vehicle: `${row.brand} ${row.model}` });
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
           });
         }
       }
@@ -167,7 +167,7 @@ export class VehiclePage extends BasePage implements OnInit {
           this.vehicleService.saveVehicle([vehicleToSave], ActionDBEnum.UPDATE).then(x => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, resMsg);
           }).catch(e => {
-            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle');
+            this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
           });
         }
       }

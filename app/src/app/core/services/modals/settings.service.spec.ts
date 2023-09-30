@@ -1,9 +1,8 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 // SERVICES
 import { SettingsService } from './settings.service';
-import { DataBaseService, SqlService } from '../common/index';
 
 // MDOELS
 import { SystemConfigurationModel } from '@models/index';
@@ -18,8 +17,6 @@ import { TranslateService } from '@ngx-translate/core';
 describe('SettingsService', () => {
     let service: SettingsService;
     let translate: TranslateService;
-    let dbService: DataBaseService;
-    let sqlService: SqlService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -28,8 +25,6 @@ describe('SettingsService', () => {
         }).compileComponents();
         service = TestBed.inject(SettingsService);
         translate = TestBed.inject(TranslateService);
-        dbService = TestBed.inject(DataBaseService);
-        sqlService = TestBed.inject(SqlService);
         await firstValueFrom(translate.use('es'));
     });
 
@@ -125,56 +120,4 @@ describe('SettingsService', () => {
         expect(result.value).toEqual('v3.1.0');
     });
 
-    it('should save system configuration key', () => {
-        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
-        const spyDBService = spyOn(dbService, 'executeScriptDataBase');
-        const spySqlService = spyOn(sqlService, 'updateSqlSystemConfiguration');
-        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
-        service.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, Constants.SETTING_THEME_DARK);
-        expect(spyDBService).toHaveBeenCalledTimes(1);
-        expect(spySqlService).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not save system configuration key', () => {
-        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
-        const spyDBService = spyOn(dbService, 'executeScriptDataBase');
-        const spySqlService = spyOn(sqlService, 'updateSqlSystemConfiguration');
-        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
-        service.saveSystemConfiguration(Constants.KEY_CONFIG_THEME, null);
-        expect(spyDBService).toHaveBeenCalledTimes(0);
-        expect(spySqlService).toHaveBeenCalledTimes(0);
-    });
-
-    it('should insert system configuration key', () => {
-        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
-        const spyDBServiceSystem = spyOn(dbService, 'getSystemConfigurationData').and.returnValue([]);
-        const spyDBService = spyOn(dbService, 'executeScriptDataBase');
-        const spySqlService = spyOn(sqlService, 'insertSqlSystemConfiguration').and.returnValue('sql');
-        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
-        service.insertSystemConfiguration();
-        expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
-        expect(spyDBService).toHaveBeenCalledTimes(1);
-        expect(spySqlService).toHaveBeenCalledTimes(3);
-    });
-
-    it('should not insert system configuration key', () => {
-        jasmine.getEnv().allowRespy(true); // ALLOW MULTIPLE RESPY
-        const spyDBServiceSystem = spyOn(dbService, 'getSystemConfigurationData').and.returnValue(MockData.SystemConfigurations);
-        const spyDBService = spyOn(dbService, 'executeScriptDataBase');
-        const spySqlService = spyOn(sqlService, 'insertSqlSystemConfiguration').and.returnValue('sql');
-        spySqlService.calls.reset(); // RESET CALLS TO VERIFY CALLS
-        service.insertSystemConfiguration();
-        expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
-        expect(spyDBService).toHaveBeenCalledTimes(0);
-        expect(spySqlService).toHaveBeenCalledTimes(0);
-    });
-
-    it('should finish import', fakeAsync(() => {
-        const spyDBServiceSystem = spyOn(dbService, 'getSystemConfigurationData').and.returnValue(MockData.SystemConfigurations);
-        const spyDBServiceAllTables = spyOn(dbService, 'loadAllTables').and.returnValue();
-        service.finishImportLoad();
-        expect(spyDBServiceAllTables).toHaveBeenCalled();
-        tick(600);
-        expect(spyDBServiceSystem).toHaveBeenCalledTimes(1);
-    }));
 });

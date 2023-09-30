@@ -41,12 +41,12 @@ export class AppComponent {
       this.statusBar.styleBlackTranslucent();
       this.splashScreen.hide();
 
+      // FILES
+      this.exportService.createOutputDirectory();
+
       // DB
       this.dbService.initDB();
       this.controlService.activateButtonExist(PageEnum.HOME);
-
-      // FILES
-      this.exportService.createOutputDirectory();
     });
   }
 

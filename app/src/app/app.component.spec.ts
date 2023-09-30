@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { Platform } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 
@@ -32,6 +32,7 @@ describe('AppComponent', () => {
     const config: any = SetupTest.config;
     config.providers.push(
       SpyMockConfig.ProviderDataBaseService,
+      SpyMockConfig.ProviderDataService,
       SpyMockConfig.ProviderExportService);
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
@@ -45,7 +46,7 @@ describe('AppComponent', () => {
     statusBar = TestBed.inject(StatusBar);
     splashScreen = TestBed.inject(SplashScreen);
     dbService = TestBed.inject(DataBaseService);
-    controlService = TestBed.inject(ControlService);
+    //controlService = TestBed.inject(ControlService);
     exportService = TestBed.inject(ExportService);
     fixture.detectChanges();
   });
@@ -57,10 +58,11 @@ describe('AppComponent', () => {
 
   it('should initialize the app', async () => {
     let spyControlService = SpyMockConfig.SpyConfig.controlService.activateButtonExist.and.returnValue(null);
-    //component.initializeApp();
-    //fixture.detectChanges();
+    component.initializeApp();
+    fixture.detectChanges();
     await platform.ready();
     fixture.whenStable().then(() => {
+        tick();
         expect(platform.ready).toHaveBeenCalled();
         expect(statusBar.styleBlackTranslucent).toHaveBeenCalled();
         expect(splashScreen.hide).toHaveBeenCalled();

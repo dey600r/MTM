@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 
 // MODELS
 import {
-    MaintenanceElementModel, ConfigurationModel, VehicleModel, MaintenanceModel, OperationModel
+    MaintenanceElementModel, ConfigurationModel, VehicleModel, MaintenanceModel, OperationModel, 
+    ISaveBehaviourModel, IConfigurationMaintenanceStorageModel
 } from '@models/index';
 
 // UTILS
 import { ConstantsColumns, ActionDBEnum, ConstantsTable } from '@utils/index';
 
 // SERVICES
-import { CommonService, DataBaseService, SqlService } from '../common/index';
+import { CommonService } from '../common/index';
+import { CRUDService, DataService, MapService } from '../data/index';
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +19,9 @@ import { CommonService, DataBaseService, SqlService } from '../common/index';
 export class ConfigurationService {
 
     constructor(private commonService: CommonService,
-                private dbService: DataBaseService,
-                private sqlService: SqlService) {
+                private crudService: CRUDService,
+                private mapService: MapService,
+                private dataService: DataService) {
     }
 
     // COMMON
@@ -41,127 +44,119 @@ export class ConfigurationService {
 
     /** CONFIGURATION */
     saveConfiguration(configuration: ConfigurationModel, action: ActionDBEnum, vehicles: VehicleModel[] = []) {
-        let sqlDB = '';
-        let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_CONFIGURATION];
-        switch (action) {
+        let listActions: ISaveBehaviourModel[] = [];
+        switch(action) {
             case ActionDBEnum.CREATE:
-                sqlDB = this.sqlService.insertSqlConfiguration([configuration]);
-                sqlDB += this.sqlService.insertSqlConfigurationMaintenance(configuration);
+                if(!!configuration.listMaintenance && configuration.listMaintenance.length > 0) {
+                    configuration.id = this.crudService.getLastId(this.dataService.getConfigurationsData());
+                    listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, data: this.mapService.saveMapConfigMaintenanceRel(configuration)});
+                }
                 break;
             case ActionDBEnum.UPDATE:
-                sqlDB = this.sqlService.updateSqlConfiguration([configuration]);
-                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
-                    ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION, [configuration.id]);
-                sqlDB += this.sqlService.insertSqlConfigurationMaintenance(configuration);
+                listActions = [
+                    { action: ActionDBEnum.DELETE, table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, data: [configuration], prop: [ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION]},
+                    { action: ActionDBEnum.CREATE, table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, data: this.mapService.saveMapConfigMaintenanceRel(configuration)}
+                ];
                 break;
             case ActionDBEnum.DELETE:
-                sqlDB = this.getSqlDeleteConfiguration(configuration, vehicles);
-                listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_VEHICLE];
+                if (!!configuration.listMaintenance && configuration.listMaintenance.length > 0) {
+                    listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, data: [configuration], prop: [ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION]});
+                }
+                if (!!vehicles && vehicles.length > 0) {
+                    listActions.push({ action: ActionDBEnum.UPDATE, table: ConstantsTable.TABLE_MTM_VEHICLE, data: vehicles});
+                }
                 break;
         }
-        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+
+        listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_CONFIGURATION, data: [configuration]});
+            
+        return this.crudService.saveDataStorage(listActions);
     }
 
     saveConfigurationMaintenance(maintenancesNew: ConfigurationModel[], maintenancesDelete: ConfigurationModel[]) {
-        let sqlDB = '';
-        const listLoadTable: string[] = [ConstantsTable.TABLE_MTM_CONFIGURATION];
+        let listActions: ISaveBehaviourModel[] = [];
+
         if (maintenancesNew && maintenancesNew.length > 0) {
-            maintenancesNew.forEach(x => {
-                sqlDB += this.sqlService.insertSqlConfigurationMaintenance(x);
+            let listData: IConfigurationMaintenanceStorageModel[] = [];
+            maintenancesNew.forEach(x => this.mapService.saveMapConfigMaintenanceRel(x).forEach(y => listData.push(y)));
+            listActions.push({ 
+                action: ActionDBEnum.CREATE,
+                table: ConstantsTable.TABLE_MTM_CONFIG_MAINT,
+                data: listData
             });
         }
         if (maintenancesDelete && maintenancesDelete.length > 0) {
             maintenancesDelete.forEach(x => {
-                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
-                    ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, x.listMaintenance.map(y => y.id),
-                    ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION, [x.id]);
+                listActions.push({ 
+                    action: ActionDBEnum.DELETE, 
+                    table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, 
+                    data: [x.listMaintenance[0], x], 
+                    prop: [ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION]
+                });
             });
         }
-        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+
+        listActions.push({ action: ActionDBEnum.REFRESH, table: ConstantsTable.TABLE_MTM_CONFIGURATION, data: [] });
+
+        return this.crudService.saveDataStorage(listActions);
     }
 
     deleteConfigManintenance(idConfiguration: number, idMaintenance: number) {
-        const sqlDB: string = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
-            ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION, [idConfiguration],
-            ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, [idMaintenance]);
-        return this.dbService.executeScriptDataBase(sqlDB, [ConstantsTable.TABLE_MTM_CONFIGURATION]);
-    }
-
-    getSqlDeleteConfiguration(configuration: ConfigurationModel, vehicles: VehicleModel[]): string {
-        let sqlDB = '';
-        if (!!configuration.listMaintenance && configuration.listMaintenance.length > 0) {
-            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT,
-                    ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION,
-                    [configuration.id]); // DELETE CONFIGURATION_MAINTENANCE
-        }
-        if (!!vehicles && vehicles.length > 0) {
-            sqlDB += this.sqlService.updateSqlVehicle(vehicles); // UPDATE VEHICLE WITH OTHER CONFIGURATIONS
-        }
-        sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIGURATION,
-            ConstantsColumns.COLUMN_MTM_ID, [configuration.id]); // DELETE CONFIGURATION
-        return sqlDB;
+        return this.crudService.saveDataStorage([{ 
+                action: ActionDBEnum.DELETE,
+                table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, 
+                data: [{ id: idConfiguration} , { id: idMaintenance }], 
+                prop: [ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_CONFIGURATION, ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE]
+            },
+            {
+                action: ActionDBEnum.REFRESH,
+                table: ConstantsTable.TABLE_MTM_CONFIGURATION,
+                data: []
+            }
+        ]);
     }
 
     /** MAINTENANCE */
     saveMaintenance(maintenance: MaintenanceModel, action: ActionDBEnum, configurations: ConfigurationModel[] = []) {
-        let sqlDB = '';
-        let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_MAINTENANCE];
-        switch (action) {
+        let listActions: ISaveBehaviourModel[] = [];
+        switch(action) {
             case ActionDBEnum.CREATE:
-                sqlDB = this.sqlService.insertSqlMaintenance([maintenance]);
-                sqlDB += this.sqlService.insertSqlMaintenanceElementRel(maintenance);
+                if(!!maintenance.listMaintenanceElement && maintenance.listMaintenanceElement.length > 0) {
+                    maintenance.id = this.crudService.getLastId(this.dataService.getMaintenanceData());
+                    listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: this.mapService.saveMapMaintenanceElementRel(maintenance)});
+                }
                 break;
             case ActionDBEnum.UPDATE:
-                sqlDB = this.sqlService.updateSqlMaintenance([maintenance]);
-                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL,
-                    ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE, [maintenance.id]);
-                sqlDB += this.sqlService.insertSqlMaintenanceElementRel(maintenance);
+                listActions = [
+                    { action: ActionDBEnum.DELETE, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: [maintenance], prop: [ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE]},
+                    { action: ActionDBEnum.CREATE, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: this.mapService.saveMapMaintenanceElementRel(maintenance)}
+                ];
                 break;
             case ActionDBEnum.DELETE:
-                sqlDB = this.getSqlDeleteMaintenance(maintenance, configurations);
-                listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_CONFIG_MAINT];
+                if (!!maintenance.listMaintenanceElement && maintenance.listMaintenanceElement.length > 0) {
+                    listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, data: [maintenance], prop: [ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE]});
+                }
+                if (!!configurations && configurations.length > 0) {
+                    listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_CONFIG_MAINT, data: [maintenance], prop: [ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE]});
+                }
                 break;
-        }
-        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
-    }
-
-    getSqlDeleteMaintenance(maintenance: MaintenanceModel, configurations: ConfigurationModel[]): string {
-        let sqlDB = '';
-        if (!!maintenance.listMaintenanceElement && maintenance.listMaintenanceElement.length > 0) {
-            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL, // DELETE MAINTENANCE_ELEMENT_REL
-                    ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_REL_MAINTENANCE, [maintenance.id]);
-        }
-        if (!!configurations && configurations.length > 0) {
-            sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_CONFIG_MAINT, // DELETE CONFIG MAINTENANCE
-                ConstantsColumns.COLUMN_MTM_CONFIGURATION_MAINTENANCE_MAINTENANCE, [maintenance.id]);
-        }
-        sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE,
-            ConstantsColumns.COLUMN_MTM_ID, [maintenance.id]);
-        return sqlDB;
+            }
+        
+        listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE, data: [maintenance]});
+            
+        return this.crudService.saveDataStorage(listActions);
     }
 
     /** MAINTENANCE ELEMENT / REPLACEMENT */
     saveMaintenanceElement(replacement: MaintenanceElementModel, action: ActionDBEnum, operations: OperationModel[] = []) {
-        let sqlDB = '';
-        let listLoadTable: string[] = [ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT];
-        switch (action) {
-            case ActionDBEnum.CREATE:
-                sqlDB = this.sqlService.insertSqlMaintenanceElement([replacement]);
-                break;
-            case ActionDBEnum.UPDATE:
-                sqlDB = this.sqlService.updateSqlMaintenanceElement([replacement]);
-                break;
-            case ActionDBEnum.DELETE:
-                if (!!operations && operations.length > 0) {
-                    sqlDB = this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT,
-                        ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT, [replacement.id]);
-                    listLoadTable = [...listLoadTable, ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT];
-                }
-                sqlDB += this.sqlService.deleteSql(ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT,
-                    ConstantsColumns.COLUMN_MTM_ID, [replacement.id]);
-                break;
+        let listActions: ISaveBehaviourModel[] = [];
+        if(ActionDBEnum.DELETE === action && !!operations && operations.length > 0) {
+            listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT, data: [replacement], prop: [ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_MAINTENANCE_ELEMENT]});
         }
-        return this.dbService.executeScriptDataBase(sqlDB, listLoadTable);
+        
+        listActions.push({ action: action, table: ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT, data: [replacement]});
+
+        return this.crudService.saveDataStorage(listActions);
     }
 
     /** OTHERS */

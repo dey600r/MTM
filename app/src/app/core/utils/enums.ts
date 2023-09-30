@@ -1,7 +1,8 @@
 export enum ActionDBEnum {
     CREATE= 1,
     UPDATE = 2,
-    DELETE = 3
+    DELETE = 3,
+    REFRESH = 4
 }
 
 export enum FilterMonthsEnum {
@@ -57,4 +58,10 @@ export enum InfoButtonEnum {
     VEHICLES = 2,
     OPERATIONS = 3,
     CONFIGURATIONS = 4
+}
+
+export enum TypeOfTableEnum {
+    MASTER = 0,
+    DATA = 1,
+    RELATION = 2
 }

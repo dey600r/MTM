@@ -20,7 +20,7 @@ describe('OperationPage', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataBaseService, SettingsService, VehicleService);
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService, VehicleService);
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);

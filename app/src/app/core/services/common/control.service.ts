@@ -6,6 +6,9 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
+// SERVICE
+import { LogService } from './log.service';
+
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
@@ -29,7 +32,8 @@ export class ControlService {
                 private popoverController: PopoverController,
                 private loadingController: LoadingController,
                 private platform: Platform,
-                private iab: InAppBrowser) {
+                private iab: InAppBrowser,
+                private logService: LogService) {
     }
 
     getDateLastUse(): Date {
@@ -129,12 +133,15 @@ export class ControlService {
     // TOAST
 
     showToast(parent: PageEnum, type: ToastTypeEnum, msg: string, data: any = null, delay: number = Constants.DELAY_TOAST,
-              pos: string = Constants.TOAST_POSITION_BOTTOM) {
-        this.showMsgToast(parent, type, this.translator.instant(msg, data), delay, pos);
+              pos: string = Constants.TOAST_POSITION_BOTTOM, err: any = null) {
+        this.showMsgToast(parent, type, this.translator.instant(msg, data), delay, pos, err);
     }
 
     async showMsgToast(parent: PageEnum, type: ToastTypeEnum, msg: string, delay: number = Constants.DELAY_TOAST,
-                       pos: any = Constants.TOAST_POSITION_BOTTOM) {
+                       pos: any = Constants.TOAST_POSITION_BOTTOM, err: any = null) {
+        
+        this.logService.logInfo(type, parent, msg, err);
+
         this.desactivateButtonExist();
         const toast = await this.toastController.create({
             message: msg,

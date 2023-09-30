@@ -41,6 +41,7 @@ export class BaseNameModel extends BaseModel {
 
 export class BaseDescriptionModel extends BaseModel {
     description: string;
+    descriptionKey: string;
     constructor(d: string = null, id: number = 1) {
         super(id);
         this.description = d;
@@ -49,6 +50,7 @@ export class BaseDescriptionModel extends BaseModel {
 
 export class BaseNameDescriptionModel extends BaseDescriptionModel {
     name: string;
+    nameKey: string;
     constructor(n: string = null, d: string = null, id: number = 1) {
         super(d, id);
         this.name = n;
