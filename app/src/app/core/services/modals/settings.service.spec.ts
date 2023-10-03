@@ -8,7 +8,7 @@ import { SettingsService } from './settings.service';
 import { SystemConfigurationModel } from '@models/index';
 
 // CONFIGURATIONS
-import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
 import { Constants } from '@utils/index';
 
 // LIBRARIES
@@ -94,28 +94,28 @@ describe('SettingsService', () => {
     });
 
     it('should get distance', () => {
-        const result = service.getDistanceSelected(MockData.SystemConfigurations);
+        const result = service.getDistanceSelected(MockAppData.SystemConfigurations);
         expect(result.code).toEqual(Constants.SETTING_DISTANCE_KM);
         expect(result.value).toEqual(MockTranslate.ES.COMMON.KM);
         expect(result.valueLarge).toEqual(MockTranslate.ES.COMMON.KILOMETERS);
     });
 
     it('should get money', () => {
-        const result = service.getMoneySelected(MockData.SystemConfigurations);
+        const result = service.getMoneySelected(MockAppData.SystemConfigurations);
         expect(result.code).toEqual(Constants.SETTING_MONEY_EURO);
         expect(result.value).toEqual('€');
         expect(result.valueLarge).toEqual(MockTranslate.ES.COMMON.EURO);
     });
 
     it('should get theme', () => {
-        const result = service.getThemeSelected(MockData.SystemConfigurations);
+        const result = service.getThemeSelected(MockAppData.SystemConfigurations);
         expect(result.code).toEqual(Constants.SETTING_THEME_DARK);
         expect(result.value).toEqual(MockTranslate.ES.COMMON.DARK);
         expect(result.valueLarge).toEqual(Constants.SETTING_THEME_DARK);
     });
 
     it('should get version selected', () => {
-        const result: SystemConfigurationModel = service.getVersionSelected(MockData.SystemConfigurations);
+        const result: SystemConfigurationModel = service.getVersionSelected(MockAppData.SystemConfigurations);
         expect(result.key).toEqual(Constants.KEY_LAST_UPDATE_DB);
         expect(result.value).toEqual('v3.1.0');
     });

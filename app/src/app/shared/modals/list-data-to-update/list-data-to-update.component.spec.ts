@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from '@services/index';
 
 // CONFIGURATION
-import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
@@ -25,7 +25,7 @@ describe('ListDataToUpdateComponent', () => {
   beforeEach((async () => {
     let listDataModel: ListDataModalModel[] = [];
 
-    MockData.Configurations.forEach(x => {
+    MockAppData.Configurations.forEach(x => {
       listDataModel = [...listDataModel,
         new ListDataModalModel(
           x.id,
@@ -33,7 +33,7 @@ describe('ListDataToUpdateComponent', () => {
           '',
           x.description,
           'cog',
-          (x.listMaintenance && x.listMaintenance.some(z => z.id === MockData.Maintenances[0].id)),
+          (x.listMaintenance && x.listMaintenance.some(z => z.id === MockAppData.Maintenances[0].id)),
           (x.id === 1)
         )];
     });

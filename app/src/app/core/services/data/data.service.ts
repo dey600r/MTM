@@ -6,12 +6,10 @@ import {
     ConfigurationModel,
     IConfigurationMaintenanceStorageModel,
     IMaintenanceElementRelStorageModel,
-    IOperationMaintenanceElementStorageModel,MaintenanceElementModel, MaintenanceFreqModel, MaintenanceModel, OperationModel, OperationTypeModel,
+    IOperationMaintenanceElementStorageModel,MaintenanceElementModel, MaintenanceFreqModel, 
+    MaintenanceModel, OperationModel, OperationTypeModel,
     SystemConfigurationModel, VehicleModel, VehicleTypeModel
 } from '@models/index';
-
-// SERVICES
-import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +34,7 @@ export class DataService {
   private maintenanceElementObservable = new BehaviorSubject([]);
   private systemConfigurationObservable = new BehaviorSubject([]);
 
-  constructor(private storageService: StorageService) {}
+  constructor() {}
   
   // GETS
 

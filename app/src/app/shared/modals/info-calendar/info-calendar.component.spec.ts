@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HomeService, SettingsService } from '@services/index';
 
 // CONFIGURATION
-import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
@@ -37,7 +37,7 @@ describe('InfoCalendarComponent', () => {
     fixture = TestBed.createComponent(InfoCalendarComponent);
     component = fixture.componentInstance;
     const allWears = homeService.getWearReplacementToVehicle(
-      MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+      MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
     component.navParams.data = new ModalInputModel<any, WearVehicleProgressBarViewModel>({
         dataList: allWears,
         parentPage: PageEnum.HOME

@@ -3,9 +3,9 @@ import { CalendarService, IconService } from '@services/index';
 
 import { Constants } from '@utils/index';
 
-import { MockConfiguration } from './mock-configuration.spec';
+import { MockAppConfiguration } from './mock-configuration.spec';
 
-export class MockVehicle {
+export class MockAppVehicle {
     static iconService: IconService = new IconService();
     static calendarService: CalendarService = new CalendarService(null);
 
@@ -15,7 +15,7 @@ export class MockVehicle {
         new VehicleTypeModel(Constants.VEHICLE_TYPE_CODE_CAR, 'CAR', 2),
         new VehicleTypeModel('O', 'OTHER', 3),
     ];
-    public static VehicleTypes: VehicleTypeModel[] = MockVehicle.VehicleTypesAux.map(x => {
+    public static VehicleTypes: VehicleTypeModel[] = MockAppVehicle.VehicleTypesAux.map(x => {
         return {...x, icon: this.iconService.getIconVehicle(x.code) };
     });
 
@@ -26,8 +26,8 @@ export class MockVehicle {
             brand: 'Yamaha',
             year: 2005,
             km: 111200,
-            configuration: MockConfiguration.Configurations[0],
-            vehicleType: MockVehicle.VehicleTypes[0],
+            configuration: MockAppConfiguration.Configurations[0],
+            vehicleType: MockAppVehicle.VehicleTypes[0],
             kmsPerMonth: 600,
             dateKms: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 2, new Date().getDate() - 14),
             datePurchase: new Date(new Date().getFullYear() - 17, new Date().getMonth() - 5, new Date().getDate() + 11),
@@ -39,8 +39,8 @@ export class MockVehicle {
             brand: 'Hyosung',
             year: 2006,
             km: 76750,
-            configuration: MockConfiguration.Configurations[1],
-            vehicleType: MockVehicle.VehicleTypes[0],
+            configuration: MockAppConfiguration.Configurations[1],
+            vehicleType: MockAppVehicle.VehicleTypes[0],
             kmsPerMonth: 50,
             dateKms: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 2, new Date().getDate() - 14),
             datePurchase: new Date(new Date().getFullYear() - 17, new Date().getMonth() + 1, new Date().getDate() - 4),
@@ -52,8 +52,8 @@ export class MockVehicle {
             brand: 'Kawasaki',
             year: 2021,
             km: 28000,
-            configuration: MockConfiguration.Configurations[2],
-            vehicleType: MockVehicle.VehicleTypes[0],
+            configuration: MockAppConfiguration.Configurations[2],
+            vehicleType: MockAppVehicle.VehicleTypes[0],
             kmsPerMonth: 600, 
             dateKms: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 2, new Date().getDate() - 14),
             datePurchase: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 5, new Date().getDate() - 11),
@@ -61,7 +61,7 @@ export class MockVehicle {
             id: 3
         })
     ];
-    public static Vehicles: VehicleModel[] = MockVehicle.VehiclesAux.map(x => {
+    public static Vehicles: VehicleModel[] = MockAppVehicle.VehiclesAux.map(x => {
         return {...x, kmEstimated: this.calendarService.calculateKmVehicleEstimated(x) };
     });
 

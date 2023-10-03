@@ -9,7 +9,7 @@ import { HomeService } from './home.service';
 import { CalendarService, CommonService } from '../common';
 
 // CONFIGURATIONS
-import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
 
 // MODELS
 import { WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, VehicleModel, OperationModel, MaintenanceModel, MaintenanceElementModel, ConfigurationModel, WearNotificationReplacementProgressBarViewModel, WearReplacementProgressBarViewModel } from '@models/index';
@@ -42,11 +42,11 @@ describe('HomeService', () => {
     /** HOME NOTIFICATIONS */
 
     it('should calculate wear notification replacement to vehicle', () => {
-        const mockVehicle: VehicleModel[] = MockData.Vehicles;
-        const mockOperation: OperationModel[] = MockData.Operations;
-        const mockMaintenance: MaintenanceModel[] = MockData.Maintenances;
-        const mockMaintenanceElement: MaintenanceElementModel[] = MockData.MaintenanceElements;
-        const result: WearVehicleProgressBarViewModel[] = service.getWearReplacementToVehicle(mockOperation, mockVehicle, MockData.Configurations, mockMaintenance);
+        const mockVehicle: VehicleModel[] = MockAppData.Vehicles;
+        const mockOperation: OperationModel[] = MockAppData.Operations;
+        const mockMaintenance: MaintenanceModel[] = MockAppData.Maintenances;
+        const mockMaintenanceElement: MaintenanceElementModel[] = MockAppData.MaintenanceElements;
+        const result: WearVehicleProgressBarViewModel[] = service.getWearReplacementToVehicle(mockOperation, mockVehicle, MockAppData.Configurations, mockMaintenance);
         expect(result.length).toEqual(mockVehicle.filter(x => x.active).length);
         result.forEach(v => {
             const vehicle: VehicleModel = mockVehicle.find(y => y.id === v.idVehicle);
@@ -114,10 +114,10 @@ describe('HomeService', () => {
     });
 
     it('should order maintenance wear', () => {
-        const mockVehicle: VehicleModel = MockData.Vehicles[0];
-        const mockOperation: OperationModel[] = MockData.Operations.filter(x => x.vehicle.id === mockVehicle.id);
-        const mockConfiguration: ConfigurationModel = MockData.Configurations.find(x => x.id === mockVehicle.configuration.id);
-        const mockMaintenance: MaintenanceModel[] = mockConfiguration.listMaintenance.filter(x => MockData.Maintenances.some(y => y.id === x.id));
+        const mockVehicle: VehicleModel = MockAppData.Vehicles[0];
+        const mockOperation: OperationModel[] = MockAppData.Operations.filter(x => x.vehicle.id === mockVehicle.id);
+        const mockConfiguration: ConfigurationModel = MockAppData.Configurations.find(x => x.id === mockVehicle.configuration.id);
+        const mockMaintenance: MaintenanceModel[] = mockConfiguration.listMaintenance.filter(x => MockAppData.Maintenances.some(y => y.id === x.id));
         const result: WearVehicleProgressBarViewModel[] = service.getWearReplacementToVehicle(mockOperation, [mockVehicle], [mockConfiguration], mockMaintenance);
         expect(result.length).toEqual(1);
         let listOrder: WearMaintenanceProgressBarViewModel[] = service.orderMaintenanceWear(result[0].listWearMaintenance);
@@ -127,10 +127,10 @@ describe('HomeService', () => {
     });
 
     it('should calculate percent vehicle', () => {
-        const mockVehicle: VehicleModel = MockData.Vehicles[0];
-        const mockOperation: OperationModel[] = MockData.Operations.filter(x => x.vehicle.id === mockVehicle.id);
-        const mockConfiguration: ConfigurationModel = MockData.Configurations.find(x => x.id === mockVehicle.configuration.id);
-        const mockMaintenance: MaintenanceModel[] = mockConfiguration.listMaintenance.filter(x => MockData.Maintenances.some(y => y.id === x.id));
+        const mockVehicle: VehicleModel = MockAppData.Vehicles[0];
+        const mockOperation: OperationModel[] = MockAppData.Operations.filter(x => x.vehicle.id === mockVehicle.id);
+        const mockConfiguration: ConfigurationModel = MockAppData.Configurations.find(x => x.id === mockVehicle.configuration.id);
+        const mockMaintenance: MaintenanceModel[] = mockConfiguration.listMaintenance.filter(x => MockAppData.Maintenances.some(y => y.id === x.id));
         const result: WearVehicleProgressBarViewModel[] = service.getWearReplacementToVehicle(mockOperation, [mockVehicle], [mockConfiguration], mockMaintenance);
         expect(result.length).toEqual(1);
         let warning: WarningWearEnum = service.getPercentVehicle(result[0].listWearMaintenance, mockVehicle.km);
@@ -203,10 +203,10 @@ describe('HomeService', () => {
     /** INFO NOTIFICATIONS */
 
     it('should calculate wear replacement to info notifications', () => {
-        const mockVehicle: VehicleModel = MockData.Vehicles[0];
-        const mockOperation: OperationModel[] = MockData.Operations.filter(x => x.vehicle.id === mockVehicle.id);
-        const mockConfiguration: ConfigurationModel = MockData.Configurations.find(x => x.id === mockVehicle.configuration.id);
-        const mockMaintenance: MaintenanceModel[] = mockConfiguration.listMaintenance.filter(x => MockData.Maintenances.some(y => y.id === x.id));
+        const mockVehicle: VehicleModel = MockAppData.Vehicles[0];
+        const mockOperation: OperationModel[] = MockAppData.Operations.filter(x => x.vehicle.id === mockVehicle.id);
+        const mockConfiguration: ConfigurationModel = MockAppData.Configurations.find(x => x.id === mockVehicle.configuration.id);
+        const mockMaintenance: MaintenanceModel[] = mockConfiguration.listMaintenance.filter(x => MockAppData.Maintenances.some(y => y.id === x.id));
         const result: WearVehicleProgressBarViewModel[] = service.getWearReplacementToVehicle(mockOperation, [mockVehicle], [mockConfiguration], mockMaintenance);
         expect(result.length).toEqual(1);
         
@@ -217,7 +217,7 @@ describe('HomeService', () => {
         info.listWearMaintenance.forEach(m => {
             const maintenance: MaintenanceModel = mockMaintenance.find(x => x.id === m.idMaintenance);
             validateWearMaintenance(m, maintenance);
-            validateWearMaintenanceElement(m.listWearReplacement[0], MockData.MaintenanceElements.find(x => x.id === m.listWearReplacement[0].idMaintenanceElement));
+            validateWearMaintenanceElement(m.listWearReplacement[0], MockAppData.MaintenanceElements.find(x => x.id === m.listWearReplacement[0].idMaintenanceElement));
             expect(m.listWearReplacement.length).toEqual(1);
             if (m.listWearReplacement[0].idOperation === null) {
                 expect(m.listWearReplacement[0].calculateKms).toEqual((m.kmMaintenance / 2) * -1);
@@ -244,10 +244,10 @@ describe('HomeService', () => {
     });
 
     it('should calculate init KM', () => {
-        const mockVehicle: VehicleModel = MockData.Vehicles[0];
-        const mockOperation: OperationModel[] = MockData.Operations.filter(x => x.vehicle.id === mockVehicle.id);
-        const mockConfiguration: ConfigurationModel = MockData.Configurations.find(x => x.id === mockVehicle.configuration.id);
-        const mockMaintenance: MaintenanceModel[] = mockConfiguration.listMaintenance.filter(x => MockData.Maintenances.some(y => y.id === x.id));
+        const mockVehicle: VehicleModel = MockAppData.Vehicles[0];
+        const mockOperation: OperationModel[] = MockAppData.Operations.filter(x => x.vehicle.id === mockVehicle.id);
+        const mockConfiguration: ConfigurationModel = MockAppData.Configurations.find(x => x.id === mockVehicle.configuration.id);
+        const mockMaintenance: MaintenanceModel[] = mockConfiguration.listMaintenance.filter(x => MockAppData.Maintenances.some(y => y.id === x.id));
         const result: WearVehicleProgressBarViewModel[] = service.getWearReplacementToVehicle(mockOperation, [mockVehicle], [mockConfiguration], mockMaintenance);
         expect(result.length).toEqual(1);
         const operations: OperationModel[] = service.getOperationsFilteredKmTime(mockOperation, result[0].listWearMaintenance, 1000, 20000, 2000, null, mockVehicle.datePurchase);
@@ -256,11 +256,11 @@ describe('HomeService', () => {
     });
 
     it('should get operation near km time', () => {
-        let result: OperationModel = service.getOperationsNearKmTime(MockData.Operations, new Date(), 50000, 156);
+        let result: OperationModel = service.getOperationsNearKmTime(MockAppData.Operations, new Date(), 50000, 156);
         expect(result.id).toEqual(7);
-        result = service.getOperationsNearKmTime(MockData.Operations, MockData.VehiclesAux[0].datePurchase, 70000, 120);
+        result = service.getOperationsNearKmTime(MockAppData.Operations, MockAppData.VehiclesAux[0].datePurchase, 70000, 120);
         expect(result.id).toEqual(6);
-        result = service.getOperationsNearKmTime(MockData.Operations, MockData.VehiclesAux[2].datePurchase, 20000, 0);
+        result = service.getOperationsNearKmTime(MockAppData.Operations, MockAppData.VehiclesAux[2].datePurchase, 20000, 0);
         expect(result.id).toEqual(5);
     });
 

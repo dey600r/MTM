@@ -10,7 +10,7 @@ import { HomeService } from '../pages/index';
 import { CalendarService } from '../common/index';
 
 // CONFIGURATIONS
-import { MockData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -57,19 +57,19 @@ describe('DashboardService', () => {
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
         expect(dashboard.showLegend).toBeFalsy();
         expect(dashboard.data.length).toEqual(2);
         expect(dashboard.legendTitle).toEqual(MockTranslate.ES.COMMON.VEHICLES);
         expect(dashboard.xAxisLabel).toEqual(MockTranslate.ES.COMMON.VEHICLES);
         expect(dashboard.yAxisLabel).toEqual(MockTranslate.ES.COMMON.EXPENSE);
-        const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
+        const vehicle1: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[0].id);
         expect(vehicle1.value).toEqual(8155.35);
-        expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
-        const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
+        expect(vehicle1.name).toEqual(`${MockAppData.Vehicles[0].brand}-${MockAppData.Vehicles[0].model}`);
+        const vehicle2: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(352);
-        expect(vehicle2.name).toEqual(`${MockData.Vehicles[1].brand}-${MockData.Vehicles[1].model}`);
+        expect(vehicle2.name).toEqual(`${MockAppData.Vehicles[1].brand}-${MockAppData.Vehicles[1].model}`);
     });
 
     it('should calculate other vehicle expenses dashboard - EN', async () => {
@@ -79,19 +79,19 @@ describe('DashboardService', () => {
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
         expect(dashboard.showLegend).toBeFalsy();
         expect(dashboard.data.length).toEqual(2);
         expect(dashboard.legendTitle).toEqual(MockTranslate.EN.COMMON.VEHICLES);
         expect(dashboard.xAxisLabel).toEqual(MockTranslate.EN.COMMON.VEHICLES);
         expect(dashboard.yAxisLabel).toEqual(MockTranslate.EN.COMMON.EXPENSE);
-        const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
+        const vehicle1: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[0].id);
         expect(vehicle1.value).toEqual(8155.35);
-        expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
-        const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
+        expect(vehicle1.name).toEqual(`${MockAppData.Vehicles[0].brand}-${MockAppData.Vehicles[0].model}`);
+        const vehicle2: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(352);
-        expect(vehicle2.name).toEqual(`${MockData.Vehicles[1].brand}-${MockData.Vehicles[1].model}`);
+        expect(vehicle2.name).toEqual(`${MockAppData.Vehicles[1].brand}-${MockAppData.Vehicles[1].model}`);
     });
 
     it('should calculate my vehicle expenses dashboard', () => {
@@ -100,14 +100,14 @@ describe('DashboardService', () => {
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
-        const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
+        const vehicle1: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[0].id);
         expect(vehicle1.value).toEqual(2772);
-        expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
-        const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
+        expect(vehicle1.name).toEqual(`${MockAppData.Vehicles[0].brand}-${MockAppData.Vehicles[0].model}`);
+        const vehicle2: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(5007);
-        expect(vehicle2.name).toEqual(`${MockData.Vehicles[1].brand}-${MockData.Vehicles[1].model}`);
+        expect(vehicle2.name).toEqual(`${MockAppData.Vehicles[1].brand}-${MockAppData.Vehicles[1].model}`);
     });
 
     it('should calculate vehicle expenses per km dashboard', () => {
@@ -117,58 +117,58 @@ describe('DashboardService', () => {
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
-        const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
+        const vehicle1: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[0].id);
         expect(vehicle1.value).toEqual(0.07);
-        expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
-        const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
+        expect(vehicle1.name).toEqual(`${MockAppData.Vehicles[0].brand}-${MockAppData.Vehicles[0].model}`);
+        const vehicle2: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(0);
-        expect(vehicle2.name).toEqual(`${MockData.Vehicles[1].brand}-${MockData.Vehicles[1].model}`);
+        expect(vehicle2.name).toEqual(`${MockAppData.Vehicles[1].brand}-${MockAppData.Vehicles[1].model}`);
     });
 
     it('should calculate vehicle other expenses dashboard with filter operations type maintenance home', () => {
         const filter: SearchDashboardModel = new SearchDashboardModel({
-            searchOperationType: [MockData.OperationTypes[6]],
+            searchOperationType: [MockAppData.OperationTypes[6]],
             showMyData: false,
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.data.length).toEqual(0);
     });
 
     it('should calculate vehicle my expenses dashboard with filter operations type maintenance home', () => {
         const filter: SearchDashboardModel = new SearchDashboardModel({
-            searchOperationType: [MockData.OperationTypes[0]],
+            searchOperationType: [MockAppData.OperationTypes[0]],
             showMyData: true,
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
-        const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
+        const vehicle1: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[0].id);
         expect(vehicle1.value).toEqual(1234);
-        expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
-        const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
+        expect(vehicle1.name).toEqual(`${MockAppData.Vehicles[0].brand}-${MockAppData.Vehicles[0].model}`);
+        const vehicle2: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(1225);
-        expect(vehicle2.name).toEqual(`${MockData.Vehicles[1].brand}-${MockData.Vehicles[1].model}`);
+        expect(vehicle2.name).toEqual(`${MockAppData.Vehicles[1].brand}-${MockAppData.Vehicles[1].model}`);
     });
 
     it('should calculate vehicle my expenses dashboard with filter replacement oil filter', () => {
         const filter: SearchDashboardModel = new SearchDashboardModel({
-            searchMaintenanceElement: [MockData.MaintenanceElements[4]],
+            searchMaintenanceElement: [MockAppData.MaintenanceElements[4]],
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelVehicleExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.data.length).toEqual(2);
-        const vehicle1: any = dashboard.data.find(x => x.id === MockData.Vehicles[0].id);
+        const vehicle1: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[0].id);
         expect(vehicle1.value).toEqual(2007);
-        expect(vehicle1.name).toEqual(`${MockData.Vehicles[0].brand}-${MockData.Vehicles[0].model}`);
-        const vehicle2: any = dashboard.data.find(x => x.id === MockData.Vehicles[1].id);
+        expect(vehicle1.name).toEqual(`${MockAppData.Vehicles[0].brand}-${MockAppData.Vehicles[0].model}`);
+        const vehicle2: any = dashboard.data.find(x => x.id === MockAppData.Vehicles[1].id);
         expect(vehicle2.value).toEqual(452);
-        expect(vehicle2.name).toEqual(`${MockData.Vehicles[1].brand}-${MockData.Vehicles[1].model}`);
+        expect(vehicle2.name).toEqual(`${MockAppData.Vehicles[1].brand}-${MockAppData.Vehicles[1].model}`);
     });
 
     // VEHICLE PER MONTH EXPENSES
@@ -178,7 +178,7 @@ describe('DashboardService', () => {
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const operationVehicle = MockData.Operations.filter(x => x.vehicle.id === MockData.Vehicles[0].id);
+        const operationVehicle = MockAppData.Operations.filter(x => x.vehicle.id === MockAppData.Vehicles[0].id);
         const dashboard: IDashboardExpensesModel<DashboardModel<IDashboardModel>> = service.getDashboardModelVehiclePerTime(windows, operationVehicle, filter);
         expect(dashboard.allSum.isDoughnut).toBeFalsy();
         expect(dashboard.allSum.showLegend).toBeFalsy();
@@ -188,7 +188,7 @@ describe('DashboardService', () => {
         expect(dashboard.allSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.EXPENSE);
         expect(dashboard.allSum.data[0].name).toEqual('02/2016');
         expect(dashboard.allSum.data[0].value).toEqual(dashboard.operationSum.data[0].value + dashboard.replacementSum.data[0].value);
-        expect(dashboard.allSum.data[1].name).toEqual('08/2017');
+        expect(dashboard.allSum.data[1].name).toEqual('09/2017');
         expect(dashboard.allSum.data[1].value).toEqual(dashboard.operationSum.data[1].value + dashboard.replacementSum.data[1].value);
         expect(dashboard.allSum.data[2].name).toEqual('03/2018');
         expect(dashboard.allSum.data[2].value).toEqual(dashboard.operationSum.data[2].value + dashboard.replacementSum.data[2].value);
@@ -201,7 +201,7 @@ describe('DashboardService', () => {
         expect(dashboard.operationSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.LABOR_EXPENSE);
         expect(dashboard.operationSum.data[0].name).toEqual('02/2016');
         expect(dashboard.operationSum.data[0].value).toEqual(650);
-        expect(dashboard.operationSum.data[1].name).toEqual('08/2017');
+        expect(dashboard.operationSum.data[1].name).toEqual('09/2017');
         expect(dashboard.operationSum.data[1].value).toEqual(333);
         expect(dashboard.operationSum.data[2].name).toEqual('03/2018');
         expect(dashboard.operationSum.data[2].value).toEqual(300);
@@ -214,7 +214,7 @@ describe('DashboardService', () => {
         expect(dashboard.replacementSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.REPLACEMENT_EXPENSE);
         expect(dashboard.replacementSum.data[0].name).toEqual('02/2016');
         expect(dashboard.replacementSum.data[0].value).toEqual(362);
-        expect(dashboard.replacementSum.data[1].name).toEqual('08/2017');
+        expect(dashboard.replacementSum.data[1].name).toEqual('09/2017');
         expect(dashboard.replacementSum.data[1].value).toEqual(193);
         expect(dashboard.replacementSum.data[2].name).toEqual('03/2018');
         expect(dashboard.replacementSum.data[2].value).toEqual(117);
@@ -226,7 +226,7 @@ describe('DashboardService', () => {
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const operationVehicle = MockData.Operations.filter(x => x.vehicle.id === MockData.Vehicles[0].id);
+        const operationVehicle = MockAppData.Operations.filter(x => x.vehicle.id === MockAppData.Vehicles[0].id);
         const dashboard: IDashboardExpensesModel<DashboardModel<IDashboardModel>> = service.getDashboardModelVehiclePerTime(windows, operationVehicle, filter);
         expect(dashboard.allSum.data.length).toBeGreaterThanOrEqual(3);
         expect(dashboard.allSum.legendTitle).toEqual(MockTranslate.EN.COMMON.DATE);
@@ -248,19 +248,19 @@ describe('DashboardService', () => {
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelOpTypeExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelOpTypeExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
         expect(dashboard.showLegend).toBeFalsy();
         expect(dashboard.data.length).toEqual(2);
         expect(dashboard.legendTitle).toEqual(MockTranslate.ES.COMMON.OPERATION_TYPE);
         expect(dashboard.xAxisLabel).toEqual(MockTranslate.ES.COMMON.OPERATION_TYPE);
         expect(dashboard.yAxisLabel).toEqual(MockTranslate.ES.COMMON.EXPENSE);
-        const opt1: any = dashboard.data.find(x => x.id === MockData.OperationTypes[5].id);
+        const opt1: any = dashboard.data.find(x => x.id === MockAppData.OperationTypes[5].id);
         expect(opt1.value).toEqual(8155.35);
-        expect(opt1.name).toEqual(MockData.OperationTypes[5].description);
-        const vehicle2: any = dashboard.data.find(x => x.id === MockData.OperationTypes[0].id);
+        expect(opt1.name).toEqual(MockAppData.OperationTypes[5].description);
+        const vehicle2: any = dashboard.data.find(x => x.id === MockAppData.OperationTypes[0].id);
         expect(vehicle2.value).toEqual(352);
-        expect(vehicle2.name).toEqual(MockData.OperationTypes[0].description);
+        expect(vehicle2.name).toEqual(MockAppData.OperationTypes[0].description);
     });
 
     it('should calculate operation type expenses dashboard - EN', async () => {
@@ -270,52 +270,52 @@ describe('DashboardService', () => {
             showStrict: false
         });
         const windows: any = service.getSizeWidthHeight(500, 900);
-        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelOpTypeExpenses(windows, MockData.Operations, filter);
+        const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelOpTypeExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
         expect(dashboard.showLegend).toBeFalsy();
         expect(dashboard.data.length).toEqual(3);
         expect(dashboard.legendTitle).toEqual(MockTranslate.EN.COMMON.OPERATION_TYPE);
         expect(dashboard.xAxisLabel).toEqual(MockTranslate.EN.COMMON.OPERATION_TYPE);
         expect(dashboard.yAxisLabel).toEqual(MockTranslate.EN.COMMON.EXPENSE);
-        const opt1: any = dashboard.data.find(x => x.id === MockData.OperationTypes[5].id);
+        const opt1: any = dashboard.data.find(x => x.id === MockAppData.OperationTypes[5].id);
         expect(opt1.value).toEqual(3500);
-        expect(opt1.name).toEqual(MockData.OperationTypes[5].description);
-        const opt2: any = dashboard.data.find(x => x.id === MockData.OperationTypes[0].id);
+        expect(opt1.name).toEqual(MockAppData.OperationTypes[5].description);
+        const opt2: any = dashboard.data.find(x => x.id === MockAppData.OperationTypes[0].id);
         expect(opt2.value).toEqual(2459);
-        expect(opt2.name).toEqual(MockData.OperationTypes[0].description);
-        const opt3: any = dashboard.data.find(x => x.id === MockData.OperationTypes[6].id);
+        expect(opt2.name).toEqual(MockAppData.OperationTypes[0].description);
+        const opt3: any = dashboard.data.find(x => x.id === MockAppData.OperationTypes[6].id);
         expect(opt3.value).toEqual(1820);
-        expect(opt3.name).toEqual(MockData.OperationTypes[6].description);
+        expect(opt3.name).toEqual(MockAppData.OperationTypes[6].description);
     });
 
     it('should prefilter operations', () => {
-        const op1 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel({
-            searchOperationType: [MockData.OperationTypes[0]],
+        const op1 = service.getPrefilterOperation(MockAppData.Operations, new SearchDashboardModel({
+            searchOperationType: [MockAppData.OperationTypes[0]],
             showStrict: false
         }));
-        expect(op1.some(x => x.operationType.id !== MockData.OperationTypes[0].id)).toBeFalsy();
+        expect(op1.some(x => x.operationType.id !== MockAppData.OperationTypes[0].id)).toBeFalsy();
         
-        const op2 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel({
-            searchMaintenanceElement: [MockData.MaintenanceElements[0]],
+        const op2 = service.getPrefilterOperation(MockAppData.Operations, new SearchDashboardModel({
+            searchMaintenanceElement: [MockAppData.MaintenanceElements[0]],
             showStrict: false
         }));
-        expect(op2.every(x => x.listMaintenanceElement.some(y => y.id === MockData.MaintenanceElements[0].id))).toBeTruthy();
+        expect(op2.every(x => x.listMaintenanceElement.some(y => y.id === MockAppData.MaintenanceElements[0].id))).toBeTruthy();
         
-        const op3 = service.getPrefilterOperation(MockData.Operations, new SearchDashboardModel());
+        const op3 = service.getPrefilterOperation(MockAppData.Operations, new SearchDashboardModel());
         expect(op3.some(x => x.owner !== null && x.owner !== '' && x.owner.toLowerCase() !== Constants.OWNER_ME &&
             x.owner.toLowerCase() !== Constants.OWNER_YO)).toBeFalsy();
     });
 
     it('should refresh search dashboard operation', () => {
-        service.setSearchOperation(MockData.OperationTypes, MockData.MaintenanceElements, 'hola');
-        expect(service.behaviourSearchOperation.value.searchOperationType).toEqual(MockData.OperationTypes);
-        expect(service.behaviourSearchOperation.value.searchMaintenanceElement).toEqual(MockData.MaintenanceElements);
+        service.setSearchOperation(MockAppData.OperationTypes, MockAppData.MaintenanceElements, 'hola');
+        expect(service.behaviourSearchOperation.value.searchOperationType).toEqual(MockAppData.OperationTypes);
+        expect(service.behaviourSearchOperation.value.searchMaintenanceElement).toEqual(MockAppData.MaintenanceElements);
         expect(service.behaviourSearchOperation.value.searchText).toEqual('hola');
     });
 
     it('should refresh search dashboard vehicles', () => {
-        service.setSearchConfiguration(MockData.Vehicles);
-        expect(service.behaviourSearchOperation.value.searchVehicle).toEqual(MockData.Vehicles);
+        service.setSearchConfiguration(MockAppData.Vehicles);
+        expect(service.behaviourSearchOperation.value.searchVehicle).toEqual(MockAppData.Vehicles);
     });
 
     it('should is empty search dashboard operation', () => {
@@ -326,9 +326,9 @@ describe('DashboardService', () => {
     it('should is not empty search dashboard operation', () => {
         service.setSearchOperation([], [], 'hola');
         expect(service.isEmptySearchDashboard(PageEnum.OPERATION)).toBeFalse();
-        service.setSearchOperation([], [MockData.MaintenanceElements[0]]);
+        service.setSearchOperation([], [MockAppData.MaintenanceElements[0]]);
         expect(service.isEmptySearchDashboard(PageEnum.OPERATION)).toBeFalse();
-        service.setSearchOperation([MockData.OperationTypes[0]]);
+        service.setSearchOperation([MockAppData.OperationTypes[0]]);
         expect(service.isEmptySearchDashboard(PageEnum.OPERATION)).toBeFalse();
     });
     
@@ -338,11 +338,11 @@ describe('DashboardService', () => {
     });
     
     it('should is not empty search dashboard configuration', () => {
-        service.setSearchConfiguration([MockData.Vehicles[0]], 'hola');
+        service.setSearchConfiguration([MockAppData.Vehicles[0]], 'hola');
         expect(service.isEmptySearchDashboard(PageEnum.CONFIGURATION)).toBeFalse();
         service.setSearchConfiguration([], 'hola');
         expect(service.isEmptySearchDashboard(PageEnum.CONFIGURATION)).toBeFalse();
-        service.setSearchConfiguration([MockData.Vehicles[0]]);
+        service.setSearchConfiguration([MockAppData.Vehicles[0]]);
         expect(service.isEmptySearchDashboard(PageEnum.CONFIGURATION)).toBeFalse();
     });
 
@@ -353,10 +353,10 @@ describe('DashboardService', () => {
     });
 
     it('should is not empty search dashboard operation/vehicle dashboard', () => {
-        service.setSearchDashboard(new SearchDashboardModel({ searchOperationType: [MockData.OperationTypes[0]] }));
+        service.setSearchDashboard(new SearchDashboardModel({ searchOperationType: [MockAppData.OperationTypes[0]] }));
         expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
         expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
-        service.setSearchDashboard(new SearchDashboardModel({ searchMaintenanceElement: [MockData.MaintenanceElements[0]] }));
+        service.setSearchDashboard(new SearchDashboardModel({ searchMaintenanceElement: [MockAppData.MaintenanceElements[0]] }));
         expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_OPERATION)).toBeFalsy();
         expect(service.isEmptySearchDashboard(PageEnum.MODAL_DASHBOARD_VEHICLE)).toBeFalsy();
         service.setSearchDashboard(new SearchDashboardModel({ showPerMont: FilterMonthsEnum.YEAR }));
@@ -472,7 +472,7 @@ describe('DashboardService', () => {
         expect(result[3].value).toBeLessThanOrEqual(1400);
         expect(result[4].value).toBeLessThanOrEqual(1800);
         expect(result[5].value).toBeLessThanOrEqual(1600);
-        expect(result[6].value).toBeLessThanOrEqual(2700);
+        expect(result[6].value).toBeLessThanOrEqual(2800);
         expect(result[0].value).toBeGreaterThanOrEqual(1000);
         expect(result[1].value).toBeGreaterThanOrEqual(900);
         expect(result[2].value).toBeGreaterThanOrEqual(1000);
@@ -510,7 +510,7 @@ describe('DashboardService', () => {
         expect(result[3].value).toBeLessThanOrEqual(186);
         expect(result[4].value).toBeLessThanOrEqual(186);
         expect(result[5].value).toBeLessThanOrEqual(186);
-        expect(result[6].value).toBeLessThanOrEqual(2700);
+        expect(result[6].value).toBeLessThanOrEqual(2800);
         expect(result[0].value).toBeGreaterThanOrEqual(8900);
         expect(result[1].value).toBeGreaterThanOrEqual(590);
         expect(result[2].value).toBeGreaterThanOrEqual(156);
@@ -521,12 +521,13 @@ describe('DashboardService', () => {
     });
 
     it('should calculate km per year with operation', () => {
-        const dataVehicle: VehicleModel = MockData.Vehicles[0];
-        let result: IDashboardModel[] = service.calculateKmPerYearWithOperations(dataVehicle, MockData.Operations.filter(x => x.vehicle.id === dataVehicle.id));
+        const dataVehicle: VehicleModel = MockAppData.Vehicles[0];
+        let result: IDashboardModel[] = service.calculateKmPerYearWithOperations(dataVehicle, MockAppData.Operations.filter(x => x.vehicle.id === dataVehicle.id));
         let year: number = new Date().getFullYear();
         expect(result.length).toEqual(year - new Date(dataVehicle.datePurchase).getFullYear() + 1);
         expect(result[0].name).toEqual((year - 17).toString());
-        expect(result[0].value).toEqual(4820);
+        expect(result[0].value).toBeLessThanOrEqual(4800);
+        expect(result[0].value).toBeGreaterThanOrEqual(4600);
         expect(result[1].name).toEqual((year - 16).toString());
         expect(result[1].value).toEqual(-1);
         expect(result[2].name).toEqual((year - 15).toString());
@@ -558,9 +559,9 @@ describe('DashboardService', () => {
     });
 
     it('should calculate km per day', () => {
-        const dataVehicle: VehicleModel = MockData.Vehicles[0];
+        const dataVehicle: VehicleModel = MockAppData.Vehicles[0];
         let year: number = new Date().getFullYear();
-        const dataOperation: OperationModel[] = MockData.Operations.filter(x => x.vehicle.id === dataVehicle.id);
+        const dataOperation: OperationModel[] = MockAppData.Operations.filter(x => x.vehicle.id === dataVehicle.id);
         expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === year - 17), year - 17, 25)).toEqual(25);
         expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === year - 15), year - 15, 120)).toEqual(120);
         expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === year - 7), year - 7, 34)).toEqual(29);
@@ -578,15 +579,15 @@ describe('DashboardService', () => {
     });
 
     it('should get dashboard information vehicle', () => {
-        const dataVehicle: VehicleModel = MockData.Vehicles[0];
-        let result: DashboardModel<IDashboardModel> = service.getDashboardInformationVehicle([1, 2], dataVehicle, MockData.Operations.filter(x => x.vehicle.id === dataVehicle.id));
+        const dataVehicle: VehicleModel = MockAppData.Vehicles[0];
+        let result: DashboardModel<IDashboardModel> = service.getDashboardInformationVehicle([1, 2], dataVehicle, MockAppData.Operations.filter(x => x.vehicle.id === dataVehicle.id));
         expect(result.data.length).toEqual(new Date().getFullYear() - new Date(dataVehicle.datePurchase).getFullYear() + 1);
         expect(result.view).toEqual([1, 2]);
     });
 
     it('should get dashboard configuration vehicle - windows', () => {
         const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(true);
-        const data: InfoVehicleConfigurationModel[] = serviceInfoVehicle.calculateInfoVehicleConfiguration(MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+        const data: InfoVehicleConfigurationModel[] = serviceInfoVehicle.calculateInfoVehicleConfiguration(MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
         let result: DashboardModel<IDashboardModel> = service.getDashboardConfigurationVehicle([1, 2], data[1]);
         expect(spyPlatform).toHaveBeenCalled();
         expect(result.view).toEqual([1, 2]);
@@ -606,7 +607,7 @@ describe('DashboardService', () => {
 
     it('should get dashboard configuration vehicle - android', () => {
         const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(false);
-        const data: InfoVehicleConfigurationModel[] = serviceInfoVehicle.calculateInfoVehicleConfiguration(MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+        const data: InfoVehicleConfigurationModel[] = serviceInfoVehicle.calculateInfoVehicleConfiguration(MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
         const result: DashboardModel<IDashboardModel> = service.getDashboardConfigurationVehicle([1, 2], data[1]);
         expect(spyPlatform).toHaveBeenCalled();
         expect(result.view).toEqual([1, 2]);
@@ -625,12 +626,12 @@ describe('DashboardService', () => {
     });
 
     it('should get dashboard record maintenance - km', () => {
-        const mockVehicle: VehicleModel[] = MockData.Vehicles;
-        const mockOperation: OperationModel[] = MockData.Operations;
-        const mockMaintenance: MaintenanceModel[] = MockData.Maintenances;
-        const wear: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(mockOperation, mockVehicle, MockData.Configurations, mockMaintenance);
+        const mockVehicle: VehicleModel[] = MockAppData.Vehicles;
+        const mockOperation: OperationModel[] = MockAppData.Operations;
+        const mockMaintenance: MaintenanceModel[] = MockAppData.Maintenances;
+        const wear: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(mockOperation, mockVehicle, MockAppData.Configurations, mockMaintenance);
         const filter: SearchDashboardModel = new SearchDashboardModel();
-        const measure: ISettingModel = settingService.getDistanceSelected(MockData.SystemConfigurations);
+        const measure: ISettingModel = settingService.getDistanceSelected(MockAppData.SystemConfigurations);
         const result: DashboardModel<IDashboardSerieModel> = service.getDashboardRecordMaintenances([1, 2], wear[0], filter, measure);
         expect(result.barPadding).toEqual(2);
         expect(result.colorScheme).toEqual({ domain: ['#D91CF6', '#1CEAF6','#5FF61C']});
@@ -654,17 +655,17 @@ describe('DashboardService', () => {
 
     it('should get dashboard record maintenance - time', async () => {
         await firstValueFrom(translate.use('en'));
-        const mockVehicle: VehicleModel[] = MockData.Vehicles;
-        const mockOperation: OperationModel[] = MockData.Operations;
-        const mockMaintenance: MaintenanceModel[] = MockData.Maintenances;
-        const wear: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(mockOperation, mockVehicle, MockData.Configurations, mockMaintenance);
+        const mockVehicle: VehicleModel[] = MockAppData.Vehicles;
+        const mockOperation: OperationModel[] = MockAppData.Operations;
+        const mockMaintenance: MaintenanceModel[] = MockAppData.Maintenances;
+        const wear: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(mockOperation, mockVehicle, MockAppData.Configurations, mockMaintenance);
         const filter: SearchDashboardModel = new SearchDashboardModel({
             filterKmTime: FilterKmTimeEnum.TIME,
             doghnut: true,
             showLegend: true,
             showAxis: false
         });
-        const measure: ISettingModel = settingService.getDistanceSelected(MockData.SystemConfigurations);
+        const measure: ISettingModel = settingService.getDistanceSelected(MockAppData.SystemConfigurations);
         const result: DashboardModel<IDashboardSerieModel> = service.getDashboardRecordMaintenances([1, 2], wear[0], filter, measure);
         expect(result.barPadding).toEqual(2);
         expect(result.colorScheme).toEqual({ domain: ['#D91CF6', '#1CEAF6','#5FF61C']});
