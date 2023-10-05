@@ -175,4 +175,8 @@ describe('CommonService', () => {
         expect(service.round((10 / 3), 10)).toEqual(3.3);
         expect(service.round((10 / 3), 100)).toEqual(3.33);
     });
+
+    it('should be calculate version', () => {
+        expect(service.getVersion('v3.2.1')).toEqual(3021);
+    });
 });

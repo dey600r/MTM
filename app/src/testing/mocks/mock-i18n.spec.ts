@@ -294,7 +294,7 @@ export class MockTranslate {
             ErrorSyncDownload: 'There was a download error: {{error}}',
             ErrorSyncUpload: 'There was a upload error: {{error}}',
             ErrorSyncDataNotFound: 'No data found in cloud. You should upload first',
-            ErrorSyncVersion: 'The version of MTM should be {{version}} but it is installed {{versionNow}}. You should upload first in cloud or the new version should be installed.'
+            ErrorSyncVersion: 'The version of MTM should be higher than {{version}} but it is installed {{versionNow}}. You should upload first {{versionSync}} in cloud or the new version should be installed.'
         },
         DB: {
             MAINTENANCE_WORKSHOP: 'Maintenance Workshop',
@@ -677,7 +677,7 @@ export class MockTranslate {
             ErrorSyncDownload: 'Ha ocurrido un error en la descarga: {{error}}',
             ErrorSyncUpload: 'Ha ocurrido un error en la subida: {{error}}',
             ErrorSyncDataNotFound: 'No se encuentran datos en la nube. Primero debería actualizarlos.',
-            ErrorSyncVersion: 'La version de MtM debería ser {{version}} pero está instalada {{versionNow}}. Deberias actualizar los datos en la nube o descargar la nueva versión.'
+            ErrorSyncVersion: 'La version de MtM debería ser {{version}} pero está instalada {{versionNow}}. Deberias actualizar los datos {{versionSync}} en la nube o descargar la nueva versión.'
         },
         DB: {
             MAINTENANCE_WORKSHOP: 'Mantenimiento Taller',

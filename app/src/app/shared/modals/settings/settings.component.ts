@@ -11,7 +11,7 @@ import {
 } from '@models/index';
 
 // UTILS
-import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, ConstantsTable, PageEnum, ToastTypeEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // SERVICES
@@ -230,13 +230,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
         JSON.stringify(json), { replace : true}).then(() => {
           // IMPORT DB
           const jsonToImport: any = this.mapDataFromContentFile(contentFile);
-          this.dbService.saveDataIntoStorage(jsonToImport).then(() => {
-            this.crudService.loadAllTables();
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
-          }).catch(e => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB', e);
-            this.clearInputFile(event);
-          });
+          if(this.syncService.validateVersionToImport(this.settingsService.getVersionSelected(jsonToImport[ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]).value)) {
+            this.dbService.saveDataIntoStorage(jsonToImport).then(() => {
+              this.crudService.loadAllTables();
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
+            }).catch(e => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB', e);
+              this.clearInputFile(event);
+            });
+          }
       }).catch(err => {
         this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile', err);
         this.clearInputFile(event);

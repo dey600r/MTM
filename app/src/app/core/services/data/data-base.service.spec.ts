@@ -85,7 +85,4 @@ describe('DataBaseService', () => {
         expect(service.formatBooleanJSON('{"data":"Y"}, {"data":"N"}')).toEqual('{"data":true}, {"data":false}');
     });
 
-    it('should be calculate version', () => {
-        expect(service.getVersion('v3.2.1')).toEqual(3021);
-    });
 });

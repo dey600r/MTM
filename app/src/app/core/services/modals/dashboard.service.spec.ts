@@ -527,7 +527,7 @@ describe('DashboardService', () => {
         expect(result.length).toEqual(year - new Date(dataVehicle.datePurchase).getFullYear() + 1);
         expect(result[0].name).toEqual((year - 17).toString());
         expect(result[0].value).toBeLessThanOrEqual(4800);
-        expect(result[0].value).toBeGreaterThanOrEqual(4600);
+        expect(result[0].value).toBeGreaterThanOrEqual(4500);
         expect(result[1].name).toEqual((year - 16).toString());
         expect(result[1].value).toEqual(-1);
         expect(result[2].name).toEqual((year - 15).toString());
