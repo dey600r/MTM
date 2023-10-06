@@ -13,13 +13,12 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:release-mtm": "mtm-deploy.bat",
-    "build:release-prod": "sh mtm-deploy-store.sh C:\/Proyectos\/MtM %npm_package_version%",
-    "build:release-jenkins": "sh mtm-deploy-jenkins.sh \/home\/workspace\/workspace\/deyapps-mtm-build $npm_package_version",
-    "build:release-free": "sh mtm-free-deploy-store.sh C:\/Proyectos\/MtM %npm_package_version%",
-    "build:release-free-jenkins": "sh mtm-free-deploy-jenkins.sh \/home\/workspace\/workspace\/deyapps-mtm-build $npm_package_version",
-    "build:apk-prod": "sh deploy-release-android-apk.sh C:\/Proyectos\/MTM v3.4.0 %PASS_MTM% %ALIAS_MTM% _",
+    "build:release-prod": "sh mtm-deploy-store.sh C:/Proyectos/MtM %npm_package_version%",
+    "build:release-jenkins": "sh mtm-deploy-jenkins.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version",
+    "build:release-free": "sh mtm-free-deploy-store.sh C:/Proyectos/MtM %npm_package_version%",
+    "build:release-free-jenkins": "sh mtm-free-deploy-jenkins.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
-    "deploy:apk": "adb -d install -r C:/Proyectos/MTM/Utils/Versions/Android/MtM_v3.4.0/MtM_v3.4.0.apk",
+    "deploy:release-apk": "mtm-deploy-apk.bat production-free",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug --consolelogs",
     "deploy:debug-windows": "ionic cordova run windows --debug -- --arch=x64 --appx=uap --platform=x64",
@@ -106,7 +105,8 @@
     "protractor": "^7.0.0",
     "ts-node": "^10.4.0",
     "tslint": "^6.1.3",
-    "typescript": "4.6.4"
+    "typescript": "4.6.4",
+    "windows": "^0.1.2"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -125,8 +125,8 @@
       "cordova-plugin-proguard": {}
     },
     "platforms": [
-      "windows",
-      "android"
+      "android",
+      "windows"
     ]
   }
 }

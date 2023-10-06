@@ -23,6 +23,7 @@
     <preference name="SplashScreenDelay" value="0" />
     <preference name="ShowSplashScreen" value="false" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <preference name="AndroidGradlePluginVersion" value="8.0.2" />
     <platform name="android">
         <hook src="scripts/beforeBuild.js" type="before_build" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="src/assets/icon/icon-splash.png" />
