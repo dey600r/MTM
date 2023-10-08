@@ -23,6 +23,7 @@
     <preference name="SplashScreenDelay" value="0" />
     <preference name="ShowSplashScreen" value="false" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="AndroidGradlePluginVersion" value="8.0.2" />
     <platform name="android">
         <hook src="scripts/beforeBuild.js" type="before_build" />
@@ -44,10 +45,7 @@
         <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
         <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
     </platform>
-    <plugin name="cordova-plugin-statusbar" spec="2.4.2" />
     <plugin name="cordova-plugin-device" spec="2.0.2" />
-    <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
-    <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <allow-navigation href="http://localhost:8100" sessionid="700af186" />
     <platform name="windows">

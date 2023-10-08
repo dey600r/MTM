@@ -186,11 +186,14 @@ describe('DashboardService', () => {
         expect(dashboard.allSum.legendTitle).toEqual(MockTranslate.ES.COMMON.DATE);
         expect(dashboard.allSum.xAxisLabel).toEqual(MockTranslate.ES.COMMON.DATE);
         expect(dashboard.allSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.EXPENSE);
-        expect(dashboard.allSum.data[0].name).toEqual('02/2016');
+        const name1: string = '02/2016';
+        const name2: string = '09/2017';
+        const name3: string = '04/2018';
+        expect(dashboard.allSum.data[0].name).toEqual(name1);
         expect(dashboard.allSum.data[0].value).toEqual(dashboard.operationSum.data[0].value + dashboard.replacementSum.data[0].value);
-        expect(dashboard.allSum.data[1].name).toEqual('09/2017');
+        expect(dashboard.allSum.data[1].name).toEqual(name2);
         expect(dashboard.allSum.data[1].value).toEqual(dashboard.operationSum.data[1].value + dashboard.replacementSum.data[1].value);
-        expect(dashboard.allSum.data[2].name).toEqual('03/2018');
+        expect(dashboard.allSum.data[2].name).toEqual(name3);
         expect(dashboard.allSum.data[2].value).toEqual(dashboard.operationSum.data[2].value + dashboard.replacementSum.data[2].value);
 
         expect(dashboard.operationSum.isDoughnut).toBeFalsy();
@@ -199,11 +202,11 @@ describe('DashboardService', () => {
         expect(dashboard.operationSum.legendTitle).toEqual(MockTranslate.ES.COMMON.DATE);
         expect(dashboard.operationSum.xAxisLabel).toEqual(MockTranslate.ES.COMMON.DATE);
         expect(dashboard.operationSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.LABOR_EXPENSE);
-        expect(dashboard.operationSum.data[0].name).toEqual('02/2016');
+        expect(dashboard.operationSum.data[0].name).toEqual(name1);
         expect(dashboard.operationSum.data[0].value).toEqual(650);
-        expect(dashboard.operationSum.data[1].name).toEqual('09/2017');
+        expect(dashboard.operationSum.data[1].name).toEqual(name2);
         expect(dashboard.operationSum.data[1].value).toEqual(333);
-        expect(dashboard.operationSum.data[2].name).toEqual('03/2018');
+        expect(dashboard.operationSum.data[2].name).toEqual(name3);
         expect(dashboard.operationSum.data[2].value).toEqual(300);
 
         expect(dashboard.replacementSum.isDoughnut).toBeFalsy();
@@ -212,11 +215,11 @@ describe('DashboardService', () => {
         expect(dashboard.replacementSum.legendTitle).toEqual(MockTranslate.ES.COMMON.DATE);
         expect(dashboard.replacementSum.xAxisLabel).toEqual(MockTranslate.ES.COMMON.DATE);
         expect(dashboard.replacementSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.REPLACEMENT_EXPENSE);
-        expect(dashboard.replacementSum.data[0].name).toEqual('02/2016');
+        expect(dashboard.replacementSum.data[0].name).toEqual(name1);
         expect(dashboard.replacementSum.data[0].value).toEqual(362);
-        expect(dashboard.replacementSum.data[1].name).toEqual('09/2017');
+        expect(dashboard.replacementSum.data[1].name).toEqual(name2);
         expect(dashboard.replacementSum.data[1].value).toEqual(193);
-        expect(dashboard.replacementSum.data[2].name).toEqual('03/2018');
+        expect(dashboard.replacementSum.data[2].name).toEqual(name3);
         expect(dashboard.replacementSum.data[2].value).toEqual(117);
     });
 

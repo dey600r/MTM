@@ -28,24 +28,24 @@ describe('LogService', () => {
     });
 
     it('should get data directory', () => {
-        expect(service.getDataDirectory()).toEqual(ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY);
-        file.externalRootDirectory = null;
+        expect(service.getDataDirectory()).toEqual(ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY);
+        file.externalDataDirectory = null;
         expect(service.getDataDirectory()).toEqual(ConstantsTest.PATH_DATA_DIRECTORY);
-        file.externalRootDirectory = ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY;
+        file.externalDataDirectory = ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY;
     });
 
-    it('should get root directory', () => {
-        expect(service.getRootDirectory()).toEqual(ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY);
-        file.externalRootDirectory = null;
+    it('should get external data directory', () => {
+        expect(service.getRootDirectory()).toEqual(ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY);
+        file.externalDataDirectory = null;
         expect(service.getRootDirectory()).toEqual('');
-        file.externalRootDirectory = ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY;
+        file.externalDataDirectory = ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY;
     });
 
     it('should get root path files', () => {
         expect(service.getRootPathFiles())
-            .toEqual(`${ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY}${Constants.OUTPUT_DIR_NAME}/`);
+            .toEqual(`${ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY}${Constants.OUTPUT_DIR_NAME}/`);
         expect(service.getRootPathFiles('hola'))
-            .toEqual(`${ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY}${Constants.OUTPUT_DIR_NAME}/hola`);
+            .toEqual(`${ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY}${Constants.OUTPUT_DIR_NAME}/hola`);
     });
 
     it('should get root relative path', () => {

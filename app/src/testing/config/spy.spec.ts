@@ -2,7 +2,6 @@ import { AngularDelegate, ModalController, NavParams, Platform, PopoverControlle
 import { Observable, of } from 'rxjs';
 
 // PLUGINS
-import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
@@ -24,7 +23,6 @@ import { ConstantsTest } from './constants.spec';
 export class SpyMockConfig {
     static SpyConfig = {
         statusBar: jasmine.createSpyObj('StatusBar', ['styleBlackTranslucent']),
-        splashScreenSpy: jasmine.createSpyObj('SplashScreen', ['hide']),
         platformReadySpy: Promise.resolve(),
         platformSpy: {
             ready: jasmine.createSpy().and.returnValue(Promise.resolve()),
@@ -47,6 +45,7 @@ export class SpyMockConfig {
             createFile: jasmine.createSpy().and.returnValue(Promise.resolve()),
             listDir: jasmine.createSpy().and.returnValue(Promise.resolve([{ name: 'test.json' }])),
             externalRootDirectory: ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY,
+            externalDataDirectory: ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY,
             dataDirectory: ConstantsTest.PATH_DATA_DIRECTORY
         },
         dbService: jasmine.createSpyObj('DataBaseService', ['initDB',]),
@@ -73,7 +72,6 @@ export class SpyMockConfig {
         InAppBrowser,
         //{ provide: LogService, useValue: SpyMockConfig.SpyConfig.logService },
         { provide: StatusBar, useValue: SpyMockConfig.SpyConfig.statusBar },
-        { provide: SplashScreen, useValue: SpyMockConfig.SpyConfig.splashScreenSpy },
         { provide: Platform, useValue: SpyMockConfig.SpyConfig.platformSpy },
         { provide: File, useValue: SpyMockConfig.SpyConfig.file },
         { provide: ScreenOrientation, useValue: SpyMockConfig.SpyConfig.screenOrientation },

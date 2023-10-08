@@ -60,11 +60,11 @@ export class LogService {
     }
     
     getDataDirectory(): string {
-        return (!!this.file.externalRootDirectory ? this.file.externalRootDirectory : this.file.dataDirectory);
+        return (!!this.file.externalDataDirectory ? this.file.externalDataDirectory : this.file.dataDirectory);
     }
 
     getRootDirectory(): string {
-        return (!!this.file.externalRootDirectory ? this.file.externalRootDirectory : '');
+        return (!!this.file.externalDataDirectory ? this.file.externalDataDirectory : '');
     }
 
     getRootPathFiles(filePath: string = ''): string {

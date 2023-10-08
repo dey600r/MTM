@@ -26,7 +26,7 @@ export class ExportService {
     }
 
     getRealRelativeDirectory(): string {
-        return (!!this.file.externalRootDirectory ? this.file.externalRootDirectory : this.getRealPathWindows());
+        return (!!this.file.externalDataDirectory ? this.file.externalDataDirectory : this.getRealPathWindows());
     }
 
     getRealPathWindows(): string {
