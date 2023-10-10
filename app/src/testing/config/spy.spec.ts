@@ -22,7 +22,7 @@ import { ConstantsTest } from './constants.spec';
 
 export class SpyMockConfig {
     static SpyConfig = {
-        statusBar: jasmine.createSpyObj('StatusBar', ['styleBlackTranslucent']),
+        statusBar: jasmine.createSpyObj('StatusBar', ['styleBlackTranslucent', 'styleLightContent']),
         platformReadySpy: Promise.resolve(),
         platformSpy: {
             ready: jasmine.createSpy().and.returnValue(Promise.resolve()),

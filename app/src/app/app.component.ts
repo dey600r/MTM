@@ -36,7 +36,7 @@ export class AppComponent {
       this.translator.use(userLang);
     }).finally(() => {
       // CONFIGURATION
-      this.statusBar.styleBlackTranslucent();
+      this.statusBar.styleLightContent();
 
       // FILES
       this.exportService.createOutputDirectory();

@@ -61,7 +61,7 @@ describe('AppComponent', () => {
     fixture.whenStable().then(() => {
         tick();
         expect(platform.ready).toHaveBeenCalled();
-        expect(statusBar.styleBlackTranslucent).toHaveBeenCalled();
+        expect(statusBar.styleLightContent).toHaveBeenCalled();
         expect(dbService.initDB).toHaveBeenCalled();
         expect(spyControlService).toHaveBeenCalled();
         expect(exportService.createOutputDirectory).toHaveBeenCalled();
