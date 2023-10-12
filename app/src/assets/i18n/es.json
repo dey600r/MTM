@@ -295,7 +295,8 @@
         "ErrorSyncDownload": "Ha ocurrido un error en la descarga: {{error}}",
         "ErrorSyncUpload": "Ha ocurrido un error en la subida: {{error}}",
         "ErrorSyncDataNotFound": "No se encuentran datos en la nube. Primero debería actualizarlos.",
-        "ErrorSyncVersion": "La version de MtM debería ser {{version}} pero está instalada {{versionNow}}. Deberias actualizar los datos en la nube o descargar la nueva versión."
+        "ErrorSyncVersion": "La version de MtM debería ser {{version}} pero está instalada {{versionNow}}. Deberias actualizar los datos {{versionSync}} en la nube o descargar la nueva versión.",
+        "ErrorFunctionNotAvailable": "Esta función no esta disponible"
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",

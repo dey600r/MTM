@@ -75,7 +75,6 @@ export class HomePage extends BasePage implements OnInit {
 
   ngOnInit() {
     this.initPage();
-    
   }
 
   /** INIT */

@@ -7,17 +7,16 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';
 
 // SERVICES
+import { ControlService, LogService, CommonService } from '../common/index';
 import { DataBaseService } from './data-base.service';
 import { ExportService } from './export.service';
-import { DataService } from './data.service';
 import { CRUDService } from './crud.service';
-import { ControlService } from '../common/control.service';
-import { LogService } from '../common/log.service';
 import { SettingsService } from '../modals/index';
 
 // UTILS
 import * as loginData from '@assets/data/login-firebase.json';
 import { Constants, ConstantsTable, PageEnum, ToastTypeEnum } from '@utils/index';
+import { environment } from '@environment/environment';
 
 // MODALS
 import { SystemConfigurationModel } from '@models/index';
@@ -30,13 +29,13 @@ export class SyncService {
   login = false;
 
   constructor(private dbService: DataBaseService,
-              private dataService: DataService,
               private crudService: CRUDService,
               private exportService: ExportService,
               private controlService: ControlService,
               private settingsService: SettingsService,
               private file: File,
-              private logService: LogService) { }
+              private logService: LogService,
+              private commonService: CommonService) { }
 
   // syncRegisterUser(email: string, pwd: string) {
   //   const auth = getAuth();
@@ -88,12 +87,16 @@ export class SyncService {
         await this.crudService.getAllDataFromStorage().then(async (json: any) => {
           const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_SYNC_FILE_NAME);
           // WRITE BACKUP FILE
-          await this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
-            JSON.stringify(json), { replace : true}).then(() => {
-              // This is intentional
-          }).catch(err => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
-          });
+          try {
+            await this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
+              JSON.stringify(json), { replace : true}).then(() => {
+                // This is intentional
+            }).catch(err => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
+            });
+          } catch(e: any) {
+            this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `Error creating backup file sync`, e);
+          }
           const dataImport: any = json;
           this.crudService.getSyncTables().forEach(x => {
               dataImport[x] = JSON.parse(data[x]);
@@ -160,14 +163,7 @@ export class SyncService {
       const settings: SystemConfigurationModel[] = JSON.parse(data[ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]);
       if (settings && settings.length >= 6 &&
           this.exportService.validateStructureJsonDB(JSON.stringify(data), this.crudService.getSyncTables())) {
-        const syncVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(settings);
-        const appVersion: SystemConfigurationModel = this.settingsService.getVersionSelected(this.dataService.getSystemConfigurationData());
-        if (syncVersion && syncVersion.value === appVersion.value) {
-          return true;
-        } else {
-          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'ALERT.ErrorSyncVersion',
-            { version: syncVersion.value, versionNow: appVersion.value }, Constants.DELAY_TOAST_HIGH);
-        }
+        return this.validateVersionToImport(this.settingsService.getVersionSelected(settings).value);
       } else {
         this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'PAGE_HOME.ErrorFormatDB');
       }
@@ -175,5 +171,16 @@ export class SyncService {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'ALERT.ErrorSyncDataNotFound');
     }
     return false;
+  }
+
+  validateVersionToImport(newVersion: string): boolean {
+    const syncVersion: number = this.commonService.getVersion(newVersion);
+    const minVersion: number = this.commonService.getVersion(environment.minVersion);
+    const result: boolean = syncVersion && syncVersion >= minVersion;
+    if (!result) {
+      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'ALERT.ErrorSyncVersion',
+        { version: environment.minVersion, versionNow: environment.lastVersion, versionSync: newVersion }, Constants.DELAY_TOAST_HIGH);
+    }
+    return result;
   }
 }

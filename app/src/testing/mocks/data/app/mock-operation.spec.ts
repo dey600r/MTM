@@ -2,11 +2,11 @@ import { OperationModel, OperationTypeModel } from '@models/index';
 import { CalendarService, IconService } from '@services/index';
 
 import { Constants } from '@utils/index';
-import { MockMaintenance } from './mock-maintenance.spec';
 
-import { MockVehicle } from './mock-vehicle.spec';
+import { MockAppMaintenance } from './mock-maintenance.spec';
+import { MockAppVehicle } from './mock-vehicle.spec';
 
-export class MockOperation {
+export class MockAppOperation {
     static iconService: IconService = new IconService();
     static calendarService: CalendarService = new CalendarService(null);
 
@@ -22,7 +22,7 @@ export class MockOperation {
         new OperationTypeModel(Constants.OPERATION_TYPE_FAILURE_HOME, 'FAILURE_HOME', 8),
         new OperationTypeModel(Constants.OPERATION_TYPE_SPARE_PARTS, 'SPARE_PARTS', 9)
     ];
-    public static OperationTypes: OperationTypeModel[] = MockOperation.OperationTypesAux.map(x => {
+    public static OperationTypes: OperationTypeModel[] = MockAppOperation.OperationTypesAux.map(x => {
         return {...x, icon: this.iconService.getIconOperationType(x.code) };
     });
 
@@ -31,8 +31,8 @@ export class MockOperation {
         new OperationModel({
             description: 'Compra moto',
             details: 'Compra hyosung GT125r 2006',
-            operationType: MockOperation.OperationTypes[5],
-            vehicle: MockVehicle.Vehicles[1],
+            operationType: MockAppOperation.OperationTypes[5],
+            vehicle: MockAppVehicle.Vehicles[1],
             km: 0,
             date: new Date(new Date().getFullYear() - 17, new Date().getMonth() + 1, new Date().getDate() - 2),
             location: 'Motos real (Ciudad Real)',
@@ -45,8 +45,8 @@ export class MockOperation {
         new OperationModel({
             description: 'Revision1',
             details: 'Aceite motor, filtro aceite, pastillas de freno',
-            operationType: MockOperation.OperationTypes[0],
-            vehicle: MockVehicle.Vehicles[1],
+            operationType: MockAppOperation.OperationTypes[0],
+            vehicle: MockAppVehicle.Vehicles[1],
             km: 4000, 
             date: new Date(new Date().getFullYear() - 17, new Date().getMonth() + 3, new Date().getDate() - 1),
             location: 'Motos real (Ciudad Real)',
@@ -55,17 +55,17 @@ export class MockOperation {
             document: '',
             id: 2,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[0],
-                MockMaintenance.MaintenanceElements[2],
-                MockMaintenance.MaintenanceElements[3],
-                MockMaintenance.MaintenanceElements[4]
+                MockAppMaintenance.MaintenanceElements[0],
+                MockAppMaintenance.MaintenanceElements[2],
+                MockAppMaintenance.MaintenanceElements[3],
+                MockAppMaintenance.MaintenanceElements[4]
             ]
         }),
         new OperationModel({
             description: 'Comprar Moto',
             details: 'Yamaha R6 2005',
-            operationType: MockOperation.OperationTypes[5],
-            vehicle: MockVehicle.Vehicles[0],
+            operationType: MockAppOperation.OperationTypes[5],
+            vehicle: MockAppVehicle.Vehicles[0],
             km: 0,
             date: new Date(new Date().getFullYear() - 17, new Date().getMonth() + 1, new Date().getDate() + 3),
             location: 'Madrid (Motos Cortes)',
@@ -78,8 +78,8 @@ export class MockOperation {
         new OperationModel({
             description: 'Primera Revisión',
             details: 'Filtro aceite, aceite motor, residuos',
-            operationType: MockOperation.OperationTypes[0],
-            vehicle: MockVehicle.Vehicles[1],
+            operationType: MockAppOperation.OperationTypes[0],
+            vehicle: MockAppVehicle.Vehicles[1],
             km: 988,
             date: new Date(new Date().getFullYear() - 17, new Date().getMonth() + 3, new Date().getDate() + 5),
             location: 'Madrid (Motos Cortes)',
@@ -88,17 +88,17 @@ export class MockOperation {
             document: '',
             id: 4,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[1],
-                MockMaintenance.MaintenanceElements[4],
-                MockMaintenance.MaintenanceElements[5],
-                MockMaintenance.MaintenanceElements[6]
+                MockAppMaintenance.MaintenanceElements[1],
+                MockAppMaintenance.MaintenanceElements[4],
+                MockAppMaintenance.MaintenanceElements[5],
+                MockAppMaintenance.MaintenanceElements[6]
             ]
         }),
         new OperationModel({
             description: 'Revisión3',
             details: 'Filtro aceite, aceite motor, residuos',
-            operationType: MockOperation.OperationTypes[6],
-            vehicle: MockVehicle.Vehicles[1],
+            operationType: MockAppOperation.OperationTypes[6],
+            vehicle: MockAppVehicle.Vehicles[1],
             km: 4200,
             date: new Date(new Date().getFullYear() - 15, new Date().getMonth() - 6, new Date().getDate() - 6),
             location: 'Ciudad Real (Motos Real)',
@@ -107,17 +107,17 @@ export class MockOperation {
             document: '',
             id: 5,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[8],
-                MockMaintenance.MaintenanceElements[5],
-                MockMaintenance.MaintenanceElements[6],
-                MockMaintenance.MaintenanceElements[10]
+                MockAppMaintenance.MaintenanceElements[8],
+                MockAppMaintenance.MaintenanceElements[5],
+                MockAppMaintenance.MaintenanceElements[6],
+                MockAppMaintenance.MaintenanceElements[10]
             ]
         }),
         new OperationModel({
             description: 'Revisión4',
             details: 'Filtro aceite, aceite motor, residuos',
-            operationType: MockOperation.OperationTypes[0],
-            vehicle: MockVehicle.Vehicles[1],
+            operationType: MockAppOperation.OperationTypes[0],
+            vehicle: MockAppVehicle.Vehicles[1],
             km: 68770,
             date: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 6, new Date().getDate() - 5),
             location: 'Ciudad Real (Motos Real)',
@@ -126,15 +126,15 @@ export class MockOperation {
             document: '',
             id: 6,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[1],
-                MockMaintenance.MaintenanceElements[7]
+                MockAppMaintenance.MaintenanceElements[1],
+                MockAppMaintenance.MaintenanceElements[7]
             ]
         }),
         new OperationModel({
             description: 'Revisión5',
             details: 'Filtro aceite, aceite motor, residuos',
-            operationType: MockOperation.OperationTypes[6],
-            vehicle: MockVehicle.Vehicles[0],
+            operationType: MockAppOperation.OperationTypes[6],
+            vehicle: MockAppVehicle.Vehicles[0],
             km: 55000,
             date: new Date(new Date().getFullYear() - 7, new Date().getMonth() - 7, new Date().getDate() - 13),
             location: 'Madrid (Motos Cortes)',
@@ -143,18 +143,18 @@ export class MockOperation {
             document: '',
             id: 7,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[0],
-                MockMaintenance.MaintenanceElements[1],
-                MockMaintenance.MaintenanceElements[4],
-                MockMaintenance.MaintenanceElements[5],
-                MockMaintenance.MaintenanceElements[6]
+                MockAppMaintenance.MaintenanceElements[0],
+                MockAppMaintenance.MaintenanceElements[1],
+                MockAppMaintenance.MaintenanceElements[4],
+                MockAppMaintenance.MaintenanceElements[5],
+                MockAppMaintenance.MaintenanceElements[6]
             ]
         }),
         new OperationModel({
             description: 'Revisión6',
             details: 'Filtro aceite, aceite motor, residuos',
-            operationType: MockOperation.OperationTypes[6],
-            vehicle: MockVehicle.Vehicles[0],
+            operationType: MockAppOperation.OperationTypes[6],
+            vehicle: MockAppVehicle.Vehicles[0],
             km: 67000,
             date: new Date(new Date().getFullYear() - 6, new Date().getMonth() - 1, new Date().getDate() + 7),
             location: 'Madrid (Motos Cortes)',
@@ -163,18 +163,18 @@ export class MockOperation {
             document: '',
             id: 8,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[0],
-                MockMaintenance.MaintenanceElements[3],
-                MockMaintenance.MaintenanceElements[4],
-                MockMaintenance.MaintenanceElements[5],
-                MockMaintenance.MaintenanceElements[10]
+                MockAppMaintenance.MaintenanceElements[0],
+                MockAppMaintenance.MaintenanceElements[3],
+                MockAppMaintenance.MaintenanceElements[4],
+                MockAppMaintenance.MaintenanceElements[5],
+                MockAppMaintenance.MaintenanceElements[10]
             ]
         }),
         new OperationModel({
             description: 'Revisión7',
             details: 'Filtro aceite, aceite motor, residuos',
-            operationType: MockOperation.OperationTypes[0],
-            vehicle: MockVehicle.Vehicles[0],
+            operationType: MockAppOperation.OperationTypes[0],
+            vehicle: MockAppVehicle.Vehicles[0],
             km: 100000,
             date: new Date(new Date().getFullYear() - 5, new Date().getMonth() - 6, new Date().getDate() - 5),
             location: 'Madrid (Motos Cortes)',
@@ -183,17 +183,17 @@ export class MockOperation {
             document: '',
             id: 9,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[2],
-                MockMaintenance.MaintenanceElements[4],
-                MockMaintenance.MaintenanceElements[5],
-                MockMaintenance.MaintenanceElements[6]
+                MockAppMaintenance.MaintenanceElements[2],
+                MockAppMaintenance.MaintenanceElements[4],
+                MockAppMaintenance.MaintenanceElements[5],
+                MockAppMaintenance.MaintenanceElements[6]
             ]
         }),
         new OperationModel({ 
             description: 'Revisión8',
             details: 'Filtro aceite, aceite motor, residuos',
-            operationType: MockOperation.OperationTypes[0],
-            vehicle: MockVehicle.Vehicles[1],
+            operationType: MockAppOperation.OperationTypes[0],
+            vehicle: MockAppVehicle.Vehicles[1],
             km: 72000,
             date: new Date(new Date().getFullYear() - 2, new Date().getMonth() - 3, new Date().getDate() + 6),
             location: 'Ciudad Real (Motos Real)',
@@ -202,16 +202,16 @@ export class MockOperation {
             document: '',
             id: 10,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[4],
-                MockMaintenance.MaintenanceElements[5],
-                MockMaintenance.MaintenanceElements[6]
+                MockAppMaintenance.MaintenanceElements[4],
+                MockAppMaintenance.MaintenanceElements[5],
+                MockAppMaintenance.MaintenanceElements[6]
             ]
         }),
         new OperationModel({
             description: 'Revisión8',
             details: 'Filtro aceite, aceite motor, residuos',
-            operationType: MockOperation.OperationTypes[0],
-            vehicle: MockVehicle.Vehicles[0],
+            operationType: MockAppOperation.OperationTypes[0],
+            vehicle: MockAppVehicle.Vehicles[0],
             km: 110300,
             date: new Date(new Date().getFullYear() - 5, new Date().getMonth() - 1, new Date().getDate() + 8),
             location: 'Madrid (Motos Cortes)',
@@ -220,10 +220,10 @@ export class MockOperation {
             document: '',
             id: 11,
             listMaintenanceElement: [
-                MockMaintenance.MaintenanceElements[2],
-                MockMaintenance.MaintenanceElements[4],
-                MockMaintenance.MaintenanceElements[5],
-                MockMaintenance.MaintenanceElements[6]
+                MockAppMaintenance.MaintenanceElements[2],
+                MockAppMaintenance.MaintenanceElements[4],
+                MockAppMaintenance.MaintenanceElements[5],
+                MockAppMaintenance.MaintenanceElements[6]
             ]
         })
     ];

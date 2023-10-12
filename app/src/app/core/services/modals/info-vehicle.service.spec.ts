@@ -9,7 +9,7 @@ import { ControlService } from '../common/index';
 import { TranslateService } from '@ngx-translate/core';
 
 // CONFIGURATIONS
-import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 
 // MODELS
 import { InfoVehicleConfigurationModel, InfoVehicleHistoricModel, IDashboardModel, ISettingModel } from '@models/index';
@@ -69,8 +69,8 @@ describe('InfoVehicleService', () => {
     });
 
     it('should get percent km vehicle', () => {
-        const data = service.calculateInfoVehicleConfiguration(MockData.Operations, [MockData.Vehicles[0]],
-            MockData.Configurations, MockData.Maintenances);
+        const data = service.calculateInfoVehicleConfiguration(MockAppData.Operations, [MockAppData.Vehicles[0]],
+            MockAppData.Configurations, MockAppData.Maintenances);
         expect(service.getPercentKmVehicle(data[0])).toEqual(50);
     });
 
@@ -88,7 +88,7 @@ describe('InfoVehicleService', () => {
 
     const validateInfoVehicleConfiguration = (data: InfoVehicleConfigurationModel, index: number) => {
         data.listMaintenance.forEach(main => {
-            const dataMain = MockData.Configurations[index].listMaintenance.find(x => x.id === main.id);
+            const dataMain = MockAppData.Configurations[index].listMaintenance.find(x => x.id === main.id);
             expect(dataMain).not.toBeUndefined();
             expect(main.km).toEqual(dataMain.km);
             expect(main.time).toEqual(dataMain.time);
@@ -103,23 +103,23 @@ describe('InfoVehicleService', () => {
 
     it('should calculate info vehicle configuration', () => {
         const data: InfoVehicleConfigurationModel[] = service.calculateInfoVehicleConfiguration(
-            MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+            MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
         expect(data.length).toEqual(3);
-        const confProd: InfoVehicleConfigurationModel = data.find(x => x.idConfiguration === MockData.Configurations[0].id);
-        expect(confProd.idVehicle).toEqual(MockData.Vehicles[0].id);
+        const confProd: InfoVehicleConfigurationModel = data.find(x => x.idConfiguration === MockAppData.Configurations[0].id);
+        expect(confProd.idVehicle).toEqual(MockAppData.Vehicles[0].id);
         validateInfoVehicleConfiguration(confProd, 0);
         expect(confProd.listMaintenance[0].warning).toEqual(WarningWearEnum.SUCCESS);
         expect(confProd.listMaintenance[1].warning).toEqual(WarningWearEnum.SKULL);
         expect(confProd.listMaintenance[2].warning).toEqual(WarningWearEnum.SKULL);
         expect(confProd.listMaintenance[3].warning).toEqual(WarningWearEnum.WARNING);
-        const confHyosung: InfoVehicleConfigurationModel = data.find(x => x.idConfiguration === MockData.Configurations[1].id);
+        const confHyosung: InfoVehicleConfigurationModel = data.find(x => x.idConfiguration === MockAppData.Configurations[1].id);
         validateInfoVehicleConfiguration(confHyosung, 1);
         expect(confHyosung.listMaintenance[0].warning).toEqual(WarningWearEnum.SUCCESS);
         expect(confHyosung.listMaintenance[1].warning).toEqual(WarningWearEnum.SKULL);
         expect(confHyosung.listMaintenance[2].warning).toEqual(WarningWearEnum.DANGER);
         expect(confHyosung.listMaintenance[3].warning).toEqual(WarningWearEnum.SKULL);
         expect(confHyosung.listMaintenance[4].warning).toEqual(WarningWearEnum.SKULL);
-        const confKawa: InfoVehicleConfigurationModel = data.find(x => x.idConfiguration === MockData.Configurations[2].id);
+        const confKawa: InfoVehicleConfigurationModel = data.find(x => x.idConfiguration === MockAppData.Configurations[2].id);
         validateInfoVehicleConfiguration(confKawa, 2);
         expect(confKawa.listMaintenance[0].warning).toEqual(WarningWearEnum.SKULL);
         expect(confKawa.listMaintenance[1].warning).toEqual(WarningWearEnum.SKULL);
@@ -128,18 +128,18 @@ describe('InfoVehicleService', () => {
 
     it('should calculate info replacement historic', () => {
         const data: InfoVehicleHistoricModel[] = service.calculateInfoReplacementHistoric(
-            MockData.Vehicles, MockData.Maintenances, MockData.Operations, MockData.Configurations, MockData.MaintenanceElements);
+            MockAppData.Vehicles, MockAppData.Maintenances, MockAppData.Operations, MockAppData.Configurations, MockAppData.MaintenanceElements);
         expect(data.length).toEqual(3);
-        const vehicleHyosung: InfoVehicleHistoricModel = data.find(x => x.id === MockData.Vehicles[0].id);
+        const vehicleHyosung: InfoVehicleHistoricModel = data.find(x => x.id === MockAppData.Vehicles[0].id);
         expect(vehicleHyosung.id).not.toBeUndefined();
-        expect(vehicleHyosung.listHistoricReplacements[0].name).toEqual(MockData.MaintenanceElements[4].name);
+        expect(vehicleHyosung.listHistoricReplacements[0].name).toEqual(MockAppData.MaintenanceElements[4].name);
         expect(vehicleHyosung.listHistoricReplacements[0].km).toBeGreaterThanOrEqual(3940);
         expect(vehicleHyosung.listHistoricReplacements[0].kmAverage).toEqual(27575);
         expect(vehicleHyosung.listHistoricReplacements[0].priceAverage).toEqual(6);
         expect(vehicleHyosung.listHistoricReplacements[0].time).toBeGreaterThanOrEqual(46);
         expect(vehicleHyosung.listHistoricReplacements[0].timeAverage).toEqual(37);
         expect(vehicleHyosung.listHistoricReplacements[0].listReplacements.length).toEqual(4);
-        expect(vehicleHyosung.listHistoricReplacements[2].name).toEqual(MockData.MaintenanceElements[0].name);
+        expect(vehicleHyosung.listHistoricReplacements[2].name).toEqual(MockAppData.MaintenanceElements[0].name);
         expect(vehicleHyosung.listHistoricReplacements[2].km).toBeGreaterThanOrEqual(36940);
         expect(vehicleHyosung.listHistoricReplacements[2].kmAverage).toEqual(33500);
         expect(vehicleHyosung.listHistoricReplacements[2].priceAverage).toEqual(110);
@@ -149,7 +149,7 @@ describe('InfoVehicleService', () => {
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].km).toEqual(12000);
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].price).toEqual(110);
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].priceOp).toEqual(333);
-        expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].time).toEqual(18);
-        expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].opName).toEqual(MockData.Operations[7].description);
+        expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].time).toEqual(19);
+        expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].opName).toEqual(MockAppData.Operations[7].description);
     });
 });

@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 // LIBRARIES IONIC
-import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
@@ -56,7 +55,6 @@ import { MapService } from './core/services';
   providers: [
     MapService,
     StatusBar,
-    SplashScreen,
     TranslateStore,
     InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

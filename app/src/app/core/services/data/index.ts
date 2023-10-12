@@ -1,4 +1,3 @@
-export * from './sql.service';
 export * from './data.service';
 export * from './data-base.service';
 export * from './crud.service';

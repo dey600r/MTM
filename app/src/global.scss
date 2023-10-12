@@ -48,6 +48,13 @@ ion-checkbox {
   min-width: 365px;
 }
 
+/* MODAL */
+
+.my-custom-modal .modal-wrapper {
+  --min-width: 90%;
+  --min-height: 90%;
+}
+
 // SPLASH SCREEN ANIMATION
 
 body {

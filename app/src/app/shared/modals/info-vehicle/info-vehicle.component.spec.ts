@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ControlService, SettingsService } from '@services/index';
 
 // CONFIGURATION
-import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
@@ -35,7 +35,7 @@ describe('InfoVehicleComponent', () => {
     fixture = TestBed.createComponent(InfoVehicleComponent);
     component = fixture.componentInstance;
     component.navParams.data = new ModalInputModel<VehicleModel>({
-        dataList: MockData.Vehicles,
+        dataList: MockAppData.Vehicles,
         parentPage: PageEnum.VEHICLE
       });
     fixture.detectChanges();

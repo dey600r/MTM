@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 path=$1
 version=$2
 prod=$3-android

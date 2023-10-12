@@ -9,43 +9,19 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        children: [
-          {
-            path: '',
-            loadChildren: () =>
-              import('../home/home.module').then(m => m.HomePageModule)
-          }
-        ]
+        children: [ { path: '', loadChildren: () => import('../home/home.module').then(m => m.HomePageModule) } ]
       },
       {
         path: 'vehicle',
-        children: [
-          {
-            path: '',
-            loadChildren: () =>
-              import('../vehicle/vehicle.module').then(m => m.VehiclePageModule)
-          }
-        ]
+        children: [ { path: '', loadChildren: () => import('../vehicle/vehicle.module').then(m => m.VehiclePageModule) } ]
       },
       {
         path: 'operation',
-        children: [
-          {
-            path: '',
-            loadChildren: () =>
-              import('../operation/operation.module').then(m => m.OperationPageModule)
-          }
-        ]
+        children: [ { path: '', loadChildren: () => import('../operation/operation.module').then(m => m.OperationPageModule) } ]
       },
       {
         path: 'configuration',
-        children: [
-          {
-            path: '',
-            loadChildren: () =>
-              import('../configuration/configuration.module').then(m => m.ConfigurationPageModule)
-          }
-        ]
+        children: [ { path: '', loadChildren: () => import('../configuration/configuration.module').then(m => m.ConfigurationPageModule) } ]
       },
       {
         path: '',

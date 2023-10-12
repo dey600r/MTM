@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { ConfigurationService } from './configuration.service';
 
 // CONFIGURATIONS
-import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 
 // MODELS
 import { ConfigurationModel, MaintenanceElementModel, MaintenanceFreqModel, MaintenanceModel, OperationModel, VehicleModel } from '@models/index';
@@ -30,7 +30,7 @@ describe('ConfigurationService', () => {
     /* CONFIGURATIONS */
 
     it('should order all replacement', () => {
-        const result: MaintenanceElementModel[] = service.orderMaintenanceElement(MockData.MaintenanceElements);
+        const result: MaintenanceElementModel[] = service.orderMaintenanceElement(MockAppData.MaintenanceElements);
         expect(result[0].id).toEqual(10);
         expect(result[1].id).toEqual(8);
         expect(result[2].id).toEqual(9);
@@ -201,7 +201,7 @@ describe('ConfigurationService', () => {
     });
 
     it('should get replacement separated by commas', () => {
-        const result: string = service.getReplacement([MockData.MaintenanceElementsAux[0], MockData.MaintenanceElementsAux[2]]);
-        expect(result).toEqual(`${MockData.MaintenanceElementsAux[0].name}, ${MockData.MaintenanceElementsAux[2].name}`);
+        const result: string = service.getReplacement([MockAppData.MaintenanceElementsAux[0], MockAppData.MaintenanceElementsAux[2]]);
+        expect(result).toEqual(`${MockAppData.MaintenanceElementsAux[0].name}, ${MockAppData.MaintenanceElementsAux[2].name}`);
     });
 });
