@@ -87,12 +87,16 @@ export class SyncService {
         await this.crudService.getAllDataFromStorage().then(async (json: any) => {
           const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_SYNC_FILE_NAME);
           // WRITE BACKUP FILE
-          await this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
-            JSON.stringify(json), { replace : true}).then(() => {
-              // This is intentional
-          }).catch(err => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
-          });
+          try {
+            await this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
+              JSON.stringify(json), { replace : true}).then(() => {
+                // This is intentional
+            }).catch(err => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile');
+            });
+          } catch(e: any) {
+            this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `Error creating backup file sync`, e);
+          }
           const dataImport: any = json;
           this.crudService.getSyncTables().forEach(x => {
               dataImport[x] = JSON.parse(data[x]);

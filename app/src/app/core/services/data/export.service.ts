@@ -39,34 +39,43 @@ export class ExportService {
 
     createOutputDirectory() {
         const pathDataDirectory: string = this.logService.getDataDirectory();
-        this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
-            this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory exists`);
-            this.createDiretory(Constants.EXPORT_DIR_NAME);
-            this.createDiretory(Constants.IMPORT_DIR_NAME);
-        }).catch(errCheck => {
-            this.file.createDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME, false).then(newDir => {
-                this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory created`);
+        try {
+            this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
+                this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory exists`);
                 this.createDiretory(Constants.EXPORT_DIR_NAME);
                 this.createDiretory(Constants.IMPORT_DIR_NAME);
-            }).catch(errCreate => {
-                this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, errCreate);
+            }).catch(errCheck => {
+                this.file.createDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME, false).then(newDir => {
+                    this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory created`);
+                    this.createDiretory(Constants.EXPORT_DIR_NAME);
+                    this.createDiretory(Constants.IMPORT_DIR_NAME);
+                }).catch(errCreate => {
+                    this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, errCreate);
+                });
             });
-        });
+        } catch(e: any) {
+            this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, e);
+        }
+        
     }
 
     createDiretory(dirName: string) {
-        const pathRootFiles: string = this.logService.getRootPathFiles();
-        this.file.checkDir(pathRootFiles, dirName).then(dir => {
-            this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${dirName} directory exists`);
-        }).catch(errCheck => {
-            this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `${dirName} directory dont exists`);
-            this.file.createDir(pathRootFiles, dirName, false).then(newDir => {
-                this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${dirName} directory created`);
-                this.file.createFile(this.logService.getRootPathFiles(dirName), Constants.FILE_EMPTY_NAME, true);
-            }).catch(errCreate => {
-                this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error creating ${dirName} directory`, errCreate);
+        try {
+            const pathRootFiles: string = this.logService.getRootPathFiles();
+            this.file?.checkDir(pathRootFiles, dirName).then(dir => {
+                this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${dirName} directory exists`);
+            }).catch(errCheck => {
+                this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `${dirName} directory dont exists`);
+                this.file.createDir(pathRootFiles, dirName, false).then(newDir => {
+                    this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${dirName} directory created`);
+                    this.file.createFile(this.logService.getRootPathFiles(dirName), Constants.FILE_EMPTY_NAME, true);
+                }).catch(errCreate => {
+                    this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error creating ${dirName} directory`, errCreate);
+                });
             });
-        });
+        } catch(e: any) {
+            this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, e);
+        }
     }
 
     generateNameExportFile(fileNameExport: string = Constants.EXPORT_FILE_NAME) {

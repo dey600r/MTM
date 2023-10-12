@@ -213,7 +213,8 @@ export class ControlService {
         this.desactivateButtonExist();
         const modal: HTMLIonModalElement = await this.modalController.create({
           component: modalComponent,
-          componentProps: inputModel
+          componentProps: inputModel,
+          cssClass: 'my-custom-modal',
         });
         modal.onDidDismiss().then((dataReturned) => {
           this.activateButtonExist(parent);

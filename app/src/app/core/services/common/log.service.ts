@@ -45,17 +45,21 @@ export class LogService {
             const logFilePath: string = this.getRootPathFiles();
             const log: string = this.generateMessageLog(type, page, msg, err);
 
-            this.file.checkFile(logFilePath, logFileName).then(value => {
-                this.file.readAsText(logFilePath, logFileName).then(txt => {
-                    this.file.writeExistingFile(logFilePath, logFileName, `${txt}\n${log}`).then(() => {
-                    }).catch(err => console.error("Error saving loging " + err?.message));
-                }, err => {
-                    console.error("Error reading loging " + err?.message);
+            try {
+                this.file.checkFile(logFilePath, logFileName).then(value => {
+                    this.file.readAsText(logFilePath, logFileName).then(txt => {
+                        this.file.writeExistingFile(logFilePath, logFileName, `${txt}\n${log}`).then(() => {
+                        }).catch(err => console.error("Error saving loging " + err?.message));
+                    }, err => {
+                        console.error("Error reading loging " + err?.message);
+                    });
+                }, reject => {
+                    this.file.writeFile(logFilePath, logFileName, log).then(() => {
+                    }).catch(err => console.error("Error creating loging " + err?.message));
                 });
-            }, reject => {
-                this.file.writeFile(logFilePath, logFileName, log).then(() => {
-                }).catch(err => console.error("Error creating loging " + err?.message));
-            });
+            } catch(e: any) {
+                console.warn('Web mode ' + e);
+            }
         }
     }
     
