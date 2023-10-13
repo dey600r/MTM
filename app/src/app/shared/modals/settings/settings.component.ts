@@ -168,7 +168,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingFile', err);
             });
         } catch(e: any) {
-          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'ALERT.ErrorFunctionNotAvailable', e);
+          this.exportService.exportJsonWeb(json, exportFileName);          
+          this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
         }
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorExportDB', e);

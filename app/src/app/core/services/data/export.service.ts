@@ -86,5 +86,24 @@ export class ExportService {
 
     validateStructureJsonDB(contentFile: string, listTables: string[]): boolean {
         return listTables.every(x => contentFile.includes(x));
-      }
+    }
+
+    exportJsonWeb(json: any, exportFileName: string) {
+        const blob = new Blob([JSON.stringify(json, null, 2)], {type: 'application/json'});
+        // window.open(window.URL.createObjectURL(blob)); // OPEN IN A NEW TAB
+    
+        let dwldLink = document.createElement("a");
+        let url = URL.createObjectURL(blob);
+        let isSafariBrowser = navigator.userAgent.indexOf('Safari') !=
+            -1 && navigator.userAgent.indexOf('Chrome') == -1;
+        if (isSafariBrowser) {
+            dwldLink.setAttribute("target", "_blank");
+        }
+        dwldLink.setAttribute("href", url);
+        dwldLink.setAttribute("download", exportFileName);
+        dwldLink.style.visibility = "hidden";
+        document.body.appendChild(dwldLink);
+        dwldLink.click();
+        document.body.removeChild(dwldLink);
+    }
 }
