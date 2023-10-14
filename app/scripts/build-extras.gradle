@@ -1,5 +1,6 @@
 android {
-    ndkVersion "23.1.7779620" 
+    // ndkPath "C:/Users/dey125r/AppData/Local/Android/Sdk/ndk/25.1.8937393"
+    ndkVersion "25.1.8937393" 
     buildTypes {
         debug {
             ndk {
@@ -11,7 +12,14 @@ android {
         release {
             ndk {
                 debugSymbolLevel 'FULL'
+                // abiFilters "armeabi", "armeabi-v7a", "x86", "arm64-v8a", "x86_64", "mips"
             }
+            // externalNativeBuild {
+            //     ndkBuild {
+            //         // Passes an optional argument to ndk-build.
+            //         arguments "NDK_OUT=${projectDir}/src/main/lib"
+            //     }
+            // }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile(
@@ -20,3 +28,8 @@ android {
         }   
     }
 }
+
+// ext.postBuildExtras = {
+//     android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
+//     android.buildTypes.release.ndk.debugSymbolLevel = 'FULL'
+// }
