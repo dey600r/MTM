@@ -166,18 +166,25 @@ export class ControlService {
         await this.alertCustom(parent, header, msg, [this.translator.instant(`COMMON.ACCEPT`)]);
     }
 
+    private alertOpen: boolean = false;
     async alertCustom(parent: PageEnum, header: string, msg: string, btns: any[]) {
-        this.desactivateButtonExist();
-        const alert = await this.alertController.create({
-            header: this.translator.instant(header),
-            subHeader: '',
-            message: this.translator.instant(msg),
-            buttons: btns
-        });
-        alert.onDidDismiss().then((dataReturned) => {
-            this.activateButtonExist(parent);
-        });
-        await alert.present();
+        if(!this.alertOpen) {
+            this.desactivateButtonExist();
+
+            this.alertOpen = true;
+            const alert = await this.alertController.create({
+                header: this.translator.instant(header),
+                subHeader: '',
+                message: this.translator.instant(msg),
+                buttons: btns
+            });
+            alert.onDidDismiss().then((dataReturned) => {
+                this.alertOpen = false;
+                this.activateButtonExist(parent);
+            });
+            await alert.present();
+        }
+            
     }
 
     // POPOVERS
@@ -206,7 +213,8 @@ export class ControlService {
         this.desactivateButtonExist();
         const modal: HTMLIonModalElement = await this.modalController.create({
           component: modalComponent,
-          componentProps: inputModel
+          componentProps: inputModel,
+          cssClass: 'my-custom-modal',
         });
         modal.onDidDismiss().then((dataReturned) => {
           this.activateButtonExist(parent);

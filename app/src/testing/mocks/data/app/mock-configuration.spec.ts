@@ -5,9 +5,9 @@ import { CalendarService, IconService } from '@services/index';
 
 import { Constants } from '@utils/index';
 
-import { MockMaintenance } from './mock-maintenance.spec';
+import { MockAppMaintenance } from './mock-maintenance.spec';
 
-export class MockConfiguration {
+export class MockAppConfiguration {
     static iconService: IconService = new IconService();
     static calendarService: CalendarService = new CalendarService(null);
 
@@ -24,34 +24,40 @@ export class MockConfiguration {
     /* CONFIGURATION */
     static Configurations: ConfigurationModel[] = [
         new ConfigurationModel({
-            name: 'PRODUCTION', 
-            description: 'PRODUCTION SETUP', 
+            name: 'DB.PRODUCTION', 
+            nameKey: 'PRODUCTION',
+            description: 'DB.PRODUCTION SETUP', 
+            descriptionKey: 'PRODUCTION SETUP',
             master: true, 
             listMaintenance: [
-                MockMaintenance.Maintenances[0],
-                MockMaintenance.Maintenances[1],
-                MockMaintenance.Maintenances[4],
-                MockMaintenance.Maintenances[5]
+                MockAppMaintenance.Maintenances[0],
+                MockAppMaintenance.Maintenances[1],
+                MockAppMaintenance.Maintenances[4],
+                MockAppMaintenance.Maintenances[5]
             ],
             id: 1
         }),
         new ConfigurationModel({
-            name: 'HYOSUNG', 
+            name: 'DB.HYOSUNG', 
+            nameKey: 'HYOSUNG', 
             description: 'PRODUCTION SETUP HYOSUNG',
+            descriptionKey: 'PRODUCTION SETUP HYOSUNG',
             master: true,
-            listMaintenance: MockMaintenance.Maintenances,
+            listMaintenance: MockAppMaintenance.Maintenances,
             id: 2
         }),
         new ConfigurationModel({
-            name: 'KAWASAKI',
+            name: 'DB.KAWASAKI',
+            nameKey: 'KAWASAKI', 
             description: 'PRODUCTION SETUP KAWASAKI',
+            descriptionKey: 'PRODUCTION SETUP KAWASAKI',
             master: true,
             listMaintenance: [
-                MockMaintenance.Maintenances[1],
-                MockMaintenance.Maintenances[3],
-                MockMaintenance.Maintenances[6],
-                MockMaintenance.Maintenances[7],
-                MockMaintenance.Maintenances[8]
+                MockAppMaintenance.Maintenances[1],
+                MockAppMaintenance.Maintenances[3],
+                MockAppMaintenance.Maintenances[6],
+                MockAppMaintenance.Maintenances[7],
+                MockAppMaintenance.Maintenances[8]
             ],
             id: 3
         })

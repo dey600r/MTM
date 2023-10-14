@@ -45,11 +45,11 @@ describe('ExportService', () => {
 
     it('should get real relative directory', () => {
         expect(service.getRealRelativeDirectory())
-            .toEqual(ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY);
-        file.externalRootDirectory = null;
+            .toEqual(ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY);
+        file.externalDataDirectory = null;
         expect(service.getRealRelativeDirectory())
             .toEqual(`C:\\Users\\<USER>\\AppData\\Local\\Packages\\<52193DeyHome.MotortrackManager>\\LocalState\\${Constants.OUTPUT_DIR_NAME}`);
-        file.externalRootDirectory = ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY;
+        file.externalDataDirectory = ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY;
     });
 
     it('should get real path windows', () => {
@@ -59,9 +59,9 @@ describe('ExportService', () => {
 
     it('should get path file', () => {
         expect(service.getPathFile('test.txt'))
-            .toEqual(`${ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY}${Constants.OUTPUT_DIR_NAME}//test.txt`);
+            .toEqual(`${ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY}${Constants.OUTPUT_DIR_NAME}//test.txt`);
         expect(service.getPathFile('test.txt', 'hola'))
-            .toEqual(`${ConstantsTest.PATH_EXTERNAL_ROOT_DIRECTORY}${Constants.OUTPUT_DIR_NAME}/hola/test.txt`);
+            .toEqual(`${ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY}${Constants.OUTPUT_DIR_NAME}/hola/test.txt`);
     });
 
     it('should create output directory', fakeAsync (() => {

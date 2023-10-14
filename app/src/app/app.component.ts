@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 
 // LIBRARIES
@@ -20,7 +19,6 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private dbService: DataBaseService,
     private translator: TranslateService,
@@ -38,8 +36,7 @@ export class AppComponent {
       this.translator.use(userLang);
     }).finally(() => {
       // CONFIGURATION
-      this.statusBar.styleBlackTranslucent();
-      this.splashScreen.hide();
+      this.statusBar.styleLightContent();
 
       // FILES
       this.exportService.createOutputDirectory();

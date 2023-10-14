@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 // LIBRARIES IONIC
 import { IonicModule } from '@ionic/angular';
-import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
-import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { CalendarModule } from 'ion5-calendar';
 import { File } from '@awesome-cordova-plugins/file/ngx';
@@ -78,8 +76,6 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
   ],
   providers: [
     File,
-    SQLite,
-    SQLitePorter,
     ScreenOrientation,
     DataBaseService,
     CommonService

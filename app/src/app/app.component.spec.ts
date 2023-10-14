@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 
 // PLUGINS
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
-import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -22,7 +21,6 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let platform: Platform;
   let statusBar: StatusBar;
-  let splashScreen: SplashScreen;
   let dbService: DataBaseService;
   let controlService: ControlService;
   let exportService: ExportService;
@@ -44,7 +42,6 @@ describe('AppComponent', () => {
     component = fixture.componentInstance;
     platform = TestBed.inject(Platform);
     statusBar = TestBed.inject(StatusBar);
-    splashScreen = TestBed.inject(SplashScreen);
     dbService = TestBed.inject(DataBaseService);
     //controlService = TestBed.inject(ControlService);
     exportService = TestBed.inject(ExportService);
@@ -64,8 +61,7 @@ describe('AppComponent', () => {
     fixture.whenStable().then(() => {
         tick();
         expect(platform.ready).toHaveBeenCalled();
-        expect(statusBar.styleBlackTranslucent).toHaveBeenCalled();
-        expect(splashScreen.hide).toHaveBeenCalled();
+        expect(statusBar.styleLightContent).toHaveBeenCalled();
         expect(dbService.initDB).toHaveBeenCalled();
         expect(spyControlService).toHaveBeenCalled();
         expect(exportService.createOutputDirectory).toHaveBeenCalled();

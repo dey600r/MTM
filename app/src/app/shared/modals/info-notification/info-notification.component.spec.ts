@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HomeService, SettingsService } from '@services/index';
 
 // CONFIGURATION
-import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
@@ -39,10 +39,10 @@ describe('InfoNotificationComponent', () => {
     fixture = TestBed.createComponent(InfoNotificationComponent);
     component = fixture.componentInstance;
     const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
-      MockData.Operations, MockData.Vehicles, MockData.Configurations, MockData.Maintenances);
+      MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
     component.navParams.data = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>({
         data: allWears[0],
-        dataList: MockData.Operations,
+        dataList: MockAppData.Operations,
         parentPage: PageEnum.HOME
       });
     fixture.detectChanges();

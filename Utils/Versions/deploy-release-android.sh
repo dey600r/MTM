@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 path=$1
 version=$2
 prod=$3-android
@@ -25,13 +26,13 @@ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -storepass "$pass" -keyst
 echo "--- ZIPPING BUNDLE ANDROID ---"
 zipalign -v -f 4 $path_release/app-release.aab $path_version/MtM$free$version.aab;
 echo "--- SAVING BUNDLE NATIVE LIBS ---"
-cd $path_native_lib
+#cd $path_native_lib
 mkdir $path_trace_store
-zip -rv native-libs-symbols-all.zip *
-mv native-libs-symbols-all.zip $path_trace_store
-rm -rf $path_native_lib/armeabi
-zip -rv native-libs-symbols.zip *
-mv native-libs-symbols.zip $path_trace_store
+#zip -rv native-libs-symbols-all.zip *
+#mv native-libs-symbols-all.zip $path_trace_store
+#rm -rf $path_native_lib/armeabi
+#zip -rv native-libs-symbols.zip *
+#mv native-libs-symbols.zip $path_trace_store
 echo "--- SAVING BUNDLE RETRACE R8 ---"
 cp $path_retrace_r8/* $path_trace_store
 echo "----> END ANDROID $prod <----";

@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SettingsService } from '@services/index';
 
 // CONFIGURATION
-import { MockData, SetupTest, SpyMockConfig } from '@testing/index';
+import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
@@ -26,7 +26,7 @@ describe('AddEditMaintenanceElementComponent', () => {
     const config: any = SetupTest.config;
     config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
       SpyMockConfig.getProviderNavParams(new ModalInputModel<MaintenanceElementModel>({
-        data: MockData.MaintenanceElements[0],
+        data: MockAppData.MaintenanceElements[0],
         parentPage: PageEnum.CONFIGURATION
       })));
     await TestBed.configureTestingModule(config).compileComponents();

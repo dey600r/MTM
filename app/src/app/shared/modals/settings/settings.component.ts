@@ -11,7 +11,7 @@ import {
 } from '@models/index';
 
 // UTILS
-import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, ConstantsTable, PageEnum, ToastTypeEnum } from '@utils/index';
 import { environment } from '@environment/environment';
 
 // SERVICES
@@ -159,13 +159,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
   exportDBToJson() {
     this.crudService.getAllDataFromStorage().then((json: any) => {
       const exportFileName: string = this.exportService.generateNameExportFile(Constants.EXPORT_FILE_NAME);
-      this.file.writeFile(this.logService.getRootPathFiles(Constants.EXPORT_DIR_NAME), exportFileName,
-        JSON.stringify(json), { replace : true}).then(() => {
-            this.getLastExportFile();
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveExportDB', {file: exportFileName});
-          }).catch(err => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingFile', err);
-          });
+      try {
+        this.file.writeFile(this.logService.getRootPathFiles(Constants.EXPORT_DIR_NAME), exportFileName,
+          JSON.stringify(json), { replace : true}).then(() => {
+              this.getLastExportFile();
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveExportDB', {file: exportFileName});
+            }).catch(err => {
+              this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingFile', err);
+            });
+        } catch(e: any) {
+          this.exportService.exportJsonWeb(json, exportFileName);          
+          this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
+        }
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorExportDB', e);
     });
@@ -214,37 +219,48 @@ export class SettingsComponent implements OnInit, OnDestroy {
         {
           text: this.translator.instant('COMMON.ACCEPT'),
           handler: () => {
-            this.importJsonToDB(contentFile, event);
+            this.backupAndimportJsonToDB(contentFile, event);
           }
         },
         () => { this.clearInputFile(event); }
     );
   }
 
-  importJsonToDB(contentFile: string, event: any) {
+  backupAndimportJsonToDB(contentFile: string, event: any) {
     // Backup
     this.crudService.getAllDataFromStorage().then((json: any) => {
       const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_FILE_NAME);
       // Write backup file
-      this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
-        JSON.stringify(json), { replace : true}).then(() => {
-          // IMPORT DB
-          const jsonToImport: any = this.mapDataFromContentFile(contentFile);
-          this.dbService.saveDataIntoStorage(jsonToImport).then(() => {
-            this.crudService.loadAllTables();
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
-          }).catch(e => {
-            this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB', e);
-            this.clearInputFile(event);
-          });
-      }).catch(err => {
-        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile', err);
-        this.clearInputFile(event);
-      });
+      try {
+        this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
+          JSON.stringify(json), { replace : true}).then(() => {
+            // IMPORT DB
+            this.importJsonToDB(contentFile, event);
+        }).catch(err => {
+          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile', err);
+          this.clearInputFile(event);
+        });
+      } catch(e: any) {
+        this.importJsonToDB(contentFile, event);
+        this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
+      }
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorBackupDB', e);
       this.clearInputFile(event);
     });
+  }
+
+  importJsonToDB(contentFile: string, event: any) {
+    const jsonToImport: any = this.mapDataFromContentFile(contentFile);
+    if(this.syncService.validateVersionToImport(this.settingsService.getVersionSelected(jsonToImport[ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]).value)) {
+      this.dbService.saveDataIntoStorage(jsonToImport).then(() => {
+        this.crudService.loadAllTables();
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.SaveImportDB');
+      }).catch(e => {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorImportDB', e);
+        this.clearInputFile(event);
+      });
+    }
   }
 
   mapDataFromContentFile(contentFile: string): any {
@@ -256,16 +272,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   // GET LIST FILES
   getLastExportFile() {
-    this.file.listDir(this.logService.getRootPathFiles(), Constants.EXPORT_DIR_NAME).then((listFiles: Entry[]) => {
-      this.lastExport = '';
-      const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
-      if (!!listActual && listActual.length > 0) {
-        this.lastExport = listActual[listActual.length - 1].name;
-      }
-      this.changeDetector.detectChanges();
-    }).catch(err => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles', err);
-    });
+    try {
+      this.file.listDir(this.logService.getRootPathFiles(), Constants.EXPORT_DIR_NAME).then((listFiles: Entry[]) => {
+        this.lastExport = '';
+        const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
+        if (!!listActual && listActual.length > 0) {
+          this.lastExport = listActual[listActual.length - 1].name;
+        }
+        this.changeDetector.detectChanges();
+      }).catch(err => {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles', err);
+      });
+    } catch(e: any) {
+      this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
+    }
   }
 
   showRealExportPath() {
@@ -304,21 +324,25 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   deleteFiles(path: string) {
-    this.file.listDir(this.logService.getRootPathFiles(), path).then((listFiles: Entry[]) => {
-      const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
-      if (!!listActual && listActual.length > 0) {
-        listActual.forEach(f => {
-          this.file.removeFile(this.logService.getRootPathFiles(path), f.name);
-        });
-        this.getLastExportFile();
-        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.DeleteExportDB',
-          {path: this.logService.getRootRelativePath(path)});
-      } else {
-        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'PAGE_HOME.InfoNotExistsFilesToDelete');
-      }
-    }).catch(err => {
-      this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles', err);
-    });
+    try {
+      this.file.listDir(this.logService.getRootPathFiles(), path).then((listFiles: Entry[]) => {
+        const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
+        if (!!listActual && listActual.length > 0) {
+          listActual.forEach(f => {
+            this.file.removeFile(this.logService.getRootPathFiles(path), f.name);
+          });
+          this.getLastExportFile();
+          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.SUCCESS, 'PAGE_HOME.DeleteExportDB',
+            {path: this.logService.getRootRelativePath(path)});
+        } else {
+          this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.WARNING, 'PAGE_HOME.InfoNotExistsFilesToDelete');
+        }
+      }).catch(err => {
+        this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles', err);
+      });
+    } catch(e: any) {
+      this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
+    }
   }
 
   // PRIVACY POLICY

@@ -101,4 +101,13 @@ export class CommonService {
     round(value: number, decimal: number): number {
         return Math.round((value + Number.EPSILON) * decimal) / decimal;
     }
+
+    /** VERSIONING */
+    getVersion(version: string): number {
+        const nums: string[] = version.split('.');
+        const v1: number = (Number)(nums[0].substring(1)) * 1000;
+        const v2: number = (Number)(nums[1]) * 10;
+        const v3: number = (Number)(nums[2]);
+        return v1 + v2 + v3;
+      }
 }
