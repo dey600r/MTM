@@ -13,9 +13,11 @@ esac
 echo "----> BUILDING ANDROID ON VERSION $version USING $prod WITH PATH $path AND $free <----";
 path_version=$path/Utils/Versions/Android/MtM$free$version
 path_key=$path/Utils/Versions/Android
-path_release=$path/app/platforms/android/app/build/outputs/bundle/release
-path_native_lib=$path/app/platforms/android/app/build/intermediates/merged_native_libs/release/out/lib
-path_retrace_r8=$path/app/platforms/android/app/build/outputs/mapping/release
+path_build=$path/app/platforms/android/app/build
+path_output=$path_build/outputs
+path_release=$path_output/bundle/release
+path_native_lib=$path_build/intermediates/merged_native_libs/release/out/lib
+path_retrace_r8=$path_output/mapping/release
 path_trace_store=$path_version/trace-store
 cd $path/app;
 rm -f -r $path_version;
@@ -35,4 +37,5 @@ mkdir $path_trace_store
 #mv native-libs-symbols.zip $path_trace_store
 echo "--- SAVING BUNDLE RETRACE R8 ---"
 cp $path_retrace_r8/* $path_trace_store
+rm -rf $path_output
 echo "----> END ANDROID $prod <----";
