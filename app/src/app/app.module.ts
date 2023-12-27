@@ -15,6 +15,7 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 // LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 // UTILS
 import { environment } from '@environment/environment';
@@ -48,7 +49,13 @@ import { MapService } from './core/services';
     CommonModule,
     FormsModule,
     PipeModule,
-    ComponentModule
+    ComponentModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   exports: [
   ],

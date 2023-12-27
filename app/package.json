@@ -1,8 +1,8 @@
 {
   "name": "MtM",
-  "version": "v3.5.2",
+  "version": "v3.5.3",
   "minVersion": "v3.3.0",
-  "dateVersion": "2023-10-01 10:00:00",
+  "dateVersion": "2023-12-27 10:00:00",
   "author": "David Jimenez Galiana",
   "homepage": "deyhome.mtm@gmail.com",
   "scripts": {
@@ -18,6 +18,7 @@
     "build:release-free": "sh mtm-free-deploy-store.sh C:\/Proyectos\/MtM %npm_package_version%",
     "build:release-free-jenkins": "sh mtm-free-deploy-jenkins.sh \/home\/workspace\/workspace\/deyapps-mtm-build $npm_package_version",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
+    "deploy:release-firebase": "mtm-deploy-firebase.bat",
     "deploy:release-apk": "mtm-deploy-apk.bat production-free",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug --consolelogs",
