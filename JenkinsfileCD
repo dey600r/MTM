@@ -15,10 +15,10 @@ node {
   }
   stage('Android - Install') {
     sh 'echo "Running on $WORKSPACE"'
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-11 bash -c "cd ./workspace/$JOB_NAME/app && ionic cordova platform rm android && ionic cordova platform add android@11.0.0"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-12 bash -c "cd ./workspace/$JOB_NAME/app && ionic cordova platform rm android && ionic cordova platform add android@12.0.1"'
   }
   stage('Android - Build MtM') {
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-11 bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-jenkins"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-12 bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-jenkins"'
   }
   stage('GIT - develop-free') {
     sh 'git restore .'
@@ -26,7 +26,7 @@ node {
     sh 'git pull'
   }
   stage('Android - Build MtM Free') {
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-11 bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-free-jenkins"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-12 bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-free-jenkins"'
     sh 'git restore .'
   }
   stage('Save Artifacts') {
