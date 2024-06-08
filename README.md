@@ -57,12 +57,12 @@ Proyect is created with:
 
 ## Environment on Docker
 
-![MTM-Docker](./app/images_readme/Capture4.png)
+![MTM-Docker](./app/images-readme/Capture4.png)
 
 ## Continuous Integration & Continuous Delivery
 
-![MTM-Jenkins](./app/images_readme/Capture5.png)
+![MTM-Jenkins](./app/images-readme/Capture5.png)
 
 ## Quality with SonarQube
 
-![MTM-SonarQube](./app/images_readme/Capture6.png)
+![MTM-SonarQube](./app/images-readme/Capture6.png)
