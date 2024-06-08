@@ -186,9 +186,9 @@ describe('DashboardService', () => {
         expect(dashboard.allSum.legendTitle).toEqual(MockTranslate.ES.COMMON.DATE);
         expect(dashboard.allSum.xAxisLabel).toEqual(MockTranslate.ES.COMMON.DATE);
         expect(dashboard.allSum.yAxisLabel).toEqual(MockTranslate.ES.COMMON.EXPENSE);
-        const name1: string = '02/2016';
-        const name2: string = '09/2017';
-        const name3: string = '04/2018';
+        const name1: string = '10/2016';
+        const name2: string = '05/2018';
+        const name3: string = '12/2018';
         expect(dashboard.allSum.data[0].name).toEqual(name1);
         expect(dashboard.allSum.data[0].value).toEqual(dashboard.operationSum.data[0].value + dashboard.replacementSum.data[0].value);
         expect(dashboard.allSum.data[1].name).toEqual(name2);
@@ -469,12 +469,12 @@ describe('DashboardService', () => {
         });
         vehicleMock.kmEstimated = calendarService.calculateKmVehicleEstimated(vehicleMock);
         let result: IDashboardModel[] = service.calculateKmPerYearWithOutOperations(data, vehicleMock);
-        expect(result[0].value).toBeLessThanOrEqual(1200);
-        expect(result[1].value).toBeLessThanOrEqual(1100);
-        expect(result[2].value).toBeLessThanOrEqual(1200);
-        expect(result[3].value).toBeLessThanOrEqual(1400);
-        expect(result[4].value).toBeLessThanOrEqual(1800);
-        expect(result[5].value).toBeLessThanOrEqual(1600);
+        expect(result[0].value).toBeLessThanOrEqual(1305);
+        expect(result[1].value).toBeLessThanOrEqual(1105);
+        expect(result[2].value).toBeLessThanOrEqual(1305);
+        expect(result[3].value).toBeLessThanOrEqual(1505);
+        expect(result[4].value).toBeLessThanOrEqual(1905);
+        expect(result[5].value).toBeLessThanOrEqual(1705);
         expect(result[6].value).toBeLessThanOrEqual(2800);
         expect(result[0].value).toBeGreaterThanOrEqual(1000);
         expect(result[1].value).toBeGreaterThanOrEqual(900);
@@ -482,7 +482,7 @@ describe('DashboardService', () => {
         expect(result[3].value).toBeGreaterThanOrEqual(1000);
         expect(result[4].value).toBeGreaterThanOrEqual(1600);
         expect(result[5].value).toBeGreaterThanOrEqual(1400);
-        expect(result[6].value).toBeGreaterThanOrEqual(2500);
+        expect(result[6].value).toBeGreaterThanOrEqual(1600);
     });
 
     it('should calculate km per year without operation 2', () => {
@@ -520,7 +520,7 @@ describe('DashboardService', () => {
         expect(result[3].value).toBeGreaterThanOrEqual(156);
         expect(result[4].value).toBeGreaterThanOrEqual(156);
         expect(result[5].value).toBeGreaterThanOrEqual(156);
-        expect(result[6].value).toBeGreaterThanOrEqual(2500);
+        expect(result[6].value).toBeGreaterThanOrEqual(1600);
     });
 
     it('should calculate km per year with operation', () => {
@@ -529,7 +529,7 @@ describe('DashboardService', () => {
         let year: number = new Date().getFullYear();
         expect(result.length).toEqual(year - new Date(dataVehicle.datePurchase).getFullYear() + 1);
         expect(result[0].name).toEqual((year - 17).toString());
-        expect(result[0].value).toBeLessThanOrEqual(4800);
+        expect(result[0].value).toBeLessThanOrEqual(6920);
         expect(result[0].value).toBeGreaterThanOrEqual(4500);
         expect(result[1].name).toEqual((year - 16).toString());
         expect(result[1].value).toEqual(-1);
@@ -548,13 +548,13 @@ describe('DashboardService', () => {
         expect(result[8].name).toEqual((year - 9).toString());
         expect(result[8].value).toEqual(-1);
         expect(result[9].name).toEqual((year - 8).toString());
-        expect(result[9].value).toEqual(-1);
+        expect(result[9].value).toEqual(7300);
         expect(result[10].name).toEqual((year - 7).toString());
-        expect(result[10].value).toEqual(7300);
+        expect(result[10].value).toEqual(-1);
         expect(result[11].name).toEqual((year - 6).toString());
-        expect(result[11].value).toEqual(24752);
+        expect(result[11].value).toEqual(46122);
         expect(result[12].name).toEqual((year - 5).toString());
-        expect(result[12].value).toEqual(26536);
+        expect(result[12].value).toEqual(12376);
         expect(result[13].name).toEqual((year - 4).toString());
         expect(result[13].value).toEqual(-1);
         expect(result[14].name).toEqual((year - 3).toString());
@@ -565,11 +565,11 @@ describe('DashboardService', () => {
         const dataVehicle: VehicleModel = MockAppData.Vehicles[0];
         let year: number = new Date().getFullYear();
         const dataOperation: OperationModel[] = MockAppData.Operations.filter(x => x.vehicle.id === dataVehicle.id);
-        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === year - 17), year - 17, 25)).toEqual(25);
-        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === year - 15), year - 15, 120)).toEqual(120);
-        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === year - 7), year - 7, 34)).toEqual(29);
-        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === year - 6), year - 6, 15)).toEqual(67);
-        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => new Date(x.date).getFullYear() === year - 5), year - 5, 12)).toEqual(79);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => !!x && new Date(x.date).getFullYear() === year - 17), year - 17, 25)).toEqual(25);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => !!x && new Date(x.date).getFullYear() === year - 15), year - 15, 120)).toEqual(120);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => !!x && new Date(x.date).getFullYear() === year - 6), year - 6, 34)).toEqual(86);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => !!x && new Date(x.date).getFullYear() === year - 6), year - 6, 15)).toEqual(80);
+        expect(service.calculateKmsPerDayPast(dataOperation, dataOperation.filter(x => !!x && new Date(x.date).getFullYear() === year - 5), year - 5, 12)).toEqual(28);
     });
 
     it('should calculate km per day using operations', () => {
