@@ -1,0 +1,94 @@
+FROM openjdk:8
+
+LABEL DeyJG <dey125r@gmail.com>
+
+EXPOSE 80
+USER root
+
+# INSTALL TOOLS
+RUN echo "Installing TOOLS ..."
+RUN apt-get update && \
+    apt-get install -y --no-install-suggests --no-install-recommends \
+      zip \
+      vim \
+      wget \
+      curl \
+      unzip \
+      gnupg \
+      iputils-ping \
+      apt-transport-https && \
+    apt-get clean
+
+WORKDIR /home/tools
+
+# INSTALL GOOGLE CHROME
+RUN echo "Installing CHROME ..."
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get install -y --no-install-suggests --no-install-recommends ./google-chrome-stable_current_amd64.deb --fix-broken
+RUN echo "Finishing ..."
+
+# INSTALL NODE
+RUN echo "Installing NODE ..."
+RUN curl -sL https://deb.nodesource.com/setup_16.x  | bash - && \ 
+    apt-get -y install nodejs
+RUN echo "Finishing ..."
+
+# INSTALL GRADLE
+RUN echo "Installing GRADLE 6.5.1 ..."
+WORKDIR /home/gradle
+COPY ./jenkins/gradle-6.5.1-bin.zip ./gradle-6.5.1-bin.zip
+#RUN curl -L --ssl-no-revoke https://services.gradle.org/distributions/gradle-6.5.1-bin.zip -o gradle-6.5.1-bin.zip
+RUN unzip gradle-6.5.1-bin.zip && rm gradle-6.5.1-bin.zip
+ENV GRADLE_HOME=/home/gradle/gradle-6.5.1
+ENV PATH=$PATH:$GRADLE_HOME/bin
+RUN echo "Finishing ..."
+
+# INSTALL ANDROID SDK
+RUN echo "Installing ANDROID SDK 28 ..."
+ENV ADB_INSTALL_TIMEOUT=10
+ENV ANDROID_HOME=/opt/android
+ENV ANDROID_SDK_ROOT=${ANDROID_HOME}
+ENV ANDROID_SDK_HOME=${ANDROID_HOME}
+ENV PATH=$PATH:$ANDROID_HOME/tools
+ENV PATH=$PATH:$ANDROID_HOME/platform-tools
+ENV PATH=$PATH:$ANDROID_HOME/build-tools/29.0.2
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
+ENV PATH=$PATH:$ANDROID_SDK_HOME/tools
+ENV PATH=$PATH:$ANDROID_SDK_HOME/platform-tools
+ENV PATH ${PATH}:${ANDROID_SDK_HOME}/tools:${ANDROID_SDK_HOME}/tools/bin:${ANDROID_SDK_HOME}/platform-tools
+ENV PATH=$PATH:$HOME/.npm-global/bin
+
+WORKDIR /opt
+RUN wget -q https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -O android-sdk-tools.zip &&\
+    unzip -q android-sdk-tools.zip -d $ANDROID_HOME &&\
+    rm android-sdk-tools.zip
+RUN wget -q https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip -O android-commandline-tools.zip && \
+    mkdir -p /opt/android/cmdline-tools && \
+    unzip -q android-commandline-tools.zip -d $ANDROID_HOME/cmdline-tools && \
+    rm android-commandline-tools.zip
+RUN wget -q https://dl.google.com/android/maven2/com/android/tools/build/aapt2/4.2.1-7147631/aapt2-4.2.1-7147631-linux.jar -O aapt2.zip && \
+    unzip -q aapt2.zip -d $ANDROID_HOME/ && \
+    rm aapt2.zip
+
+ENV PATH ${PATH}:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/tools/bin
+RUN yes | sdkmanager  --licenses
+#RUN touch $ANDROID_HOME/.android/repositories.cfg
+RUN sdkmanager "tools" "platform-tools"
+RUN yes | sdkmanager --update --channel=3
+RUN yes | sdkmanager \
+    "platforms;android-27" \
+    "platforms;android-28" \
+    "build-tools;28.0.0" \
+    "build-tools;29.0.2" \
+    "ndk;21.0.6113669"
+RUN yes | sdkmanager --update --include_obsolete
+RUN echo "Finishing ..."
+
+# INSTALL DEPENDENCIES
+RUN echo "Other configurations ..."
+RUN npm i -g @angular/cli@13.3.10 @ionic/cli@latest cordova firebase-tools native-run
+ENV PASS_MTM=MtM_2020
+ENV ALIAS_MTM=mtm
+RUN echo "Finishing ..."
+
+WORKDIR /home/workspace
