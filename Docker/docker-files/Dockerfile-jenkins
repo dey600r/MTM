@@ -1,0 +1,60 @@
+FROM jenkins/jenkins
+
+LABEL DeyJG <dey125r@gmail.com>
+
+EXPOSE 80
+USER root
+
+# INSTALL TOOLS
+RUN echo "Installing TOOLS ..."
+RUN apt-get update && \
+    apt-get install -y --no-install-suggests --no-install-recommends \
+        zip \
+        vim \
+        wget \
+        curl \
+        unzip \
+        iputils-ping \
+        apt-transport-https \
+        ca-certificates \
+        gnupg2 \
+        software-properties-common && \
+    apt-get clean
+
+WORKDIR /home/tools
+
+# INSTALL GOOGLE CHROME
+RUN echo "Installing CHROME ..."
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get install -y --no-install-suggests --no-install-recommends ./google-chrome-stable_current_amd64.deb --fix-broken
+RUN echo "Finishing ..."
+
+# INSTALL DOCKER
+RUN echo "Installing DOCKER ..."
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+RUN add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) \
+    stable"
+RUN apt-get update  -qq \
+    && apt-get install docker-ce -y
+RUN usermod -aG docker jenkins
+RUN echo "Finishing ..."
+
+WORKDIR /var/jenkins_home
+
+# CONFIG SSH
+RUN echo "Configuring SSH Client ..."
+RUN mkdir .ssh
+COPY ./nginx/keys/remote-key /.ssh/remote_key
+#RUN ssh -tt remote_user@nginx-ssh
+RUN echo "Finishing ..."
+
+# INSTALL DEPENDENCIES
+RUN echo "Other configurations ..."
+COPY ./jenkins/MtM/login-firebase.json /var/jenkins_home/workspace/files-mtm/login-firebase.json
+COPY ./jenkins/MtM/mtm-certificate-store-windows.pfx /var/jenkins_home/workspace/files-mtm/mtm-certificate-store-windows.pfx
+COPY ./jenkins/MtM/mtm-release-prod-key.keystore /var/jenkins_home/workspace/files-mtm/mtm-release-prod-key.keystore
+RUN echo "Finishing ..."
+
+CMD /usr/bin/tini -- /usr/local/bin/jenkins.sh

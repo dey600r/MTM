@@ -35,7 +35,6 @@ package-lock.json
 /app/build.json
 /app/build-demo.json
 
-/Docker
 /Utils/Versions/Android
 /Utils/Versions/Windows
 /Utils/*.txt
@@ -52,3 +51,9 @@ app/src/assets/data
 app/.angular/
 app/.firebase/
 app/config.xml
+Docker/docker-files/Dockerfile-windows
+Docker/docker-files/Dockerfile-windows2
+Docker/docker-files/Dockerfile-windows3
+Docker/docker-files/Install.cmd
+Docker/docker-files/jenkins/
+Docker/docker-files/nginx/
