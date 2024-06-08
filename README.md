@@ -54,3 +54,15 @@ Proyect is created with:
     <td><img src="./app/images-readme/Capture3.png" width=270 height=480></td>
   </tr>
  </table>
+
+## Environment on Docker
+
+![MTM-Docker](./images_readme/Captura4.png)
+
+## Continuous Integration & Continuous Delivery
+
+![MTM-Jenkins](./images_readme/Captura5.png)
+
+## Quality with SonarQube
+
+![MTM-SonarQube](./images_readme/Captura6.png)
