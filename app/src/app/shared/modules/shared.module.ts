@@ -14,23 +14,21 @@ import { AppInfoComponent } from '@components/info/app-info.component';
 import { HeaderSkeletonComponent } from '@components/header-skeleton/header-skeleton.component';
 
 @NgModule({
-  declarations: [
-    AppInfoComponent,
-    HeaderSkeletonComponent
-  ],
-  entryComponents: [],
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    TranslateModule.forChild()
-  ],
-  exports: [
-    AppInfoComponent,
-    HeaderSkeletonComponent
-  ],
-  providers: [
-  ]
+    declarations: [
+        AppInfoComponent,
+        HeaderSkeletonComponent
+    ],
+    imports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        HttpClientModule,
+        TranslateModule.forChild()
+    ],
+    exports: [
+        AppInfoComponent,
+        HeaderSkeletonComponent
+    ],
+    providers: []
 })
 export class SharedModule { }

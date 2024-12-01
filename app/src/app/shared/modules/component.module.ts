@@ -35,50 +35,49 @@ import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data
 import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 
 @NgModule({
-  declarations: [
-    AddEditConfigurationComponent,
-    AddEditVehicleComponent,
-    AddEditOperationComponent,
-    AddEditMaintenanceComponent,
-    AddEditMaintenanceElementComponent,
-    DashboardComponent,
-    InfoNotificationComponent,
-    SettingsComponent,
-    InfoCalendarComponent,
-    SearchDashboardPopOverComponent,
-    ListDataToUpdateComponent,
-    InfoVehicleComponent
-  ],
-  entryComponents: [],
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    CalendarModule,
-    NgxChartsModule,
-    PipeModule,
-    SharedModule,
-    TranslateModule.forChild()
-  ],
-  exports: [
-    AddEditConfigurationComponent,
-    AddEditVehicleComponent,
-    AddEditOperationComponent,
-    AddEditMaintenanceComponent,
-    AddEditMaintenanceElementComponent,
-    DashboardComponent,
-    InfoNotificationComponent,
-    SettingsComponent,
-    InfoCalendarComponent,
-    SearchDashboardPopOverComponent,
-    ListDataToUpdateComponent
-  ],
-  providers: [
-    File,
-    ScreenOrientation,
-    DataBaseService,
-    CommonService
-  ]
+    declarations: [
+        AddEditConfigurationComponent,
+        AddEditVehicleComponent,
+        AddEditOperationComponent,
+        AddEditMaintenanceComponent,
+        AddEditMaintenanceElementComponent,
+        DashboardComponent,
+        InfoNotificationComponent,
+        SettingsComponent,
+        InfoCalendarComponent,
+        SearchDashboardPopOverComponent,
+        ListDataToUpdateComponent,
+        InfoVehicleComponent
+    ],
+    imports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        HttpClientModule,
+        CalendarModule,
+        NgxChartsModule,
+        PipeModule,
+        SharedModule,
+        TranslateModule.forChild()
+    ],
+    exports: [
+        AddEditConfigurationComponent,
+        AddEditVehicleComponent,
+        AddEditOperationComponent,
+        AddEditMaintenanceComponent,
+        AddEditMaintenanceElementComponent,
+        DashboardComponent,
+        InfoNotificationComponent,
+        SettingsComponent,
+        InfoCalendarComponent,
+        SearchDashboardPopOverComponent,
+        ListDataToUpdateComponent
+    ],
+    providers: [
+        File,
+        ScreenOrientation,
+        DataBaseService,
+        CommonService
+    ]
 })
 export class ComponentModule { }

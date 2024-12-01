@@ -29,44 +29,42 @@ import { PipeModule } from '@modules/pipes.module';
 import { MapService } from './core/services';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  entryComponents: [],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    IonicModule.forRoot(),
-    HttpClientModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    }),
-    AppRoutingModule,
-    CommonModule,
-    FormsModule,
-    PipeModule,
-    ComponentModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
-  ],
-  exports: [
-  ],
-  providers: [
-    MapService,
-    StatusBar,
-    TranslateStore,
-    InAppBrowser,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        IonicModule.forRoot(),
+        HttpClientModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [HttpClient]
+            }
+        }),
+        AppRoutingModule,
+        CommonModule,
+        FormsModule,
+        PipeModule,
+        ComponentModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: environment.production,
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
+        })
+    ],
+    exports: [],
+    providers: [
+        MapService,
+        StatusBar,
+        TranslateStore,
+        InAppBrowser,
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}
 

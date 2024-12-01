@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "defaultProject": "app",
   "newProjectRoot": "projects",
   "projects": {
     "app": {
@@ -473,7 +472,9 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/cordova-builders"
+    "schematicCollections": [
+      "@ionic/cordova-builders"
+    ]
   },
   "schematics": {
     "@ionic/cordova-builders:component": {
