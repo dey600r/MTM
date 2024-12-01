@@ -61,20 +61,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
     versionApp: string = `Version app: ${environment.lastVersion}`;
     versionDateApp: string = `${environment.lastUpdate}`;
 
-    constructor(private navParams: NavParams,
-                private changeDetector: ChangeDetectorRef,
-                private modalController: ModalController,
-                private dbService: DataBaseService,
-                private crudService: CRUDService,
-                private dataService: DataService,
-                private settingsService: SettingsService,
-                private exportService: ExportService,
-                private file: File,
-                private controlService: ControlService,
-                private translator: TranslateService,
-                private themeService: ThemeService,
-                private syncService: SyncService,
-                private logService: LogService
+    constructor(private readonly navParams: NavParams,
+                private readonly changeDetector: ChangeDetectorRef,
+                private readonly modalController: ModalController,
+                private readonly dbService: DataBaseService,
+                private readonly crudService: CRUDService,
+                private readonly dataService: DataService,
+                private readonly settingsService: SettingsService,
+                private readonly exportService: ExportService,
+                private readonly file: File,
+                private readonly controlService: ControlService,
+                private readonly translator: TranslateService,
+                private readonly themeService: ThemeService,
+                private readonly syncService: SyncService,
+                private readonly logService: LogService
       ) {
   }
 

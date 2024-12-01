@@ -30,7 +30,7 @@ export class AddEditVehicleComponent implements OnInit {
   configurations: ConfigurationModel[] = [];
   operations: OperationModel[] = [];
   vehicleTypes: VehicleTypeModel[] = [];
-  formatDate = this.calendarService.getFormatCalendar();
+  formatDate = '';
   measure: ISettingModel;
 
   // TRANSLATE
@@ -38,16 +38,17 @@ export class AddEditVehicleComponent implements OnInit {
   translateSelect = '';
 
   constructor(
-    private modalController: ModalController,
-    private navParams: NavParams,
-    private dataService: DataService,
-    private translator: TranslateService,
-    private vehicleService: VehicleService,
-    private commonService: CommonService,
-    private calendarService: CalendarService,
-    private controlService: ControlService,
-    private settingsService: SettingsService
+    private readonly modalController: ModalController,
+    private readonly navParams: NavParams,
+    private readonly dataService: DataService,
+    private readonly translator: TranslateService,
+    private readonly vehicleService: VehicleService,
+    private readonly commonService: CommonService,
+    private readonly calendarService: CalendarService,
+    private readonly controlService: ControlService,
+    private readonly settingsService: SettingsService
   ) {
+    this.formatDate = this.calendarService.getFormatCalendar();
     this.translateYearBetween = this.translator.instant('PAGE_VEHICLE.AddYearBetween', { year: new Date().getFullYear()});
     this.translateSelect = this.translator.instant('COMMON.SELECT');
   }

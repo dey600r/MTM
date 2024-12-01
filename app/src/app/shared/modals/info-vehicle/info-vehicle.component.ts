@@ -67,17 +67,17 @@ export class InfoVehicleComponent implements OnInit {
   // SUSBSCRIPTION
   screenSubscription: Subscription = new Subscription();
 
-  constructor(private platform: Platform,
+  constructor(private readonly platform: Platform,
               public navParams: NavParams,
-              private screenOrientation: ScreenOrientation,
-              private modalController: ModalController,
-              private controlService: ControlService,
-              private dataService: DataService,
-              private commonService: CommonService,
-              private infoVehicleService: InfoVehicleService,
-              private settingsService: SettingsService,
-              private dashboardService: DashboardService,
-              private changeDetector: ChangeDetectorRef) { }
+              private readonly screenOrientation: ScreenOrientation,
+              private readonly modalController: ModalController,
+              private readonly controlService: ControlService,
+              private readonly dataService: DataService,
+              private readonly commonService: CommonService,
+              private readonly infoVehicleService: InfoVehicleService,
+              private readonly settingsService: SettingsService,
+              private readonly dashboardService: DashboardService,
+              private readonly changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.initSummary();

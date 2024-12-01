@@ -45,14 +45,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     searchSubscription: Subscription = new Subscription();
     screenSubscription: Subscription = new Subscription();
 
-    constructor(private platform: Platform,
-                private navParams: NavParams,
-                private screenOrientation: ScreenOrientation,
-                private changeDetector: ChangeDetectorRef,
-                private dashboardService: DashboardService,
-                private modalController: ModalController,
-                private controlService: ControlService,
-                private iconService: IconService) {
+    constructor(private readonly platform: Platform,
+                private readonly navParams: NavParams,
+                private readonly screenOrientation: ScreenOrientation,
+                private readonly changeDetector: ChangeDetectorRef,
+                private readonly dashboardService: DashboardService,
+                private readonly modalController: ModalController,
+                private readonly controlService: ControlService,
+                private readonly iconService: IconService) {
   }
 
   ngOnInit() {

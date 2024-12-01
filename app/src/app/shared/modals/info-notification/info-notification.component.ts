@@ -68,21 +68,21 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   searchDashboardRecordsSubscription: Subscription = new Subscription();
   screenSubscription: Subscription = new Subscription();
 
-  constructor(private platform: Platform,
+  constructor(private readonly platform: Platform,
               public navParams: NavParams,
-              private modalController: ModalController,
-              private dashboardService: DashboardService,
-              private calendarService: CalendarService,
-              private infoCalendarService: InfoCalendarService,
-              private controlService: ControlService,
-              private screenOrientation: ScreenOrientation,
-              private changeDetector: ChangeDetectorRef,
-              private translator: TranslateService,
-              private settingsService: SettingsService,
-              private dataService: DataService,
-              private homeService: HomeService,
-              private infoVehicleService: InfoVehicleService,
-              private iconService: IconService) {
+              private readonly modalController: ModalController,
+              private readonly dashboardService: DashboardService,
+              private readonly calendarService: CalendarService,
+              private readonly infoCalendarService: InfoCalendarService,
+              private readonly controlService: ControlService,
+              private readonly screenOrientation: ScreenOrientation,
+              private readonly changeDetector: ChangeDetectorRef,
+              private readonly translator: TranslateService,
+              private readonly settingsService: SettingsService,
+              private readonly dataService: DataService,
+              private readonly homeService: HomeService,
+              private readonly infoVehicleService: InfoVehicleService,
+              private readonly iconService: IconService) {
   }
 
   ngOnInit() {

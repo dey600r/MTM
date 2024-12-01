@@ -51,14 +51,14 @@ export class InfoCalendarComponent implements OnInit {
   notificationEmpty = '';
 
   constructor(public navParams: NavParams,
-              private modalController: ModalController,
-              private calendarService: CalendarService,
-              private infoCalendarService: InfoCalendarService,
-              private commonService: CommonService,
-              private translator: TranslateService,
-              private controlService: ControlService,
-              private settingsService: SettingsService,
-              private dataService: DataService) {
+              private readonly modalController: ModalController,
+              private readonly calendarService: CalendarService,
+              private readonly infoCalendarService: InfoCalendarService,
+              private readonly commonService: CommonService,
+              private readonly translator: TranslateService,
+              private readonly controlService: ControlService,
+              private readonly settingsService: SettingsService,
+              private readonly dataService: DataService) {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }

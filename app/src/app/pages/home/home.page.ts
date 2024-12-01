@@ -37,7 +37,7 @@ export class HomePage extends BasePage implements OnInit {
   input: ModalInputModel = new ModalInputModel();
 
   // DATA
-  searchDashboard: SearchDashboardModel = this.dashboardService.getSearchDashboard();
+  searchDashboard: SearchDashboardModel = new SearchDashboardModel();
   activateInfo = false;
   wears: WearVehicleProgressBarViewModel[] = [];
   allWears: WearVehicleProgressBarViewModel[] = [];
@@ -60,17 +60,18 @@ export class HomePage extends BasePage implements OnInit {
   maintenanceSubscription: Subscription = new Subscription();
 
   constructor(public platform: Platform,
-              private dataService: DataService,
+              private readonly dataService: DataService,
               public translator: TranslateService,
-              private dashboardService: DashboardService,
-              private configurationService: ConfigurationService,
-              private controlService: ControlService,
-              private settingsService: SettingsService,
-              private themeService: ThemeService,
-              private homeService: HomeService,
-              private modalController: ModalController,
-              private detector: ChangeDetectorRef) {
+              private readonly dashboardService: DashboardService,
+              private readonly configurationService: ConfigurationService,
+              private readonly controlService: ControlService,
+              private readonly settingsService: SettingsService,
+              private readonly themeService: ThemeService,
+              private readonly homeService: HomeService,
+              private readonly modalController: ModalController,
+              private readonly detector: ChangeDetectorRef) {
     super(platform, translator);
+    this.searchDashboard = this.dashboardService.getSearchDashboard();
   }
 
   ngOnInit() {

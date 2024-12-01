@@ -20,9 +20,9 @@ export class ListDataToUpdateComponent {
   // MODAL MODELS
   modalInputModel: ModalInputModel<ListModalModel> = new ModalInputModel<ListModalModel>();
 
-  constructor(private controlService: ControlService,
-              private modalController: ModalController,
-              private navParams: NavParams) {
+  constructor(private readonly controlService: ControlService,
+              private readonly modalController: ModalController,
+              private readonly navParams: NavParams) {
     this.modalInputModel = new ModalInputModel(this.navParams.data);
   }
 

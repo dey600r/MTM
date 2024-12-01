@@ -53,7 +53,7 @@
           <ion-icon *ngIf="this.submited && !isValidOperationType(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidOperationType(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddOperationType' | translate }}</ion-text>
         </ion-label>
-        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="required" 
+        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="true" 
            required [(ngModel)]="operation.operationType.id">
           <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationType">{{ ot.description }}</ion-select-option>
         </ion-select>

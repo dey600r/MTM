@@ -27,13 +27,13 @@ export class AddEditConfigurationComponent implements OnInit {
   measure: ISettingModel;
 
   constructor(
-    private modalController: ModalController,
-    private navParams: NavParams,
-    private dataService: DataService,
-    private commonService: CommonService,
-    private controlService: ControlService,
-    private settingsService: SettingsService,
-    private configurationService: ConfigurationService
+    private readonly modalController: ModalController,
+    private readonly navParams: NavParams,
+    private readonly dataService: DataService,
+    private readonly commonService: CommonService,
+    private readonly controlService: ControlService,
+    private readonly settingsService: SettingsService,
+    private readonly configurationService: ConfigurationService
   ) {
   }
 

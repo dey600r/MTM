@@ -37,7 +37,7 @@ export class AddEditOperationComponent implements OnInit {
   maintenanceElementSelect: MaintenanceElementModel[] = [];
   idMaintenanceElementSelect: number[] = [];
   owners: any [] = [];
-  formatDate = this.calendarService.getFormatCalendar();
+  formatDate = '';
   measure: ISettingModel;
   coin: ISettingModel;
 
@@ -49,18 +49,19 @@ export class AddEditOperationComponent implements OnInit {
   translateSelect = '';
 
   constructor(
-    private modalController: ModalController,
-    private navParams: NavParams,
-    private dataService: DataService,
-    private translator: TranslateService,
-    private operationService: OperationService,
-    private commonService: CommonService,
-    private calendarService: CalendarService,
-    private controlService: ControlService,
-    private configurationService: ConfigurationService,
-    private settingsService: SettingsService,
-    private vehicleService: VehicleService
+    private readonly modalController: ModalController,
+    private readonly navParams: NavParams,
+    private readonly dataService: DataService,
+    private readonly translator: TranslateService,
+    private readonly operationService: OperationService,
+    private readonly commonService: CommonService,
+    private readonly calendarService: CalendarService,
+    private readonly controlService: ControlService,
+    private readonly configurationService: ConfigurationService,
+    private readonly settingsService: SettingsService,
+    private readonly vehicleService: VehicleService
   ) {
+    this.formatDate = this.calendarService.getFormatCalendar();
     this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
     this.translateMe = this.translator.instant('COMMON.ME');
     this.translateAccept = this.translator.instant('COMMON.ACCEPT');

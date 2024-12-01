@@ -40,19 +40,18 @@ export class AddEditMaintenanceComponent implements OnInit {
   translateSelect = '';
   translateAccept = '';
   translateCancel = '';
-  customActionSheetOptions: any = {
-    header: this.translator.instant('COMMON.REPLACEMENT'),
-  };
+  customActionSheetOptions: any = {};
 
   constructor(
-    private modalController: ModalController,
-    private navParams: NavParams,
-    private dataService: DataService,
-    private configurationService: ConfigurationService,
-    private translator: TranslateService,
-    private controlService: ControlService,
-    private settingsService: SettingsService
+    private readonly modalController: ModalController,
+    private readonly navParams: NavParams,
+    private readonly dataService: DataService,
+    private readonly configurationService: ConfigurationService,
+    private readonly translator: TranslateService,
+    private readonly controlService: ControlService,
+    private readonly settingsService: SettingsService
   ) {
+    this.customActionSheetOptions = { header: this.translator.instant('COMMON.REPLACEMENT') };
     this.translateSelect = this.translator.instant('COMMON.SELECT');
     this.translateAccept = this.translator.instant('COMMON.ACCEPT');
     this.translateCancel = this.translator.instant('COMMON.CANCEL');

@@ -22,10 +22,10 @@ export class AddEditMaintenanceElementComponent implements OnInit {
   submited = false;
 
   constructor(
-    private modalController: ModalController,
-    private navParams: NavParams,
-    private controlService: ControlService,
-    private configurationService: ConfigurationService
+    private readonly modalController: ModalController,
+    private readonly navParams: NavParams,
+    private readonly controlService: ControlService,
+    private readonly configurationService: ConfigurationService
   ) {
   }
 

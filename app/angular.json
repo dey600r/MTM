@@ -19,7 +19,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
-              "ion5-calendar"
+              "ion5-calendar",
+              "moment"
             ],
             "assets": [
               {

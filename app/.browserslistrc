@@ -4,9 +4,10 @@
 
 # You can see what browsers were selected by your queries by running:
 #   npx browserslist
-
-> 0.5%
-last 2 versions
-Firefox ESR
+supports es6-module
 not dead
-not IE 9-11 # For IE 9-11 support, remove 'not'.
+not safari tp
+not IE <= 11
+not ios_saf 10.3
+not safari 10.1
+not edge 16-17
