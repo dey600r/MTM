@@ -122,7 +122,7 @@
               </ion-label>
             </div>
           </div>
-          <div class="table-row" [hidden]="showInfoMaintenance[i]">
+          <div class="table-row" *ngIf="showInfoMaintenance[i]">
             <ion-list class="second-item-div">
               <ion-item *ngFor="let r of m.listReplacement" [ngClass]="{ 'disable-item-color': !m.active }">
                 <ion-avatar slot="start" class="second-avatar">
@@ -198,7 +198,7 @@
               </ion-label>
             </div>
           </div>
-          <div class="table-row" [hidden]="showInfoReplacement[i]">
+          <div class="table-row" *ngIf="showInfoReplacement[i]">
             <ion-list class="second-item-div">
               <ion-item *ngFor="let subRep of rep.listReplacements" button
                 (click)="showInfoReplacement[i] = !showInfoReplacement[i]; showToastInfoReplacement(rep, subRep)">

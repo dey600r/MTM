@@ -13,7 +13,7 @@ import { ToastTypeEnum, PageEnum } from '@utils/index';
 
     private storage: Storage;
   
-    constructor(private logService: LogService) {
+    constructor(private readonly logService: LogService) {
       this.storage = window.localStorage;
     }
 

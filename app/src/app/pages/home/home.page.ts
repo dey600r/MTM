@@ -168,7 +168,7 @@ export class HomePage extends BasePage implements OnInit {
   initShowInfoMaintenance() {
     this.showInfoMaintenance = [];
     if (this.vehicleSelected) {
-      this.vehicleSelected.listWearMaintenance.forEach(x => this.showInfoMaintenance = [...this.showInfoMaintenance, true]);
+      this.vehicleSelected.listWearMaintenance.forEach(x => this.showInfoMaintenance = [...this.showInfoMaintenance, false]);
     }
   }
 

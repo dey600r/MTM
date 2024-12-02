@@ -1,4 +1,4 @@
-<ion-header [hidden]="!loadedHeader">
+<ion-header *ngIf="loadedHeader">
   <ion-toolbar>
     <!-- Button filter -->
     <ion-button slot="start" fill="clear" class="btn-width-header"></ion-button>
@@ -19,7 +19,7 @@
     </ion-segment-button>
   </ion-segment>
 </ion-header>
-<ion-content [hidden]="!loadedBody">
+<ion-content *ngIf="loadedBody">
   <!-- INFO MAINTENANCES -->
   <app-info *ngIf="segmentSelected === 1 && configurations.length === 0" [inputInfo]="inputConfiguration"></app-info>
   <!-- CONFIGURATIONS -->

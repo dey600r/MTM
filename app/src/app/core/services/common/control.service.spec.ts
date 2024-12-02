@@ -59,7 +59,7 @@ describe('ControlService', () => {
 
     it('should is not app free', () => {
         const closeModal = spyOn(modalController, 'dismiss');
-        const createToast = spyOn(new ModalController(null, null, null), 'create');
+        const createToast = spyOn(new ModalController(), 'create');
         service.isAppFree(modalController);
         expect(createToast).not.toHaveBeenCalled();
         expect(closeModal).not.toHaveBeenCalled();

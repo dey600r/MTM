@@ -25,15 +25,15 @@ export class ControlService {
     // SUBSCRIPTION
     private exitButtonSubscripion: Subscription = new Subscription();
 
-    constructor(private translator: TranslateService,
-                private alertController: AlertController,
-                private toastController: ToastController,
-                private modalController: ModalController,
-                private popoverController: PopoverController,
-                private loadingController: LoadingController,
-                private platform: Platform,
-                private iab: InAppBrowser,
-                private logService: LogService) {
+    constructor(private readonly translator: TranslateService,
+                private readonly alertController: AlertController,
+                private readonly toastController: ToastController,
+                private readonly modalController: ModalController,
+                private readonly popoverController: PopoverController,
+                private readonly loadingController: LoadingController,
+                private readonly platform: Platform,
+                private readonly iab: InAppBrowser,
+                private readonly logService: LogService) {
     }
 
     getDateLastUse(): Date {

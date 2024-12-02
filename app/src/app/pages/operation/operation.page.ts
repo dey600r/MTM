@@ -49,15 +49,15 @@ export class OperationPage extends BasePage implements OnInit {
   coin: ISettingModel;
 
   constructor(public platform: Platform,
-              private dataService: DataService,
+              private readonly dataService: DataService,
               public translator: TranslateService,
-              private commonService: CommonService,
-              private controlService: ControlService,
-              private operationService: OperationService,
-              private dashboardService: DashboardService,
-              private settingsService: SettingsService,
-              private detector: ChangeDetectorRef,
-              private iconService: IconService) {
+              private readonly commonService: CommonService,
+              private readonly controlService: ControlService,
+              private readonly operationService: OperationService,
+              private readonly dashboardService: DashboardService,
+              private readonly settingsService: SettingsService,
+              private readonly detector: ChangeDetectorRef,
+              private readonly iconService: IconService) {
     super(platform, translator);
   }
 

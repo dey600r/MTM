@@ -12,7 +12,7 @@ import { environment } from '@environment/environment';
 })
 export class LogService {
 
-    constructor(private file: File) {
+    constructor(private readonly file: File) {
     }
 
     private generateNameLogFile(): string {

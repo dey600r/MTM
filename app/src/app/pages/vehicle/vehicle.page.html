@@ -1,4 +1,4 @@
-<ion-header [hidden]="!loadedHeader">
+<ion-header *ngIf="loadedHeader">
   <ion-toolbar>
     <!-- Button chart -->
     <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openDashboardVehicle()">
@@ -19,7 +19,7 @@
     </ion-segment-button>
   </ion-segment>
 </ion-header>
-<ion-content [hidden]="!loadedBody">
+<ion-content *ngIf="loadedBody">
   <!-- INFO -->
   <app-info *ngIf="vehicles.length === 0" [inputInfo]="input"></app-info>
   <!-- LIST -->

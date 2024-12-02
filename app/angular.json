@@ -19,8 +19,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
-              "ion5-calendar",
-              "moment"
+              "moment",
+              "rfdc"
             ],
             "assets": [
               {

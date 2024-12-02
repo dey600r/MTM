@@ -15,7 +15,7 @@ import { VehicleModel } from '@models/index';
 })
 export class CalendarService {
 
-    constructor(private translator: TranslateService) {
+    constructor(private readonly translator: TranslateService) {
     }
 
     // COMMON UTILS METHODS STRINGS

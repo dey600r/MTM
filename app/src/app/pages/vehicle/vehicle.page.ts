@@ -36,15 +36,15 @@ export class VehiclePage extends BasePage implements OnInit {
   iconNameHeaderLeft = '';
 
   constructor(public platform: Platform,
-              private dataService: DataService,
+              private readonly dataService: DataService,
               public translator: TranslateService,
-              private vehicleService: VehicleService,
-              private commonService: CommonService,
-              private controlService: ControlService,
-              private dashboardService: DashboardService,
-              private settingsService: SettingsService,
-              private detector: ChangeDetectorRef,
-              private iconService: IconService) {
+              private readonly vehicleService: VehicleService,
+              private readonly commonService: CommonService,
+              private readonly controlService: ControlService,
+              private readonly dashboardService: DashboardService,
+              private readonly settingsService: SettingsService,
+              private readonly detector: ChangeDetectorRef,
+              private readonly iconService: IconService) {
       super(platform, translator);
   }
 

@@ -1,4 +1,4 @@
-<ion-header [hidden]="!loadedHeader">
+<ion-header *ngIf="loadedHeader">
   <ion-toolbar>
     <!-- Button Calendar -->
     <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openInfoCalendar()">
@@ -28,7 +28,7 @@
   </ion-segment>
 </ion-header>
 
-<ion-content [hidden]="!loadedBody">
+<ion-content *ngIf="loadedBody">
   <!-- INFO -->
   <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
   <!-- List Vehicles -->       
@@ -60,8 +60,8 @@
                   <!-- BUTTON OPEN INFORMATION -->
                   <div class="icon-notification">
                     <ion-button class="margin0" fill="clear">
-                      <ion-icon *ngIf="showInfoMaintenance[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
-                      <ion-icon *ngIf="!showInfoMaintenance[i]" size="small" color="primary" name="caret-up-circle"></ion-icon>
+                      <ion-icon *ngIf="!showInfoMaintenance[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
+                      <ion-icon *ngIf="showInfoMaintenance[i]" size="small" color="primary" name="caret-up-circle"></ion-icon>
                     </ion-button>
                   </div>
                 </div>
@@ -89,7 +89,7 @@
               </div>
             </div>
           </div>
-          <div class="table-row" [hidden]="showInfoMaintenance[i]">
+          <div class="table-row" *ngIf="showInfoMaintenance[i]">
             <ion-list class="second-item-div">
               <ion-item button *ngFor="let wr of wm.listWearReplacement" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]; openInfoNotification(this.vehicleSelected, wm, wr)">
                 <div>

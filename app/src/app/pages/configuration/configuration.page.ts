@@ -64,16 +64,16 @@ export class ConfigurationPage extends BasePage implements OnInit {
   @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
   constructor(public platform: Platform,
-              private dataService: DataService,
+              private readonly dataService: DataService,
               public translator: TranslateService,
-              private commonService: CommonService,
-              private controlService: ControlService,
-              private configurationService: ConfigurationService,
-              private settingsService: SettingsService,
-              private vehicleService: VehicleService,
-              private dashboardService: DashboardService,
-              private iconService: IconService,
-              private detector: ChangeDetectorRef) {
+              private readonly commonService: CommonService,
+              private readonly controlService: ControlService,
+              private readonly configurationService: ConfigurationService,
+              private readonly settingsService: SettingsService,
+              private readonly vehicleService: VehicleService,
+              private readonly dashboardService: DashboardService,
+              private readonly iconService: IconService,
+              private readonly detector: ChangeDetectorRef) {
     super(platform, translator);
   }
 

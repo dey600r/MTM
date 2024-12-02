@@ -103,7 +103,8 @@ export class InfoVehicleComponent implements OnInit {
     if (this.modalInputModel.dataList !== null && this.modalInputModel.dataList.length > 0) {
       this.initConfigurationSummary();
       this.initChartSummary();
-      this.changeDetector.detectChanges();
+      if(this.vehicleSelected)
+        this.initData(this.vehicleSelected.id);
     }
 
     this.controlService.isAppFree(this.modalController);
@@ -141,8 +142,6 @@ export class InfoVehicleComponent implements OnInit {
       // INFO VEHICLE REPLACEMENTS
       this.listInfoVehicleReplacement = this.infoVehicleService.calculateInfoReplacementHistoric(
         this.vehicles, maintenances, this.operations, configurations, maintenanceElements);
-
-      this.initShowInfo(this.vehicleSelected);
     }
   }
 
@@ -192,7 +191,7 @@ export class InfoVehicleComponent implements OnInit {
     this.showInfoMaintenance = [];
     if (vehicleSelected) {
       this.selectedInfoVehicleConfiguration.listMaintenance.forEach(x =>
-        this.showInfoMaintenance = [...this.showInfoMaintenance, true]);
+        this.showInfoMaintenance = [...this.showInfoMaintenance, false]);
     }
   }
 
@@ -200,7 +199,7 @@ export class InfoVehicleComponent implements OnInit {
     this.showInfoReplacement = [];
     if (vehicleSelected) {
       this.selectedInfoReplacement.forEach(x =>
-        this.showInfoReplacement = [...this.showInfoReplacement, true]);
+        this.showInfoReplacement = [...this.showInfoReplacement, false]);
     }
   }
 
@@ -250,12 +249,16 @@ export class InfoVehicleComponent implements OnInit {
 
   // SEGMENT
 
-  segmentChanged(event: any): void {
-    this.showSpinner = true; // Windows 10: Fix no change good the data of the chart when the tabs is changed
-    this.initDataSelected(Number(event.detail.value));
+  initData(idVehicle: number) {
+    this.initDataSelected(idVehicle);
     this.initShowInfo(this.vehicleSelected);
     this.initVehicleSummary();
     this.resetList();
+  }
+
+  segmentChanged(event: any): void {
+    this.showSpinner = true; // Windows 10: Fix no change good the data of the chart when the tabs is changed
+    this.initData(Number(event.detail.value));
     this.changeDetector.detectChanges();
     setTimeout(() => { this.showSpinner = false; }, 150);
   }

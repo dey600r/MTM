@@ -24,9 +24,9 @@ import { ConstantsColumns } from '@utils/index';
 })
 export class MapService {
 
-  constructor(private translator: TranslateService,
-              private iconService: IconService,
-              private calendarService: CalendarService) {}
+  constructor(private readonly translator: TranslateService,
+              private readonly iconService: IconService,
+              private readonly calendarService: CalendarService) {}
 
   /* MASTER DATA */
 

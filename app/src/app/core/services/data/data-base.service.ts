@@ -22,12 +22,12 @@ import { CRUDService } from './crud.service';
 })
 export class DataBaseService {
 
-  constructor(private plt: Platform,
-              private http: HttpClient,
-              private storageService: StorageService,
-              private mapService: MapService,
-              private crudService: CRUDService,
-              private logService: LogService) { }
+  constructor(private readonly plt: Platform,
+              private readonly http: HttpClient,
+              private readonly storageService: StorageService,
+              private readonly mapService: MapService,
+              private readonly crudService: CRUDService,
+              private readonly logService: LogService) { }
 
   initDB() {
     this.plt.ready().then(() => {
