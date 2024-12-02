@@ -65,3 +65,9 @@ export enum TypeOfTableEnum {
     DATA = 1,
     RELATION = 2
 }
+
+export enum CalendarModeEnum {
+    MONTH = 0,
+    YEAR = 1,
+    YEARS = 2
+}

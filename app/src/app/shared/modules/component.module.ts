@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 // LIBRARIES IONIC
 import { IonicModule } from '@ionic/angular';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
-import { CalendarModule } from 'ion5-calendar';
+import { IonCalendarModule } from '@heliomarpm/ion-calendar';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // LIBRARIES ANGULAR
@@ -54,7 +54,7 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
         CommonModule,
         FormsModule,
         HttpClientModule,
-        CalendarModule,
+        IonCalendarModule,
         NgxChartsModule,
         PipeModule,
         SharedModule,
