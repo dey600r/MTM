@@ -35,36 +35,36 @@
         (ionFocus)="moveCursorToEnd($event)" [(ngModel)]="operation.details"></ion-textarea>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.VEHICLES' | translate }}</ion-text>
-          <ion-text color="danger">*</ion-text>
-          <ion-icon *ngIf="this.submited && !isValidVehicle(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidVehicle(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddVehicle' | translate }}</ion-text>
-        </ion-label>
         <ion-select #opVehicle name="opVehicle" [placeholder]="this.translateSelect" required 
-          [(ngModel)]="operation.vehicle.id" disabled="true">
+            [(ngModel)]="operation.vehicle.id" disabled="true" label-placement="stacked" >
+          <div slot="label" class="label-required">
+            <ion-text>{{ 'COMMON.VEHICLES' | translate }}</ion-text>
+            <ion-text color="danger">*</ion-text>
+            <ion-icon *ngIf="this.submited && !isValidVehicle(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+            <ion-text *ngIf="this.submited && !isValidVehicle(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddVehicle' | translate }}</ion-text>
+          </div>
           <ion-select-option [(value)]="m.id" *ngFor="let m of vehicles">{{ m.brand + ' ' + m.model }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.OPERATION_TYPE' | translate }}</ion-text>
-          <ion-text color="danger">*</ion-text>
-          <ion-icon *ngIf="this.submited && !isValidOperationType(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-          <ion-text *ngIf="this.submited && !isValidOperationType(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddOperationType' | translate }}</ion-text>
-        </ion-label>
-        <ion-select #opType name="opType" [placeholder]="this.translateSelect" aria-required="true" 
-           required [(ngModel)]="operation.operationType.id">
+        <ion-select select #opType name="opType" [placeholder]="this.translateSelect" aria-required="true" 
+            required [(ngModel)]="operation.operationType.id" label-placement="stacked" >
+          <div slot="label" class="label-required">
+            <ion-text>{{ 'COMMON.OPERATION_TYPE' | translate }}</ion-text>
+            <ion-text color="danger">*</ion-text>
+            <ion-icon *ngIf="this.submited && !isValidOperationType(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+            <ion-text *ngIf="this.submited && !isValidOperationType(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddOperationType' | translate }}</ion-text>
+          </div>
           <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationType">{{ ot.description }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
-        </ion-label>
         <ion-select #opReplacement name="opReplacement" multiple="true" [placeholder]="this.translateSelect"
-        [disabled]="!isOperationTypeWithReplacement()" [cancelText]="this.translateCancel"
-        [okText]="this.translateAccept" [(ngModel)]="this.idMaintenanceElementSelect" (ionChange)="changeReplacement()">
+            [disabled]="!isOperationTypeWithReplacement()" [cancelText]="this.translateCancel" [okText]="this.translateAccept"
+            [(ngModel)]="this.idMaintenanceElementSelect" (ionChange)="changeReplacement()" label-placement="stacked" >
+          <div slot="label" class="label-required">
+            <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
+          </div>
           <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElement">{{ me.name }}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -85,7 +85,7 @@
           <ion-text *ngIf="this.submited && !isValidDate(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddDate' | translate }}</ion-text>
         </ion-label>
         <ion-datetime-button datetime="opDate" required></ion-datetime-button>
-        <ion-popover [keepContentsMounted]="true">
+        <ion-popover [keepContentsMounted]="true" aria-hidden="false">
           <ng-template>
             <ion-datetime id="opDate" #opDate name="opDate" 
                 [(ngModel)]="operation.date" presentation="date"></ion-datetime>
@@ -120,10 +120,10 @@
         <ion-input #opLocation name="opLocation" [placeholder]="translateWorkshop" autocapitalize type="text" [(ngModel)]="operation.location"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">
-          <ion-text>{{ 'COMMON.OWNER' | translate }}</ion-text>
-        </ion-label>
-        <ion-select #opOwner name="opOwner" [placeholder]="this.translateSelect" [(ngModel)]="operation.owner">
+        <ion-select #opOwner name="opOwner" [placeholder]="this.translateSelect" [(ngModel)]="operation.owner" label-placement="stacked">
+          <div slot="label" class="label-required">
+            <ion-text>{{ 'COMMON.OWNER' | translate }}</ion-text>
+          </div>
           <ion-select-option [(value)]="owner.id" *ngFor="let owner of owners">{{ owner.value | translate }}</ion-select-option>
         </ion-select>
       </ion-item>

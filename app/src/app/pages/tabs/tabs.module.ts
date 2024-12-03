@@ -7,31 +7,24 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
 
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { environment } from '@environment/environment';
 
-@NgModule({
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    TabsPageRoutingModule,
-    HttpClientModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    }),
-  ],
-  exports: [],
-  providers: [TranslateStore],
-  declarations: [TabsPage],
-})
+@NgModule({ exports: [],
+    declarations: [TabsPage], imports: [IonicModule,
+        CommonModule,
+        FormsModule,
+        TabsPageRoutingModule,
+        TranslateModule.forChild({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [HttpClient]
+            }
+        })], providers: [TranslateStore, provideHttpClient(withInterceptorsFromDi())] })
 export class TabsPageModule {}
 
 export function createTranslateLoader(http: HttpClient) {

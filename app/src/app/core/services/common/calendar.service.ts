@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 // LIBRARY ANGULAR
 import { TranslateService } from '@ngx-translate/core';
-import * as Moment from 'moment';
+import moment from 'moment';
 
 // UTILS
 import { Constants } from '@utils/index';
@@ -21,15 +21,15 @@ export class CalendarService {
     // COMMON UTILS METHODS STRINGS
 
     getDateString(date: Date): any {
-        return Moment(date).format(this.getFormatCalendar());
+        return moment(date).format(this.getFormatCalendar());
     }
 
     getDateStringToDB(date: Date): any {
-        return Moment(date).format(Constants.DATE_FORMAT_DB);
+        return moment(date).format(Constants.DATE_FORMAT_DB);
     }
 
     getDateTimeStringToDB(date: Date): any {
-        return Moment(date).format(Constants.DATE_TIME_FORMAT_DB);
+        return moment(date).format(Constants.DATE_TIME_FORMAT_DB);
     }
 
     getFormatCalendar() {

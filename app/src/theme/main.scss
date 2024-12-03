@@ -410,7 +410,6 @@
   }
   
   .h-row2 {
-    //font-size: 16px;
     margin: 2px 2px 1px 1px;
     white-space: normal !important;
   }
@@ -450,4 +449,15 @@ ion-datetime-button::part(native) {
     width: 100%;
     text-align: start;
     padding-left: 0px;
+}
+
+
+ion-calendar ion-button.button-has-icon-only {
+    min-width: 0px;
+}
+
+// OTHERS
+
+.label-required {
+    min-width: 350px;
 }

@@ -60,7 +60,7 @@
             </div>
           </ion-label>
           <!-- Toggle -->
-          <div class="width30">
+          <div class="width30" style="margin-left: 20px;">
             <ion-checkbox *ngIf="m.master" class="right" [name]="'configurationMaintenance' + i" color="primary" 
               [(ngModel)]="toggleMaintenaces[i]"></ion-checkbox>
             <ion-checkbox *ngIf="!m.master" class="right" [name]="'configurationMaintenance' + i" color="secondary" 

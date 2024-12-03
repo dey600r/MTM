@@ -15,19 +15,15 @@
           "options": {
             "outputPath": "www",
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [ "src/polyfills.ts" ],
             "tsConfig": "tsconfig.app.json",
+            "main": "src/main.ts",
             "allowedCommonJsDependencies": [
               "moment",
               "rfdc"
             ],
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
-              },
+              { "glob": "**/*", "input": "src/assets", "output": "assets" },
               { "glob": "**/*bar-chart.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*caret-down-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*caret-up-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
@@ -107,21 +103,19 @@
             ],
             "styles": [
               { "input": "src/theme/main.scss" },
+              { "input": "src/global.scss" },
               { "input": "src/theme/variables.scss" },
-              { "input": "src/theme/colours.scss" },
-              { "input": "src/global.scss" }
+              { "input": "src/theme/colours.scss" }
             ],
             "scripts": [
             ],
             "aot": false,
-            "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
-            "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "serviceWorker": true
           },
           "configurations": {
             "production-android": {
@@ -137,8 +131,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -172,8 +164,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -200,8 +190,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -235,8 +223,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -475,7 +461,10 @@
   "cli": {
     "schematicCollections": [
       "@ionic/cordova-builders"
-    ]
+    ],
+    "cache": {
+      "enabled": true
+    }
   },
   "schematics": {
     "@ionic/cordova-builders:component": {

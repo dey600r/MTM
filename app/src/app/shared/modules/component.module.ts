@@ -10,7 +10,7 @@ import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // LIBRARIES ANGULAR
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
@@ -34,8 +34,7 @@ import { SearchDashboardPopOverComponent } from '@modals/search-dashboard-popove
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AddEditConfigurationComponent,
         AddEditVehicleComponent,
         AddEditOperationComponent,
@@ -49,17 +48,6 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
         ListDataToUpdateComponent,
         InfoVehicleComponent
     ],
-    imports: [
-        IonicModule,
-        CommonModule,
-        FormsModule,
-        HttpClientModule,
-        IonCalendarModule,
-        NgxChartsModule,
-        PipeModule,
-        SharedModule,
-        TranslateModule.forChild()
-    ],
     exports: [
         AddEditConfigurationComponent,
         AddEditVehicleComponent,
@@ -72,12 +60,19 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
         InfoCalendarComponent,
         SearchDashboardPopOverComponent,
         ListDataToUpdateComponent
-    ],
-    providers: [
+    ], imports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        IonCalendarModule,
+        NgxChartsModule,
+        PipeModule,
+        SharedModule,
+        TranslateModule.forChild()], providers: [
         File,
         ScreenOrientation,
         DataBaseService,
-        CommonService
-    ]
-})
+        CommonService,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class ComponentModule { }

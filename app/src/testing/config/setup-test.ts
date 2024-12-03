@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 // import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
@@ -47,7 +47,7 @@ export class SetupTest {
     imports: [
       BrowserModule,
       BrowserAnimationsModule,
-      HttpClientModule, // HttpClientTestingModule,
+      provideHttpClient(withInterceptorsFromDi()), // HttpClientTestingModule,
       RouterTestingModule.withRoutes(routes),
       CommonModule,
       FormsModule,

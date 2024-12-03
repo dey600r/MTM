@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 // LIBRARIES ANGULAR
 import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
@@ -16,25 +16,18 @@ import { environment } from '@environment/environment';
 import { ConfigurationPage } from './configuration.page';
 import { SharedModule } from '@modules/shared.module';
 
-@NgModule({
-  declarations: [ConfigurationPage],
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    RouterModule.forChild([{ path: '', component: ConfigurationPage}]),
-    HttpClientModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    }),
-    SharedModule
-  ],
-  providers: [TranslateStore],
-})
+@NgModule({ declarations: [ConfigurationPage], imports: [IonicModule,
+        CommonModule,
+        FormsModule,
+        RouterModule.forChild([{ path: '', component: ConfigurationPage }]),
+        TranslateModule.forChild({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [HttpClient]
+            }
+        }),
+        SharedModule], providers: [TranslateStore, provideHttpClient(withInterceptorsFromDi())] })
 export class ConfigurationPageModule {}
 
 export function createTranslateLoader(http: HttpClient) {
