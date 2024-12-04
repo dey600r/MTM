@@ -77,8 +77,6 @@ export class InfoCalendarComponent implements OnInit {
     }
 
     this.initCalendar();
-
-    this.controlService.isAppFree(this.modalController);
   }
 
   initCalendar() {

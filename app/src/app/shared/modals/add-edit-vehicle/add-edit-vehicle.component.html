@@ -75,7 +75,7 @@
           <ion-icon *ngIf="this.submited && !isValidConfiguration(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
           <ion-text *ngIf="this.submited && !isValidConfiguration(formAddVehicle)" class="label-required-text" color="danger">{{ 'PAGE_VEHICLE.AddConfiguration' | translate }}</ion-text>
           </div>
-          <ion-select-option [(value)]="c.id" *ngFor="let c of configurations">{{c.name}}</ion-select-option>
+          <ion-select-option [value]="c.id" *ngFor="let c of configurations">{{c.name}}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
@@ -86,7 +86,7 @@
             <ion-icon *ngIf="this.submited && !isValidVehicleType(formAddVehicle)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
             <ion-text *ngIf="this.submited && !isValidVehicleType(formAddVehicle)" color="danger">{{ 'PAGE_VEHICLE.AddVehicleType' | translate }}</ion-text>
           </div>
-          <ion-select-option [(value)]="vt.id" *ngFor="let vt of vehicleTypes">{{ vt.description }}</ion-select-option>
+          <ion-select-option [value]="vt.id" *ngFor="let vt of vehicleTypes">{{ vt.description }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>

@@ -34,7 +34,7 @@
             <div slot="label" class="label-required">
                 <ion-text>{{ 'COMMON.OP_TYPE' | translate }}</ion-text>
             </div>
-            <ion-select-option [(value)]="ot.id" *ngFor="let ot of operationTypes">{{ ot.description }}</ion-select-option>
+            <ion-select-option [value]="ot.id" *ngFor="let ot of operationTypes">{{ ot.description }}</ion-select-option>
         </ion-select>
     </ion-item>
     <ion-item *ngIf="showFilterVehicle">
@@ -44,7 +44,7 @@
             <div slot="label" class="label-required">
                 <ion-text>{{ 'COMMON.VEHICLES' | translate }}</ion-text>
             </div>
-            <ion-select-option [(value)]="v.id" *ngFor="let v of vehicles">{{ v.brand + ' - ' + v.model }}</ion-select-option>
+            <ion-select-option [value]="v.id" *ngFor="let v of vehicles">{{ v.brand + ' - ' + v.model }}</ion-select-option>
         </ion-select>
     </ion-item>
     <ion-item *ngIf="showFilterMaintElement">
@@ -54,7 +54,7 @@
             <div slot="label" class="label-required">
                 <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
             </div>
-            <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
+            <ion-select-option [value]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
         </ion-select>
     </ion-item>
     <ion-item *ngIf="showFilterMonth">
@@ -63,7 +63,7 @@
             <div slot="label" class="label-required">
                 <ion-text>{{ 'COMMON.CALCULATE_PER_MONTH' | translate }}</ion-text>
             </div>
-            <ion-select-option [(value)]="m.id" *ngFor="let m of months">{{ m.name }}</ion-select-option>
+            <ion-select-option [value]="m.id" *ngFor="let m of months">{{ m.name }}</ion-select-option>
         </ion-select>
     </ion-item>
     <ion-item *ngIf="showStrict">

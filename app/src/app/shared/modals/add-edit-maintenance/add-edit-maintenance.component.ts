@@ -86,7 +86,7 @@ export class AddEditMaintenanceComponent implements OnInit {
     this.maintenanceFreqs = this.dataService.getMaintenanceFreqData();
   }
 
-  saveData(f: Form) {
+  saveData(f: HTMLFormElement) {
     this.submited = true;
     if (this.isValidForm(f)) {
       if (this.isInitDisabled()) {

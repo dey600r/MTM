@@ -1,7 +1,8 @@
+import { LegendPosition } from "@swimlane/ngx-charts";
 import { IDashboardColorModel } from "../index";
 
 export class DashboardModel<T> {
-    view: any[];
+    view: [number, number];
     data: T[];
     showXAxis: boolean;
     showYAxis: boolean;
@@ -15,7 +16,7 @@ export class DashboardModel<T> {
     colorScheme: any;
     showLabels: boolean;
     isDoughnut: boolean;
-    legendPosition: string;
+    legendPosition: LegendPosition;
     showDataLabel: boolean;
     barPadding: number;
     groupPadding: number;
@@ -25,7 +26,7 @@ export class DashboardModel<T> {
     }
 
     private setData1(data: Partial<DashboardModel<T>>) {
-        this.view = (data.view ? data.view : []);
+        this.view = (data.view ? data.view : [840, 400]);
         this.data = (data.data ? data.data : []);
         this.colorScheme = (data.colorScheme === undefined || data.colorScheme === null ? this.getColorSchemeDefault() : this.mapColorScheme(data.colorScheme));
         this.showXAxis = (data.showXAxis !== undefined ? data.showXAxis : true);
@@ -42,7 +43,7 @@ export class DashboardModel<T> {
         this.yAxisLabel = (data.yAxisLabel !== undefined ? data.yAxisLabel : '');
         this.showLabels = (data.showLabels !== undefined ? data.showLabels : true);
         this.isDoughnut = (data.isDoughnut !== undefined ? data.isDoughnut : false);
-        this.legendPosition = (data.legendPosition !== undefined ? data.legendPosition : '');
+        this.legendPosition = (data.legendPosition !== undefined ? data.legendPosition : LegendPosition.Right);
         this.showDataLabel = (data.showDataLabel !== undefined ? data.showDataLabel : false);
         this.barPadding = (data.barPadding !== undefined ? data.barPadding : 2);
         this.groupPadding = (data.groupPadding !== undefined ? data.groupPadding : 4);

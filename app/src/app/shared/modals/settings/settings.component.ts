@@ -352,12 +352,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   // SYNCHRONIZE
   unlockSync(order: number, num: number) {
-    if (!environment.isFree &&
-        ((order === 1 && this.pwdSync === 0) ||
+    if ((order === 1 && this.pwdSync === 0) ||
         (order === 3 && this.pwdSync === 2) ||
         (order === 2 && this.pwdSync === 7) ||
         (order === 4 && this.pwdSync === 15) ||
-        (order === 3 && this.pwdSync === 24))) {
+        (order === 3 && this.pwdSync === 24)) {
       this.pwdSync += num;
     } else {
       this.pwdSync = 0;

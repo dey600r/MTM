@@ -1,8 +1,8 @@
 {
   "name": "MtM",
-  "version": "v3.5.3",
+  "version": "v3.6.0",
   "minVersion": "v3.3.0",
-  "dateVersion": "2023-12-27 10:00:00",
+  "dateVersion": "2024-12-04 10:00:00",
   "author": "David Jimenez Galiana",
   "homepage": "deyhome.mtm@gmail.com",
   "scripts": {
@@ -12,18 +12,13 @@
     "test": "ng test",
     "lint": "eslint -c .eslintrc.js --ext .ts --ext .html ./src",
     "e2e": "ng e2e",
-    "build:release-mtm": "mtm-deploy.bat",
     "build:release-prod": "sh mtm-deploy-store.sh C:/Proyectos/MtM %npm_package_version%",
-    "build:release-jenkins": "sh mtm-deploy-jenkins.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version",
-    "build:release-free": "sh mtm-free-deploy-store.sh C:/Proyectos/MtM %npm_package_version%",
-    "build:release-free-jenkins": "sh mtm-free-deploy-jenkins.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version",
+    "build:release-jenkins": "sh mtm-deploy-store.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
     "deploy:release-firebase": "mtm-deploy-firebase.bat",
     "deploy:release-apk": "mtm-deploy-apk.bat production-free",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug --consolelogs",
-    "deploy:debug-windows": "ionic cordova run windows --debug -- --arch=x64 --appx=uap --platform=x64",
-    "deploy:prod-electron": "ng build --configuration production --base-href . && electron-packager . C:/Proyectos/MTM/Utils/Versions/Electron/MtM_David_2.0.4 --platform=win32 --arch=x64 --electron-version=8.2.4 --overwrite",
     "sonarqube": "ng test --code-coverage --watch=false && sonar-scanner.bat"
   },
   "private": true,
@@ -86,7 +81,6 @@
     "cordova-plugin-proguard": "2.2.0",
     "cordova-plugin-screen-orientation": "3.0.2",
     "cordova-plugin-statusbar": "3.0.0",
-    "cordova-windows": "7.0.1",
     "eslint": "^8.57.1",
     "eslint-plugin-html": "^8.1.2",
     "eslint-plugin-import": "^2.31.0",
@@ -125,7 +119,6 @@
       "cordova-plugin-statusbar": {}
     },
     "platforms": [
-      "windows",
       "android"
     ]
   }

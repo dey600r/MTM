@@ -145,98 +145,6 @@
                 }
               ]
             },
-            "production-windows": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": false,
-                  "inlineCritical": true
-                },
-                "fonts": true
-              },
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "production-free-android": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment-free.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "production-free-windows": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment-free.prod.ts"
-                }
-              ],
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": false,
-                  "inlineCritical": true
-                },
-                "fonts": true
-              },
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
             "ci": {
               "progress": false
             }
@@ -251,15 +159,6 @@
           "configurations": {
             "production-android": {
               "buildTarget": "app:build:production-android"
-            },
-            "production-windows": {
-              "buildTarget": "app:build:production-windows"
-            },
-            "production-free-android": {
-              "buildTarget": "app:build:production-free-android"
-            },
-            "production-free-windows": {
-              "buildTarget": "app:build:production-free-windows"
             },
             "ci": {
             }
@@ -280,9 +179,9 @@
             "karmaConfig": "karma.conf.js",
             "styles": [
               { "input": "src/theme/main.scss" },
+              { "input": "src/global.scss" },
               { "input": "src/theme/variables.scss" },
-              { "input": "src/theme/colours.scss" },
-              { "input": "src/global.scss" }
+              { "input": "src/theme/colours.scss" }
             ],
             "scripts": [],
             "assets": [
@@ -397,15 +296,6 @@
             "production-android": {
               "devServerTarget": "app:serve:production-android"
             },
-            "production-windows": {
-              "devServerTarget": "app:serve:production-windows"
-            },
-            "production-free-android": {
-              "devServerTarget": "app:serve:production-free-android"
-            },
-            "production-free-windows": {
-              "devServerTarget": "app:serve:production-free-windows"
-            },
             "ci": {
               "devServerTarget": "app:serve:ci"
             }
@@ -419,15 +309,6 @@
           "configurations": {
             "production-android": {
               "browserTarget": "app:build:production-android"
-            },
-            "production-windows": {
-              "browserTarget": "app:build:production-windows"
-            },
-            "production-free-android": {
-              "browserTarget": "app:build:production-free-android"
-            },
-            "production-free-windows": {
-              "browserTarget": "app:build:production-free-windows"
             }
           }
         },
@@ -441,18 +322,6 @@
             "production-android": {
               "cordovaBuildTarget": "app:ionic-cordova-build:production-android",
               "devServerTarget": "app:serve:production"
-            },
-            "production-windows": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:production-windows",
-              "devServerTarget": "app:serve:production"
-            },
-            "production-free-android": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:production-free-android",
-              "devServerTarget": "app:serve:production-free"
-            },
-            "production-free-windows": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:production-free-windows",
-              "devServerTarget": "app:serve:production-free"
             }
           }
         }

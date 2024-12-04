@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { Form } from '@angular/forms';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
@@ -60,7 +59,7 @@ export class AddEditConfigurationComponent implements OnInit {
     }
   }
 
-  saveData(f: Form) {
+  saveData(f: HTMLFormElement) {
     this.submited = true;
     if (this.isValidForm(f)) {
       this.configuration.listMaintenance = [];

@@ -37,7 +37,7 @@
               <ion-icon *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
               <ion-text *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddReplacement' | translate }}</ion-text>
             </div>
-            <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
+            <ion-select-option [value]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
@@ -49,7 +49,7 @@
               <ion-icon *ngIf="this.submited && !isValidFreq(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
               <ion-text *ngIf="this.submited && !isValidFreq(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddMaintenanceFreq' | translate }}</ion-text>
             </div>
-            <ion-select-option [(value)]="f.id" *ngFor="let f of maintenanceFreqs">{{f.description}}</ion-select-option>
+            <ion-select-option [value]="f.id" *ngFor="let f of maintenanceFreqs">{{f.description}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>

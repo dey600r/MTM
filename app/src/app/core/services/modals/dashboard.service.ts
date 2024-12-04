@@ -36,13 +36,13 @@ export class DashboardService {
     public behaviourSearchConfiguration: BehaviorSubject<SearchDashboardModel>
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
 
-    constructor(private commonService: CommonService,
-                private calendarService: CalendarService,
-                private translator: TranslateService,
-                private platform: Platform) {
+    constructor(private readonly commonService: CommonService,
+                private readonly calendarService: CalendarService,
+                private readonly translator: TranslateService,
+                private readonly platform: Platform) {
     }
 
-    getSizeWidthHeight(w: number, h: number): number[] {
+    getSizeWidthHeight(w: number, h: number): [number, number] {
         const width: number = (w > 768 && h > 600 ? 600 : w);
         const height: number = (w > 768 && h > 600 ? 600 : h);
         return [width - 15, height / 3 + 35];
@@ -51,7 +51,7 @@ export class DashboardService {
     /** DASHBOADS */
 
     // VEHICLE OP TYPE EXPENSES
-    getDashboardModelVehicleExpenses(view: number[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+    getDashboardModelVehicleExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
         return new DashboardModel<IDashboardModel>({
             view: view,
             data: this.mapOperationToDashboardVehicleExpenses(data, filter), 
@@ -64,7 +64,6 @@ export class DashboardService {
             showYAxisLabel: filter.showAxisLabel,
             yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
             isDoughnut: filter.doghnut,
-            legendPosition: 'below',
             showDataLabel: filter.showDataLabel
         });
     }
@@ -94,7 +93,7 @@ export class DashboardService {
     }
 
     // VEHICLE PER MONTH EXPENSES
-    getDashboardModelVehiclePerTime(view: number[], data: OperationModel[], filter: SearchDashboardModel): IDashboardExpensesModel<DashboardModel<IDashboardModel>> {
+    getDashboardModelVehiclePerTime(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): IDashboardExpensesModel<DashboardModel<IDashboardModel>> {
         const result: IDashboardExpensesModel<IDashboardModel[]> = this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter);
         return {
             allSum: this.initDashboardModelVehiclePerTime(view, result.allSum, filter, 'COMMON.EXPENSE'),
@@ -103,7 +102,7 @@ export class DashboardService {
         };
     }
 
-    initDashboardModelVehiclePerTime(view: number[], data: IDashboardModel[], filter: SearchDashboardModel, translateY: string): DashboardModel<IDashboardModel> {
+    initDashboardModelVehiclePerTime(view: [number, number], data: IDashboardModel[], filter: SearchDashboardModel, translateY: string): DashboardModel<IDashboardModel> {
         return new DashboardModel<IDashboardModel>({
             view: view,
             data: data, 
@@ -116,7 +115,6 @@ export class DashboardService {
             showYAxisLabel: filter.showAxisLabel,
             yAxisLabel: this.translator.instant(translateY),
             isDoughnut: filter.doghnut,
-            legendPosition: 'below',
             showDataLabel: filter.showDataLabel
         });
     }
@@ -182,7 +180,7 @@ export class DashboardService {
     }
 
     // OPERATION TYPE EXPENSES
-    getDashboardModelOpTypeExpenses(view: number[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+    getDashboardModelOpTypeExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
         return new DashboardModel<IDashboardModel>({
             view: view,
             data: this.mapOperationToDashboardOpTypeExpenses(data, filter), 
@@ -195,7 +193,6 @@ export class DashboardService {
             showYAxisLabel: filter.showAxisLabel,
             yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
             isDoughnut: filter.doghnut,
-            legendPosition: 'below',
             showDataLabel: filter.showDataLabel
         });
     }
@@ -235,7 +232,7 @@ export class DashboardService {
     }
 
     // REPLACEMENTS EXPENSES
-    getDashboardModelReplacementExpenses(view: number[], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+    getDashboardModelReplacementExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
         return new DashboardModel<IDashboardModel>({
             view: view,
             data: this.mapOperationToDashboardReplacementExpenses(data, filter), 
@@ -248,7 +245,6 @@ export class DashboardService {
             showYAxisLabel: filter.showAxisLabel,
             yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
             isDoughnut: filter.doghnut,
-            legendPosition: 'below',
             showDataLabel: filter.showDataLabel
         });
     }
@@ -313,7 +309,7 @@ export class DashboardService {
     }
 
     // RECORDS MAINTENANCES
-    getDashboardRecordMaintenances(view: number[], data: WearVehicleProgressBarViewModel, filter: SearchDashboardModel,
+    getDashboardRecordMaintenances(view: [number, number], data: WearVehicleProgressBarViewModel, filter: SearchDashboardModel,
                                    measure: ISettingModel): DashboardModel<IDashboardSerieModel> {
         let dataDashboard: IDashboardSerieModel[] = [];
         let translateY = measure.valueLarge;
@@ -336,7 +332,6 @@ export class DashboardService {
             showYAxisLabel: filter.showAxisLabel,
             yAxisLabel: translateY,
             isDoughnut: filter.doghnut,
-            legendPosition: 'below',
             showDataLabel: filter.showDataLabel
         });
     }
@@ -432,7 +427,7 @@ export class DashboardService {
     //#region INFO VEHICLE
 
     // CHART INFO VEHICLE
-    getDashboardInformationVehicle(view: number[], vehicle: VehicleModel, operations: OperationModel[]): DashboardModel<IDashboardModel> {
+    getDashboardInformationVehicle(view: [number, number], vehicle: VehicleModel, operations: OperationModel[]): DashboardModel<IDashboardModel> {
         return new DashboardModel<IDashboardModel>({
             view: view,
             data: this.calculaterKmPerYear(vehicle, operations)
@@ -589,7 +584,7 @@ export class DashboardService {
 
     // CHART CONFIGURATION VEHICLE
 
-    getDashboardConfigurationVehicle(view: number[], data: InfoVehicleConfigurationModel): DashboardModel<IDashboardModel> {
+    getDashboardConfigurationVehicle(view: [number, number], data: InfoVehicleConfigurationModel): DashboardModel<IDashboardModel> {
         let result: IDashboardModel[] = [];
         let colors: string[] = [];
         const dataFiltered = data.listMaintenance.filter(x => x.active);

@@ -84,7 +84,7 @@ export class AddEditVehicleComponent implements OnInit {
     this.operations = this.dataService.getOperationsData().filter(x => x.vehicle.id === this.vehicle.id);
   }
 
-  saveData(f: Form) {
+  saveData(f: HTMLFormElement) {
     this.submited = true;
     if (this.isValidForm(f)) {
       const result = this.validateDateAndKmToOperations();

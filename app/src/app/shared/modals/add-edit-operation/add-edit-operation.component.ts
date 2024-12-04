@@ -110,7 +110,7 @@ export class AddEditOperationComponent implements OnInit {
     this.loadOwner();
   }
 
-  saveData(f: Form) {
+  saveData(f: HTMLFormElement) {
     this.submited = true;
     if (this.isValidForm(f)) {
       const result = this.validateDateToKm();

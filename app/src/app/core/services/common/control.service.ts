@@ -12,7 +12,6 @@ import { LogService } from './log.service';
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
-import { environment } from '@environment/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -46,17 +45,6 @@ export class ControlService {
 
     isPage(page: PageEnum): boolean {
         return this.listPages.some(x => x === page);
-    }
-
-    // IS MTM FREE
-
-    isAppFree(modalController: ModalController) {
-        if (environment.isFree) {
-            this.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
-            setTimeout(() => {
-                this.closeModal(modalController);
-            }, Constants.DELAY_TOAST_IS_FREE);
-        }
     }
 
     // EXIT BUTTON

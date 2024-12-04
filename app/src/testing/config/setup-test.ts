@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-// import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
@@ -43,11 +42,10 @@ import { InfoCalendarComponent } from '@modals/info-calendar/info-calendar.compo
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 
 export class SetupTest {
-  static config = {
+  static readonly config = {
     imports: [
       BrowserModule,
       BrowserAnimationsModule,
-      provideHttpClient(withInterceptorsFromDi()), // HttpClientTestingModule,
       RouterTestingModule.withRoutes(routes),
       CommonModule,
       FormsModule,
@@ -56,7 +54,7 @@ export class SetupTest {
         loader: {
           provide: TranslateLoader,
           useFactory: (createTranslateLoader),
-          deps: [HttpClient],
+          deps: [HttpClient]
         }
       })
     ],

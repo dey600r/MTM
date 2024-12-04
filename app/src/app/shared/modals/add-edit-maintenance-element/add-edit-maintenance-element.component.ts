@@ -38,7 +38,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
     }
   }
 
-  saveData(f: Form) {
+  saveData(f: HTMLFormElement) {
     this.submited = true;
     if (this.isValidForm(f)) {
       this.configurationService.saveMaintenanceElement(this.maintenanceElement,

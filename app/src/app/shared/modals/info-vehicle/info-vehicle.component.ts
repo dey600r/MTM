@@ -106,8 +106,6 @@ export class InfoVehicleComponent implements OnInit {
       if(this.vehicleSelected)
         this.initData(this.vehicleSelected.id);
     }
-
-    this.controlService.isAppFree(this.modalController);
   }
 
   initVehicleSummary() {
@@ -159,7 +157,7 @@ export class InfoVehicleComponent implements OnInit {
     });
   }
 
-  initChartInformationVehicle(windowSize: any[]) {
+  initChartInformationVehicle(windowSize: [number, number]) {
     this.vehicles.forEach(x => {
       this.dataDashboardInformationVehicle = [...this.dataDashboardInformationVehicle, {
         id: x.id,
@@ -168,7 +166,7 @@ export class InfoVehicleComponent implements OnInit {
     
   }
 
-  initChartConfigurationVehicle(windowSize: any[]) {
+  initChartConfigurationVehicle(windowSize: [number, number]) {
     this.listInfoVehicleConfiguration.forEach(x => {
       this.dataDashboardConfigurationVehicle = [...this.dataDashboardConfigurationVehicle, {
         id: x.idVehicle,

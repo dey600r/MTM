@@ -93,8 +93,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.configureResume();
 
     this.initInfoNotifications();
-
-    this.controlService.isAppFree(this.modalController);
   }
 
   ngOnDestroy() {
@@ -146,7 +144,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   calculateDashboardExpenses(filter: SearchDashboardModel) {
     if (!this.hideGraph) {
-      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+      const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
       const wearMain: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
       const oldData: MaintenanceElementModel[] = [...filter.searchMaintenanceElement];
       filter.searchMaintenanceElement = [new MaintenanceElementModel({ id: wearMain.listWearReplacement[0].idMaintenanceElement })];
@@ -161,7 +159,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   calculateDashboad(all: boolean, filter: SearchDashboardModel) {
     if (!this.hideRecords) {
-      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+      const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
       if (all) {
         this.wear = this.homeService.getWearReplacement(filter.showStrict, this.modalInputModel.data, this.modalInputModel.dataList);
       }
@@ -173,7 +171,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getObserverOrientationChange() {
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardVehicleOperationExpenses.view = windowSize;
       this.dashboardVehicleReplacementExpenses.view = windowSize;
       this.dashboardRecordsMaintenance.view = windowSize;

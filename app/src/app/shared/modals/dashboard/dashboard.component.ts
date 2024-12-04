@@ -72,7 +72,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
       if (!this.openningPopover) { // Windows: Fix refresh chart :(
         this.showSpinner = true;
-        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
           this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
         } else { // VEHICLE EXPENSES PER MONTH
@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize: number[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardVehicleExpenses.view = windowSize;
       this.dashboardOpTypeExpenses.view = windowSize;
       this.dashboardReplacementExpenses.view = windowSize;
@@ -104,8 +104,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       }, 200);
     });
-
-    this.controlService.isAppFree(this.modalController);
   }
 
   ngOnDestroy() {
