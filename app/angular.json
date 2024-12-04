@@ -115,7 +115,8 @@
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
-            "serviceWorker": true
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production-android": {
