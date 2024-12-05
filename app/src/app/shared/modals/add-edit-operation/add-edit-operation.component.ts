@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { Form } from '@angular/forms';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
