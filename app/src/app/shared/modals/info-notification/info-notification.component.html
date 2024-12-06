@@ -21,8 +21,7 @@
       <ion-icon size="large" name="analytics"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.SUMMARY' | translate }} {{ nameMaintenance }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideSummary" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
+        <ion-icon size="small" color="primary" [name]="hideSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
     <ion-item *ngIf="!hideSummary" button (click)="showInfoVehicle()">
@@ -45,15 +44,14 @@
   </ion-list>
   <!-- CHART -->
   <ion-list *ngIf="isCalendar">
-    <ion-list-header (click)="refreshChartExpenses()" class="padding-list-header">
+    <ion-list-header (click)="refreshChartLaborExpenses()" class="padding-list-header">
       <ion-icon size="large" name="bar-chart"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
+      <h3 class="header-list">{{ 'COMMON.LABOR_EXPENSE' | translate }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideGraph" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideGraph" size="small" color="primary" name="caret-up-circle"></ion-icon>
+        <ion-icon size="small" color="primary" [name]="hideGraphLabor ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <div *ngIf="!hideGraph" class="justify-center">
+    <div *ngIf="!hideGraphLabor" class="justify-center">
       <ngx-charts-bar-vertical *ngIf="!showSpinner"
         [view]="dashboardVehicleOperationExpenses.view"
         [scheme]="dashboardVehicleOperationExpenses.colorScheme"
@@ -74,7 +72,16 @@
         <ion-spinner class="spinner" name="lines"></ion-spinner>
       </div>
     </div>
-    <div *ngIf="!hideGraph" class="justify-center">
+  </ion-list>
+  <ion-list *ngIf="isCalendar">
+    <ion-list-header (click)="refreshChartReplacementExpenses()" class="padding-list-header">
+      <ion-icon size="large" name="bar-chart"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.REPLACEMENT_EXPENSE' | translate }}</h3>
+      <ion-button fill="clear">
+        <ion-icon size="small" color="primary" [name]="hideGraphReplacement ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <div *ngIf="!hideGraphReplacement" class="justify-center">
       <ngx-charts-bar-vertical *ngIf="!showSpinner"
         [view]="dashboardVehicleReplacementExpenses.view"
         [scheme]="dashboardVehicleReplacementExpenses.colorScheme"
@@ -102,8 +109,7 @@
       <ion-icon size="large" [name]="iconMaintenanceElement"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ nameMaintenanceElement }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideRecords" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideRecords" size="small" color="primary" name="caret-up-circle"></ion-icon>
+        <ion-icon size="small" color="primary" [name]="hideRecords ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
     <ion-item *ngIf="!hideRecords" class="item-border-color-white">

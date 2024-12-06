@@ -1,8 +1,9 @@
 <ion-header>
     <ion-toolbar>
       <!-- Title -->
-      <ion-title *ngIf="this.modalInputModel.isCreate" color="text-header" class="align-center padding-left30">{{ 'PAGE_OPERATION.AddNewOperation' | translate }}</ion-title>
-      <ion-title *ngIf="!this.modalInputModel.isCreate" color="text-header" class="align-center padding-left30">{{ 'PAGE_OPERATION.EditOperation' | translate }}</ion-title>
+      <ion-title color="text-header" class="align-center padding-left30">
+        {{ (this.modalInputModel.type == MODAL_TYPE_ENUM.CREATE ? 'PAGE_OPERATION.AddNewOperation' : 'PAGE_OPERATION.EditOperation') | translate }}
+      </ion-title>
       <!-- Button Close -->
       <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
         <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>

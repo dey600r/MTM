@@ -71,3 +71,9 @@ export enum CalendarModeEnum {
     YEAR = 1,
     YEARS = 2
 }
+
+export enum ModalTypeEnum {
+    CREATE = 0,
+    UPDATE = 1,
+    DUPLICATE = 2
+}

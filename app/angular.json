@@ -98,6 +98,7 @@
               { "glob": "**/*sync.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*cloud-upload.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*cloud-download.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*add-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*.svg", "input": "src/assets/icon", "output": "./svg" },
               "src/manifest.webmanifest"
             ],
@@ -264,6 +265,7 @@
               { "glob": "**/*sync.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*cloud-upload.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*cloud-download.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*add-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*.svg", "input": "src/assets/icon", "output": "./svg" },
               "src/manifest.webmanifest"
             ]

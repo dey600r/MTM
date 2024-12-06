@@ -60,8 +60,7 @@
                   <!-- BUTTON OPEN INFORMATION -->
                   <div class="icon-notification">
                     <ion-button class="margin0" fill="clear">
-                      <ion-icon *ngIf="!showInfoMaintenance[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
-                      <ion-icon *ngIf="showInfoMaintenance[i]" size="small" color="primary" name="caret-up-circle"></ion-icon>
+                      <ion-icon size="small" color="primary" [name]="showInfoMaintenance[i] ? 'caret-up-circle' : 'caret-down-circle'"></ion-icon>
                     </ion-button>
                   </div>
                 </div>
@@ -136,7 +135,7 @@
       </ion-item>
       <!-- SLIDING END -->
       <ion-item-options side="end">
-        <ion-item-option class="day-circle-config-blue" (click)="openModalMaintenance(itemSliding, wm, false)">
+        <ion-item-option class="day-circle-config-blue" (click)="openUpdateModalMaintenance(itemSliding, wm)">
           <ion-icon slot="icon-only" name="build"></ion-icon>
         </ion-item-option>
       </ion-item-options>
@@ -148,8 +147,8 @@
       <ion-icon name="grid"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ion-fab-button color="fab-back" (click)="openModalVehicle()"><ion-icon color="primary" name="home"></ion-icon></ion-fab-button>
-      <ion-fab-button color="fab-back" *ngIf="!hideOpButton" (click)="openModalOperation()"><ion-icon color="primary" name="construct"></ion-icon></ion-fab-button>
+      <ion-fab-button color="fab-back" (click)="openCreateModalVehicle()"><ion-icon color="primary" name="home"></ion-icon></ion-fab-button>
+      <ion-fab-button color="fab-back" *ngIf="!hideOpButton" (click)="openCreateModalOperation()"><ion-icon color="primary" name="construct"></ion-icon></ion-fab-button>
     </ion-fab-list>
   </ion-fab>
 </ion-content>
@@ -161,7 +160,7 @@
 
 <ion-content *ngIf="!loadedBody">
   <ion-list>
-    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]">
+    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]">
       <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
       <ion-label>
         <h3 class="main-item-div"><ion-skeleton-text animated style="width: 85%"></ion-skeleton-text></h3>

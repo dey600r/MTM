@@ -5,7 +5,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum, ModalTypeEnum } from '@utils/index';
 import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel, ISettingModel } from '@models/index';
 import {
   DataService, VehicleService, CommonService, CalendarService, ControlService, SettingsService
@@ -24,6 +24,7 @@ export class AddEditVehicleComponent implements OnInit {
   // MODEL FORM
   vehicle: VehicleModel = new VehicleModel();
   submited = false;
+  MODAL_TYPE_ENUM = ModalTypeEnum;
 
   // DATA
   configurations: ConfigurationModel[] = [];
@@ -56,7 +57,7 @@ export class AddEditVehicleComponent implements OnInit {
 
     this.modalInputModel = new ModalInputModel<VehicleModel>(this.navParams.data);
     this.vehicle = Object.assign({}, this.modalInputModel.data);
-    if (this.modalInputModel.isCreate) {
+    if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.vehicle.id = -1;
       this.vehicle.datePurchase = this.calendarService.getDateStringToDB(new Date());
     }
@@ -73,7 +74,7 @@ export class AddEditVehicleComponent implements OnInit {
 
     // GET VEHICLE TYPE
     const dataVehicleType = this.dataService.getVehicleTypeData();
-    if (!!dataVehicleType && dataVehicleType.length > 0 && this.modalInputModel.isCreate) {
+    if (!!dataVehicleType && dataVehicleType.length > 0 && this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.vehicle.vehicleType = new VehicleTypeModel(dataVehicleType[0].code, dataVehicleType[0].description, dataVehicleType[0].id);
     }
     this.vehicleTypes = dataVehicleType;
@@ -91,14 +92,14 @@ export class AddEditVehicleComponent implements OnInit {
         this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.WARNING, result, null, Constants.DELAY_TOAST_HIGHER);
       } else {
         // Save date to change km to calculate maintenance
-        if (!this.modalInputModel.isCreate && this.modalInputModel.data.km !== this.vehicle.km) {
+        if (this.modalInputModel.type === ModalTypeEnum.UPDATE && this.modalInputModel.data.km !== this.vehicle.km) {
           this.vehicle.dateKms = new Date();
         }
         this.vehicleService.saveVehicle([this.vehicle],
-          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
           this.closeModal();
           this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.SUCCESS,
-            (this.modalInputModel.isCreate ? 'PAGE_VEHICLE.AddSaveVehicle' : 'PAGE_VEHICLE.EditSaveVehicle'),
+            (this.modalInputModel.type === ModalTypeEnum.CREATE ? 'PAGE_VEHICLE.AddSaveVehicle' : 'PAGE_VEHICLE.EditSaveVehicle'),
             { vehicle: this.vehicle.model });
         }).catch(e => {
           this.controlService.showToast(PageEnum.MODAL_VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);

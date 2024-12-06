@@ -5,7 +5,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
+import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum, ModalTypeEnum } from '@utils/index';
 import {
   ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, ISettingModel
 } from '@models/index';
@@ -27,6 +27,7 @@ export class AddEditOperationComponent implements OnInit {
   // MODEL FORM
   operation: OperationModel = new OperationModel();
   submited = false;
+  MODAL_TYPE_ENUM = ModalTypeEnum
 
   // DATA
   operations: OperationModel[] = [];
@@ -73,9 +74,12 @@ export class AddEditOperationComponent implements OnInit {
     this.modalInputModel = new ModalInputModel<OperationModel>(this.navParams.data);
 
     this.operation = Object.assign({}, this.modalInputModel.data);
-    if (this.modalInputModel.isCreate) {
+    if (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE) {
       this.operation.id = -1;
       this.operation.date = this.calendarService.getDateStringToDB(new Date());
+    }
+
+    if(this.modalInputModel.type == ModalTypeEnum.CREATE) {
       this.operation.operationType.id = null;
     }
 
@@ -115,7 +119,7 @@ export class AddEditOperationComponent implements OnInit {
       const result = this.validateDateToKm();
       if (result !== '') {
         this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.WARNING, result, null, Constants.DELAY_TOAST_HIGHER);
-      } else if (!this.modalInputModel.isCreate && this.idMaintenanceElementSelect.length > 0 && !this.isOperationTypeWithReplacement()) {
+      } else if (this.modalInputModel.type === ModalTypeEnum.UPDATE && this.idMaintenanceElementSelect.length > 0 && !this.isOperationTypeWithReplacement()) {
         this.showConfirmSaveWithDelete();
       } else {
         this.checkUpdateBeforeSaveOperation();
@@ -157,10 +161,10 @@ export class AddEditOperationComponent implements OnInit {
     this.operation.price = (this.operation.price.toString().includes(',') ?
       Number(this.operation.price.toString().replace(',', '.')) : this.operation.price);
     this.operationService.saveOperation(this.operation,
-      (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+      (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
       this.closeModal();
       this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.SUCCESS,
-        this.modalInputModel.isCreate ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation',
+        (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation'),
           { operation: this.operation.description });
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation', e);

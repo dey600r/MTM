@@ -34,8 +34,7 @@
       <ion-icon class="icon-header" [name]="vehicle.iconVehicle"></ion-icon>
       <h3 class="header-list header font-size20">{{ vehicle.nameVehicle }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideVehicles[i]" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideVehicles[i]" size="small" color="primary" name="caret-up-circle"></ion-icon>
+        <ion-icon size="small" color="primary" [name]="hideVehicles[i] ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
     <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintenance" [hidden]="hideVehicles[i]">

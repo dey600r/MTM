@@ -15,7 +15,7 @@ import {
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -326,14 +326,14 @@ export class HomePage extends BasePage implements OnInit {
       }));
   }
 
-  openModalVehicle(): void {
+  openCreateModalVehicle(): void {
     this.controlService.openModal(PageEnum.HOME, AddEditVehicleComponent, new ModalInputModel<VehicleModel>({
         data: new VehicleModel(),
         parentPage: PageEnum.HOME
     }));
   }
 
-  openModalOperation(): void {
+  openCreateModalOperation(): void {
     const operation: OperationModel = new OperationModel();
     operation.vehicle.id = this.vehicleSelected.idVehicle;
     this.controlService.openModal(PageEnum.HOME, AddEditOperationComponent, new ModalInputModel<OperationModel>({
@@ -342,14 +342,14 @@ export class HomePage extends BasePage implements OnInit {
       }));
   }
 
-  openModalMaintenance(itemSliding: any, w: WearMaintenanceProgressBarViewModel = null, create: boolean = true): void {
+  openUpdateModalMaintenance(itemSliding: any, w: WearMaintenanceProgressBarViewModel = null): void {
     let rowMaintenance: MaintenanceModel = new MaintenanceModel();
     if (w !== null) {
       rowMaintenance = this.maintenances.find(x => x.id === w.idMaintenance);
     }
     if (itemSliding) { itemSliding.close(); }
     this.controlService.openModal(PageEnum.HOME, AddEditMaintenanceComponent, new ModalInputModel<MaintenanceModel, number>({
-        isCreate: create,
+        type: ModalTypeEnum.UPDATE,
         data: rowMaintenance,
         dataList: [this.vehicleSelected.kmEstimatedVehicle],
         parentPage: PageEnum.HOME

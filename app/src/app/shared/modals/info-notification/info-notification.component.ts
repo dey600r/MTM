@@ -40,7 +40,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   dashboardVehicleReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
   dashboardRecordsMaintenance: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   currentPopover = null;
-  hideGraph = true;
+  hideGraphLabor = true;
+  hideGraphReplacement = true;
   hideSummary = false;
   hideRecords = true;
   isCalendar = true;
@@ -143,7 +144,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   calculateDashboardExpenses(filter: SearchDashboardModel) {
-    if (!this.hideGraph) {
+    if (!this.hideGraphLabor || !this.hideGraphReplacement) {
       const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
       const wearMain: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
       const oldData: MaintenanceElementModel[] = [...filter.searchMaintenanceElement];
@@ -244,9 +245,16 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  refreshChartExpenses() {
-    this.hideGraph = !this.hideGraph;
-    if (!this.hideGraph) {
+  refreshChartLaborExpenses() {
+    this.hideGraphLabor = !this.hideGraphLabor;
+    if (!this.hideGraphLabor) {
+      this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
+    }
+  }
+
+  refreshChartReplacementExpenses() {
+    this.hideGraphReplacement = !this.hideGraphReplacement;
+    if (!this.hideGraphReplacement) {
       this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
     }
   }

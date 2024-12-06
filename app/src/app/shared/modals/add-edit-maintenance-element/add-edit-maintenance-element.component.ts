@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 
 // UTILS
-import { ActionDBEnum, PageEnum, ToastTypeEnum } from '@app/core/utils';
+import { ActionDBEnum, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel, MaintenanceElementModel } from '@models/index';
 import { ConfigurationService, ControlService } from '@services/index';
 
@@ -19,6 +19,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
   // MODEL FORM
   maintenanceElement: MaintenanceElementModel = new MaintenanceElementModel();
   submited = false;
+  MODAL_TYPE_ENUM = ModalTypeEnum
 
   constructor(
     private readonly modalController: ModalController,
@@ -32,7 +33,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
 
     this.modalInputModel = new ModalInputModel<MaintenanceElementModel>(this.navParams.data);
     this.maintenanceElement = Object.assign({}, this.modalInputModel.data);
-    if (this.modalInputModel.isCreate) {
+    if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.maintenanceElement.id = -1;
     }
   }
@@ -41,10 +42,10 @@ export class AddEditMaintenanceElementComponent implements OnInit {
     this.submited = true;
     if (this.isValidForm(f)) {
       this.configurationService.saveMaintenanceElement(this.maintenanceElement,
-          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.SUCCESS, (this.modalInputModel.isCreate ?
-          'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.SUCCESS, 
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),
           { replacement: this.maintenanceElement.name });
       }).catch(e => {
         this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement', e);

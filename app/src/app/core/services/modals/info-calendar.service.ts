@@ -17,8 +17,8 @@ import { WarningWearEnum } from '@utils/index';
 })
 export class InfoCalendarService {
 
-    constructor(private calendarService: CalendarService,
-                private iconService: IconService) {
+    constructor(private readonly calendarService: CalendarService,
+                private readonly iconService: IconService) {
     }
 
     // INFO CALENDAR
@@ -27,9 +27,9 @@ export class InfoCalendarService {
         let result: InfoCalendarVehicleViewModel[] = [];
 
         if (!!listWearsNotification && listWearsNotification.length > 0) {
-            listWearsNotification.forEach(wear => {
+            listWearsNotification.forEach(wear => { // VEHICLE ITERATION
                 let calMain: InfoCalendarMaintenanceViewModel[] = [];
-                wear.listWearMaintenance.forEach(wearMain => {
+                wear.listWearMaintenance.forEach(wearMain => { // MAINTENANCE ITERATION
                     let rep: InfoCalendarMaintenanceViewModel =
                         calMain.find(x => x.idMaintenance === wearMain.idMaintenance);
                     if (!!!rep) {
@@ -46,11 +46,12 @@ export class InfoCalendarService {
                         }];
                         rep = calMain.find(x => x.idMaintenance === wearMain.idMaintenance);
                     }
-                    wearMain.listWearReplacement.forEach(wearRep => {
-                        const calendarKm: InfoCalendarReplacementViewModel =
-                            this.createInfoCalendarReplacement(wear, wearMain, wearRep, true);
-                        rep.listInfoCalendarReplacement = [...rep.listInfoCalendarReplacement, calendarKm];
+                    wearMain.listWearReplacement.forEach(wearRep => { // STATUS REPLACEMENTE ITERATION
+                        // CALENDAR FOR KMS
+                        rep.listInfoCalendarReplacement = [...rep.listInfoCalendarReplacement,
+                            this.createInfoCalendarReplacement(wear, wearMain, wearRep, true)];
                         if (wearMain.timeMaintenance !== 0 && wearMain.timeMaintenance !== null) {
+                            // CALENDAR FOR TIME
                             rep.listInfoCalendarReplacement = [...rep.listInfoCalendarReplacement,
                                 this.createInfoCalendarReplacement(wear, wearMain, wearRep, false)];
                         }

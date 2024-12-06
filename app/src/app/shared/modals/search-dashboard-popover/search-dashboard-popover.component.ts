@@ -39,7 +39,7 @@ import {
     filterVehicle: number[] = [];
     filterOpType: number[] = [];
     filterMaintElement: number[] = [];
-    filterMonth: FilterMonthsEnum = FilterMonthsEnum.MONTH;
+    filterMonth: FilterMonthsEnum = FilterMonthsEnum.YEAR;
     searchDashboard: SearchDashboardModel = new SearchDashboardModel();
     months: any[] = [];
 

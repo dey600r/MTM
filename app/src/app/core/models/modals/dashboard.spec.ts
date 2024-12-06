@@ -1,4 +1,5 @@
 import { DashboardModel } from "@models/index";
+import { LegendPosition } from "@swimlane/ngx-charts";
 
 describe('DashboardModels', () => {
 
@@ -23,7 +24,7 @@ describe('DashboardModels', () => {
         expect(base.barPadding).toEqual(2);
         expect(base.groupPadding).toEqual(4);
         base = new DashboardModel<number>({
-            view: [1, 2, 3],
+            view: [1, 2],
             data: [4, 5, 6],
             colorScheme: ['david'],
             showXAxis: false,
@@ -37,12 +38,12 @@ describe('DashboardModels', () => {
             yAxisLabel: 'y',
             showLabels: false,
             isDoughnut: true,
-            legendPosition: 'top',
+            legendPosition: LegendPosition.Below,
             showDataLabel: true,
             barPadding: 7,
             groupPadding: 9
         });
-        expect(base.view).toEqual([1, 2, 3]);
+        expect(base.view).toEqual([1, 2]);
         expect(base.data).toEqual([4, 5, 6]);
         expect(base.showXAxis).toEqual(false);
         expect(base.showYAxis).toEqual(false);
@@ -56,7 +57,7 @@ describe('DashboardModels', () => {
         expect(base.colorScheme).toEqual(base.mapColorScheme(['david']));
         expect(base.showLabels).toEqual(false);
         expect(base.isDoughnut).toEqual(true);
-        expect(base.legendPosition).toEqual('top');
+        expect(base.legendPosition).toEqual(LegendPosition.Below);
         expect(base.showDataLabel).toEqual(true);
         expect(base.barPadding).toEqual(7);
         expect(base.groupPadding).toEqual(9);

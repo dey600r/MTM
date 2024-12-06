@@ -6,7 +6,7 @@ import { Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, Constants, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
   ModalInputModel, MaintenanceModel, ISettingModel,
   MaintenanceFreqModel, MaintenanceElementModel
@@ -26,6 +26,7 @@ export class AddEditMaintenanceComponent implements OnInit {
   // MODEL FORM
   maintenance: MaintenanceModel = new MaintenanceModel();
   submited = false;
+  MODAL_TYPE_ENUM = ModalTypeEnum;
 
   // DATA
   maintenanceElements: MaintenanceElementModel[] = [];
@@ -70,7 +71,7 @@ export class AddEditMaintenanceComponent implements OnInit {
     this.valueRange.lower = this.maintenance.fromKm;
     this.valueRange.upper = this.maintenance.toKm === null ? this.maxKm : this.maintenance.toKm;
     this.changeRange();
-    if (this.modalInputModel.isCreate) {
+    if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.maintenance.id = -1;
       this.maintenance.maintenanceFreq.id = null;
     }
@@ -100,10 +101,10 @@ export class AddEditMaintenanceComponent implements OnInit {
       this.maintenance.listMaintenanceElement = this.maintenanceElements.filter(x =>
         this.maintenanceElementSelect.some(y => y === x.id));
       this.configurationService.saveMaintenance(this.maintenance,
-          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.SUCCESS, (this.modalInputModel.isCreate ?
-            'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.SUCCESS,
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),
           { maintenance: this.maintenance.description });
       }).catch(e => {
         this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance', e);
