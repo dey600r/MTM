@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -22,7 +22,7 @@ import {
 export class AddEditOperationComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<OperationModel> = new ModalInputModel<OperationModel>();
+  @Input() modalInputModel: ModalInputModel<OperationModel> = new ModalInputModel<OperationModel>();
 
   // MODEL FORM
   operation: OperationModel = new OperationModel();
@@ -50,7 +50,6 @@ export class AddEditOperationComponent implements OnInit {
 
   constructor(
     private readonly modalController: ModalController,
-    private readonly navParams: NavParams,
     private readonly dataService: DataService,
     private readonly translator: TranslateService,
     private readonly operationService: OperationService,
@@ -70,8 +69,6 @@ export class AddEditOperationComponent implements OnInit {
    }
 
   ngOnInit() {
-
-    this.modalInputModel = new ModalInputModel<OperationModel>(this.navParams.data);
 
     this.operation = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE) {

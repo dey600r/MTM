@@ -1,4 +1,4 @@
-import { AngularDelegate, ModalController, NavParams, Platform, PopoverController } from '@ionic/angular';
+import { AngularDelegate, ModalController, Platform, PopoverController } from '@ionic/angular';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
@@ -91,10 +91,6 @@ export class SpyMockConfig {
     static readonly ProviderDataService = { provide: DataService, useValue: SpyMockConfig.SpyMockAppDataService() };
     static readonly ProviderDataBaseService = { provide: DataBaseService, useValue: SpyMockConfig.SpyConfig.dbService };
     static readonly ProviderExportService = { provide: ExportService, useValue: SpyMockConfig.SpyConfig.exportService };
-
-    static getProviderNavParams(data: ModalInputModel) {
-        return {provide: NavParams, useValue: { data }};
-    }
 
     static SpyMockAppDataService() {
         const spy = SpyMockConfig.SpyConfig.dataService;

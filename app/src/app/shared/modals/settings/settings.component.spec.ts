@@ -27,8 +27,7 @@ describe('SettingsComponent', () => {
     config.providers.push(
       SpyMockConfig.ProviderDataBaseService,
       SpyMockConfig.ProviderDataService, 
-      SettingsService, ExportService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel({ parentPage: PageEnum.HOME })));
+      SettingsService, ExportService);
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
@@ -38,6 +37,7 @@ describe('SettingsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SettingsComponent);
     component = fixture.componentInstance;
+    component.modalInputModel = new ModalInputModel({ parentPage: PageEnum.HOME });
     fixture.detectChanges();
   });
 

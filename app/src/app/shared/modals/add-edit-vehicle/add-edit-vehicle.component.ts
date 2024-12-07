@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -19,7 +19,7 @@ import {
 export class AddEditVehicleComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<VehicleModel> = new ModalInputModel<VehicleModel>();
+  @Input() modalInputModel: ModalInputModel<VehicleModel> = new ModalInputModel<VehicleModel>();
 
   // MODEL FORM
   vehicle: VehicleModel = new VehicleModel();
@@ -39,7 +39,6 @@ export class AddEditVehicleComponent implements OnInit {
 
   constructor(
     private readonly modalController: ModalController,
-    private readonly navParams: NavParams,
     private readonly dataService: DataService,
     private readonly translator: TranslateService,
     private readonly vehicleService: VehicleService,
@@ -55,7 +54,6 @@ export class AddEditVehicleComponent implements OnInit {
 
   ngOnInit() {
 
-    this.modalInputModel = new ModalInputModel<VehicleModel>(this.navParams.data);
     this.vehicle = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.vehicle.id = -1;

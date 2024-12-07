@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // MODELS
 import { ModalInputModel, ModalOutputModel, ListModalModel } from '@models/index';
@@ -18,12 +18,10 @@ import { ModalOutputEnum } from '@utils/index';
 export class ListDataToUpdateComponent {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<ListModalModel> = new ModalInputModel<ListModalModel>();
+  @Input() modalInputModel: ModalInputModel<ListModalModel> = new ModalInputModel<ListModalModel>();
 
   constructor(private readonly controlService: ControlService,
-              private readonly modalController: ModalController,
-              private readonly navParams: NavParams) {
-    this.modalInputModel = new ModalInputModel(this.navParams.data);
+              private readonly modalController: ModalController) {
   }
 
   save() {

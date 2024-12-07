@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { PopoverController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 
 // LIBRARY ANGULAR
 import { TranslateService } from '@ngx-translate/core';
@@ -26,7 +26,7 @@ import {
   export class SearchDashboardPopOverComponent implements OnInit {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel = new ModalInputModel();
+    @Input() modalInputModel: ModalInputModel = new ModalInputModel();
 
     // DATA
     config: ISearcherControlModel;
@@ -66,7 +66,6 @@ import {
     showMyData = false;
 
     constructor(private readonly popoverController: PopoverController,
-                private readonly navParams: NavParams,
                 private readonly dataService: DataService,
                 private readonly dashboardService: DashboardService,
                 private readonly commonService: CommonService,
@@ -94,7 +93,6 @@ import {
 
     ngOnInit() {
         this.config = this.dashboardService.getConfigSearcher();
-        this.modalInputModel = new ModalInputModel(this.navParams.data);
 
         // FILTER VEHICLES
         this.filterVehicle = [];
@@ -194,7 +192,7 @@ import {
         this.filterOpType = [];
         this.filterMaintElement = [];
         this.filterVehicle = [];
-        this.filterMonth = FilterMonthsEnum.MONTH;
+        this.filterMonth = this.searchDashboard.showPerMont;
         setTimeout(() => {
             this.refresh = true;
             this.onChangeFilterGrouper();

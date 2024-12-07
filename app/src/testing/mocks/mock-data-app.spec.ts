@@ -36,5 +36,5 @@ export class MockAppData {
     public static readonly OperationTypes: OperationTypeModel[] = MockAppOperation.OperationTypes;
 
     /* OPERATIONS */
-    static readonly Operations: OperationModel[] = MockAppOperation.Operations;
+    public static readonly Operations: OperationModel[] = MockAppOperation.Operations;
 }

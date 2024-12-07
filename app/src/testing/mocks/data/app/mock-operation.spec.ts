@@ -7,11 +7,11 @@ import { MockAppMaintenance } from './mock-maintenance.spec';
 import { MockAppVehicle } from './mock-vehicle.spec';
 
 export class MockAppOperation {
-    static iconService: IconService = new IconService();
-    static calendarService: CalendarService = new CalendarService(null);
+    public static readonly iconService: IconService = new IconService();
+    public static readonly calendarService: CalendarService = new CalendarService(null);
 
     /* OPERATION TYPES */
-    public static OperationTypesAux: OperationTypeModel[] = [
+    public static readonly OperationTypesAux: OperationTypeModel[] = [
         new OperationTypeModel(Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP, 'MAINTENANCE_WORKSHOP', 1),
         new OperationTypeModel(Constants.OPERATION_TYPE_FAILURE_WORKSHOP, 'FAILURE_WORKSHOP', 2),
         new OperationTypeModel(Constants.OPERATION_TYPE_CLOTHES, 'CLOTHES', 3),
@@ -22,12 +22,12 @@ export class MockAppOperation {
         new OperationTypeModel(Constants.OPERATION_TYPE_FAILURE_HOME, 'FAILURE_HOME', 8),
         new OperationTypeModel(Constants.OPERATION_TYPE_SPARE_PARTS, 'SPARE_PARTS', 9)
     ];
-    public static OperationTypes: OperationTypeModel[] = MockAppOperation.OperationTypesAux.map(x => {
+    public static readonly OperationTypes: OperationTypeModel[] = MockAppOperation.OperationTypesAux.map(x => {
         return {...x, icon: this.iconService.getIconOperationType(x.code) };
     });
 
     /* OPERATIONS */
-    static Operations: OperationModel[] = [
+    public static readonly Operations: OperationModel[] = [
         new OperationModel({
             description: 'Compra moto',
             details: 'Compra hyosung GT125r 2006',

@@ -19,7 +19,7 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 export class ControlService {
 
     private dateLastUse = new Date();
-    private listPages: PageEnum[] = [PageEnum.HOME, PageEnum.VEHICLE, PageEnum.OPERATION, PageEnum.CONFIGURATION];
+    private readonly listPages: PageEnum[] = [PageEnum.HOME, PageEnum.VEHICLE, PageEnum.OPERATION, PageEnum.CONFIGURATION];
 
     // SUBSCRIPTION
     private exitButtonSubscripion: Subscription = new Subscription();
@@ -181,7 +181,7 @@ export class ControlService {
         this.desactivateButtonExist();
         const currentPopover = await this.popoverController.create({
             component: modalComponent,
-            componentProps: inputModel,
+            componentProps: { modalInputModel: inputModel },
             event: ev,
             translucent: true
         });
@@ -201,7 +201,7 @@ export class ControlService {
         this.desactivateButtonExist();
         const modal: HTMLIonModalElement = await this.modalController.create({
           component: modalComponent,
-          componentProps: inputModel,
+          componentProps: { modalInputModel: inputModel },
           cssClass: 'my-custom-modal',
         });
         modal.onDidDismiss().then((dataReturned) => {

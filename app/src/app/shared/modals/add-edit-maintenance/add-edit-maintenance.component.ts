@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
-import { Form } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -21,7 +20,7 @@ import { DataService, ConfigurationService, ControlService, SettingsService } fr
 export class AddEditMaintenanceComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<MaintenanceModel, number> = new ModalInputModel<MaintenanceModel, number>();
+  @Input() modalInputModel: ModalInputModel<MaintenanceModel, number> = new ModalInputModel<MaintenanceModel, number>();
 
   // MODEL FORM
   maintenance: MaintenanceModel = new MaintenanceModel();
@@ -45,7 +44,6 @@ export class AddEditMaintenanceComponent implements OnInit {
 
   constructor(
     private readonly modalController: ModalController,
-    private readonly navParams: NavParams,
     private readonly dataService: DataService,
     private readonly configurationService: ConfigurationService,
     private readonly translator: TranslateService,
@@ -65,7 +63,6 @@ export class AddEditMaintenanceComponent implements OnInit {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
 
-    this.modalInputModel = new ModalInputModel<MaintenanceModel, number>(this.navParams.data);
     this.maintenance = Object.assign({}, this.modalInputModel.data);
     this.maxKm = (this.modalInputModel.dataList[0] === null ? 100000 : Math.round(this.modalInputModel.dataList[0] / 1000) * 1000 + 30000);
     this.valueRange.lower = this.maintenance.fromKm;

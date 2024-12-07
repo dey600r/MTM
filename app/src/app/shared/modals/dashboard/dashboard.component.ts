@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { Platform, ModalController, NavParams } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
+import { Platform, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -25,7 +25,7 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class DashboardComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel<any, OperationModel> = new ModalInputModel<any, OperationModel>();
+    @Input() modalInputModel: ModalInputModel<any, OperationModel> = new ModalInputModel<any, OperationModel>();
     input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
     // MODEL FORM
@@ -46,7 +46,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     screenSubscription: Subscription = new Subscription();
 
     constructor(private readonly platform: Platform,
-                private readonly navParams: NavParams,
                 private readonly screenOrientation: ScreenOrientation,
                 private readonly changeDetector: ChangeDetectorRef,
                 private readonly dashboardService: DashboardService,
@@ -56,7 +55,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.modalInputModel = new ModalInputModel<any, OperationModel>(this.navParams.data);
+    
     this.input = new ModalInputModel<IInfoModel>({
       parentPage: this.getParent(this.modalInputModel.parentPage),
       data: {

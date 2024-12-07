@@ -25,8 +25,7 @@ describe('InfoCalendarComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel()));
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
     homeService = TestBed.inject(HomeService);
     translate = TestBed.inject(TranslateService);
@@ -38,7 +37,7 @@ describe('InfoCalendarComponent', () => {
     component = fixture.componentInstance;
     const allWears = homeService.getWearReplacementToVehicle(
       MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
-    component.navParams.data = new ModalInputModel<any, WearVehicleProgressBarViewModel>({
+    component.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>({
         dataList: allWears,
         parentPage: PageEnum.HOME
       });

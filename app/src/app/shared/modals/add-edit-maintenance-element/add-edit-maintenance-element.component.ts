@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // UTILS
 import { ActionDBEnum, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
@@ -14,7 +14,7 @@ import { ConfigurationService, ControlService } from '@services/index';
 export class AddEditMaintenanceElementComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<MaintenanceElementModel> = new ModalInputModel<MaintenanceElementModel>();
+  @Input() modalInputModel: ModalInputModel<MaintenanceElementModel> = new ModalInputModel<MaintenanceElementModel>();
 
   // MODEL FORM
   maintenanceElement: MaintenanceElementModel = new MaintenanceElementModel();
@@ -23,7 +23,6 @@ export class AddEditMaintenanceElementComponent implements OnInit {
 
   constructor(
     private readonly modalController: ModalController,
-    private readonly navParams: NavParams,
     private readonly controlService: ControlService,
     private readonly configurationService: ConfigurationService
   ) {
@@ -31,7 +30,6 @@ export class AddEditMaintenanceElementComponent implements OnInit {
 
   ngOnInit() {
 
-    this.modalInputModel = new ModalInputModel<MaintenanceElementModel>(this.navParams.data);
     this.maintenanceElement = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.maintenanceElement.id = -1;

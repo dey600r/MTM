@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
@@ -14,7 +14,7 @@ import { DataService, CommonService, ConfigurationService, ControlService, Setti
 export class AddEditConfigurationComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<ConfigurationModel> = new ModalInputModel<ConfigurationModel>();
+  @Input() modalInputModel: ModalInputModel<ConfigurationModel> = new ModalInputModel<ConfigurationModel>();
 
   // MODEL FORM
   configuration: ConfigurationModel = new ConfigurationModel();
@@ -28,7 +28,6 @@ export class AddEditConfigurationComponent implements OnInit {
 
   constructor(
     private readonly modalController: ModalController,
-    private readonly navParams: NavParams,
     private readonly dataService: DataService,
     private readonly commonService: CommonService,
     private readonly controlService: ControlService,
@@ -44,7 +43,6 @@ export class AddEditConfigurationComponent implements OnInit {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
 
-    this.modalInputModel = new ModalInputModel<ConfigurationModel>(this.navParams.data);
     this.configuration = Object.assign({}, this.modalInputModel.data);
     
     this.maintenances = this.commonService.orderBy(this.dataService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);

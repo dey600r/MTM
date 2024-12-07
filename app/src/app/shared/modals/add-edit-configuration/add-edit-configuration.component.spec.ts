@@ -24,11 +24,7 @@ describe('AddEditConfigurationComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel<ConfigurationModel>({
-        data: MockAppData.Configurations[0],
-        parentPage: PageEnum.CONFIGURATION
-      })));
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
@@ -38,6 +34,10 @@ describe('AddEditConfigurationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AddEditConfigurationComponent);
     component = fixture.componentInstance;
+    component.modalInputModel = new ModalInputModel<ConfigurationModel>({
+      data: MockAppData.Configurations[0],
+      parentPage: PageEnum.CONFIGURATION
+    });
     fixture.detectChanges();
   });
 

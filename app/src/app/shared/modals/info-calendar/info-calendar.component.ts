@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
 import { ICalendarComponentOptions, IDayConfig, ICalendarComponentMonthChange, ICalendarDay } from '@heliomarpm/ion-calendar';
@@ -30,7 +30,7 @@ import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, PageEn
 export class InfoCalendarComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
+  @Input() modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
 
   // DATA
   listInfoCalendar: InfoCalendarVehicleViewModel[] = [];
@@ -54,8 +54,7 @@ export class InfoCalendarComponent implements OnInit {
   // TRANSLATE
   notificationEmpty = '';
 
-  constructor(public navParams: NavParams,
-              private readonly modalController: ModalController,
+  constructor(private readonly modalController: ModalController,
               private readonly calendarService: CalendarService,
               private readonly infoCalendarService: InfoCalendarService,
               private readonly commonService: CommonService,
@@ -69,7 +68,6 @@ export class InfoCalendarComponent implements OnInit {
 
   ngOnInit() {
     this.activeSpinner = true;
-    this.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>(this.navParams.data);
 
     // GET SETTINGS
     const settings = this.dataService.getSystemConfigurationData();

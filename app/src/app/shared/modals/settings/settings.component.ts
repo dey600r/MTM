@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
 import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
@@ -25,7 +25,7 @@ import { SettingsService, DataBaseService, ControlService, ThemeService, SyncSer
 export class SettingsComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
+    @Input() modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
 
     // MODEL FORM
 
@@ -61,8 +61,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     versionApp: string = `Version app: ${environment.lastVersion}`;
     versionDateApp: string = `${environment.lastUpdate}`;
 
-    constructor(private readonly navParams: NavParams,
-                private readonly changeDetector: ChangeDetectorRef,
+    constructor(private readonly changeDetector: ChangeDetectorRef,
                 private readonly modalController: ModalController,
                 private readonly dbService: DataBaseService,
                 private readonly crudService: CRUDService,
@@ -80,8 +79,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.exportService.createOutputDirectory();
-
-    this.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>(this.navParams.data);
 
     // SETTINGS
     this.listDistances = this.settingsService.getListDistance();

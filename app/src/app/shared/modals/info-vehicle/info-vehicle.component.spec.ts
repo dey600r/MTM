@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 // COMPONENTS
@@ -24,8 +24,7 @@ describe('InfoVehicleComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, ControlService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel()));
+    config.providers.push(SpyMockConfig.ProviderDataService, ControlService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await firstValueFrom(translate.use('es'));
@@ -34,7 +33,7 @@ describe('InfoVehicleComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(InfoVehicleComponent);
     component = fixture.componentInstance;
-    component.navParams.data = new ModalInputModel<VehicleModel>({
+    component.modalInputModel = new ModalInputModel<VehicleModel>({
         dataList: MockAppData.Vehicles,
         parentPage: PageEnum.VEHICLE
       });

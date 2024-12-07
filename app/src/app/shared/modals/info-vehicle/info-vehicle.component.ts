@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Platform, ModalController, NavParams } from '@ionic/angular';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Platform, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -29,7 +29,7 @@ import { ConstantsColumns, InfoButtonEnum } from '@utils/index';
 export class InfoVehicleComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
+  @Input() modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
   input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
   // DATA
@@ -68,7 +68,6 @@ export class InfoVehicleComponent implements OnInit {
   screenSubscription: Subscription = new Subscription();
 
   constructor(private readonly platform: Platform,
-              public navParams: NavParams,
               private readonly screenOrientation: ScreenOrientation,
               private readonly modalController: ModalController,
               private readonly controlService: ControlService,
@@ -86,7 +85,6 @@ export class InfoVehicleComponent implements OnInit {
   // INIT DATA
 
   initSummary() {
-    this.modalInputModel = new ModalInputModel<any, VehicleModel>(this.navParams.data);
     this.input = new ModalInputModel<IInfoModel>({
       parentPage: this.modalInputModel.parentPage,
       data: {

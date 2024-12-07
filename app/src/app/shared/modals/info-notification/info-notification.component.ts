@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ModalController, NavParams, Platform } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
+import { ModalController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -32,7 +32,7 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<WearVehicleProgressBarViewModel, OperationModel> = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>();
+  @Input() modalInputModel: ModalInputModel<WearVehicleProgressBarViewModel, OperationModel> = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>();
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
@@ -68,9 +68,9 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   searchDashboardSubscription: Subscription = new Subscription();
   searchDashboardRecordsSubscription: Subscription = new Subscription();
   screenSubscription: Subscription = new Subscription();
+  component: any;
 
   constructor(private readonly platform: Platform,
-              public navParams: NavParams,
               private readonly modalController: ModalController,
               private readonly dashboardService: DashboardService,
               private readonly calendarService: CalendarService,
@@ -87,8 +87,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.modalInputModel = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>(this.navParams.data);
-
     this.getSettings();
 
     this.configureResume();

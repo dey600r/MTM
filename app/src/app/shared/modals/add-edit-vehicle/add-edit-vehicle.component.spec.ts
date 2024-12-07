@@ -24,11 +24,7 @@ describe('AddEditVehicleComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel<VehicleModel>({
-        data: MockAppData.Vehicles[0],
-        parentPage: PageEnum.VEHICLE
-      })));
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
@@ -38,6 +34,10 @@ describe('AddEditVehicleComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AddEditVehicleComponent);
     component = fixture.componentInstance;
+    component.modalInputModel = new ModalInputModel<VehicleModel>({
+      data: MockAppData.Vehicles[0],
+      parentPage: PageEnum.VEHICLE
+    });
     fixture.detectChanges();
   });
 
