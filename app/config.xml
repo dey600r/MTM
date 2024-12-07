@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="360" id="mtm.ionic.dey125rdev" version="3.6.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="360" id="mtm.ionic.dey125r" version="3.6.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM</name>
     <description>Motor Track Manager</description>
     <author email="deyhome.mtm@gmail.com" href="https://mtmweb-cd867.web.app/home">DeyHome</author>
@@ -19,7 +19,7 @@
     <preference name="ShowSplashScreen" value="false" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="StatusBarOverlaysWebView" value="false" />
-    <preference name="AndroidGradlePluginVersion" value="8.0.2" />
+    <preference name="AndroidGradlePluginVersion" value="8.3.0" />
     <platform name="android">
         <hook src="scripts/beforeBuild.js" type="before_build" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="src/assets/icon/icon-splash.png" />
