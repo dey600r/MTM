@@ -26,13 +26,15 @@ It helps you to know at any time when you should pass the next review and the li
 ## Technologies
 Proyect is created with:
 * Visual Code
-* HTML5, SCSS3 y Typescript 4.5
-* Angular 13
+* HTML5, SCSS3 y Typescript 5.4
+* Angular 18
 * Jasmine and Karma
-* Ionic 6
+* Ionic 8
 * Cordova
 * SQLite
+* Docker
 * SonarQube
+* Jenkins
 
 ## Application
 

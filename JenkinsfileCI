@@ -5,7 +5,7 @@ node {
   stage('Angular - Install and Test') { 
     nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
       dir('./app') {
-        sh 'npm install'
+        sh 'npm install --force'
         sh 'ng test --code-coverage --watch=false'
       }
     }
