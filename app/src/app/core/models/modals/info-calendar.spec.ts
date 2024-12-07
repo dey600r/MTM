@@ -1,4 +1,4 @@
-import { InfoCalendarMaintenanceViewModel, InfoCalendarReplacementViewModel, InfoCalendarVehicleViewModel } from "@models/index";
+import { InfoCalendarMaintOpViewModel, InfoCalendarReplacementViewModel, InfoCalendarVehicleViewModel } from "@models/index";
 import { WarningWearEnum } from "@utils/index";
 
 describe('InfoCalendarModels', () => {
@@ -9,14 +9,16 @@ describe('InfoCalendarModels', () => {
         expect(base.nameVehicle).toEqual('');
         expect(base.iconVehicle).toEqual('');
         expect(base.typeVehicle).toEqual('');
-        expect(base.listInfoCalendarMaintenance).toEqual([]);
+        expect(base.listInfoCalendarMaintOp).toEqual([]);
     });
 
     it('should initialize infocalendarmaintenance view', () => {
-        const base: InfoCalendarMaintenanceViewModel = new InfoCalendarMaintenanceViewModel();
-        expect(base.idMaintenance).toEqual(-1);
-        expect(base.descriptionMaintenance).toEqual('');
-        expect(base.iconMaintenance).toEqual('');
+        const base: InfoCalendarMaintOpViewModel = new InfoCalendarMaintOpViewModel();
+        expect(base.id).toEqual(-1);
+        expect(base.description).toEqual('');
+        expect(base.detailOperation).toEqual('');
+        expect(base.icon).toEqual('');
+        expect(base.kmOperation).toEqual(0);
         expect(base.initMaintenance).toEqual(false);
         expect(base.wearMaintenance).toEqual(false);
         expect(base.codeMaintenanceFreq).toEqual('');

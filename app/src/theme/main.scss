@@ -461,3 +461,9 @@ ion-calendar ion-button.button-has-icon-only {
 .label-required {
     min-width: 350px;
 }
+
+ion-label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

@@ -5,7 +5,7 @@ describe('DashboardModels', () => {
 
     it('should initialize dashboard model', () => {
         let base: DashboardModel<number> = new DashboardModel();
-        expect(base.view).toEqual([]);
+        expect(base.view).toEqual([840, 400]);
         expect(base.data).toEqual([]);
         expect(base.showXAxis).toEqual(true);
         expect(base.showYAxis).toEqual(true);
@@ -19,7 +19,7 @@ describe('DashboardModels', () => {
         expect(base.colorScheme).toEqual(base.getColorSchemeDefault());
         expect(base.showLabels).toEqual(true);
         expect(base.isDoughnut).toEqual(false);
-        expect(base.legendPosition).toEqual('');
+        expect(base.legendPosition).toEqual(LegendPosition.Right);
         expect(base.showDataLabel).toEqual(false);
         expect(base.barPadding).toEqual(2);
         expect(base.groupPadding).toEqual(4);

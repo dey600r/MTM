@@ -77,3 +77,8 @@ export enum ModalTypeEnum {
     UPDATE = 1,
     DUPLICATE = 2
 }
+
+export enum CalendarTypeEnum {
+    OPERATION = 0,
+    MAINTENANCE = 1
+}

@@ -5,7 +5,7 @@ describe('SearchDashboardModels', () => {
 
     it('should initialize search dashboard model', () => {
         let base: SearchDashboardModel = new SearchDashboardModel();
-        expect(base.showPerMont).toEqual(FilterMonthsEnum.MONTH);
+        expect(base.showPerMont).toEqual(FilterMonthsEnum.YEAR);
         expect(base.searchOperationType).toEqual([]);
         expect(base.searchMaintenanceElement).toEqual([]);
         expect(base.searchVehicle).toEqual([]);

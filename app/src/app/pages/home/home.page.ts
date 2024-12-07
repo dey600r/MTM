@@ -308,7 +308,8 @@ export class HomePage extends BasePage implements OnInit {
   openInfoCalendar() {
     if (!!this.wears && this.wears.length > 0) {
       this.controlService.openModal(PageEnum.HOME,
-        InfoCalendarComponent, new ModalInputModel<any, WearVehicleProgressBarViewModel>({
+        InfoCalendarComponent, new ModalInputModel<OperationModel[], WearVehicleProgressBarViewModel>({
+          data: this.operations,
           dataList: this.wears,
           parentPage: PageEnum.HOME
         }));

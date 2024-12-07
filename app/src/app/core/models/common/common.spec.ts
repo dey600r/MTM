@@ -2,7 +2,7 @@ import {
     BaseCodeDescriptionModel, BaseDescriptionModel, BaseIconCodeDescriptionModel, BaseIconNameDescriptionModel, BaseMaintenanceModel,
     BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, ModalInputModel, ModalOutputModel
 } from "@models/index";
-import { ModalOutputEnum, PageEnum, WarningWearEnum } from "@utils/index";
+import { ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from "@utils/index";
 
 describe('CommonModel', () => {
 
@@ -13,17 +13,17 @@ describe('CommonModel', () => {
 
     it('should initialize modalinput model', () => {
         let base: ModalInputModel<number, string> = new ModalInputModel<number, string>();
-        expect(base.isCreate).toEqual(true);
+        expect(base.type).toEqual(ModalTypeEnum.CREATE);
         expect(base.data).toEqual(null);
         expect(base.dataList).toEqual([]);
         expect(base.parentPage).toEqual(PageEnum.HOME);
         base = new ModalInputModel<number, string>({
-            isCreate: false,
+            type: ModalTypeEnum.UPDATE,
             data: 5, 
             dataList: ['david'],
             parentPage: PageEnum.CONFIGURATION
         });
-        expect(base.isCreate).toEqual(false);
+        expect(base.type).toEqual(ModalTypeEnum.UPDATE);
         expect(base.data).toEqual(5);
         expect(base.dataList[0]).toEqual('david');
         expect(base.parentPage).toEqual(PageEnum.CONFIGURATION);

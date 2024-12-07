@@ -37,42 +37,62 @@
         <ion-icon size="small" color="primary" [name]="hideVehicles[i] ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintenance" [hidden]="hideVehicles[i]">
+    <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintOp" [hidden]="hideVehicles[i]">
       <!-- Icons -->
       <ion-avatar slot="start" class="max-width9 align-start">
-        <ion-icon size="large" class="icon-color" [name]="maint.iconMaintenance"></ion-icon>
+        <ion-icon size="large" class="icon-color" [name]="maint.icon"></ion-icon>
       </ion-avatar>
       <div class="main-item">
         <div>
           <!-- Label -->
           <div class="table-row">
-            <ion-label class="row-label">{{ maint.descriptionMaintenance }}</ion-label>
-            <div class="icon-notification">
-              <ion-icon *ngIf="maint.fromKmMaintenance !== 0" name="walk"
-                color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
-              <ion-icon *ngIf="maint.toKmMaintenance !== null" name="trail-sign"
-                color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
-              <ion-icon *ngIf="maint.initMaintenance" name="navigate-circle"
-                color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
-              <ion-icon *ngIf="!maint.initMaintenance && maint.wearMaintenance" name="notifications-circle"
-                color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
-            </div>
+            <div class="main-item-div width100">
+              <div class="table-row margin-right5 table-row auto-width">
+                <ion-label class="row-label">{{ maint.description }}</ion-label>
+                <p slot="end" class="p-color subrow-pos align-right auto-width font-size14">{{ maint.dateFormatOperation }}</p>
+              </div>
+              <div *ngIf="CALENDAR_TYPE.OPERATION == maint.type" class="table-row margin-right5 table-row auto-width">
+                <p class="subrow-color subrow-pos align-center auto-width subrow-width font-size13 font-italic">
+                  {{ 'COMMON.DISTANCE' | translate }}: {{ maint.kmOperation }}{{measure.value}}
+                </p>
+                <p class="subrow-color subrow-pos align-right auto-width font-size13 font-italic">
+                  {{ 'COMMON.LABOR' | translate }}: {{ maint.priceOperation }}{{coin.value}}
+                </p>
+              </div>
           </div>
-          <ion-item button *ngFor="let repl of maint.listInfoCalendarReplacement" class="second-item" (click)="showInfo(repl)">
+          <div *ngIf="CALENDAR_TYPE.MAINTENANCE == maint.type" class="table-row margin-right5 table-row auto-width icon-notification">
+            <ion-icon *ngIf="maint.fromKmMaintenance !== 0" name="walk"
+              color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+            <ion-icon *ngIf="maint.toKmMaintenance !== null" name="trail-sign"
+              color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+            <ion-icon *ngIf="maint.initMaintenance" name="navigate-circle"
+              color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+            <ion-icon *ngIf="!maint.initMaintenance && maint.wearMaintenance" name="notifications-circle"
+              color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+          </div>
+        </div>
+          <ion-item button *ngFor="let repl of maint.listInfoCalendarReplacement" class="second-item" (click)="showInfo(maint, repl)">
             <!-- Ivatar -->
             <ion-avatar slot="start" class="max-width9 align-start">
               <ion-icon [class]="'second-icon-avatar' + repl.warningIconClass" [color]="repl.warningIconClass" [name]="repl.iconReplacement"></ion-icon>
             </ion-avatar>
-            <div class="main-item-div">
+            <div class="main-item-div width100">
               <div class="table-row margin-right5 table-row auto-width">
                 <ion-icon [class]="'icon-pos' + repl.warningIconClass" [color]="repl.warningIconClass" size="small"
                   [name]="repl.warningIcon"></ion-icon>
-                <p class="p-color row-pos auto-width row-overflow-hiden font-size14">{{ repl.nameReplacement }}</p>
-                <p class="p-color row-pos align-right font-size14">{{ repl.dateFormat }}</p>
+                <p class="p-color row-pos auto-width row-overflow-hiden font-size14 width100">{{ repl.nameReplacement }}</p>
+                <p *ngIf="CALENDAR_TYPE.MAINTENANCE == maint.type" class="p-color row-pos align-right auto-width font-size14">{{ repl.dateFormat }}</p>
+                <p *ngIf="CALENDAR_TYPE.OPERATION == maint.type && repl.price !== 0" style="white-space: nowrap;" class="subrow-color row-pos align-right auto-width font-size13 font-italic">
+                  {{ 'COMMON.PRICE' | translate }}: {{ repl.price }}{{coin.value}}
+                </p>
               </div>
-              <div class="table-row margin-right5 table-row auto-width">
-                <p *ngIf="repl.time === 0 && repl.km !== 0" class="subrow-color subrow-pos align-right auto-width subrow-width font-size13 font-italic">{{ 'COMMON.DISTANCE' | translate }}: {{ repl.km }}{{measure.value}}</p>
-                <p *ngIf="repl.price !== 0" class="subrow-color subrow-pos align-right auto-width font-size13 font-italic">{{ 'COMMON.LAST_PRICE' | translate }}: {{ repl.price }}{{coin.value}}</p>
+              <div *ngIf="CALENDAR_TYPE.MAINTENANCE == maint.type" class="table-row margin-right5 table-row auto-width">
+                <p *ngIf="repl.time === 0 && repl.km !== 0" class="subrow-color subrow-pos align-right auto-width subrow-width font-size13 font-italic">
+                  {{ 'COMMON.DISTANCE' | translate }}: {{ repl.km }}{{measure.value}}
+                </p>
+                <p *ngIf="repl.price !== 0" class="subrow-color subrow-pos align-right auto-width font-size13 font-italic">
+                  {{ 'COMMON.LAST_PRICE' | translate }}: {{ repl.price }}{{coin.value}}
+                </p>
               </div>
             </div>
           </ion-item>

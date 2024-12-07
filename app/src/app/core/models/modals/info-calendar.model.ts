@@ -1,3 +1,4 @@
+import { CalendarTypeEnum } from '@utils/index';
 import { BaseWarningIconModel } from '../common/index';
 
 export class InfoCalendarVehicleViewModel {
@@ -5,14 +6,21 @@ export class InfoCalendarVehicleViewModel {
     nameVehicle = '';
     typeVehicle = '';
     iconVehicle = '';
-    listInfoCalendarMaintenance: InfoCalendarMaintenanceViewModel[] = [];
+    listInfoCalendarMaintOp: InfoCalendarMaintOpViewModel[] = [];
 }
 
-export class InfoCalendarMaintenanceViewModel {
-    idMaintenance = -1;
-    descriptionMaintenance = '';
+export class InfoCalendarMaintOpViewModel {
+    id = -1;
+    type: CalendarTypeEnum = CalendarTypeEnum.MAINTENANCE;
+    description = '';
+    detailOperation = '';
     codeMaintenanceFreq = '';
-    iconMaintenance = '';
+    codeOperationType = '';
+    icon = '';
+    priceOperation = 0;
+    kmOperation = 0;
+    dateOperation = null;
+    dateFormatOperation = '';
     fromKmMaintenance = 0;
     toKmMaintenance = 0;
     initMaintenance = false;

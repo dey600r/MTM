@@ -475,14 +475,14 @@ export class DashboardService {
         // CALCULATE KM PER DAY USING OLD OPERATIONS
         const operationYearBefore: OperationModel[] = this.commonService.orderBy(operations.filter(x => 
             x.date && (new Date(x.date).getFullYear() < year && new Date(x.date).getFullYear() > year - 2)), modelDate);
-        if (operationYearBefore.length > 0) {
+        if (operationYearBefore.length > 0 && operationYear.length > 0) {
             kmBefore = this.calculateKmPerDayOperation(operationYearBefore[operationYearBefore.length - 1], operationYear[0]);
         }
 
         // CALCULATE KM PER DAY USING OLD NEW OPERATION
         const operationYearAfter: OperationModel[] = this.commonService.orderBy(operations.filter(x => 
             x.date && (new Date(x.date).getFullYear() > year && new Date(x.date).getFullYear() < year + 2)), modelDate);
-        if (operationYearAfter.length > 0) {
+        if (operationYearAfter.length > 0 && operationYear.length > 0) {
             kmAfter = this.calculateKmPerDayOperation(operationYear[operationYear.length - 1], operationYearAfter[0]);
         }
 

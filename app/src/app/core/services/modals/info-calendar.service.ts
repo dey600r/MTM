@@ -5,12 +5,13 @@ import { IconService, CalendarService } from '../common/index';
 
 // MODELS
 import {
-    WearVehicleProgressBarViewModel, InfoCalendarVehicleViewModel, InfoCalendarMaintenanceViewModel,
-    InfoCalendarReplacementViewModel, WearMaintenanceProgressBarViewModel, VehicleModel, WearReplacementProgressBarViewModel
+    WearVehicleProgressBarViewModel, InfoCalendarVehicleViewModel, InfoCalendarMaintOpViewModel,
+    InfoCalendarReplacementViewModel, WearMaintenanceProgressBarViewModel, VehicleModel, 
+    WearReplacementProgressBarViewModel, OperationModel
 } from '@models/index';
 
 // UTILS
-import { WarningWearEnum } from '@utils/index';
+import { CalendarTypeEnum, WarningWearEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -23,28 +24,34 @@ export class InfoCalendarService {
 
     // INFO CALENDAR
 
-    getInfoCalendar(listWearsNotification: WearVehicleProgressBarViewModel[]): InfoCalendarVehicleViewModel[] {
+    private getInfoCalendarNotifications(listWearsNotification: WearVehicleProgressBarViewModel[]): InfoCalendarVehicleViewModel[] {
         let result: InfoCalendarVehicleViewModel[] = [];
-
         if (!!listWearsNotification && listWearsNotification.length > 0) {
             listWearsNotification.forEach(wear => { // VEHICLE ITERATION
-                let calMain: InfoCalendarMaintenanceViewModel[] = [];
+                let calMain: InfoCalendarMaintOpViewModel[] = [];
                 wear.listWearMaintenance.forEach(wearMain => { // MAINTENANCE ITERATION
-                    let rep: InfoCalendarMaintenanceViewModel =
-                        calMain.find(x => x.idMaintenance === wearMain.idMaintenance);
-                    if (!!!rep) {
+                    let rep: InfoCalendarMaintOpViewModel =
+                        calMain.find(x => x.id === wearMain.idMaintenance);
+                    if (!rep) {
                         calMain = [...calMain, {
-                            idMaintenance: wearMain.idMaintenance,
-                            descriptionMaintenance: wearMain.descriptionMaintenance,
+                            id: wearMain.idMaintenance,
+                            type: CalendarTypeEnum.MAINTENANCE,
+                            description: wearMain.descriptionMaintenance,
+                            detailOperation: '',
                             codeMaintenanceFreq: wearMain.codeMaintenanceFreq,
-                            iconMaintenance: wearMain.iconMaintenance,
+                            codeOperationType: '',
+                            icon: wearMain.iconMaintenance,
+                            priceOperation: 0,
+                            kmOperation: 0,
+                            dateOperation: null,
+                            dateFormatOperation: '',
                             fromKmMaintenance: wearMain.fromKmMaintenance,
                             toKmMaintenance: wearMain.toKmMaintenance,
                             initMaintenance: wearMain.initMaintenance,
                             wearMaintenance: wearMain.wearMaintenance,
                             listInfoCalendarReplacement: []
                         }];
-                        rep = calMain.find(x => x.idMaintenance === wearMain.idMaintenance);
+                        rep = calMain.find(x => x.id === wearMain.idMaintenance);
                     }
                     wearMain.listWearReplacement.forEach(wearRep => { // STATUS REPLACEMENTE ITERATION
                         // CALENDAR FOR KMS
@@ -62,12 +69,75 @@ export class InfoCalendarService {
                     nameVehicle: wear.nameVehicle,
                     typeVehicle: wear.typeVehicle,
                     iconVehicle: wear.iconVehicle,
-                    listInfoCalendarMaintenance: calMain
+                    listInfoCalendarMaintOp: calMain,
                 }];
             });
         }
-
         return result;
+    }
+
+    getInfoCalendarOperation(listOperations: OperationModel[], listCalendar: InfoCalendarVehicleViewModel[]): InfoCalendarVehicleViewModel[] {
+        let result: InfoCalendarVehicleViewModel[] = listCalendar;
+        if(!!listOperations && listOperations.length > 0) {
+            listOperations.forEach(op => { // OPERATION ITERATOR
+                if(!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
+                    let listInfoOpReplacements: InfoCalendarReplacementViewModel[] = [];
+                    op.listMaintenanceElement.forEach(rep => { // REPLACEMENT OPERATOR
+                        listInfoOpReplacements = [...listInfoOpReplacements, {
+                            idReplacement: rep.id,
+                            nameReplacement: rep.name,
+                            iconReplacement: this.iconService.getIconReplacement(rep.id),
+                            price: rep.price,
+                            km: op.km,
+                            time: 0,
+                            warning: WarningWearEnum.SUCCESS,
+                            warningIcon: this.iconService.getIconKms(WarningWearEnum.SUCCESS),
+                            warningIconClass: this.iconService.getClassIcon(WarningWearEnum.SUCCESS),
+                            date: new Date(op.date),
+                            dateFormat: this.calendarService.getDateString(op.date),
+                        }];
+                    });
+                    let infoOp: InfoCalendarMaintOpViewModel = {
+                        id: op.id,
+                        type: CalendarTypeEnum.OPERATION,
+                        description: op.description,
+                        detailOperation: op.details,
+                        codeMaintenanceFreq: '',
+                        codeOperationType: op.operationType.code,
+                        icon: this.iconService.getIconOperationType(op.operationType.code),
+                        priceOperation: op.price,
+                        kmOperation: op.km,
+                        dateOperation: new Date(op.date),
+                        dateFormatOperation: this.calendarService.getDateString(op.date),
+                        fromKmMaintenance: 0,
+                        toKmMaintenance: null,
+                        initMaintenance: false,
+                        wearMaintenance: false,
+                        listInfoCalendarReplacement: listInfoOpReplacements
+                    };
+
+                    const infoCalendarVehicle = result.find(x => x.idVehicle == op.vehicle.id);
+                    if(infoCalendarVehicle) {
+                        infoCalendarVehicle.listInfoCalendarMaintOp = [...infoCalendarVehicle.listInfoCalendarMaintOp, infoOp];
+                    } else {
+                        result = [...result, {
+                            idVehicle: op.vehicle.id,
+                            nameVehicle: `${op.vehicle.brand} ${op.vehicle.model}`,
+                            typeVehicle: op.vehicle.vehicleType.code,
+                            iconVehicle: op.vehicle.vehicleType.icon,
+                            listInfoCalendarMaintOp: [infoOp],
+                        }];
+                    }
+
+                }
+            });
+        }
+        return result;
+    }
+
+    getInfoCalendar(listWearsNotification: WearVehicleProgressBarViewModel[], listOperations: OperationModel[]): InfoCalendarVehicleViewModel[] {
+        const listCalendarNotifications: InfoCalendarVehicleViewModel[] = this.getInfoCalendarNotifications(listWearsNotification);
+        return this.getInfoCalendarOperation(listOperations, listCalendarNotifications);
     }
 
     createInfoCalendarReplacement(wear: WearVehicleProgressBarViewModel, wearMain: WearMaintenanceProgressBarViewModel,
@@ -85,6 +155,10 @@ export class InfoCalendarService {
             warnings = wearRep.warningMonths;
             dateResult = this.getDateCalculatingTime(wear, wearMain, wearRep);
         }
+        const today = new Date();
+        if(today > dateResult)
+            dateResult = today;
+
         return {
             idReplacement: wearRep.idMaintenanceElement,
             nameReplacement: wearRep.nameMaintenanceElement,
@@ -161,15 +235,15 @@ export class InfoCalendarService {
         let result: InfoCalendarVehicleViewModel[] = [];
         if (!!data && data.length > 0) {
             data.forEach(x => {
-                if (x.listInfoCalendarMaintenance.some(m =>
+                if (x.listInfoCalendarMaintOp.some(m =>
                     m.listInfoCalendarReplacement.some(r => this.isDateEquals(r.date, date)))) {
-                    const rVehicle: InfoCalendarMaintenanceViewModel[] = this.calculateVehicleReplacementCalendar(x, date);
+                    const rVehicle: InfoCalendarMaintOpViewModel[] = this.calculateVehicleReplacementCalendar(x, date);
                     result = [...result, {
                         idVehicle: x.idVehicle,
                         nameVehicle: x.nameVehicle,
                         typeVehicle: x.typeVehicle,
                         iconVehicle: x.iconVehicle,
-                        listInfoCalendarMaintenance: rVehicle
+                        listInfoCalendarMaintOp: rVehicle
                     }];
                 }
             });
@@ -178,8 +252,8 @@ export class InfoCalendarService {
     }
 
     calculateVehicleReplacementCalendar(x: InfoCalendarVehicleViewModel, date: Date[]) {
-        let rVehicle: InfoCalendarMaintenanceViewModel[] = [];
-        x.listInfoCalendarMaintenance.forEach(y => {
+        let rVehicle: InfoCalendarMaintOpViewModel[] = [];
+        x.listInfoCalendarMaintOp.forEach(y => {
             if (y.listInfoCalendarReplacement.some(r => this.isDateEquals(r.date, date))) {
                 let rMaint: InfoCalendarReplacementViewModel[] = [];
                 y.listInfoCalendarReplacement.forEach(z => {
@@ -200,10 +274,17 @@ export class InfoCalendarService {
                     }
                 });
                 rVehicle = [...rVehicle, {
-                    idMaintenance: y.idMaintenance,
-                    descriptionMaintenance: y.descriptionMaintenance,
+                    id: y.id,
+                    type: y.type,
+                    description: y.description,
+                    detailOperation: y.detailOperation,
                     codeMaintenanceFreq: y.codeMaintenanceFreq,
-                    iconMaintenance: y.iconMaintenance,
+                    codeOperationType: y.codeOperationType,
+                    icon: y.icon,
+                    priceOperation: y.priceOperation,
+                    kmOperation: y.kmOperation,
+                    dateOperation: y.dateOperation,
+                    dateFormatOperation: y.dateFormatOperation,
                     fromKmMaintenance: y.fromKmMaintenance,
                     toKmMaintenance: y.toKmMaintenance,
                     initMaintenance: y.initMaintenance,
@@ -230,7 +311,7 @@ export class InfoCalendarService {
     getCircleColor(listInfoCalendarVehicle: InfoCalendarVehicleViewModel[], replacement: InfoCalendarReplacementViewModel): string {
         let listWarning: WarningWearEnum[] = [];
         listInfoCalendarVehicle.forEach(x => {
-            x.listInfoCalendarMaintenance.forEach(y => {
+            x.listInfoCalendarMaintOp.forEach(y => {
                 y.listInfoCalendarReplacement.forEach(z => {
                     if (!listWarning.some(w => w === z.warning) && this.isDateEquals(z.date, [replacement.date])) {
                         listWarning = [...listWarning, z.warning];

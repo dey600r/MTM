@@ -10,7 +10,8 @@ import {
   ModalInputModel, InfoCalendarVehicleViewModel,
   InfoCalendarReplacementViewModel, ISettingModel,
   WearVehicleProgressBarViewModel,
-  ICalendarColorMode
+  ICalendarColorMode,
+  InfoCalendarMaintOpViewModel
 } from '@models/index';
 
 // SERVICES
@@ -19,7 +20,7 @@ import {
 } from '@services/index';
 
 // UTILS
-import { CalendarModeEnum, Constants, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
+import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Component({
   selector: 'info-calendar',
@@ -48,6 +49,7 @@ export class InfoCalendarComponent implements OnInit {
   hideVehicles: boolean[] = [];
   measure: ISettingModel;
   coin: ISettingModel;
+  CALENDAR_TYPE = CalendarTypeEnum;
 
   // TRANSLATE
   notificationEmpty = '';
@@ -80,14 +82,14 @@ export class InfoCalendarComponent implements OnInit {
   }
 
   initCalendar() {
-    this.listInfoCalendar = this.infoCalendarService.getInfoCalendar(this.modalInputModel.dataList);
+    this.listInfoCalendar = this.infoCalendarService.getInfoCalendar(this.modalInputModel.dataList, this.modalInputModel.data);
     let days: IDayConfig[] = [];
     let dateInit: Date = new Date();
     if (!!this.listInfoCalendar && this.listInfoCalendar.length) {
       dateInit = this.commonService.min(this.modalInputModel.dataList, ConstantsColumns.COLUMN_MODEL_DATE_PURCHASE_VEHICLE);
       this.listInfoCalendar.forEach((x, index) => {
         this.hideVehicles[index] = (index !== 0);
-        x.listInfoCalendarMaintenance.forEach(y => {
+        x.listInfoCalendarMaintOp.forEach(y => {
           y.listInfoCalendarReplacement.forEach(z => {
             if (!days.some(d => d.date === z.date)) {
               days = [...days, {
@@ -253,7 +255,7 @@ export class InfoCalendarComponent implements OnInit {
   calculateColor(mode: CalendarModeEnum, notifications: InfoCalendarVehicleViewModel[]): ICalendarColorMode[] {
     let cells: ICalendarColorMode[] = [];
     notifications.forEach(x => {
-      x.listInfoCalendarMaintenance.forEach(y => {
+      x.listInfoCalendarMaintOp.forEach(y => {
         y.listInfoCalendarReplacement.forEach(z => {
           const color: string = this.infoCalendarService.getCircleColor(this.listInfoCalendar, z);
           let iterator = z.date.getMonth();
@@ -291,13 +293,23 @@ export class InfoCalendarComponent implements OnInit {
     }
   }
 
-  showInfo(repl: InfoCalendarReplacementViewModel) {
+  private getInfoMaintenance(repl: InfoCalendarReplacementViewModel): string {
     let msg = '';
     if (repl.time === 0 && repl.km !== 0) {
       msg = this.translator.instant('ALERT.InfoCalendarKm',
         {replacement: repl.nameReplacement, km: repl.km, measure: this.measure.value, date: repl.dateFormat});
     } else {
       msg = this.translator.instant('ALERT.InfoCalendarTime', {replacement: repl.nameReplacement, date: repl.dateFormat});
+    }
+    return msg;
+  }
+
+  showInfo(maintOp: InfoCalendarMaintOpViewModel, repl: InfoCalendarReplacementViewModel) {
+    let msg = '';
+    if(CalendarTypeEnum.MAINTENANCE == maintOp.type) {
+      msg = this.getInfoMaintenance(repl);
+    } else {
+      msg = maintOp.detailOperation;
     }
     this.controlService.showMsgToast(PageEnum.MODAL_CALENDAR, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGH);
   }
