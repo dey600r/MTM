@@ -1,4 +1,4 @@
-<ion-header [hidden]="!loadedHeader">
+<ion-header *ngIf="loadedHeader">
   <ion-toolbar>
     <!-- Button chart -->
     <ion-button slot="start" fill="clear" (click)="openDashboardOperation()" class="btn-width-header">
@@ -23,36 +23,45 @@
   </ion-segment>
 </ion-header>
 
-<ion-content [hidden]="!loadedBody">
+<ion-content *ngIf="loadedBody">
   <!-- INFO -->
   <app-info *ngIf="operations.length === 0" [inputInfo]="input"></app-info>
   <!-- LIST -->
   <ion-list *ngIf="operations.length > 0" class="segment-top margin-bottom45">
-    <ion-item button *ngFor="let op of operations">
-      <!-- Icons -->
-      <ion-avatar slot="start" class="max-width10" (click)="openOperationModal(op, false)">
-        <ion-icon size="large" class="icon-color" [name]="op.operationType.icon"></ion-icon>
-      </ion-avatar>
-      <!-- Labels -->
-      <ion-label class="min-width40 label-event-force" (click)="openOperationModal(op, false)">
-        <h2 class="text-overflow">{{ op.description }}</h2>
-        <h3>{{ op.km }} {{measure.value}}</h3>
-      </ion-label>
-      <ion-label class="padding-left10 label-event-force" (click)="openOperationModal(op, false)">
-        <p class="p-style">{{ op.date | dateFormatCalendarPipe }}</p>
-        <p class="p-style">{{ this.calculatePriceOperation(op) }} {{coin.value}}</p>
-      </ion-label>
-      <!-- Buttons delete -->
-      <div class="align-right fix-width69">
-        <ion-button class="btn-width-row" fill="clear" (click)="deleteOperation(op)">
-          <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-        </ion-button>
-      </div>
-    </ion-item>
+    <ion-item-sliding *ngFor="let op of operations; let i = index;" #itemSliding>
+      <ion-item button>
+        <!-- Icons -->
+        <ion-avatar slot="start" class="max-width10" (click)="openUpdateOperationModal(op)">
+          <ion-icon size="large" class="icon-color" [name]="op.operationType.icon"></ion-icon>
+        </ion-avatar>
+        <!-- Labels -->
+        <ion-label class="min-width40 label-event-force" (click)="openUpdateOperationModal(op)">
+          <h2 class="text-overflow">{{ op.description }}</h2>
+          <h3>{{ op.km }} {{measure.value}}</h3>
+        </ion-label>
+        <ion-label class="padding-left10 label-event-force" (click)="openUpdateOperationModal(op)">
+          <p class="p-style">{{ op.date | dateFormatCalendarPipe }}</p>
+          <p class="p-style">{{ this.calculatePriceOperation(op) }} {{coin.value}}</p>
+        </ion-label>
+        <!-- Buttons delete -->
+        <div class="align-right fix-width69">
+          <ion-button class="btn-width-row" fill="clear" (click)="deleteOperation(op)">
+            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+    
+      <!-- SLIDING END -->
+      <ion-item-options side="end">
+        <ion-item-option class="day-circle-config-blue" (click)="openDuplicateOperationModal(itemSliding, op)">
+          <ion-icon slot="icon-only" name="duplicate"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
   <ion-fab *ngIf="this.vehicles.length > 0" horizontal="end" vertical="bottom" slot="fixed">
-    <ion-fab-button (click)="openOperationModal()">
-      <ion-icon name="duplicate"></ion-icon>
+    <ion-fab-button (click)="openCreateOperationModal()">
+      <ion-icon name="add-circle"></ion-icon>
     </ion-fab-button>
   </ion-fab>
   <ion-fab *ngIf="this.vehicles.length === 0" horizontal="end" vertical="bottom" slot="fixed">
@@ -69,7 +78,7 @@
 
 <ion-content *ngIf="!loadedBody">
   <ion-list>
-    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]">
+    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]">
       <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
       <ion-label>
         <h3><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></h3>

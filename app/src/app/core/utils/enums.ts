@@ -65,3 +65,20 @@ export enum TypeOfTableEnum {
     DATA = 1,
     RELATION = 2
 }
+
+export enum CalendarModeEnum {
+    MONTH = 0,
+    YEAR = 1,
+    YEARS = 2
+}
+
+export enum ModalTypeEnum {
+    CREATE = 0,
+    UPDATE = 1,
+    DUPLICATE = 2
+}
+
+export enum CalendarTypeEnum {
+    OPERATION = 0,
+    MAINTENANCE = 1
+}

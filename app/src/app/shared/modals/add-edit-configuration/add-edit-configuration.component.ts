@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
-import { Form } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum } from '@app/core/utils';
+import { ActionDBEnum, ConstantsColumns, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel, ISettingModel } from '@models/index';
 import { DataService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
@@ -15,11 +14,12 @@ import { DataService, CommonService, ConfigurationService, ControlService, Setti
 export class AddEditConfigurationComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<ConfigurationModel> = new ModalInputModel<ConfigurationModel>();
+  @Input() modalInputModel: ModalInputModel<ConfigurationModel> = new ModalInputModel<ConfigurationModel>();
 
   // MODEL FORM
   configuration: ConfigurationModel = new ConfigurationModel();
   submited = false;
+  MODAL_TYPE_ENUM = ModalTypeEnum;
 
   // DATA
   maintenances: MaintenanceModel[] = [];
@@ -27,13 +27,12 @@ export class AddEditConfigurationComponent implements OnInit {
   measure: ISettingModel;
 
   constructor(
-    private modalController: ModalController,
-    private navParams: NavParams,
-    private dataService: DataService,
-    private commonService: CommonService,
-    private controlService: ControlService,
-    private settingsService: SettingsService,
-    private configurationService: ConfigurationService
+    private readonly modalController: ModalController,
+    private readonly dataService: DataService,
+    private readonly commonService: CommonService,
+    private readonly controlService: ControlService,
+    private readonly settingsService: SettingsService,
+    private readonly configurationService: ConfigurationService
   ) {
   }
 
@@ -44,14 +43,11 @@ export class AddEditConfigurationComponent implements OnInit {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
 
-    this.modalInputModel = new ModalInputModel<ConfigurationModel>(this.navParams.data);
     this.configuration = Object.assign({}, this.modalInputModel.data);
-    if (this.modalInputModel.isCreate) {
-      this.configuration.id = -1;
-    }
-
+    
     this.maintenances = this.commonService.orderBy(this.dataService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
-    if (this.modalInputModel.isCreate) {
+    if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
+      this.configuration.id = -1;
       this.maintenances.forEach(x => this.toggleMaintenaces = [...this.toggleMaintenaces, false]);
     } else {
       this.maintenances.forEach(x => {
@@ -60,7 +56,7 @@ export class AddEditConfigurationComponent implements OnInit {
     }
   }
 
-  saveData(f: Form) {
+  saveData(f: HTMLFormElement) {
     this.submited = true;
     if (this.isValidForm(f)) {
       this.configuration.listMaintenance = [];
@@ -71,10 +67,10 @@ export class AddEditConfigurationComponent implements OnInit {
         }
       }
       this.configurationService.saveConfiguration(this.configuration,
-          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
         this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.SUCCESS,
-          (this.modalInputModel.isCreate ? 'PAGE_CONFIGURATION.AddSaveConfiguration' : 'PAGE_CONFIGURATION.EditSaveConfiguration'),
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddSaveConfiguration' : 'PAGE_CONFIGURATION.EditSaveConfiguration'),
           { configuration: this.configuration.name });
       }).catch(e => {
         this.controlService.showToast(PageEnum.MODAL_CONFIGURATION, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveConfiguration', e);

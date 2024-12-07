@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="353" id="mtm.ionic.dey125r" version="3.5.3" windows-packageVersion="3.5.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="360" id="mtm.ionic.dey125r" version="3.6.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM</name>
     <description>Motor Track Manager</description>
     <author email="deyhome.mtm@gmail.com" href="https://mtmweb-cd867.web.app/home">DeyHome</author>
@@ -14,17 +14,12 @@
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="22" />
     <preference name="android-targetSdkVersion" value="34" />
-    <preference name="WindowsStoreIdentityName" value="52193DeyHome.MotortrackManager" />
-    <preference name="WindowsStorePublisherName" value="DeyApps" />
-    <preference name="WindowsStoreDisplayName" value="Motor Track Manager" />
-    <preference name="windows-target-version" value="10.0" />
-    <preference name="windows-phone-target-version" value="10.0" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreenDelay" value="0" />
     <preference name="ShowSplashScreen" value="false" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="StatusBarOverlaysWebView" value="false" />
-    <preference name="AndroidGradlePluginVersion" value="8.0.2" />
+    <preference name="AndroidGradlePluginVersion" value="8.3.0" />
     <platform name="android">
         <hook src="scripts/beforeBuild.js" type="before_build" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="src/assets/icon/icon-splash.png" />
@@ -45,21 +40,5 @@
         <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
         <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
     </platform>
-    <plugin name="cordova-plugin-device" spec="2.0.2" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-    <allow-navigation href="http://localhost:8100" sessionid="700af186" />
-    <platform name="windows">
-        <Capability Name="internetClientServer" />
-        <Capability Name="internetClient" />
-        <preference name="SplashScreenDelay" value="3000" />
-        <preference name="SplashScreenBackgroundColor" value="#2A2A2A" />
-        <icon src="resources/windows/icon/Square44x44Logo.png" target="Square44x44Logo" />
-        <icon src="resources/windows/icon/SmallTile.png" target="Square71x71Logo" />
-        <icon src="resources/windows/icon/Square150x150Logo.png" target="Square150x150Logo" />
-        <icon src="resources/windows/icon/Square310x310Logo.png" target="Square310x310Logo" />
-        <icon src="resources/windows/icon/Wide310x150Logo.png" target="Wide310x150Logo" />
-        <icon src="resources/windows/icon/StoreLogo.png" target="StoreLogo" />
-        <splash src="resources/windows/splash/Splash.png" target="SplashScreen" />
-        <splash src="resources/windows/splash/Splash.png" target="SplashScreenPhone" />
-    </platform>
 </widget>

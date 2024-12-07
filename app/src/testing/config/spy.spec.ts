@@ -1,4 +1,5 @@
-import { AngularDelegate, ModalController, NavParams, Platform, PopoverController } from '@ionic/angular';
+import { AngularDelegate, ModalController, Platform, PopoverController } from '@ionic/angular';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 // PLUGINS
@@ -21,7 +22,7 @@ import { ConstantsTest } from './constants.spec';
 
 
 export class SpyMockConfig {
-    static SpyConfig = {
+    static readonly SpyConfig = {
         statusBar: jasmine.createSpyObj('StatusBar', ['styleBlackTranslucent', 'styleLightContent']),
         platformReadySpy: Promise.resolve(),
         platformSpy: {
@@ -63,13 +64,14 @@ export class SpyMockConfig {
         }
     };
 
-    static Providers = [
+    static readonly Providers = [
         TranslateService,
         ModalController,
         AngularDelegate,
         PopoverController,
         DateFormatCalendarPipe,
         InAppBrowser,
+        provideHttpClient(withInterceptorsFromDi()),
         //{ provide: LogService, useValue: SpyMockConfig.SpyConfig.logService },
         { provide: StatusBar, useValue: SpyMockConfig.SpyConfig.statusBar },
         { provide: Platform, useValue: SpyMockConfig.SpyConfig.platformSpy },
@@ -78,20 +80,17 @@ export class SpyMockConfig {
         { provide: ControlService, useValue: SpyMockConfig.SpyConfig.controlService }
     ];
 
-    static ProvidersServices = [
+    static readonly ProvidersServices = [
         InAppBrowser,
+        provideHttpClient(withInterceptorsFromDi()),
         { provide: Storage, useValue: SpyMockConfig.SpyConfig.window },
         { provide: File, useValue: SpyMockConfig.SpyConfig.file }
     ];
 
-    static ProviderLogService = { provide: LogService, useValue: SpyMockConfig.SpyConfig.logService };
-    static ProviderDataService = { provide: DataService, useValue: SpyMockConfig.SpyMockAppDataService() };
-    static ProviderDataBaseService = { provide: DataBaseService, useValue: SpyMockConfig.SpyConfig.dbService };
-    static ProviderExportService = { provide: ExportService, useValue: SpyMockConfig.SpyConfig.exportService };
-
-    static getProviderNavParams(data: ModalInputModel) {
-        return {provide: NavParams, useValue: { data }};
-    }
+    static readonly ProviderLogService = { provide: LogService, useValue: SpyMockConfig.SpyConfig.logService };
+    static readonly ProviderDataService = { provide: DataService, useValue: SpyMockConfig.SpyMockAppDataService() };
+    static readonly ProviderDataBaseService = { provide: DataBaseService, useValue: SpyMockConfig.SpyConfig.dbService };
+    static readonly ProviderExportService = { provide: ExportService, useValue: SpyMockConfig.SpyConfig.exportService };
 
     static SpyMockAppDataService() {
         const spy = SpyMockConfig.SpyConfig.dataService;

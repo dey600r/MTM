@@ -1,4 +1,4 @@
-import { ModalOutputEnum, PageEnum, WarningWearEnum } from '@utils/index';
+import { ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from '@utils/index';
 
 export class BaseModel {
     id: number;
@@ -8,12 +8,12 @@ export class BaseModel {
 }
 
 export class ModalInputModel<T = any, R = any> {
-    isCreate: boolean;
+    type: ModalTypeEnum;
     data: T;
     dataList: R[];
     parentPage: PageEnum;
     constructor(data: Partial<ModalInputModel<T, R>> = {}) {
-        this.isCreate = (data.isCreate !== undefined ? data.isCreate : true);
+        this.type = (data.type ?? ModalTypeEnum.CREATE);
         this.data = (data.data ? data.data : null);
         this.dataList = (data.dataList ? data.dataList : []);
         this.parentPage = (data.parentPage ? data.parentPage : PageEnum.HOME);

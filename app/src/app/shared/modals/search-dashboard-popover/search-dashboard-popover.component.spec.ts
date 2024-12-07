@@ -24,8 +24,7 @@ describe('SearchDashboardPopOverComponent', () => {
 
   beforeEach(async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel({ parentPage: PageEnum.OPERATION })));
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
@@ -35,6 +34,7 @@ describe('SearchDashboardPopOverComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SearchDashboardPopOverComponent);
     component = fixture.componentInstance;
+    component.modalInputModel = new ModalInputModel({ parentPage: PageEnum.OPERATION });
     fixture.detectChanges();
   });
 

@@ -9,20 +9,20 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 /* Core CSS required for Ionic components to work properly */
-@import "~@ionic/angular/css/core.css";
+@import "@ionic/angular/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
-@import "~@ionic/angular/css/normalize.css";
-@import "~@ionic/angular/css/structure.css";
-@import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import '@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
-@import "~@ionic/angular/css/padding.css";
-@import "~@ionic/angular/css/float-elements.css";
-@import "~@ionic/angular/css/text-alignment.css";
-@import "~@ionic/angular/css/text-transformation.css";
-@import "~@ionic/angular/css/flex-utils.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
 
 /* SEGMENTS */
 
@@ -50,7 +50,7 @@ ion-checkbox {
 
 /* MODAL */
 
-.my-custom-modal .modal-wrapper {
+.my-custom-modal {
   --min-width: 90%;
   --min-height: 90%;
 }
@@ -60,3 +60,23 @@ ion-checkbox {
 body {
   background-color: var(--ion-background-color);
 }
+
+[hidden] {
+  display: none !important;
+}
+
+ // SCROLL BAR 
+//  *::-webkit-scrollbar {
+//   width: 8px;
+//   height: 8px;
+// }
+
+// *::-webkit-scrollbar-track {
+//   box-shadow: inset 0 0 8px gray;
+//   border-radius: 8px;
+// }
+
+// *::-webkit-scrollbar-thumb {
+//   background: var(--ion-background-color);
+//   border-radius: 8px;
+// }

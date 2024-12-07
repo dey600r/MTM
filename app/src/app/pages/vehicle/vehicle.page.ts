@@ -5,7 +5,7 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
 import { DataService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
 import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel } from '@models/index';
 
@@ -36,15 +36,15 @@ export class VehiclePage extends BasePage implements OnInit {
   iconNameHeaderLeft = '';
 
   constructor(public platform: Platform,
-              private dataService: DataService,
+              private readonly dataService: DataService,
               public translator: TranslateService,
-              private vehicleService: VehicleService,
-              private commonService: CommonService,
-              private controlService: ControlService,
-              private dashboardService: DashboardService,
-              private settingsService: SettingsService,
-              private detector: ChangeDetectorRef,
-              private iconService: IconService) {
+              private readonly vehicleService: VehicleService,
+              private readonly commonService: CommonService,
+              private readonly controlService: ControlService,
+              private readonly dashboardService: DashboardService,
+              private readonly settingsService: SettingsService,
+              private readonly detector: ChangeDetectorRef,
+              private readonly iconService: IconService) {
       super(platform, translator);
   }
 
@@ -94,12 +94,20 @@ export class VehiclePage extends BasePage implements OnInit {
 
   /** MODALS */
 
-  openVehicleModal(row: VehicleModel = new VehicleModel(), create: boolean = true) {
+  private openVehicleModal(row: VehicleModel, type: ModalTypeEnum) {
     this.controlService.openModal(PageEnum.VEHICLE, AddEditVehicleComponent, new ModalInputModel<VehicleModel>({
-        isCreate: create,
+        type: type,
         data: row,
         parentPage: PageEnum.VEHICLE
       }));
+  }
+
+  openCreateVehicleModal() {
+    this.openVehicleModal(new VehicleModel(), ModalTypeEnum.CREATE);
+  }
+
+  openUpdateVehicleModal(row: VehicleModel) {
+    this.openVehicleModal(row, ModalTypeEnum.UPDATE);
   }
 
   openInfoVehicle() {
@@ -123,7 +131,7 @@ export class VehiclePage extends BasePage implements OnInit {
       this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
     } else {
       this.controlService.openModal(PageEnum.VEHICLE, DashboardComponent, new ModalInputModel<any, OperationModel>({
-          isCreate: false,
+          type: ModalTypeEnum.UPDATE,
           dataList: this.operations,
           parentPage: PageEnum.VEHICLE
         }));

@@ -9,7 +9,7 @@ node {
   stage('Angular - Install') { 
     nodejs(nodeJSInstallationName: 'NodeJS-Ionic') {
       dir('./app') {
-        sh 'npm install'
+        sh 'npm install --force'
       }
     }
   }

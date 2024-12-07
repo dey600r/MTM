@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
-import { Form } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, Constants, PageEnum, ToastTypeEnum } from '@utils/index';
+import { ActionDBEnum, Constants, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
   ModalInputModel, MaintenanceModel, ISettingModel,
   MaintenanceFreqModel, MaintenanceElementModel
@@ -21,11 +20,12 @@ import { DataService, ConfigurationService, ControlService, SettingsService } fr
 export class AddEditMaintenanceComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<MaintenanceModel, number> = new ModalInputModel<MaintenanceModel, number>();
+  @Input() modalInputModel: ModalInputModel<MaintenanceModel, number> = new ModalInputModel<MaintenanceModel, number>();
 
   // MODEL FORM
   maintenance: MaintenanceModel = new MaintenanceModel();
   submited = false;
+  MODAL_TYPE_ENUM = ModalTypeEnum;
 
   // DATA
   maintenanceElements: MaintenanceElementModel[] = [];
@@ -40,19 +40,17 @@ export class AddEditMaintenanceComponent implements OnInit {
   translateSelect = '';
   translateAccept = '';
   translateCancel = '';
-  customActionSheetOptions: any = {
-    header: this.translator.instant('COMMON.REPLACEMENT'),
-  };
+  customActionSheetOptions: any = {};
 
   constructor(
-    private modalController: ModalController,
-    private navParams: NavParams,
-    private dataService: DataService,
-    private configurationService: ConfigurationService,
-    private translator: TranslateService,
-    private controlService: ControlService,
-    private settingsService: SettingsService
+    private readonly modalController: ModalController,
+    private readonly dataService: DataService,
+    private readonly configurationService: ConfigurationService,
+    private readonly translator: TranslateService,
+    private readonly controlService: ControlService,
+    private readonly settingsService: SettingsService
   ) {
+    this.customActionSheetOptions = { header: this.translator.instant('COMMON.REPLACEMENT') };
     this.translateSelect = this.translator.instant('COMMON.SELECT');
     this.translateAccept = this.translator.instant('COMMON.ACCEPT');
     this.translateCancel = this.translator.instant('COMMON.CANCEL');
@@ -65,13 +63,12 @@ export class AddEditMaintenanceComponent implements OnInit {
       this.measure = this.settingsService.getDistanceSelected(settings);
     }
 
-    this.modalInputModel = new ModalInputModel<MaintenanceModel, number>(this.navParams.data);
     this.maintenance = Object.assign({}, this.modalInputModel.data);
     this.maxKm = (this.modalInputModel.dataList[0] === null ? 100000 : Math.round(this.modalInputModel.dataList[0] / 1000) * 1000 + 30000);
     this.valueRange.lower = this.maintenance.fromKm;
     this.valueRange.upper = this.maintenance.toKm === null ? this.maxKm : this.maintenance.toKm;
     this.changeRange();
-    if (this.modalInputModel.isCreate) {
+    if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.maintenance.id = -1;
       this.maintenance.maintenanceFreq.id = null;
     }
@@ -87,7 +84,7 @@ export class AddEditMaintenanceComponent implements OnInit {
     this.maintenanceFreqs = this.dataService.getMaintenanceFreqData();
   }
 
-  saveData(f: Form) {
+  saveData(f: HTMLFormElement) {
     this.submited = true;
     if (this.isValidForm(f)) {
       if (this.isInitDisabled()) {
@@ -101,10 +98,10 @@ export class AddEditMaintenanceComponent implements OnInit {
       this.maintenance.listMaintenanceElement = this.maintenanceElements.filter(x =>
         this.maintenanceElementSelect.some(y => y === x.id));
       this.configurationService.saveMaintenance(this.maintenance,
-          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.SUCCESS, (this.modalInputModel.isCreate ?
-            'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.SUCCESS,
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddSaveMaintenance' : 'PAGE_CONFIGURATION.EditSaveMaintenance'),
           { maintenance: this.maintenance.description });
       }).catch(e => {
         this.controlService.showToast(PageEnum.MODAL_MAINTENANCE, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveMaintenance', e);

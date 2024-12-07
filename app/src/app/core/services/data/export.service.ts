@@ -14,8 +14,8 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 })
 export class ExportService {
 
-    constructor(private file: File,
-                private logService: LogService) {
+    constructor(private readonly file: File,
+                private readonly logService: LogService) {
     }
 
     /** EXPORTS AND IMPORTS */

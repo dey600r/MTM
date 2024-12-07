@@ -9,38 +9,38 @@ import { MockDBConfiguration, MockDBMaintenance, MockDBOperation, MockDBVehicle 
 export class MockDBData {
 
     /* MAINTENANCE ELELEMTNS */
-    public static MaintenanceElements: IMaintenanceElementStorageModel[] = MockDBMaintenance.MaintenanceElements;
+    public static readonly MaintenanceElements: IMaintenanceElementStorageModel[] = MockDBMaintenance.MaintenanceElements;
 
     /* MAINTENANCE FREQUENCIES */
-    public static MaintenanceFreqs: IMaintenanceFreqStorageModel[] = MockDBMaintenance.MaintenanceFreqs;
+    public static readonly MaintenanceFreqs: IMaintenanceFreqStorageModel[] = MockDBMaintenance.MaintenanceFreqs;
 
     /* MAINTENANCES */
-    public static Maintenances: IMaintenanceStorageModel[] = MockDBMaintenance.Maintenances;
+    public static readonly Maintenances: IMaintenanceStorageModel[] = MockDBMaintenance.Maintenances;
 
     /* MAINTENANCES - MAINTENANCES ELEMENT */
-    public static MaintenancesElementRel: IMaintenanceElementRelStorageModel[] = MockDBMaintenance.MaintenanceElementRel;
+    public static readonly MaintenancesElementRel: IMaintenanceElementRelStorageModel[] = MockDBMaintenance.MaintenanceElementRel;
 
     /* SYSTEM CONFIGURATION */
-    public static SystemConfigurations: ISystemConfigurationStorageModel[] = MockDBConfiguration.SystemConfigurations;
+    public static readonly SystemConfigurations: ISystemConfigurationStorageModel[] = MockDBConfiguration.SystemConfigurations;
 
     /* CONFIGURATION */
-    static Configurations: IConfigurationStorageModel[] = MockDBConfiguration.Configurations;
+    static readonly Configurations: IConfigurationStorageModel[] = MockDBConfiguration.Configurations;
 
     /* CONFIGURATION - MAINTENANCES */
-    public static ConfigurationMaintenance: IConfigurationMaintenanceStorageModel[] = MockDBConfiguration.ConfigurationMaintenances;
+    public static readonly ConfigurationMaintenance: IConfigurationMaintenanceStorageModel[] = MockDBConfiguration.ConfigurationMaintenances;
 
     /* VEHICLE TYPE */
-    public static VehicleTypes: IVehicleTypeStorageModel[] = MockDBVehicle.VehicleTypes;
+    public static readonly VehicleTypes: IVehicleTypeStorageModel[] = MockDBVehicle.VehicleTypes;
 
     /* VEHICLES */
-    public static Vehicles: IVehicleStorageModel[] = MockDBVehicle.Vehicles;
+    public static readonly Vehicles: IVehicleStorageModel[] = MockDBVehicle.Vehicles;
 
     /* OPERATION TYPES */
-    public static OperationTypes: IOperationTypeStorageModel[] = MockDBOperation.OperationTypes;
+    public static readonly OperationTypes: IOperationTypeStorageModel[] = MockDBOperation.OperationTypes;
 
     /* OPERATIONS */
-    public static Operations: IOperationStorageModel[] = MockDBOperation.Operations;
+    public static readonly Operations: IOperationStorageModel[] = MockDBOperation.Operations;
 
     /* OPERATIONS - MAINTENANCE MODEL */
-    public static OperationMaintenancesElement: IOperationMaintenanceElementStorageModel[] = MockDBOperation.OperationMaintenanceElement;
+    public static readonly OperationMaintenancesElement: IOperationMaintenanceElementStorageModel[] = MockDBOperation.OperationMaintenanceElement;
 }

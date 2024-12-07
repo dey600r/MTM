@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Platform, ModalController, NavParams } from '@ionic/angular';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Platform, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -29,7 +29,7 @@ import { ConstantsColumns, InfoButtonEnum } from '@utils/index';
 export class InfoVehicleComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
+  @Input() modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
   input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
   // DATA
@@ -67,17 +67,16 @@ export class InfoVehicleComponent implements OnInit {
   // SUSBSCRIPTION
   screenSubscription: Subscription = new Subscription();
 
-  constructor(private platform: Platform,
-              public navParams: NavParams,
-              private screenOrientation: ScreenOrientation,
-              private modalController: ModalController,
-              private controlService: ControlService,
-              private dataService: DataService,
-              private commonService: CommonService,
-              private infoVehicleService: InfoVehicleService,
-              private settingsService: SettingsService,
-              private dashboardService: DashboardService,
-              private changeDetector: ChangeDetectorRef) { }
+  constructor(private readonly platform: Platform,
+              private readonly screenOrientation: ScreenOrientation,
+              private readonly modalController: ModalController,
+              private readonly controlService: ControlService,
+              private readonly dataService: DataService,
+              private readonly commonService: CommonService,
+              private readonly infoVehicleService: InfoVehicleService,
+              private readonly settingsService: SettingsService,
+              private readonly dashboardService: DashboardService,
+              private readonly changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.initSummary();
@@ -86,7 +85,6 @@ export class InfoVehicleComponent implements OnInit {
   // INIT DATA
 
   initSummary() {
-    this.modalInputModel = new ModalInputModel<any, VehicleModel>(this.navParams.data);
     this.input = new ModalInputModel<IInfoModel>({
       parentPage: this.modalInputModel.parentPage,
       data: {
@@ -103,10 +101,9 @@ export class InfoVehicleComponent implements OnInit {
     if (this.modalInputModel.dataList !== null && this.modalInputModel.dataList.length > 0) {
       this.initConfigurationSummary();
       this.initChartSummary();
-      this.changeDetector.detectChanges();
+      if(this.vehicleSelected)
+        this.initData(this.vehicleSelected.id);
     }
-
-    this.controlService.isAppFree(this.modalController);
   }
 
   initVehicleSummary() {
@@ -141,8 +138,6 @@ export class InfoVehicleComponent implements OnInit {
       // INFO VEHICLE REPLACEMENTS
       this.listInfoVehicleReplacement = this.infoVehicleService.calculateInfoReplacementHistoric(
         this.vehicles, maintenances, this.operations, configurations, maintenanceElements);
-
-      this.initShowInfo(this.vehicleSelected);
     }
   }
 
@@ -160,7 +155,7 @@ export class InfoVehicleComponent implements OnInit {
     });
   }
 
-  initChartInformationVehicle(windowSize: any[]) {
+  initChartInformationVehicle(windowSize: [number, number]) {
     this.vehicles.forEach(x => {
       this.dataDashboardInformationVehicle = [...this.dataDashboardInformationVehicle, {
         id: x.id,
@@ -169,7 +164,7 @@ export class InfoVehicleComponent implements OnInit {
     
   }
 
-  initChartConfigurationVehicle(windowSize: any[]) {
+  initChartConfigurationVehicle(windowSize: [number, number]) {
     this.listInfoVehicleConfiguration.forEach(x => {
       this.dataDashboardConfigurationVehicle = [...this.dataDashboardConfigurationVehicle, {
         id: x.idVehicle,
@@ -192,7 +187,7 @@ export class InfoVehicleComponent implements OnInit {
     this.showInfoMaintenance = [];
     if (vehicleSelected) {
       this.selectedInfoVehicleConfiguration.listMaintenance.forEach(x =>
-        this.showInfoMaintenance = [...this.showInfoMaintenance, true]);
+        this.showInfoMaintenance = [...this.showInfoMaintenance, false]);
     }
   }
 
@@ -200,7 +195,7 @@ export class InfoVehicleComponent implements OnInit {
     this.showInfoReplacement = [];
     if (vehicleSelected) {
       this.selectedInfoReplacement.forEach(x =>
-        this.showInfoReplacement = [...this.showInfoReplacement, true]);
+        this.showInfoReplacement = [...this.showInfoReplacement, false]);
     }
   }
 
@@ -250,12 +245,16 @@ export class InfoVehicleComponent implements OnInit {
 
   // SEGMENT
 
-  segmentChanged(event: any): void {
-    this.showSpinner = true; // Windows 10: Fix no change good the data of the chart when the tabs is changed
-    this.initDataSelected(Number(event.detail.value));
+  initData(idVehicle: number) {
+    this.initDataSelected(idVehicle);
     this.initShowInfo(this.vehicleSelected);
     this.initVehicleSummary();
     this.resetList();
+  }
+
+  segmentChanged(event: any): void {
+    this.showSpinner = true; // Windows 10: Fix no change good the data of the chart when the tabs is changed
+    this.initData(Number(event.detail.value));
     this.changeDetector.detectChanges();
     setTimeout(() => { this.showSpinner = false; }, 150);
   }

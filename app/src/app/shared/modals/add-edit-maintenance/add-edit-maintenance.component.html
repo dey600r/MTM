@@ -1,8 +1,9 @@
 <ion-header>
     <ion-toolbar>
         <!-- Title -->
-        <ion-title *ngIf="this.modalInputModel.isCreate" color="text-header" class="align-center padding-left30">{{ 'PAGE_CONFIGURATION.AddNewMaintenance' | translate }}</ion-title>
-        <ion-title *ngIf="!this.modalInputModel.isCreate" color="text-header" class="align-center padding-left30">{{ 'PAGE_CONFIGURATION.EditMaintenance' | translate }}</ion-title>
+        <ion-title color="text-header" class="align-center padding-left30">
+          {{ (this.modalInputModel.type == MODAL_TYPE_ENUM.CREATE ? 'PAGE_CONFIGURATION.AddNewMaintenance' : 'PAGE_CONFIGURATION.EditMaintenance') | translate }}
+        </ion-title>
         <!-- Button Close -->
         <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
             <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
@@ -28,28 +29,28 @@
             [(ngModel)]="maintenance.description"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="stacked">
-            <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
-            <ion-text color="danger">*</ion-text>
-            <ion-icon *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-            <ion-text *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddReplacement' | translate }}</ion-text>
-          </ion-label>
           <ion-select #maintenanceReplacement name="maintenanceReplacement" multiple="true" [placeholder]="this.translateSelect"
-          [cancelText]="this.translateCancel" [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect"
-          [interfaceOptions]="customActionSheetOptions" interface="action-sheet">
-            <ion-select-option [(value)]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
+              [cancelText]="this.translateCancel" [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect"
+              [interfaceOptions]="customActionSheetOptions" interface="action-sheet" label-placement="stacked" >
+            <div slot="label" class="label-required">
+              <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
+              <ion-text color="danger">*</ion-text>
+              <ion-icon *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+              <ion-text *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddReplacement' | translate }}</ion-text>
+            </div>
+            <ion-select-option [value]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label position="stacked">
-            <ion-text>{{ 'COMMON.FREQUENCY' | translate }}</ion-text>
-            <ion-text color="danger">*</ion-text>
-            <ion-icon *ngIf="this.submited && !isValidFreq(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-            <ion-text *ngIf="this.submited && !isValidFreq(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddMaintenanceFreq' | translate }}</ion-text>
-          </ion-label>
-          <ion-select #maintenanceFreq name="maintenanceFreq" 
-            [placeholder]="this.translateSelect" [(ngModel)]="maintenance.maintenanceFreq.id">
-            <ion-select-option [(value)]="f.id" *ngFor="let f of maintenanceFreqs">{{f.description}}</ion-select-option>
+          <ion-select #maintenanceFreq name="maintenanceFreq" [placeholder]="this.translateSelect" 
+              [(ngModel)]="maintenance.maintenanceFreq.id" label-placement="stacked" >
+            <div slot="label" class="label-required">
+              <ion-text>{{ 'COMMON.FREQUENCY' | translate }}</ion-text>
+              <ion-text color="danger">*</ion-text>
+              <ion-icon *ngIf="this.submited && !isValidFreq(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+              <ion-text *ngIf="this.submited && !isValidFreq(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddMaintenanceFreq' | translate }}</ion-text>
+            </div>
+            <ion-select-option [value]="f.id" *ngFor="let f of maintenanceFreqs">{{f.description}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
@@ -74,14 +75,14 @@
           <ion-label (click)="showInfoInit()">
             <h2>{{ 'COMMON.INIT' | translate }}</h2>
           </ion-label>
-          <ion-checkbox [disabled]="isInitDisabled()" #maintenanceInit name="maintenanceInit" color="primary" [(ngModel)]="maintenance.init"></ion-checkbox>
+          <ion-checkbox [disabled]="isInitDisabled()" #maintenanceInit name="maintenanceInit" slot="end" color="primary" [(ngModel)]="maintenance.init"></ion-checkbox>
         </ion-item>
         <ion-item>
           <ion-icon class="ion-icon-margin" slot="start" size="large" name="notifications-circle" (click)="showInfoWear()"></ion-icon>
           <ion-label (click)="showInfoWear()">
             <h2>{{ 'COMMON.WEAR' | translate }}</h2>
           </ion-label>
-          <ion-checkbox #maintenanceWear name="maintenanceWear" color="primary" [(ngModel)]="maintenance.wear"></ion-checkbox>
+          <ion-checkbox #maintenanceWear name="maintenanceWear" slot="end" color="primary" [(ngModel)]="maintenance.wear"></ion-checkbox>
         </ion-item>
         <ion-item>
           <ion-label position="stacked" style="padding-bottom: 3px;">
@@ -95,11 +96,8 @@
         </ion-item>
       </ion-list>
       <!-- Buton Save -->
-      <ion-button *ngIf="maintenance.master" class="button-circle" type="submit" [disabled]="maintenance.master">
-        <ion-icon name="lock-closed"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="!maintenance.master" class="button-circle" type="submit">
-        <ion-icon name="save"></ion-icon>
+      <ion-button class="button-circle" type="submit" [disabled]="maintenance.master">
+        <ion-icon [name]="maintenance.master ? 'lock-closed' : 'save'"></ion-icon>
       </ion-button>
     </form>
 </ion-content>

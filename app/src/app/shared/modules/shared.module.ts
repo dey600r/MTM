@@ -7,30 +7,25 @@ import { IonicModule } from '@ionic/angular';
 
 // LIBRARIES ANGULAR
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 // COMPONENTS
 import { AppInfoComponent } from '@components/info/app-info.component';
 import { HeaderSkeletonComponent } from '@components/header-skeleton/header-skeleton.component';
 
-@NgModule({
-  declarations: [
-    AppInfoComponent,
-    HeaderSkeletonComponent
-  ],
-  entryComponents: [],
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    TranslateModule.forChild()
-  ],
-  exports: [
-    AppInfoComponent,
-    HeaderSkeletonComponent
-  ],
-  providers: [
-  ]
-})
+@NgModule({ declarations: [
+        AppInfoComponent,
+        HeaderSkeletonComponent
+    ],
+    exports: [
+        AppInfoComponent,
+        HeaderSkeletonComponent
+    ], imports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        TranslateModule.forChild()], 
+        providers: [provideHttpClient(withInterceptorsFromDi())
+
+    ]})
 export class SharedModule { }

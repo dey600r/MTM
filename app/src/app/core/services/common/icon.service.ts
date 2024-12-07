@@ -97,6 +97,8 @@ export class IconService {
             return 'body';
           case Constants.OPERATION_TYPE_SPARE_PARTS:
             return 'repeat';
+          default:
+            return 'repeat';
         }
     }
 
@@ -108,6 +110,8 @@ export class IconService {
             return 'alarm';
           case Constants.MAINTENANCE_FREQ_CALENDAR_CODE:
             return 'calendar';
+          default:
+            return 'alarm';
         }
     }
 

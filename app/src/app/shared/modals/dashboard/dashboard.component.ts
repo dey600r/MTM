@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { Platform, ModalController, NavParams } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
+import { Platform, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -25,7 +25,7 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class DashboardComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel<any, OperationModel> = new ModalInputModel<any, OperationModel>();
+    @Input() modalInputModel: ModalInputModel<any, OperationModel> = new ModalInputModel<any, OperationModel>();
     input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
 
     // MODEL FORM
@@ -45,18 +45,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     searchSubscription: Subscription = new Subscription();
     screenSubscription: Subscription = new Subscription();
 
-    constructor(private platform: Platform,
-                private navParams: NavParams,
-                private screenOrientation: ScreenOrientation,
-                private changeDetector: ChangeDetectorRef,
-                private dashboardService: DashboardService,
-                private modalController: ModalController,
-                private controlService: ControlService,
-                private iconService: IconService) {
+    constructor(private readonly platform: Platform,
+                private readonly screenOrientation: ScreenOrientation,
+                private readonly changeDetector: ChangeDetectorRef,
+                private readonly dashboardService: DashboardService,
+                private readonly modalController: ModalController,
+                private readonly controlService: ControlService,
+                private readonly iconService: IconService) {
   }
 
   ngOnInit() {
-    this.modalInputModel = new ModalInputModel<any, OperationModel>(this.navParams.data);
+    
     this.input = new ModalInputModel<IInfoModel>({
       parentPage: this.getParent(this.modalInputModel.parentPage),
       data: {
@@ -72,7 +71,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
       if (!this.openningPopover) { // Windows: Fix refresh chart :(
         this.showSpinner = true;
-        const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
           this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
         } else { // VEHICLE EXPENSES PER MONTH
@@ -90,7 +89,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize: number[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardVehicleExpenses.view = windowSize;
       this.dashboardOpTypeExpenses.view = windowSize;
       this.dashboardReplacementExpenses.view = windowSize;
@@ -104,8 +103,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       }, 200);
     });
-
-    this.controlService.isAppFree(this.modalController);
   }
 
   ngOnDestroy() {

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 // COMPONENTS
@@ -27,8 +27,7 @@ describe('InfoNotificationComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel()));
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
     homeService = TestBed.inject(HomeService);
     translate = TestBed.inject(TranslateService);
@@ -40,7 +39,7 @@ describe('InfoNotificationComponent', () => {
     component = fixture.componentInstance;
     const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
       MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
-    component.navParams.data = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>({
+    component.modalInputModel = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>({
         data: allWears[0],
         dataList: MockAppData.Operations,
         parentPage: PageEnum.HOME

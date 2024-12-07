@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ModalController, NavParams, Platform } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
+import { ModalController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -32,7 +32,7 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<WearVehicleProgressBarViewModel, OperationModel> = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>();
+  @Input() modalInputModel: ModalInputModel<WearVehicleProgressBarViewModel, OperationModel> = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>();
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
@@ -40,7 +40,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   dashboardVehicleReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
   dashboardRecordsMaintenance: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   currentPopover = null;
-  hideGraph = true;
+  hideGraphLabor = true;
+  hideGraphReplacement = true;
   hideSummary = false;
   hideRecords = true;
   isCalendar = true;
@@ -67,34 +68,30 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   searchDashboardSubscription: Subscription = new Subscription();
   searchDashboardRecordsSubscription: Subscription = new Subscription();
   screenSubscription: Subscription = new Subscription();
+  component: any;
 
-  constructor(private platform: Platform,
-              public navParams: NavParams,
-              private modalController: ModalController,
-              private dashboardService: DashboardService,
-              private calendarService: CalendarService,
-              private infoCalendarService: InfoCalendarService,
-              private controlService: ControlService,
-              private screenOrientation: ScreenOrientation,
-              private changeDetector: ChangeDetectorRef,
-              private translator: TranslateService,
-              private settingsService: SettingsService,
-              private dataService: DataService,
-              private homeService: HomeService,
-              private infoVehicleService: InfoVehicleService,
-              private iconService: IconService) {
+  constructor(private readonly platform: Platform,
+              private readonly modalController: ModalController,
+              private readonly dashboardService: DashboardService,
+              private readonly calendarService: CalendarService,
+              private readonly infoCalendarService: InfoCalendarService,
+              private readonly controlService: ControlService,
+              private readonly screenOrientation: ScreenOrientation,
+              private readonly changeDetector: ChangeDetectorRef,
+              private readonly translator: TranslateService,
+              private readonly settingsService: SettingsService,
+              private readonly dataService: DataService,
+              private readonly homeService: HomeService,
+              private readonly infoVehicleService: InfoVehicleService,
+              private readonly iconService: IconService) {
   }
 
   ngOnInit() {
-    this.modalInputModel = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>(this.navParams.data);
-
     this.getSettings();
 
     this.configureResume();
 
     this.initInfoNotifications();
-
-    this.controlService.isAppFree(this.modalController);
   }
 
   ngOnDestroy() {
@@ -145,8 +142,8 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   }
 
   calculateDashboardExpenses(filter: SearchDashboardModel) {
-    if (!this.hideGraph) {
-      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+    if (!this.hideGraphLabor || !this.hideGraphReplacement) {
+      const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
       const wearMain: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
       const oldData: MaintenanceElementModel[] = [...filter.searchMaintenanceElement];
       filter.searchMaintenanceElement = [new MaintenanceElementModel({ id: wearMain.listWearReplacement[0].idMaintenanceElement })];
@@ -161,7 +158,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   calculateDashboad(all: boolean, filter: SearchDashboardModel) {
     if (!this.hideRecords) {
-      const windowsSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+      const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
       if (all) {
         this.wear = this.homeService.getWearReplacement(filter.showStrict, this.modalInputModel.data, this.modalInputModel.dataList);
       }
@@ -173,7 +170,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getObserverOrientationChange() {
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize: any[] = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardVehicleOperationExpenses.view = windowSize;
       this.dashboardVehicleReplacementExpenses.view = windowSize;
       this.dashboardRecordsMaintenance.view = windowSize;
@@ -246,9 +243,16 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  refreshChartExpenses() {
-    this.hideGraph = !this.hideGraph;
-    if (!this.hideGraph) {
+  refreshChartLaborExpenses() {
+    this.hideGraphLabor = !this.hideGraphLabor;
+    if (!this.hideGraphLabor) {
+      this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
+    }
+  }
+
+  refreshChartReplacementExpenses() {
+    this.hideGraphReplacement = !this.hideGraphReplacement;
+    if (!this.hideGraphReplacement) {
       this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
     }
   }

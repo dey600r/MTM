@@ -7,34 +7,34 @@ import { MockAppConfiguration, MockAppVehicle, MockAppMaintenance, MockAppOperat
 export class MockAppData {
 
     /* MAINTENANCE ELELEMTNS */
-    static MaintenanceElementsAux: MaintenanceElementModel[] = MockAppMaintenance.MaintenanceElementsAux;
-    public static MaintenanceElements: MaintenanceElementModel[] = MockAppMaintenance.MaintenanceElements;
+    static readonly MaintenanceElementsAux: MaintenanceElementModel[] = MockAppMaintenance.MaintenanceElementsAux;
+    public static readonly MaintenanceElements: MaintenanceElementModel[] = MockAppMaintenance.MaintenanceElements;
 
     /* MAINTENANCE FREQUENCIES */
-    public static MaintenanceFreqsAux: MaintenanceFreqModel[] = MockAppMaintenance.MaintenanceFreqsAux;
-    public static MaintenanceFreqs: MaintenanceFreqModel[] = MockAppMaintenance.MaintenanceFreqs;
+    public static readonly MaintenanceFreqsAux: MaintenanceFreqModel[] = MockAppMaintenance.MaintenanceFreqsAux;
+    public static readonly MaintenanceFreqs: MaintenanceFreqModel[] = MockAppMaintenance.MaintenanceFreqs;
 
     /* MAINTENANCES */
-    public static Maintenances: MaintenanceModel[] = MockAppMaintenance.Maintenances;
+    public static readonly Maintenances: MaintenanceModel[] = MockAppMaintenance.Maintenances;
 
     /* SYSTEM CONFIGURATION */
-    public static SystemConfigurations: SystemConfigurationModel[] = MockAppConfiguration.SystemConfigurations;
+    public static readonly SystemConfigurations: SystemConfigurationModel[] = MockAppConfiguration.SystemConfigurations;
 
     /* CONFIGURATION */
-    static Configurations: ConfigurationModel[] = MockAppConfiguration.Configurations;
+    static readonly Configurations: ConfigurationModel[] = MockAppConfiguration.Configurations;
 
     /* VEHICLE TYPE */
-    public static VehicleTypesAux: VehicleTypeModel[] = MockAppVehicle.VehicleTypesAux;
-    public static VehicleTypes: VehicleTypeModel[] = MockAppVehicle.VehicleTypes;
+    public static readonly VehicleTypesAux: VehicleTypeModel[] = MockAppVehicle.VehicleTypesAux;
+    public static readonly VehicleTypes: VehicleTypeModel[] = MockAppVehicle.VehicleTypes;
 
     /* VEHICLES */
-    public static VehiclesAux: VehicleModel[] = MockAppVehicle.VehiclesAux;
-    public static Vehicles: VehicleModel[] = MockAppVehicle.Vehicles;
+    public static readonly VehiclesAux: VehicleModel[] = MockAppVehicle.VehiclesAux;
+    public static readonly Vehicles: VehicleModel[] = MockAppVehicle.Vehicles;
 
     /* OPERATION TYPES */
-    public static OperationTypesAux: OperationTypeModel[] = MockAppOperation.OperationTypesAux;
-    public static OperationTypes: OperationTypeModel[] = MockAppOperation.OperationTypes;
+    public static readonly OperationTypesAux: OperationTypeModel[] = MockAppOperation.OperationTypesAux;
+    public static readonly OperationTypes: OperationTypeModel[] = MockAppOperation.OperationTypes;
 
     /* OPERATIONS */
-    static Operations: OperationModel[] = MockAppOperation.Operations;
+    public static readonly Operations: OperationModel[] = MockAppOperation.Operations;
 }

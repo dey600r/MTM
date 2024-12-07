@@ -28,14 +28,14 @@ export class SyncService {
 
   login = false;
 
-  constructor(private dbService: DataBaseService,
-              private crudService: CRUDService,
-              private exportService: ExportService,
-              private controlService: ControlService,
-              private settingsService: SettingsService,
-              private file: File,
-              private logService: LogService,
-              private commonService: CommonService) { }
+  constructor(private readonly dbService: DataBaseService,
+              private readonly crudService: CRUDService,
+              private readonly exportService: ExportService,
+              private readonly controlService: ControlService,
+              private readonly settingsService: SettingsService,
+              private readonly file: File,
+              private readonly logService: LogService,
+              private readonly commonService: CommonService) { }
 
   // syncRegisterUser(email: string, pwd: string) {
   //   const auth = getAuth();

@@ -12,7 +12,6 @@ import { LogService } from './log.service';
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
-import { environment } from '@environment/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -20,20 +19,20 @@ import { environment } from '@environment/environment';
 export class ControlService {
 
     private dateLastUse = new Date();
-    private listPages: PageEnum[] = [PageEnum.HOME, PageEnum.VEHICLE, PageEnum.OPERATION, PageEnum.CONFIGURATION];
+    private readonly listPages: PageEnum[] = [PageEnum.HOME, PageEnum.VEHICLE, PageEnum.OPERATION, PageEnum.CONFIGURATION];
 
     // SUBSCRIPTION
     private exitButtonSubscripion: Subscription = new Subscription();
 
-    constructor(private translator: TranslateService,
-                private alertController: AlertController,
-                private toastController: ToastController,
-                private modalController: ModalController,
-                private popoverController: PopoverController,
-                private loadingController: LoadingController,
-                private platform: Platform,
-                private iab: InAppBrowser,
-                private logService: LogService) {
+    constructor(private readonly translator: TranslateService,
+                private readonly alertController: AlertController,
+                private readonly toastController: ToastController,
+                private readonly modalController: ModalController,
+                private readonly popoverController: PopoverController,
+                private readonly loadingController: LoadingController,
+                private readonly platform: Platform,
+                private readonly iab: InAppBrowser,
+                private readonly logService: LogService) {
     }
 
     getDateLastUse(): Date {
@@ -46,17 +45,6 @@ export class ControlService {
 
     isPage(page: PageEnum): boolean {
         return this.listPages.some(x => x === page);
-    }
-
-    // IS MTM FREE
-
-    isAppFree(modalController: ModalController) {
-        if (environment.isFree) {
-            this.showToast(PageEnum.MODAL_INFO, ToastTypeEnum.WARNING, 'ALERT.PayForMTM', null, Constants.DELAY_TOAST_NORMAL);
-            setTimeout(() => {
-                this.closeModal(modalController);
-            }, Constants.DELAY_TOAST_IS_FREE);
-        }
     }
 
     // EXIT BUTTON
@@ -193,7 +181,7 @@ export class ControlService {
         this.desactivateButtonExist();
         const currentPopover = await this.popoverController.create({
             component: modalComponent,
-            componentProps: inputModel,
+            componentProps: { modalInputModel: inputModel },
             event: ev,
             translucent: true
         });
@@ -213,7 +201,7 @@ export class ControlService {
         this.desactivateButtonExist();
         const modal: HTMLIonModalElement = await this.modalController.create({
           component: modalComponent,
-          componentProps: inputModel,
+          componentProps: { modalInputModel: inputModel },
           cssClass: 'my-custom-modal',
         });
         modal.onDidDismiss().then((dataReturned) => {

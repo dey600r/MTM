@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
 import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
@@ -25,7 +25,7 @@ import { SettingsService, DataBaseService, ControlService, ThemeService, SyncSer
 export class SettingsComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
+    @Input() modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
 
     // MODEL FORM
 
@@ -61,27 +61,24 @@ export class SettingsComponent implements OnInit, OnDestroy {
     versionApp: string = `Version app: ${environment.lastVersion}`;
     versionDateApp: string = `${environment.lastUpdate}`;
 
-    constructor(private navParams: NavParams,
-                private changeDetector: ChangeDetectorRef,
-                private modalController: ModalController,
-                private dbService: DataBaseService,
-                private crudService: CRUDService,
-                private dataService: DataService,
-                private settingsService: SettingsService,
-                private exportService: ExportService,
-                private file: File,
-                private controlService: ControlService,
-                private translator: TranslateService,
-                private themeService: ThemeService,
-                private syncService: SyncService,
-                private logService: LogService
+    constructor(private readonly changeDetector: ChangeDetectorRef,
+                private readonly modalController: ModalController,
+                private readonly dbService: DataBaseService,
+                private readonly crudService: CRUDService,
+                private readonly dataService: DataService,
+                private readonly settingsService: SettingsService,
+                private readonly exportService: ExportService,
+                private readonly file: File,
+                private readonly controlService: ControlService,
+                private readonly translator: TranslateService,
+                private readonly themeService: ThemeService,
+                private readonly syncService: SyncService,
+                private readonly logService: LogService
       ) {
   }
 
   ngOnInit() {
     this.exportService.createOutputDirectory();
-
-    this.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>(this.navParams.data);
 
     // SETTINGS
     this.listDistances = this.settingsService.getListDistance();
@@ -352,12 +349,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   // SYNCHRONIZE
   unlockSync(order: number, num: number) {
-    if (!environment.isFree &&
-        ((order === 1 && this.pwdSync === 0) ||
+    if ((order === 1 && this.pwdSync === 0) ||
         (order === 3 && this.pwdSync === 2) ||
         (order === 2 && this.pwdSync === 7) ||
         (order === 4 && this.pwdSync === 15) ||
-        (order === 3 && this.pwdSync === 24))) {
+        (order === 3 && this.pwdSync === 24)) {
       this.pwdSync += num;
     } else {
       this.pwdSync = 0;

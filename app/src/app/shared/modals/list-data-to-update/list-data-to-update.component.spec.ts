@@ -23,8 +23,19 @@ describe('ListDataToUpdateComponent', () => {
   let translate: TranslateService;
 
   beforeEach((async () => {
-    let listDataModel: ListDataModalModel[] = [];
+    const config: any = SetupTest.config;
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService);
+    await TestBed.configureTestingModule(config).compileComponents();
 
+    translate = TestBed.inject(TranslateService);
+    await firstValueFrom(translate.use('es'));
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ListDataToUpdateComponent);
+    component = fixture.componentInstance;
+
+    let listDataModel: ListDataModalModel[] = [];
     MockAppData.Configurations.forEach(x => {
       listDataModel = [...listDataModel,
         new ListDataModalModel(
@@ -38,21 +49,11 @@ describe('ListDataToUpdateComponent', () => {
         )];
     });
     const listModel: ListModalModel = new ListModalModel('TEST_TITLE', true, listDataModel);
-    const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel<ListModalModel>({
-        data: listModel, 
-        parentPage: PageEnum.CONFIGURATION
-      })));
-    await TestBed.configureTestingModule(config).compileComponents();
-
-    translate = TestBed.inject(TranslateService);
-    await firstValueFrom(translate.use('es'));
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ListDataToUpdateComponent);
-    component = fixture.componentInstance;
+    component.modalInputModel = new ModalInputModel<ListModalModel>({
+      data: listModel, 
+      parentPage: PageEnum.CONFIGURATION
+    });
+    
     fixture.detectChanges();
   });
 

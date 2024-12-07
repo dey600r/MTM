@@ -1,5 +1,5 @@
 export class MockTranslate {
-    static EN = {
+    public static readonly EN = {
         COMMON: {
             SAVE: 'Save',
             ACCEPT: 'Accept',
@@ -50,6 +50,7 @@ export class MockTranslate {
             CHARTS: 'Boards',
             EXPENSE: 'Expense',
             EXPENSES: 'Expenses',
+            LABOR: "Labor",
             LABOR_EXPENSE: "Labor Expense",
             REPLACEMENT_EXPENSE: 'Replacement Expense',
             DATE_PURCHASE: 'Date Purchase',
@@ -383,7 +384,7 @@ export class MockTranslate {
         }
     };
 
-    static ES = {
+    public static readonly ES = {
         COMMON: {
             SAVE: 'Guardar',
             ACCEPT: 'Aceptar',
@@ -434,8 +435,9 @@ export class MockTranslate {
             CHARTS: 'Gráficos',
             EXPENSE: 'Gasto',
             EXPENSES: 'Gastos',
-            LABOR_EXPENSE: "Gasto mano de obra",
-            REPLACEMENT_EXPENSE: "Gasto recambio",
+            LABOR: "Mano de obra",
+            LABOR_EXPENSE: "Gastos de mano de obra",
+            REPLACEMENT_EXPENSE: "Gastos de recambios",
             DATE_PURCHASE: 'Fecha compra',
             SHOW_AXIS: 'Mostrar ejes',
             SHOW_LEGEND: 'Mostrar leyenda',

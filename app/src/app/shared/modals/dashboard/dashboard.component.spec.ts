@@ -24,11 +24,7 @@ describe('DashboardComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel<any, OperationModel>({
-         dataList: MockAppData.Operations, 
-         parentPage: PageEnum.OPERATION
-      })));
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
@@ -38,6 +34,10 @@ describe('DashboardComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
+    component.modalInputModel = new ModalInputModel<any, OperationModel>({
+      dataList: MockAppData.Operations, 
+      parentPage: PageEnum.OPERATION
+   });
     fixture.detectChanges();
   });
 

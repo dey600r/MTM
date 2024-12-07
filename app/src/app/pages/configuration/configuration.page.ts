@@ -18,7 +18,8 @@ import {
 
 // UTILS
 import { 
-  ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, InfoButtonEnum 
+  ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, InfoButtonEnum, 
+  ModalTypeEnum
 } from '@utils/index';
 
 // COMPONENTS
@@ -64,16 +65,16 @@ export class ConfigurationPage extends BasePage implements OnInit {
   @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
   constructor(public platform: Platform,
-              private dataService: DataService,
+              private readonly dataService: DataService,
               public translator: TranslateService,
-              private commonService: CommonService,
-              private controlService: ControlService,
-              private configurationService: ConfigurationService,
-              private settingsService: SettingsService,
-              private vehicleService: VehicleService,
-              private dashboardService: DashboardService,
-              private iconService: IconService,
-              private detector: ChangeDetectorRef) {
+              private readonly commonService: CommonService,
+              private readonly controlService: ControlService,
+              private readonly configurationService: ConfigurationService,
+              private readonly settingsService: SettingsService,
+              private readonly vehicleService: VehicleService,
+              private readonly dashboardService: DashboardService,
+              private readonly iconService: IconService,
+              private readonly detector: ChangeDetectorRef) {
     super(platform, translator);
   }
 
@@ -184,13 +185,13 @@ export class ConfigurationPage extends BasePage implements OnInit {
   openModalSegmentSelected() {
     switch (this.segmentSelected) {
       case 1:
-        this.openConfigurationModal();
+        this.openCreateConfigurationModal();
         break;
       case 2:
-        this.openMaintenanceModal();
+        this.openCreateMaintenanceModal();
         break;
       default:
-        this.openReplacementModal();
+        this.openCreateReplacementModal();
     }
   }
 
@@ -290,12 +291,20 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   /** CONFIGURATION */
 
-  openConfigurationModal(row: ConfigurationModel = new ConfigurationModel(), create: boolean = true) {
+  private openConfigurationModal(row: ConfigurationModel, type: ModalTypeEnum) {
     this.controlService.openModal(PageEnum.CONFIGURATION, AddEditConfigurationComponent, new ModalInputModel<ConfigurationModel>({
-          isCreate: create, 
-          data: row,
-          parentPage: PageEnum.CONFIGURATION
-        }));
+      type: type, 
+      data: row,
+      parentPage: PageEnum.CONFIGURATION
+    }));
+  }
+
+  openCreateConfigurationModal() {
+    this.openConfigurationModal(new ConfigurationModel(), ModalTypeEnum.CREATE);
+  }
+
+  openUpdateConfigurationModal(row: ConfigurationModel) {
+    this.openConfigurationModal(row, ModalTypeEnum.UPDATE);
   }
 
   deleteConfiguration(row: ConfigurationModel) {
@@ -376,14 +385,22 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   /** MAINTENANCE */
 
-  openMaintenanceModal(row: MaintenanceModel = new MaintenanceModel(), create: boolean = true) {
+  private openMaintenanceModal(row: MaintenanceModel, type: ModalTypeEnum) {
     this.controlService.openModal(PageEnum.CONFIGURATION,
       AddEditMaintenanceComponent, new ModalInputModel<MaintenanceModel, number>({
-          isCreate: create,
-          data: row,
-          dataList: [this.maxKm],
-          parentPage: PageEnum.CONFIGURATION
-        }));
+        type: type,
+        data: row,
+        dataList: [this.maxKm],
+        parentPage: PageEnum.CONFIGURATION
+      }));
+  }
+
+  openCreateMaintenanceModal() {
+    this.openMaintenanceModal(new MaintenanceModel(), ModalTypeEnum.CREATE);
+  }
+
+  openUpdateMaintenanceModal(row: MaintenanceModel) {
+    this.openMaintenanceModal(row, ModalTypeEnum.UPDATE);
   }
 
   deleteMaintenance(row: MaintenanceModel) {
@@ -467,12 +484,20 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   /** MAINTENANCE ELEMENTS / REPLACEMENT */
 
-  openReplacementModal(row: MaintenanceElementModel = new MaintenanceElementModel(), create: boolean = true) {
+  private openReplacementModal(row: MaintenanceElementModel, type: ModalTypeEnum) {
     this.controlService.openModal(PageEnum.CONFIGURATION, AddEditMaintenanceElementComponent, new ModalInputModel<MaintenanceElementModel>({
-          isCreate: create,
-          data: row,
-          parentPage: PageEnum.CONFIGURATION
-        }));
+      type: type,
+      data: row,
+      parentPage: PageEnum.CONFIGURATION
+    }));
+  }
+
+  openCreateReplacementModal() {
+    this.openReplacementModal(new MaintenanceElementModel(), ModalTypeEnum.CREATE);
+  }
+
+  openUpdateReplacementModal(row: MaintenanceElementModel) {
+    this.openReplacementModal(row, ModalTypeEnum.UPDATE);
   }
 
   deleteReplacement(row: MaintenanceElementModel) {

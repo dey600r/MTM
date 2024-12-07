@@ -5,12 +5,12 @@ import { FormsModule } from '@angular/forms';
 // LIBRARIES IONIC
 import { IonicModule } from '@ionic/angular';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
-import { CalendarModule } from 'ion5-calendar';
+import { IonCalendarModule } from '@heliomarpm/ion-calendar';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // LIBRARIES ANGULAR
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
@@ -34,51 +34,45 @@ import { SearchDashboardPopOverComponent } from '@modals/search-dashboard-popove
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 
-@NgModule({
-  declarations: [
-    AddEditConfigurationComponent,
-    AddEditVehicleComponent,
-    AddEditOperationComponent,
-    AddEditMaintenanceComponent,
-    AddEditMaintenanceElementComponent,
-    DashboardComponent,
-    InfoNotificationComponent,
-    SettingsComponent,
-    InfoCalendarComponent,
-    SearchDashboardPopOverComponent,
-    ListDataToUpdateComponent,
-    InfoVehicleComponent
-  ],
-  entryComponents: [],
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    CalendarModule,
-    NgxChartsModule,
-    PipeModule,
-    SharedModule,
-    TranslateModule.forChild()
-  ],
-  exports: [
-    AddEditConfigurationComponent,
-    AddEditVehicleComponent,
-    AddEditOperationComponent,
-    AddEditMaintenanceComponent,
-    AddEditMaintenanceElementComponent,
-    DashboardComponent,
-    InfoNotificationComponent,
-    SettingsComponent,
-    InfoCalendarComponent,
-    SearchDashboardPopOverComponent,
-    ListDataToUpdateComponent
-  ],
-  providers: [
-    File,
-    ScreenOrientation,
-    DataBaseService,
-    CommonService
-  ]
-})
+@NgModule({ declarations: [
+        AddEditConfigurationComponent,
+        AddEditVehicleComponent,
+        AddEditOperationComponent,
+        AddEditMaintenanceComponent,
+        AddEditMaintenanceElementComponent,
+        DashboardComponent,
+        InfoNotificationComponent,
+        SettingsComponent,
+        InfoCalendarComponent,
+        SearchDashboardPopOverComponent,
+        ListDataToUpdateComponent,
+        InfoVehicleComponent
+    ],
+    exports: [
+        AddEditConfigurationComponent,
+        AddEditVehicleComponent,
+        AddEditOperationComponent,
+        AddEditMaintenanceComponent,
+        AddEditMaintenanceElementComponent,
+        DashboardComponent,
+        InfoNotificationComponent,
+        SettingsComponent,
+        InfoCalendarComponent,
+        SearchDashboardPopOverComponent,
+        ListDataToUpdateComponent
+    ], imports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        IonCalendarModule,
+        NgxChartsModule,
+        PipeModule,
+        SharedModule,
+        TranslateModule.forChild()], providers: [
+        File,
+        ScreenOrientation,
+        DataBaseService,
+        CommonService,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class ComponentModule { }

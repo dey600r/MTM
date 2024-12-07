@@ -57,30 +57,6 @@ describe('ControlService', () => {
         expect(isPage).toBeTruthy();
     });
 
-    it('should is not app free', () => {
-        const closeModal = spyOn(modalController, 'dismiss');
-        const createToast = spyOn(new ModalController(null, null, null), 'create');
-        service.isAppFree(modalController);
-        expect(createToast).not.toHaveBeenCalled();
-        expect(closeModal).not.toHaveBeenCalled();
-    });
-
-    it('should is app free', fakeAsync(() => {
-        const onDismiss: any = {
-            onDidDismiss: jasmine.createSpy().and.returnValue(Promise.resolve({})),
-            present: jasmine.createSpy().and.returnValue(Promise.resolve({}))
-        };
-        const createToast = spyOn(toastController, 'create').and.returnValue(Promise.resolve(onDismiss));
-        const setTimeout = spyOn(window, 'setTimeout');
-        environment.isFree = true;
-        service.isAppFree(modalController);
-        tick(Constants.DELAY_TOAST_IS_FREE + 2);
-        expect(setTimeout).toHaveBeenCalled();
-        expect(createToast).toHaveBeenCalled();
-        expect(onDismiss.onDidDismiss).toHaveBeenCalled();
-        expect(onDismiss.present).toHaveBeenCalled();
-    }));
-
     it('should active button exit', () => {
         const platformIs = spyOn(platform, 'is').and.returnValue(false);
         service.activateButtonExist(PageEnum.VEHICLE);

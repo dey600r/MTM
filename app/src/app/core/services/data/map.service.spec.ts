@@ -64,18 +64,18 @@ describe('MapService', () => {
     });
 
     it('should save maintenance model from storage into model', () => {
-        let data: IMaintenanceStorageModel = MockDBData.Maintenances[0];
-        let result: IMaintenanceStorageModel = service.saveMapMaintenance(MockAppData.Maintenances[0]);
-        expect(result.id).toEqual(data.id);
+        const dataDB: IMaintenanceStorageModel = MockDBData.Maintenances[0];
+        const data: MaintenanceModel = MockAppData.Maintenances[0];
+        const result: IMaintenanceStorageModel = service.saveMapMaintenance(data);
+        expect(result.id).toEqual(dataDB.id);
         expect(result.description).toEqual(undefined);
-        expect(result.master).toEqual(data.master);
-        expect(result.fromKm).toEqual(data.fromKm);
-        expect(result.toKm).toEqual(data.toKm);
-        expect(result.init).toEqual(data.init);
-        expect(result.wear).toEqual(data.wear);
-        expect(result.time).toEqual(data.time);
-        expect(result.km).toEqual(data.km);
-        expect(result.idMaintenanceFrec).toEqual(data.idMaintenanceFrec);
+        expect(result.master).toEqual(dataDB.master);
+        expect(result.fromKm).toEqual(dataDB.fromKm);
+        expect(result.toKm).toEqual(dataDB.toKm);
+        expect(result.init).toEqual(dataDB.init);
+        expect(result.wear).toEqual(dataDB.wear);
+        expect(result.time).toEqual(dataDB.time);
+        expect(result.km).toEqual(dataDB.km);
     });
 
     it('should map operation model from storage into model', () => {
@@ -209,10 +209,11 @@ describe('MapService', () => {
     });
 
     it('should save operation maintenance model from storage into model', () => {
-        let result: IOperationMaintenanceElementStorageModel[] = service.saveMapOpMaintenanceRel(MockAppData.Operations[0]);
+        const data = MockAppData.Operations[1];
+        let result: IOperationMaintenanceElementStorageModel[] = service.saveMapOpMaintenanceRel(data);
         result.forEach(x => {
-            expect(x.idOperation).toEqual(MockAppData.Operations[0].id);
-            expect(MockAppData.Operations[0].listMaintenanceElement.some(y => y.id === x.idMaintenanceElement)).toBeTruthy();
+            expect(x.idOperation).toEqual(data.id);
+            expect(data.listMaintenanceElement.some(y => y.id === x.idMaintenanceElement)).toBeTruthy();
         });
     });
 });

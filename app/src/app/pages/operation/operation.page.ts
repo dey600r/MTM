@@ -10,9 +10,10 @@ import {
   DashboardService, SettingsService, IconService
 } from '@services/index';
 import {
-  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel, IInfoModel, ISettingModel
+  OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel, IInfoModel, ISettingModel,
+  OperationTypeModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
@@ -49,15 +50,15 @@ export class OperationPage extends BasePage implements OnInit {
   coin: ISettingModel;
 
   constructor(public platform: Platform,
-              private dataService: DataService,
+              private readonly dataService: DataService,
               public translator: TranslateService,
-              private commonService: CommonService,
-              private controlService: ControlService,
-              private operationService: OperationService,
-              private dashboardService: DashboardService,
-              private settingsService: SettingsService,
-              private detector: ChangeDetectorRef,
-              private iconService: IconService) {
+              private readonly commonService: CommonService,
+              private readonly controlService: ControlService,
+              private readonly operationService: OperationService,
+              private readonly dashboardService: DashboardService,
+              private readonly settingsService: SettingsService,
+              private readonly detector: ChangeDetectorRef,
+              private readonly iconService: IconService) {
     super(platform, translator);
   }
 
@@ -130,18 +131,7 @@ export class OperationPage extends BasePage implements OnInit {
   }
 
   /** MODALS */
-
-  openOperationModal(
-      row: OperationModel = new OperationModel({
-          vehicle: this.vehicles.find(x => x.id === this.vehicleSelected)
-        }), create: boolean = true) {
-    this.controlService.openModal(PageEnum.OPERATION, AddEditOperationComponent, new ModalInputModel<OperationModel>({
-        isCreate: create,
-        data: row,
-        parentPage: PageEnum.OPERATION
-      }));
-  }
-
+  
   openDashboardOperation() {
     if (this.operationsVehicle.length === 0) {
       this.showModalInfoOperation();
@@ -151,6 +141,40 @@ export class OperationPage extends BasePage implements OnInit {
           parentPage: PageEnum.OPERATION
         }));
     }
+  }
+
+  private openOperationModal(row: OperationModel, type: ModalTypeEnum) {
+    this.controlService.openModal(PageEnum.OPERATION, AddEditOperationComponent, new ModalInputModel<OperationModel>({
+        type: type,
+        data: row,
+        parentPage: PageEnum.OPERATION
+      }));
+  }
+
+  openCreateOperationModal() {
+    this.openOperationModal(
+      new OperationModel({ vehicle: this.vehicles.find(x => x.id === this.vehicleSelected) }), 
+      ModalTypeEnum.CREATE
+    );
+  }
+
+  openUpdateOperationModal(row: OperationModel) {
+    this.openOperationModal(row, ModalTypeEnum.UPDATE)
+  }
+
+  openDuplicateOperationModal(itemSliding: any, row: OperationModel) {
+    if (itemSliding) { itemSliding.close(); }
+    this.openOperationModal(new OperationModel({
+      description: row.description,
+      details: row.details,
+      vehicle: new VehicleModel({ id: row.vehicle.id }),
+      operationType: new OperationTypeModel(row.operationType.code, row.operationType.description, row.operationType.id),
+      listMaintenanceElement: [...row.listMaintenanceElement],
+      date: row.date,
+      price: row.price,
+      location: row.location,
+      owner: row.owner
+    }), ModalTypeEnum.DUPLICATE);
   }
 
   deleteOperation(row: OperationModel) {

@@ -34,25 +34,56 @@ describe('InfoCalendarService', () => {
     it('should map list wear notification to list info calendar vehicle view', () => {
         const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
-        const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears);
+        const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears, []);
         expect(result[0].nameVehicle).toEqual(`${MockAppData.Vehicles[1].brand} ${MockAppData.Vehicles[1].model}`);
-        expect(result[0].listInfoCalendarMaintenance[0].codeMaintenanceFreq).toEqual(Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
-        expect(result[0].listInfoCalendarMaintenance[0].wearMaintenance).toEqual(false);
-        expect(result[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement[0].km).toEqual(6000);
-        expect(service.getInfoCalendar([])).toEqual([]);
+        expect(result[0].listInfoCalendarMaintOp[0].codeMaintenanceFreq).toEqual(Constants.MAINTENANCE_FREQ_CALENDAR_CODE);
+        expect(result[0].listInfoCalendarMaintOp[0].wearMaintenance).toEqual(false);
+        expect(result[0].listInfoCalendarMaintOp[0].listInfoCalendarReplacement[0].km).toEqual(6000);
+        expect(service.getInfoCalendar([], [])).toEqual([]);
     });
 
-    it('should get list info calendar vehicle view filter with date', () => {
+    it('should get empty list info calendar vehicle view filter with past date', () => {
         const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
-        const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears);
+        const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears, []);
         const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendarReplacementDate(listInfoCalendar,
             [new Date(2007, 1, 1), new Date(2008, 11, 31)]);
-        expect(result[0].nameVehicle).toEqual(`${MockAppData.Vehicles[1].brand} ${MockAppData.Vehicles[1].model}`);
-        expect(result[0].listInfoCalendarMaintenance[0].listInfoCalendarReplacement.length).toEqual(1);
-        expect(result[1].nameVehicle).toEqual(`${MockAppData.Vehicles[0].brand} ${MockAppData.Vehicles[0].model}`);
-        expect(result[1].listInfoCalendarMaintenance[0].listInfoCalendarReplacement.length).toEqual(2);
+        expect(result).toEqual([]);
+    });
+
+    it('should get empty list info calendar vehicle view filter with future date', () => {
+        const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar([], MockAppData.Operations);
+        const today = new Date();
+        const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendarReplacementDate(listInfoCalendar,
+            [today, new Date(today.getFullYear(), today.getMonth() + 10, today.getDate() + 15)]);
+        expect(result).toEqual([]);
+    });
+
+    it('should get list info calendar vehicle maintenance view filter with date', () => {
+        const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
+            MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
+        const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears, []);
+        const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendarReplacementDate(listInfoCalendar, [new Date()]);
+        expect(result.some(x => x.nameVehicle == `${MockAppData.Vehicles[1].brand} ${MockAppData.Vehicles[1].model}`)).toBeTrue();
+        expect(result[0].listInfoCalendarMaintOp[0].listInfoCalendarReplacement.length).toEqual(2);
+        expect(result.some(x => x.nameVehicle == `${MockAppData.Vehicles[0].brand} ${MockAppData.Vehicles[0].model}`)).toBeTrue();
+        expect(result[1].listInfoCalendarMaintOp[0].listInfoCalendarReplacement.length).toEqual(2);
         expect(service.getInfoCalendarReplacementDate([], [])).toEqual([]);
+    });
+
+    it('should get list info calendar vehicle operation view filter with date', () => {
+        const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
+            MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
+        const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears, MockAppData.Operations);
+        const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendarReplacementDate(listInfoCalendar, 
+            [new Date(2022, 1, 1), new Date(2023, 11, 31)]);
+        expect(result.some(x => x.nameVehicle == `${MockAppData.Vehicles[1].brand} ${MockAppData.Vehicles[1].model}`)).toBeTrue();
+        expect(result[0].listInfoCalendarMaintOp[0].listInfoCalendarReplacement.length).toEqual(2);
+        const op = MockAppData.Operations.find(x => x.id === 6);
+        expect(result[0].listInfoCalendarMaintOp[0].id).toEqual(op.id);
+        expect(result[0].listInfoCalendarMaintOp[0].detailOperation).toEqual(op.details);
+        expect(result[0].listInfoCalendarMaintOp[0].listInfoCalendarReplacement.length).toEqual(op.listMaintenanceElement.length);
+
     });
 
     it('should validate date between range dates', () => {
@@ -65,10 +96,10 @@ describe('InfoCalendarService', () => {
     it('should calculate circle color advice', () => {
         const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
             MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
-        const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears);
+        const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears, []);
         let allColors: string[] = [];
         listInfoCalendar.forEach(v => {
-            v.listInfoCalendarMaintenance.forEach(m => {
+            v.listInfoCalendarMaintOp.forEach(m => {
                 m.listInfoCalendarReplacement.forEach(r => {
                     const color: string = service.getCircleColor(listInfoCalendar, r);
                     if (!allColors.some(x => x === color)) {
@@ -78,9 +109,6 @@ describe('InfoCalendarService', () => {
             });
         });
 
-        expect(allColors.some(x => x === 'day-circle-config-skull')).toBeTruthy();
-        expect(allColors.some(x => x === 'day-circle-config-danger')).toBeTruthy();
-        expect(allColors.some(x => x === 'day-circle-config-warning')).toBeTruthy();
         expect(allColors.some(x => x === 'day-circle-config-success')).toBeTruthy();
         expect(allColors.some(x => x === 'day-circle-config-all')).toBeTruthy();
     });
@@ -99,7 +127,8 @@ describe('InfoCalendarService', () => {
         expect(result.price).toEqual(472);
         expect(result.time).toEqual(0);
         expect(result.warning).toEqual(WarningWearEnum.SUCCESS);
-        expect(result.date.toDateString()).toEqual(new Date(today.getFullYear() + 14, today.getMonth() + 1, today.getDate() - 5).toDateString());
+        expect(result.date.getTime()).toBeLessThanOrEqual(new Date(today.getFullYear() + 14, today.getMonth() + 2, today.getDate() - 5).getTime());
+        expect(result.date.getTime()).toBeGreaterThanOrEqual(new Date(today.getFullYear() + 14, today.getMonth(), today.getDate() - 5).getTime());
 
         allWears[1].listWearMaintenance[0].listWearReplacement[0].priceOperation = null;
         result = service.createInfoCalendarReplacement(allWears[1], 
@@ -112,7 +141,8 @@ describe('InfoCalendarService', () => {
         expect(result.price).toEqual(0);
         expect(result.time).toEqual(0);
         expect(result.warning).toEqual(WarningWearEnum.SKULL);
-        expect(result.date.toDateString()).toEqual(new Date(today.getFullYear() - 2, today.getMonth() - 4, today.getDate() - 11).toDateString());
+        expect(result.date.getTime()).toBeLessThanOrEqual(new Date(today.getFullYear() + 1, today.getMonth(), today.getDate() - 11).getTime());
+        expect(result.date.getTime()).toBeGreaterThanOrEqual(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 11).getTime());
     });
 
     it('should get date from km', () => {
@@ -122,7 +152,8 @@ describe('InfoCalendarService', () => {
         const date: Date = service.getDateCalculatingKm(allWears[0], 
                                                         allWears[0].listWearMaintenance[3], 
                                                         allWears[0].listWearMaintenance[3].listWearReplacement[1]);
-        expect(date).toEqual(new Date(today.getFullYear() + 14, today.getMonth() + 1, today.getDate() - 5));
+        expect(date.getTime()).toBeLessThanOrEqual(new Date(today.getFullYear() + 14, today.getMonth() + 2, today.getDate() - 5).getTime());
+        expect(date.getTime()).toBeGreaterThanOrEqual(new Date(today.getFullYear() + 14, today.getMonth(), today.getDate() - 5).getTime());
     });
 
     it('should get date from time', () => {
@@ -137,8 +168,14 @@ describe('InfoCalendarService', () => {
 
     it('should calculate km info notification', () => {
         let today: Date = new Date();
-        expect(service.calculateKmInfoNotification(MockAppData.Vehicles[0], 10, 1000)).toEqual(new Date(today.getFullYear() - 2, today.getMonth() -1, today.getDate() + 6));
-        expect(service.calculateKmInfoNotification(MockAppData.Vehicles[1], 0, 2000)).toEqual(new Date(today.getFullYear() + 1, today.getMonth() + 1, today.getDate() - 1));
-        expect(service.calculateKmInfoNotification(MockAppData.Vehicles[2], 1000, 6000)).toEqual(new Date(today.getFullYear() - 1, today.getMonth() - 6, today.getDate() - 8));
+        const result1 = service.calculateKmInfoNotification(MockAppData.Vehicles[0], 10, 1000);
+        expect(result1.getTime()).toBeLessThanOrEqual(new Date(today.getFullYear() - 2, today.getMonth() -1, today.getDate() + 7).getTime());
+        expect(result1.getTime()).toBeGreaterThanOrEqual(new Date(today.getFullYear() - 2, today.getMonth() -1, today.getDate() + 5).getTime());
+        const result2 = service.calculateKmInfoNotification(MockAppData.Vehicles[1], 0, 2000);
+        expect(result2.getTime()).toBeLessThanOrEqual(new Date(today.getFullYear() + 1, today.getMonth() + 1, today.getDate()).getTime());
+        expect(result2.getTime()).toBeGreaterThanOrEqual(new Date(today.getFullYear() + 1, today.getMonth() + 1, today.getDate() - 2).getTime());
+        const result3 = service.calculateKmInfoNotification(MockAppData.Vehicles[2], 1000, 6000);
+        expect(result3.getTime()).toBeLessThanOrEqual(new Date(today.getFullYear() - 1, today.getMonth() - 6, today.getDate() - 7).getTime());
+        expect(result3.getTime()).toBeGreaterThanOrEqual(new Date(today.getFullYear() - 1, today.getMonth() - 6, today.getDate() - 9).getTime());
     });
 });

@@ -5,6 +5,5 @@ export const environment = {
   lastVersion: packageInfo.version,
   lastUpdate: packageInfo.dateVersion,
   minVersion: packageInfo.minVersion,
-  isFree: false,
   pathTranslate: './assets/i18n/'
 };

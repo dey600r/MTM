@@ -24,12 +24,7 @@ describe('AddEditMaintenanceComponent', () => {
 
   beforeEach((async () => {
     const config: any = SetupTest.config;
-    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService,
-      SpyMockConfig.getProviderNavParams(new ModalInputModel<MaintenanceModel, number>({
-        data: MockAppData.Maintenances[0],
-        dataList: [MockAppData.Vehicles[0].km],
-        parentPage: PageEnum.CONFIGURATION
-      })));
+    config.providers.push(SpyMockConfig.ProviderDataService, SettingsService);
     await TestBed.configureTestingModule(config).compileComponents();
 
     translate = TestBed.inject(TranslateService);
@@ -39,6 +34,11 @@ describe('AddEditMaintenanceComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AddEditMaintenanceComponent);
     component = fixture.componentInstance;
+    component.modalInputModel = new ModalInputModel<MaintenanceModel, number>({
+      data: MockAppData.Maintenances[0],
+      dataList: [MockAppData.Vehicles[0].km],
+      parentPage: PageEnum.CONFIGURATION
+    });
     fixture.detectChanges();
   });
 

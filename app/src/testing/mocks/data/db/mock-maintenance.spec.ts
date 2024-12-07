@@ -5,7 +5,7 @@ import { Constants } from "@utils/index";
 export class MockDBMaintenance {
 
     /* MAINTENANCE ELELEMTNS */
-    static MaintenanceElements: IMaintenanceElementStorageModel[] = [
+    public static readonly MaintenanceElements: IMaintenanceElementStorageModel[] = [
         {
             name: 'FRONT_WHEEL',
             description: 'CHANGE_FRONT_WHEEL',
@@ -75,13 +75,13 @@ export class MockDBMaintenance {
     ];
 
     /* MAINTENANCE FREQUENCIES */
-    public static MaintenanceFreqs: IMaintenanceFreqStorageModel[] = [
+    public static readonly MaintenanceFreqs: IMaintenanceFreqStorageModel[] = [
         { code: Constants.MAINTENANCE_FREQ_ONCE_CODE, description: 'ONCE', id: 1 },
         { code: Constants.MAINTENANCE_FREQ_CALENDAR_CODE, description: 'CALENDAR', id: 2}
     ];
 
     /* MAINTENANCES */
-    public static Maintenances: IMaintenanceStorageModel[] = [
+    public static readonly Maintenances: IMaintenanceStorageModel[] = [
         {
             description: 'FIRST_REVIEW',
             idMaintenanceFrec: MockDBMaintenance.MaintenanceFreqs[0].id,
@@ -192,7 +192,7 @@ export class MockDBMaintenance {
         }
     ];
 
-    public static MaintenanceElementRel: IMaintenanceElementRelStorageModel[] = [
+    public static readonly MaintenanceElementRel: IMaintenanceElementRelStorageModel[] = [
         { id: 1, idMaintenance: MockDBMaintenance.Maintenances[0].id, idMaintenanceElement: MockDBMaintenance.MaintenanceElements[0].id },
         { id: 1, idMaintenance: MockDBMaintenance.Maintenances[0].id, idMaintenanceElement: MockDBMaintenance.MaintenanceElements[2].id },
         { id: 1, idMaintenance: MockDBMaintenance.Maintenances[1].id, idMaintenanceElement: MockDBMaintenance.MaintenanceElements[1].id },

@@ -29,8 +29,7 @@
       <ion-icon size="large" name="analytics"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.INFORMATION_VEHICLE' | translate }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideVehicleSummary" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideVehicleSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
+        <ion-icon size="small" color="primary" [name]="hideVehicleSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
     <!-- CHART INFORMATION VEHICLE-->
@@ -72,8 +71,7 @@
       <ion-icon size="large" name="cog"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.CONFIGURATION' | translate }} {{ selectedInfoVehicleConfiguration.nameConfiguration }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideConfigurationSummary" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideConfigurationSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
+        <ion-icon size="small" color="primary" [name]="hideConfigurationSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideConfigurationSummary">
@@ -122,7 +120,7 @@
               </ion-label>
             </div>
           </div>
-          <div class="table-row" [hidden]="showInfoMaintenance[i]">
+          <div class="table-row" *ngIf="showInfoMaintenance[i]">
             <ion-list class="second-item-div">
               <ion-item *ngFor="let r of m.listReplacement" [ngClass]="{ 'disable-item-color': !m.active }">
                 <ion-avatar slot="start" class="second-avatar">
@@ -156,8 +154,7 @@
       <ion-icon size="large" name="repeat"></ion-icon>
       <h3 class="header-list">{{ 'COMMON.REPLACEMENT_HISTORY' | translate }}</h3>
       <ion-button fill="clear">
-        <ion-icon *ngIf="hideReplacementSummary" size="small" color="primary" name="caret-down-circle"></ion-icon>
-        <ion-icon *ngIf="!hideReplacementSummary" size="small" color="primary" name="caret-up-circle"></ion-icon>
+        <ion-icon size="small" color="primary" [name]="hideReplacementSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideReplacementSummary">
@@ -198,7 +195,7 @@
               </ion-label>
             </div>
           </div>
-          <div class="table-row" [hidden]="showInfoReplacement[i]">
+          <div class="table-row" *ngIf="showInfoReplacement[i]">
             <ion-list class="second-item-div">
               <ion-item *ngFor="let subRep of rep.listReplacements" button
                 (click)="showInfoReplacement[i] = !showInfoReplacement[i]; showToastInfoReplacement(rep, subRep)">

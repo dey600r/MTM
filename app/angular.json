@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "defaultProject": "app",
   "newProjectRoot": "projects",
   "projects": {
     "app": {
@@ -16,18 +15,15 @@
           "options": {
             "outputPath": "www",
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [ "src/polyfills.ts" ],
             "tsConfig": "tsconfig.app.json",
+            "main": "src/main.ts",
             "allowedCommonJsDependencies": [
-              "ion5-calendar"
+              "moment",
+              "rfdc"
             ],
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
-              },
+              { "glob": "**/*", "input": "src/assets", "output": "assets" },
               { "glob": "**/*bar-chart.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*caret-down-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*caret-up-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
@@ -102,19 +98,19 @@
               { "glob": "**/*sync.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*cloud-upload.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*cloud-download.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*add-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*.svg", "input": "src/assets/icon", "output": "./svg" },
               "src/manifest.webmanifest"
             ],
             "styles": [
               { "input": "src/theme/main.scss" },
+              { "input": "src/global.scss" },
               { "input": "src/theme/variables.scss" },
-              { "input": "src/theme/colours.scss" },
-              { "input": "src/global.scss" }
+              { "input": "src/theme/colours.scss" }
             ],
             "scripts": [
             ],
             "aot": false,
-            "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
             "sourceMap": true,
@@ -137,106 +133,6 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "production-windows": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": false,
-                  "inlineCritical": true
-                },
-                "fonts": true
-              },
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "production-free-android": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment-free.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "production-free-windows": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment-free.prod.ts"
-                }
-              ],
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": false,
-                  "inlineCritical": true
-                },
-                "fonts": true
-              },
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -259,20 +155,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app:build"
+            "buildTarget": "app:build"
           },
           "configurations": {
             "production-android": {
-              "browserTarget": "app:build:production-android"
-            },
-            "production-windows": {
-              "browserTarget": "app:build:production-windows"
-            },
-            "production-free-android": {
-              "browserTarget": "app:build:production-free-android"
-            },
-            "production-free-windows": {
-              "browserTarget": "app:build:production-free-windows"
+              "buildTarget": "app:build:production-android"
             },
             "ci": {
             }
@@ -281,7 +168,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "app:build"
+            "buildTarget": "app:build"
           }
         },
         "test": {
@@ -293,9 +180,9 @@
             "karmaConfig": "karma.conf.js",
             "styles": [
               { "input": "src/theme/main.scss" },
+              { "input": "src/global.scss" },
               { "input": "src/theme/variables.scss" },
-              { "input": "src/theme/colours.scss" },
-              { "input": "src/global.scss" }
+              { "input": "src/theme/colours.scss" }
             ],
             "scripts": [],
             "assets": [
@@ -378,6 +265,7 @@
               { "glob": "**/*sync.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*cloud-upload.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*cloud-download.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
+              { "glob": "**/*add-circle.svg", "input": "node_modules/ionicons/dist/ionicons/svg", "output": "./svg" },
               { "glob": "**/*.svg", "input": "src/assets/icon", "output": "./svg" },
               "src/manifest.webmanifest"
             ]
@@ -410,15 +298,6 @@
             "production-android": {
               "devServerTarget": "app:serve:production-android"
             },
-            "production-windows": {
-              "devServerTarget": "app:serve:production-windows"
-            },
-            "production-free-android": {
-              "devServerTarget": "app:serve:production-free-android"
-            },
-            "production-free-windows": {
-              "devServerTarget": "app:serve:production-free-windows"
-            },
             "ci": {
               "devServerTarget": "app:serve:ci"
             }
@@ -432,15 +311,6 @@
           "configurations": {
             "production-android": {
               "browserTarget": "app:build:production-android"
-            },
-            "production-windows": {
-              "browserTarget": "app:build:production-windows"
-            },
-            "production-free-android": {
-              "browserTarget": "app:build:production-free-android"
-            },
-            "production-free-windows": {
-              "browserTarget": "app:build:production-free-windows"
             }
           }
         },
@@ -454,18 +324,6 @@
             "production-android": {
               "cordovaBuildTarget": "app:ionic-cordova-build:production-android",
               "devServerTarget": "app:serve:production"
-            },
-            "production-windows": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:production-windows",
-              "devServerTarget": "app:serve:production"
-            },
-            "production-free-android": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:production-free-android",
-              "devServerTarget": "app:serve:production-free"
-            },
-            "production-free-windows": {
-              "cordovaBuildTarget": "app:ionic-cordova-build:production-free-windows",
-              "devServerTarget": "app:serve:production-free"
             }
           }
         }
@@ -473,7 +331,12 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/cordova-builders"
+    "schematicCollections": [
+      "@ionic/cordova-builders"
+    ],
+    "cache": {
+      "enabled": true
+    }
   },
   "schematics": {
     "@ionic/cordova-builders:component": {

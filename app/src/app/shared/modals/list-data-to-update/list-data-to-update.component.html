@@ -20,14 +20,11 @@
         <h3>{{ data.description }}</h3>
         <p>{{ data.detail }}</p>
       </ion-label>
-      <ion-checkbox color="primary" [(ngModel)]="data.selected" [disabled]="data.disabled"></ion-checkbox>
+      <ion-checkbox color="primary" [(ngModel)]="data.selected" [disabled]="data.disabled" slot="end"></ion-checkbox>
     </ion-item>
   </ion-list>
   <!-- Buton Save -->
-  <ion-button *ngIf="!modalInputModel.data.active" class="button-circle" [disabled]="true">
-    <ion-icon name="lock-closed"></ion-icon>
-  </ion-button>
-  <ion-button *ngIf="modalInputModel.data.active" class="button-circle" (click)="save()">
-    <ion-icon name="save"></ion-icon>
+  <ion-button class="button-circle" [disabled]="!modalInputModel.data.active" (click)="save()">
+    <ion-icon [name]="modalInputModel.data.active ? 'save' : 'lock-closed'"></ion-icon>
   </ion-button>
 </ion-content>

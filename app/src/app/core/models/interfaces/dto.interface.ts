@@ -62,3 +62,8 @@ export interface IDashboardExpensesModel<T> {
     operationSum: T;
     replacementSum: T;
 }
+
+export interface ICalendarColorMode {
+    iterator: number;
+    color: string;
+}

@@ -4,11 +4,11 @@ import { CalendarService, IconService } from '@services/index';
 import { Constants } from '@utils/index';
 
 export class MockAppMaintenance {
-    static iconService: IconService = new IconService();
-    static calendarService: CalendarService = new CalendarService(null);
+    public static readonly iconService: IconService = new IconService();
+    public static readonly calendarService: CalendarService = new CalendarService(null);
 
     /* MAINTENANCE ELELEMTNS */
-    static MaintenanceElementsAux: MaintenanceElementModel[] = [
+    public static readonly MaintenanceElementsAux: MaintenanceElementModel[] = [
         new MaintenanceElementModel({
             name: 'DB.FRONT_WHEEL',
             nameKey: 'FRONT_WHEEL',
@@ -109,21 +109,21 @@ export class MockAppMaintenance {
             id: 11
         })
     ];
-    public static MaintenanceElements: MaintenanceElementModel[] = MockAppMaintenance.MaintenanceElementsAux.map(x => {
+    public static readonly MaintenanceElements: MaintenanceElementModel[] = MockAppMaintenance.MaintenanceElementsAux.map(x => {
         return {...x, icon: this.iconService.getIconReplacement(x.id) };
     });
 
     /* MAINTENANCE FREQUENCIES */
-    public static MaintenanceFreqsAux: MaintenanceFreqModel[] = [
+    public static readonly MaintenanceFreqsAux: MaintenanceFreqModel[] = [
         new MaintenanceFreqModel(Constants.MAINTENANCE_FREQ_ONCE_CODE, 'ONCE', 1),
         new MaintenanceFreqModel(Constants.MAINTENANCE_FREQ_CALENDAR_CODE, 'CALENDAR', 2)
     ];
-    public static MaintenanceFreqs: MaintenanceFreqModel[] = MockAppMaintenance.MaintenanceFreqsAux.map(x => {
+    public static readonly MaintenanceFreqs: MaintenanceFreqModel[] = MockAppMaintenance.MaintenanceFreqsAux.map(x => {
         return {...x, icon: this.iconService.getIconMaintenance(x.code) };
     });
 
     /* MAINTENANCES */
-    public static Maintenances: MaintenanceModel[] = [
+    public static readonly Maintenances: MaintenanceModel[] = [
         new MaintenanceModel({
             description: 'DB.FIRST_REVIEW',
             descriptionKey: 'FIRST_REVIEW',

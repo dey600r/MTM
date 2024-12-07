@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
-import { Form } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 // UTILS
-import { ActionDBEnum, PageEnum, ToastTypeEnum } from '@app/core/utils';
+import { ActionDBEnum, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel, MaintenanceElementModel } from '@models/index';
 import { ConfigurationService, ControlService } from '@services/index';
 
@@ -15,37 +14,36 @@ import { ConfigurationService, ControlService } from '@services/index';
 export class AddEditMaintenanceElementComponent implements OnInit {
 
   // MODAL MODELS
-  modalInputModel: ModalInputModel<MaintenanceElementModel> = new ModalInputModel<MaintenanceElementModel>();
+  @Input() modalInputModel: ModalInputModel<MaintenanceElementModel> = new ModalInputModel<MaintenanceElementModel>();
 
   // MODEL FORM
   maintenanceElement: MaintenanceElementModel = new MaintenanceElementModel();
   submited = false;
+  MODAL_TYPE_ENUM = ModalTypeEnum
 
   constructor(
-    private modalController: ModalController,
-    private navParams: NavParams,
-    private controlService: ControlService,
-    private configurationService: ConfigurationService
+    private readonly modalController: ModalController,
+    private readonly controlService: ControlService,
+    private readonly configurationService: ConfigurationService
   ) {
   }
 
   ngOnInit() {
 
-    this.modalInputModel = new ModalInputModel<MaintenanceElementModel>(this.navParams.data);
     this.maintenanceElement = Object.assign({}, this.modalInputModel.data);
-    if (this.modalInputModel.isCreate) {
+    if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.maintenanceElement.id = -1;
     }
   }
 
-  saveData(f: Form) {
+  saveData(f: HTMLFormElement) {
     this.submited = true;
     if (this.isValidForm(f)) {
       this.configurationService.saveMaintenanceElement(this.maintenanceElement,
-          (this.modalInputModel.isCreate ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
         this.closeModal();
-        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.SUCCESS, (this.modalInputModel.isCreate ?
-          'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),
+        this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.SUCCESS, 
+          (this.modalInputModel.type === ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddSaveReplacement' : 'PAGE_CONFIGURATION.EditSaveReplacement'),
           { replacement: this.maintenanceElement.name });
       }).catch(e => {
         this.controlService.showToast(PageEnum.MODAL_MAINTENANCE_ELEMENT, ToastTypeEnum.DANGER, 'PAGE_CONFIGURATION.ErrorSaveReplacement', e);

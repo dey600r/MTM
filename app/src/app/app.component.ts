@@ -18,12 +18,12 @@ import { PageEnum } from './core/utils';
 export class AppComponent {
 
   constructor(
-    private platform: Platform,
-    private statusBar: StatusBar,
-    private dbService: DataBaseService,
-    private translator: TranslateService,
-    private controlService: ControlService,
-    private exportService: ExportService
+    private readonly platform: Platform,
+    private readonly statusBar: StatusBar,
+    private readonly dbService: DataBaseService,
+    private readonly translator: TranslateService,
+    private readonly controlService: ControlService,
+    private readonly exportService: ExportService
   ) {
     this.initializeApp();
   }

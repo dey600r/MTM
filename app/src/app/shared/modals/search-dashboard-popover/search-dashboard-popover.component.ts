@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { PopoverController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 
 // LIBRARY ANGULAR
 import { TranslateService } from '@ngx-translate/core';
@@ -26,7 +26,7 @@ import {
   export class SearchDashboardPopOverComponent implements OnInit {
 
     // MODAL MODELS
-    modalInputModel: ModalInputModel = new ModalInputModel();
+    @Input() modalInputModel: ModalInputModel = new ModalInputModel();
 
     // DATA
     config: ISearcherControlModel;
@@ -39,20 +39,9 @@ import {
     filterVehicle: number[] = [];
     filterOpType: number[] = [];
     filterMaintElement: number[] = [];
-    filterMonth: FilterMonthsEnum = FilterMonthsEnum.MONTH;
-    searchDashboard: SearchDashboardModel = this.dashboardService.getSearchDashboard();
-    months: any[] = [{
-        id:  FilterMonthsEnum.MONTH,
-        name: `1 ${this.translator.instant('COMMON.MONTH')}`
-    },
-    {
-        id:  FilterMonthsEnum.QUARTER,
-        name: `4 ${this.translator.instant('COMMON.MONTHS')}`
-    },
-    {
-        id:  FilterMonthsEnum.YEAR,
-        name: `12 ${this.translator.instant('COMMON.MONTHS')}`
-    }];
+    filterMonth: FilterMonthsEnum = FilterMonthsEnum.YEAR;
+    searchDashboard: SearchDashboardModel = new SearchDashboardModel();
+    months: any[] = [];
 
     // TRANSLATE
     translateAccept = '';
@@ -76,24 +65,34 @@ import {
     showDoghnut = false;
     showMyData = false;
 
-    constructor(private popoverController: PopoverController,
-                private navParams: NavParams,
-                private dataService: DataService,
-                private dashboardService: DashboardService,
-                private commonService: CommonService,
-                private configurationService: ConfigurationService,
-                private translator: TranslateService,
-                private settingsService: SettingsService) {
+    constructor(private readonly popoverController: PopoverController,
+                private readonly dataService: DataService,
+                private readonly dashboardService: DashboardService,
+                private readonly commonService: CommonService,
+                private readonly configurationService: ConfigurationService,
+                private readonly translator: TranslateService,
+                private readonly settingsService: SettingsService) {
         this.searchDashboard = this.dashboardService.getSearchDashboard();
         this.filterMonth = this.searchDashboard.showPerMont;
         this.translateAccept = this.translator.instant('COMMON.ACCEPT');
         this.translateCancel = this.translator.instant('COMMON.CANCEL');
         this.translateSelect = this.translator.instant('COMMON.SELECT');
+        this.months = [{
+            id:  FilterMonthsEnum.MONTH,
+            name: `1 ${this.translator.instant('COMMON.MONTH')}`
+        },
+        {
+            id:  FilterMonthsEnum.QUARTER,
+            name: `4 ${this.translator.instant('COMMON.MONTHS')}`
+        },
+        {
+            id:  FilterMonthsEnum.YEAR,
+            name: `12 ${this.translator.instant('COMMON.MONTHS')}`
+        }];
     }
 
     ngOnInit() {
         this.config = this.dashboardService.getConfigSearcher();
-        this.modalInputModel = new ModalInputModel(this.navParams.data);
 
         // FILTER VEHICLES
         this.filterVehicle = [];
@@ -193,7 +192,7 @@ import {
         this.filterOpType = [];
         this.filterMaintElement = [];
         this.filterVehicle = [];
-        this.filterMonth = FilterMonthsEnum.MONTH;
+        this.filterMonth = this.searchDashboard.showPerMont;
         setTimeout(() => {
             this.refresh = true;
             this.onChangeFilterGrouper();

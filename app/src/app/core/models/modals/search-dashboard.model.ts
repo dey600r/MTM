@@ -17,7 +17,7 @@ export class SearchDashboardModel {
     expensePerKm: boolean;
     showStrict: boolean;
     constructor(data: Partial<SearchDashboardModel> = {}) {
-        this.showPerMont = (data.showPerMont !== undefined ? data.showPerMont : FilterMonthsEnum.MONTH);
+        this.showPerMont = (data.showPerMont !== undefined ? data.showPerMont : FilterMonthsEnum.YEAR);
         this.searchText = (data.searchText !== undefined ? data.searchText : '');
         this.searchOperationType = (data.searchOperationType !== undefined ? data.searchOperationType : []);
         this.searchMaintenanceElement = (data.searchMaintenanceElement !== undefined ? data.searchMaintenanceElement : []);
