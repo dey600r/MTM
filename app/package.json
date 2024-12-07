@@ -16,7 +16,7 @@
     "build:release-jenkins": "sh mtm-deploy-store.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
     "deploy:release-firebase": "mtm-deploy-firebase.bat",
-    "deploy:release-apk": "mtm-deploy-apk.bat production-free",
+    "deploy:release-apk": "mtm-deploy-apk.bat production",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug --ssl --verbose --host=192.168.1.23 --port=8100",
     "sonarqube": "ng test --code-coverage --watch=false && sonar-scanner.bat"
