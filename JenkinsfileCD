@@ -15,7 +15,7 @@ node {
   }
   stage('Android - Install') {
     sh 'echo "Running on $WORKSPACE"'
-    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-13 bash -c "cd ./workspace/$JOB_NAME/app && npm uninstall cordova-android --save-dev --force && ionic cordova platform rm android && ionic cordova platform add android@13.0.0"'
+    sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-13 bash -c "cd ./workspace/$JOB_NAME/app && ionic cordova platform rm android && ionic cordova platform add android@13.0.0"'
   }
   stage('Android - Build MtM') {
     sh 'docker run --rm -v docker_jenkins_data:/home/workspace node-android-13 bash -c "cd ./workspace/$JOB_NAME/app && npm run build:release-jenkins"'
