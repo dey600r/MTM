@@ -1,4 +1,4 @@
-import { ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from '@utils/index';
+import { ModalHeaderOutputEnum, ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from '@utils/index';
 
 export class BaseModel {
     id: number;
@@ -100,5 +100,38 @@ export class BaseMaintenanceModel extends BaseDescriptionModel {
         this.wear = (data.wear !== undefined ? data.wear : false);
         this.fromKm = (data.fromKm !== undefined ? data.fromKm : 0);
         this.toKm = (data.toKm !== undefined ? data.toKm : null);
+    }
+}
+
+export class ModalHeaderSegmentInputModel {
+    id: number;
+    name: string;
+    icon: string;
+    selected: boolean;
+    constructor(id: number, name: string, icon: string, selected: boolean) {
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.selected = selected;
+    }
+}
+
+export class ModalHeaderInputModel {
+    title: string;
+    iconButton: string;
+    dataSegment: ModalHeaderSegmentInputModel[];
+    constructor(data: Partial<ModalHeaderInputModel> = {}) {
+        this.title = (data.title ?? '');
+        this.iconButton = (data.iconButton ?? '');
+        this.dataSegment = (data.dataSegment ?? []);
+    }
+}
+
+export class ModalHeaderOutputModel {
+    type: ModalHeaderOutputEnum;
+    data: any;
+    constructor(t: ModalHeaderOutputEnum, event: any = null) {
+        this.type = t;
+        this.data = event;
     }
 }

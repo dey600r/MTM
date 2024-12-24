@@ -104,6 +104,11 @@
             ],
             "styles": [
               { "input": "src/theme/main.scss" },
+              { "input": "@ionic/angular/css/core.css" },
+              { "input": "@ionic/angular/css/normalize.css" },
+              { "input": "@ionic/angular/css/structure.css" },
+              { "input": "@ionic/angular/css/typography.css" },
+              { "input": "@ionic/angular/css/display.css" },
               { "input": "src/global.scss" },
               { "input": "src/theme/variables.scss" },
               { "input": "src/theme/colours.scss" }
@@ -180,6 +185,11 @@
             "karmaConfig": "karma.conf.js",
             "styles": [
               { "input": "src/theme/main.scss" },
+              { "input": "@ionic/angular/css/core.css" },
+              { "input": "@ionic/angular/css/normalize.css" },
+              { "input": "@ionic/angular/css/structure.css" },
+              { "input": "@ionic/angular/css/typography.css" },
+              { "input": "@ionic/angular/css/display.css" },
               { "input": "src/global.scss" },
               { "input": "src/theme/variables.scss" },
               { "input": "src/theme/colours.scss" }

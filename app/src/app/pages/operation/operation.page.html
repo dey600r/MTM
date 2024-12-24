@@ -15,9 +15,7 @@
   <ion-segment class="segment-button-fixed" 
     [value]="this.vehicleSelected" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
     <ion-segment-button *ngFor="let v of vehicles; let i = index;" [value]="v.id" layout="icon-start">
-      <ion-label>
-        {{ v.brand + ' ' + v.model }}
-      </ion-label>
+      <ion-label>{{ v.$getName }}</ion-label>
       <ion-icon size="small" [name]="v.vehicleType.icon"></ion-icon>
     </ion-segment-button>
   </ion-segment>

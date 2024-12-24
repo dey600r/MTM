@@ -15,7 +15,7 @@ import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
-import { ModalInputModel, OperationModel } from '@models/index';
+import { DashboardInputModal, ModalInputModel } from '@models/index';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -34,8 +34,12 @@ describe('DashboardComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
-    component.modalInputModel = new ModalInputModel<any, OperationModel>({
-      dataList: MockAppData.Operations, 
+    component.modalInputModel = new ModalInputModel<DashboardInputModal>({
+      data: {
+        operations: MockAppData.Operations, 
+        vehicles: [],
+        vehicleSelected: -1,
+      },
       parentPage: PageEnum.OPERATION
    });
     fixture.detectChanges();

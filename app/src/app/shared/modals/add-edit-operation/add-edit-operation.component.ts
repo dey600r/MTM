@@ -7,7 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum, ModalTypeEnum } from '@utils/index';
 import {
-  ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, ISettingModel
+  ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, ISettingModel,
+  ModalHeaderInputModel
 } from '@models/index';
 import {
   DataService, OperationService, CommonService, ConfigurationService, ControlService,
@@ -23,11 +24,11 @@ export class AddEditOperationComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<OperationModel> = new ModalInputModel<OperationModel>();
-
+  modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
+  
   // MODEL FORM
   operation: OperationModel = new OperationModel();
   submited = false;
-  MODAL_TYPE_ENUM = ModalTypeEnum
 
   // DATA
   operations: OperationModel[] = [];
@@ -69,6 +70,9 @@ export class AddEditOperationComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.modalHeaderInput = new ModalHeaderInputModel({
+      title: (this.modalInputModel.type == ModalTypeEnum.CREATE ? 'PAGE_OPERATION.AddNewOperation' : 'PAGE_OPERATION.EditOperation')
+    });
 
     this.operation = Object.assign({}, this.modalInputModel.data);
     if (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE) {

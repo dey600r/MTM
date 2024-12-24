@@ -1,17 +1,5 @@
-<ion-header>
-    <ion-toolbar>
-        <!-- Button show filter -->
-        <ion-button slot="start" fill="clear" (click)="showPopover($event)" class="btn-width-header">
-            <ion-icon size="large" class="btn-color" [name]="iconFilter"></ion-icon>
-        </ion-button>
-        <!-- Title -->
-        <ion-title color="text-header" class="align-center">{{ 'COMMON.CHARTS' | translate }}</ion-title>
-        <!-- Button Close -->
-        <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
-        <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
-        </ion-button>
-    </ion-toolbar>
-</ion-header>
+<!-- HEADER MODAL -->
+<app-header-modal [input]="modalHeaderInput" (output)="eventEmitHeader($event)"></app-header-modal>
 
 <ion-content>
      <!-- INFO MAINTENANCES -->
@@ -19,10 +7,9 @@
     <!-- CHARTS -->
     <div *ngIf="dashboardVehicleExpenses.data.length > 0 || dashboardOpTypeExpenses.data.length > 0">
         <ion-list-header class="padding-list-header">
-            <ion-icon *ngIf="isParentPageVehicle()" size="large" name="home"></ion-icon>
+            <ion-icon size="large" name="cash"></ion-icon>
             <h3 *ngIf="isParentPageVehicle()" class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerVehicle' | translate }}</h3>
-            <ion-icon *ngIf="isParentPageOperation()" size="large" [name]="this.operations[0].vehicle.vehicleType.icon"></ion-icon>
-            <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }} {{ vehicleModel }}</h3>
+            <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
         </ion-list-header>
         <ngx-charts-bar-vertical *ngIf="!showSpinner" class="justify-center"
             [view]="dashboardVehicleExpenses.view"

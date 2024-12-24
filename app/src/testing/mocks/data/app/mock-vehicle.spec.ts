@@ -6,21 +6,21 @@ import { Constants } from '@utils/index';
 import { MockAppConfiguration } from './mock-configuration.spec';
 
 export class MockAppVehicle {
-    static iconService: IconService = new IconService();
-    static calendarService: CalendarService = new CalendarService(null);
+    public static readonly iconService: IconService = new IconService();
+    public static readonly calendarService: CalendarService = new CalendarService(null);
 
     /* VEHICLE TYPE */
-    public static VehicleTypesAux: VehicleTypeModel[] = [
+    public static readonly VehicleTypesAux: VehicleTypeModel[] = [
         new VehicleTypeModel(Constants.VEHICLE_TYPE_CODE_MOTO, 'MOTORBIKE', 1),
         new VehicleTypeModel(Constants.VEHICLE_TYPE_CODE_CAR, 'CAR', 2),
         new VehicleTypeModel('O', 'OTHER', 3),
     ];
-    public static VehicleTypes: VehicleTypeModel[] = MockAppVehicle.VehicleTypesAux.map(x => {
+    public static readonly VehicleTypes: VehicleTypeModel[] = MockAppVehicle.VehicleTypesAux.map(x => {
         return {...x, icon: this.iconService.getIconVehicle(x.code) };
     });
 
     /* VEHICLES */
-    public static VehiclesAux: VehicleModel[] = [
+    public static readonly VehiclesAux: VehicleModel[] = [
         new VehicleModel({
             model: 'R6',
             brand: 'Yamaha',
@@ -61,8 +61,8 @@ export class MockAppVehicle {
             id: 3
         })
     ];
-    public static Vehicles: VehicleModel[] = MockAppVehicle.VehiclesAux.map(x => {
-        return {...x, kmEstimated: this.calendarService.calculateKmVehicleEstimated(x) };
+    public static readonly Vehicles: VehicleModel[] = MockAppVehicle.VehiclesAux.map(x => {
+        return new VehicleModel({...x, kmEstimated: this.calendarService.calculateKmVehicleEstimated(x) });
     });
 
 }

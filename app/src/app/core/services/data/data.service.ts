@@ -17,9 +17,9 @@ import {
 export class DataService {
 
   // MASTER DATA
-  private vehicleTypeObservable = new BehaviorSubject([]);
-  private operationTypeObservable = new BehaviorSubject([]);
-  private maintenanceFreqObservable = new BehaviorSubject([]);
+  private readonly vehicleTypeObservable = new BehaviorSubject([]);
+  private readonly operationTypeObservable = new BehaviorSubject([]);
+  private readonly maintenanceFreqObservable = new BehaviorSubject([]);
 
   // RELATED DATA
   private operationMaintenanceElementList: IOperationMaintenanceElementStorageModel[] = [];
@@ -27,12 +27,12 @@ export class DataService {
   private maintenanceElementRelList: IMaintenanceElementRelStorageModel[] = [];
 
   // APPLICATION DATA
-  private vehiclesObservable = new BehaviorSubject([]);
-  private configurationObservable = new BehaviorSubject([]);
-  private operationObservable = new BehaviorSubject([]);
-  private maintenanceObservable = new BehaviorSubject([]);
-  private maintenanceElementObservable = new BehaviorSubject([]);
-  private systemConfigurationObservable = new BehaviorSubject([]);
+  private readonly vehiclesObservable = new BehaviorSubject([]);
+  private readonly configurationObservable = new BehaviorSubject([]);
+  private readonly operationObservable = new BehaviorSubject([]);
+  private readonly maintenanceObservable = new BehaviorSubject([]);
+  private readonly maintenanceElementObservable = new BehaviorSubject([]);
+  private readonly systemConfigurationObservable = new BehaviorSubject([]);
 
   constructor() {}
   

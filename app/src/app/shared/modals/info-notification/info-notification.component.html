@@ -1,18 +1,5 @@
-<ion-header>
-    <ion-toolbar>
-        <!-- Button show filter -->
-        <ion-button *ngIf="isCalendar" slot="start" fill="clear" (click)="showPopover($event)" class="btn-width-header">
-            <ion-icon size="large" class="btn-color" [name]="iconFilter"></ion-icon>
-        </ion-button>
-        <!-- Title -->
-        <ion-title color="text-header" class="align-center">{{ labelNameVehicle }}</ion-title>
-        <!-- Button Close -->
-        <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
-          <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
-        </ion-button>
-    </ion-toolbar>
-</ion-header>
-
+<!-- HEADER MODAL -->
+<app-header-modal [input]="modalHeaderInput" (output)="eventEmitHeader($event)"></app-header-modal>
 
 <ion-content>
   <!-- RESUME -->

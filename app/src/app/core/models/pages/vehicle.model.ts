@@ -14,6 +14,11 @@ export class VehicleModel extends BaseModel {
     dateKms: Date;
     datePurchase: Date;
     active: boolean;
+    
+    public get $getName(): string {
+        return `${this.brand} ${this.model}`;
+    }
+
     constructor(data: Partial<VehicleModel> = {}) {
         super(data.id);
         this.model = (data.model ? data.model : null);
@@ -28,4 +33,6 @@ export class VehicleModel extends BaseModel {
         this.datePurchase = (data.datePurchase ? data.datePurchase : new Date());
         this.active = (data.active !== undefined ? data.active : true);
     }
+
+    
 }

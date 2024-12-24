@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
 import { DataService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
-import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel } from '@models/index';
+import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel, DashboardInputModal } from '@models/index';
 
 // COMPONENTS
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
@@ -130,9 +130,11 @@ export class VehiclePage extends BasePage implements OnInit {
     if (this.vehicles.length === 0) {
       this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
     } else {
-      this.controlService.openModal(PageEnum.VEHICLE, DashboardComponent, new ModalInputModel<any, OperationModel>({
+      this.controlService.openModal(PageEnum.VEHICLE, DashboardComponent, new ModalInputModel<Partial<DashboardInputModal>>({
           type: ModalTypeEnum.UPDATE,
-          dataList: this.operations,
+          data: {
+            operations: this.operations
+          },
           parentPage: PageEnum.VEHICLE
         }));
     }
@@ -147,13 +149,13 @@ export class VehiclePage extends BasePage implements OnInit {
       'PAGE_VEHICLE.ConfirmDeleteVehicleOperation' : 'PAGE_VEHICLE.ConfirmDeleteVehicle');
 
     this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.VEHICLES'),
-      this.translator.instant(message, {vehicle: `${row.brand} ${row.model}`}),
+      this.translator.instant(message, {vehicle: row.$getName}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
           this.vehicleService.saveVehicle([row], ActionDBEnum.DELETE, ops).then(x => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_VEHICLE.DeleteSaveVehicle',
-              { vehicle: `${row.brand} ${row.model}` });
+              { vehicle: row.$getName });
           }).catch(e => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
           });
@@ -166,7 +168,7 @@ export class VehiclePage extends BasePage implements OnInit {
     let vehicleToSave: VehicleModel = vehicle;
     const message: string = (vehicleToSave.active ? 'PAGE_VEHICLE.ConfirmDesactivateNotificationVehicle' : 'PAGE_VEHICLE.ConfirmActivateNotificationVehicle');
     this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.VEHICLES'),
-      this.translator.instant(message, {vehicle: `${vehicleToSave.brand} ${vehicleToSave.model}`}),
+      this.translator.instant(message, {vehicle: vehicleToSave.$getName}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {

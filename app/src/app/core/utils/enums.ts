@@ -82,3 +82,8 @@ export enum CalendarTypeEnum {
     OPERATION = 0,
     MAINTENANCE = 1
 }
+
+export enum ModalHeaderOutputEnum {
+    BUTTON = 0,
+    SEGMENT = 1
+}

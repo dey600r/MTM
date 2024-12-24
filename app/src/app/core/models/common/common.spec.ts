@@ -1,8 +1,8 @@
 import {
     BaseCodeDescriptionModel, BaseDescriptionModel, BaseIconCodeDescriptionModel, BaseIconNameDescriptionModel, BaseMaintenanceModel,
-    BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, ModalInputModel, ModalOutputModel
+    BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, ModalHeaderInputModel, ModalHeaderOutputModel, ModalHeaderSegmentInputModel, ModalInputModel, ModalOutputModel
 } from "@models/index";
-import { ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from "@utils/index";
+import { ModalHeaderOutputEnum, ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from "@utils/index";
 
 describe('CommonModel', () => {
 
@@ -145,5 +145,40 @@ describe('CommonModel', () => {
         expect(base.time).toEqual(12);
         expect(base.init).toEqual(true);
         expect(base.wear).toEqual(true);
+    });
+
+    it('should initialize modalheaderinput model', () => {
+        let input: ModalHeaderInputModel = new ModalHeaderInputModel();
+        expect(input.title).toEqual('');
+        expect(input.iconButton).toEqual('');
+        expect(input.dataSegment.length).toEqual(0);
+        input = new ModalHeaderInputModel({
+            title: 'david',
+            iconButton: 'home', 
+            dataSegment: [
+                new ModalHeaderSegmentInputModel(1, 'first', 'seg', true),
+                new ModalHeaderSegmentInputModel(2, 'second', 'icon', false),
+            ]
+        });
+        expect(input.title).toEqual('david');
+        expect(input.iconButton).toEqual('home');
+        expect(input.dataSegment.length).toEqual(2);
+        expect(input.dataSegment[0].id).toEqual(1);
+        expect(input.dataSegment[0].name).toEqual('first');
+        expect(input.dataSegment[0].icon).toEqual('seg');
+        expect(input.dataSegment[0].selected).toBeTrue();
+        expect(input.dataSegment[1].id).toEqual(2);
+        expect(input.dataSegment[1].name).toEqual('second');
+        expect(input.dataSegment[1].icon).toEqual('icon');
+        expect(input.dataSegment[1].selected).toBeFalse();
+    });
+
+    it('should initialize modalheaderoutput model', () => {
+        let output: ModalHeaderOutputModel = new ModalHeaderOutputModel(ModalHeaderOutputEnum.BUTTON);
+        expect(output.type).toEqual(ModalHeaderOutputEnum.BUTTON);
+        expect(output.data).toEqual(null);
+        output = new ModalHeaderOutputModel(ModalHeaderOutputEnum.SEGMENT, 1);
+        expect(output.type).toEqual(ModalHeaderOutputEnum.SEGMENT);
+        expect(output.data).toEqual(1);
     });
 });

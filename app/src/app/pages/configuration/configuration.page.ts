@@ -205,7 +205,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       listDataModel = [...listDataModel,
         new ListDataModalModel(
           x.id,
-          `${x.brand} ${x.model}`,
+          x.$getName,
           x.configuration.name,
           `${x.km} ${this.measure.value}`,
           x.vehicleType.icon,

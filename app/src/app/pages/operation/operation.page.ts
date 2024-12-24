@@ -11,7 +11,8 @@ import {
 } from '@services/index';
 import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel, IInfoModel, ISettingModel,
-  OperationTypeModel
+  OperationTypeModel,
+  DashboardInputModal
 } from '@models/index';
 import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
 
@@ -136,8 +137,12 @@ export class OperationPage extends BasePage implements OnInit {
     if (this.operationsVehicle.length === 0) {
       this.showModalInfoOperation();
     } else {
-      this.controlService.openModal(PageEnum.OPERATION, DashboardComponent, new ModalInputModel<any, OperationModel>({
-          dataList: this.operationsVehicle,
+      this.controlService.openModal(PageEnum.OPERATION, DashboardComponent, new ModalInputModel<DashboardInputModal>({
+          data: {
+            operations: this.allOperations,
+            vehicles: this.vehicles,
+            vehicleSelected: this.vehicleSelected
+          },
           parentPage: PageEnum.OPERATION
         }));
     }
@@ -225,7 +230,7 @@ export class OperationPage extends BasePage implements OnInit {
     this.showSkeletonBodyNotInit(500);
     this.vehicleSelected = Number(event.detail.value);
     this.loadOperationVehicles();
-    this.operations = this.filterOperations(this.filterDashboard, this.allOperations.filter(x => x.vehicle.id === Number(event.detail.value)));
+    this.operations = this.filterOperations(this.filterDashboard, this.operationsVehicle);
     this.loadIconDashboard(this.operations);
   }
 

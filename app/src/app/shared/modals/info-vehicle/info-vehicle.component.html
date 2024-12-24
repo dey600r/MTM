@@ -1,23 +1,5 @@
-<ion-header>
-  <ion-toolbar>
-      <!-- Title -->
-      <ion-title color="text-header" class="align-center">{{ 'COMMON.SUMMARY_VEHICLES' | translate }}</ion-title>
-      <!-- Button Close -->
-      <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
-        <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
-      </ion-button>
-  </ion-toolbar>
-  <!-- SEGMENT -->
-  <ion-segment class="segment-button-fixed" 
-    [value]="this.vehicleSelected.id" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
-    <ion-segment-button *ngFor="let v of vehicles; let i = index;" [value]="v.id" layout="icon-start">
-      <ion-label>
-        {{ v.brand + ' ' + v.model }}
-      </ion-label>
-      <ion-icon size="small" [name]="v.vehicleType.icon"></ion-icon>
-    </ion-segment-button>
-  </ion-segment>
-</ion-header>
+<!-- HEADER MODAL -->
+<app-header-modal [input]="modalHeaderInput" (output)="eventEmitHeader($event)"></app-header-modal>
 
 <ion-content>
   <!-- INFO VEHICLE -->

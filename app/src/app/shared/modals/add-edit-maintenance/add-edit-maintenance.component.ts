@@ -8,7 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ActionDBEnum, Constants, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 import {
   ModalInputModel, MaintenanceModel, ISettingModel,
-  MaintenanceFreqModel, MaintenanceElementModel
+  MaintenanceFreqModel, MaintenanceElementModel,
+  ModalHeaderInputModel
 } from '@models/index';
 import { DataService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
@@ -21,11 +22,11 @@ export class AddEditMaintenanceComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<MaintenanceModel, number> = new ModalInputModel<MaintenanceModel, number>();
+  modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
 
   // MODEL FORM
   maintenance: MaintenanceModel = new MaintenanceModel();
   submited = false;
-  MODAL_TYPE_ENUM = ModalTypeEnum;
 
   // DATA
   maintenanceElements: MaintenanceElementModel[] = [];
@@ -57,6 +58,9 @@ export class AddEditMaintenanceComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.modalHeaderInput = new ModalHeaderInputModel({
+      title: (this.modalInputModel.type == ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddNewMaintenance' : 'PAGE_CONFIGURATION.EditMaintenance')
+    });
 
     const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {

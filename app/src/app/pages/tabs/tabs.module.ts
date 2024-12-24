@@ -14,7 +14,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '@environment/environment';
 
 @NgModule({ exports: [],
-    declarations: [TabsPage], imports: [IonicModule,
+    declarations: [TabsPage], 
+    imports: [
+        IonicModule,
         CommonModule,
         FormsModule,
         TabsPageRoutingModule,
@@ -24,7 +26,9 @@ import { environment } from '@environment/environment';
                 useFactory: (createTranslateLoader),
                 deps: [HttpClient]
             }
-        })], providers: [TranslateStore, provideHttpClient(withInterceptorsFromDi())] })
+        })
+    ], 
+    providers: [TranslateStore, provideHttpClient(withInterceptorsFromDi())] })
 export class TabsPageModule {}
 
 export function createTranslateLoader(http: HttpClient) {

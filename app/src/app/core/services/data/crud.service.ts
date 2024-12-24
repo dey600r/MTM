@@ -273,10 +273,10 @@ export class CRUDService {
       },
     ];
 
-  constructor(private storageService: StorageService,
-              private mapService: MapService,
-              private dataService: DataService,
-              private calendarService: CalendarService) {
+  constructor(private readonly storageService: StorageService,
+              private readonly mapService: MapService,
+              private readonly dataService: DataService,
+              private readonly calendarService: CalendarService) {
 
   }
 
@@ -292,8 +292,9 @@ export class CRUDService {
           for(let element of data[conf.table]) {  
           let parameters: any[] = [];
           conf.get.relatedTable.forEach(step => {
-              const dataTable: any[] = JSON.parse(JSON.stringify(step.getDataRelatedTableFunction()));
-              if(step.getDataRelatedTableRefFunction == null) {
+            // const dataTable: any[] = JSON.parse(JSON.stringify(step.getDataRelatedTableFunction()));
+            const dataTable: any[] = step.getDataRelatedTableFunction();
+            if(step.getDataRelatedTableRefFunction == null) {
                 let idRelated: number = Number(element[step.foreignKey]);
                 parameters = [...parameters, dataTable.find(row => Number(row.id) === idRelated)];
               } else {

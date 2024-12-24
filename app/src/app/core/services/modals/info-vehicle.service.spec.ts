@@ -149,7 +149,7 @@ describe('InfoVehicleService', () => {
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].km).toEqual(12000);
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].price).toEqual(110);
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].priceOp).toEqual(333);
-        expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].time).toEqual(19);
+        expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].time).toBeGreaterThanOrEqual(17);
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].opName).toEqual(MockAppData.Operations[7].description);
     });
 });

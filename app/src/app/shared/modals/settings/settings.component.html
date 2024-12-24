@@ -1,13 +1,5 @@
-<ion-header>
-    <ion-toolbar>
-        <!-- Title -->
-        <ion-title color="text-header" class="align-center">{{ 'COMMON.SETTINGS' | translate }}</ion-title>
-        <!-- Button Close -->
-        <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
-          <ion-icon color="primary" size="large" name="close-circle"></ion-icon>
-        </ion-button>
-    </ion-toolbar>
-</ion-header>
+<!-- HEADER MODAL -->
+<app-header-modal [input]="modalHeaderInput"></app-header-modal>
 
 <ion-content>
   <!-- SETTINGS -->

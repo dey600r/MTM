@@ -1,15 +1,5 @@
-<ion-header>
-    <ion-toolbar>
-      <!-- Title -->
-      <ion-title color="text-header" class="align-center padding-left30">
-        {{ (this.modalInputModel.type == MODAL_TYPE_ENUM.CREATE ? 'PAGE_OPERATION.AddNewOperation' : 'PAGE_OPERATION.EditOperation') | translate }}
-      </ion-title>
-      <!-- Button Close -->
-      <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
-        <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
-      </ion-button>
-    </ion-toolbar>
-  </ion-header>
+<!-- HEADER MODAL -->
+<app-header-modal [input]="modalHeaderInput"></app-header-modal>
   
 <ion-content>
   <!-- Form -->
@@ -44,7 +34,7 @@
             <ion-icon *ngIf="this.submited && !isValidVehicle(formAddOperation)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
             <ion-text *ngIf="this.submited && !isValidVehicle(formAddOperation)" color="danger">{{ 'PAGE_OPERATION.AddVehicle' | translate }}</ion-text>
           </div>
-          <ion-select-option [value]="m.id" *ngFor="let m of vehicles">{{ m.brand + ' ' + m.model }}</ion-select-option>
+          <ion-select-option [value]="m.id" *ngFor="let m of vehicles">{{ m.$getName }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>

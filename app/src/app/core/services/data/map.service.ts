@@ -203,7 +203,7 @@ export class MapService {
   }
 
   getMapVehicle(data: IVehicleStorageModel, configuration: ConfigurationModel, vehicleType: VehicleTypeModel): VehicleModel {
-    let vehicleMapped: VehicleModel = {
+    let vehicleMapped: VehicleModel = new VehicleModel({
       id: Number(data[ConstantsColumns.COLUMN_MTM_ID]),
       model: data[ConstantsColumns.COLUMN_MTM_VEHICLE_MODEL],
       brand: data[ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND],
@@ -216,7 +216,7 @@ export class MapService {
       dateKms: new Date(data[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_KMS]),
       datePurchase: data[ConstantsColumns.COLUMN_MTM_VEHICLE_DATE_PURCHASE],
       active: data[ConstantsColumns.COLUMN_MTM_VEHICLE_ACTIVE]
-    };
+    });
     vehicleMapped.kmEstimated = this.calendarService.calculateKmVehicleEstimated(vehicleMapped);
     return vehicleMapped;
   }

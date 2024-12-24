@@ -15,7 +15,7 @@ import { MockAppData, SetupTest, SpyMockConfig } from '@testing/index';
 import { PageEnum } from '@utils/index';
 
 // MODELS
-import { ModalInputModel, WearVehicleProgressBarViewModel } from '@models/index';
+import { CalendarInputModal, ModalInputModel } from '@models/index';
 
 describe('InfoCalendarComponent', () => {
   let component: InfoCalendarComponent;
@@ -37,8 +37,12 @@ describe('InfoCalendarComponent', () => {
     component = fixture.componentInstance;
     const allWears = homeService.getWearReplacementToVehicle(
       MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
-    component.modalInputModel = new ModalInputModel<any, WearVehicleProgressBarViewModel>({
-        dataList: allWears,
+    component.modalInputModel = new ModalInputModel<CalendarInputModal>({
+        data: {
+          wear: allWears,
+          operations: [],
+          vehicleSelected: allWears[0].idVehicle
+        },
         parentPage: PageEnum.HOME
       });
     fixture.detectChanges();

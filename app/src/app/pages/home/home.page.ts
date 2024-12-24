@@ -13,7 +13,8 @@ import {
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
-  ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
+  ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel,
+  CalendarInputModal
 } from '@models/index';
 import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
 
@@ -306,11 +307,14 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   openInfoCalendar() {
-    if (!!this.wears && this.wears.length > 0) {
+    if ((!!this.wears && this.wears.length > 0) || (!!this.operations && this.operations.length > 0)) {
       this.controlService.openModal(PageEnum.HOME,
-        InfoCalendarComponent, new ModalInputModel<OperationModel[], WearVehicleProgressBarViewModel>({
-          data: this.operations,
-          dataList: this.wears,
+        InfoCalendarComponent, new ModalInputModel<CalendarInputModal>({
+          data: {
+            wear: this.wears,
+            operations: this.operations,
+            vehicleSelected: this.vehicleSelected.idVehicle
+          },
           parentPage: PageEnum.HOME
         }));
     } else {
