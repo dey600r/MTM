@@ -40,36 +40,36 @@ describe('CRUDService', () => {
         const allTables = service.getAllTables();
         expect(allTables.length).toEqual(12);
         // MASTER
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_VEHICLE_TYPE));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OPERATION_TYPE));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ));
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_VEHICLE_TYPE)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OPERATION_TYPE)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_FREQ)).toBeTrue();
         // DATA
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_VEHICLE));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_CONFIGURATION));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OPERATION));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT));
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_VEHICLE)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_CONFIGURATION)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OPERATION)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT)).toBeTrue();
         // RELATION
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_CONFIG_MAINT));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT));
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_CONFIG_MAINT)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT)).toBeTrue();
     });
 
     it('should get sync tables', () => {
         const allTables = service.getSyncTables();
         expect(allTables.length).toEqual(9);
         // DATA
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_VEHICLE));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_CONFIGURATION));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OPERATION));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT));
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_VEHICLE)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_CONFIGURATION)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OPERATION)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT)).toBeTrue();
         // RELATION
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_CONFIG_MAINT));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL));
-        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT));
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_CONFIG_MAINT)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_MAINTENANCE_ELEMENT_REL)).toBeTrue();
+        expect(allTables.some(x => x === ConstantsTable.TABLE_MTM_OP_MAINT_ELEMENT)).toBeTrue();
     });
 
     it('should get data from storage', async () => {

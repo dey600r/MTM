@@ -97,4 +97,8 @@ describe('DataService', () => {
         expect(service.getSystemConfigurationData().length).toEqual(MockAppData.SystemConfigurations.length);
         service.getSystemConfiguration().subscribe(data => expect(data.length).toEqual(MockAppData.SystemConfigurations.length));
     });
+
+    it('should filter null', () => {
+        expect(service.getSystemConfigurationData()).toEqual([]);
+    });
 });

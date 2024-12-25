@@ -37,7 +37,9 @@ describe('WearProgressModels', () => {
             percentKm: 0.6,
             percentTime: 0.7,
             warning: WarningWearEnum.DANGER,
-            listWearMaintenance: [new WearMaintenanceProgressBarViewModel()]
+            listWearMaintenance: [new WearMaintenanceProgressBarViewModel()],
+            iconVehicle: 'test',
+            warningProgressBarIcon: 'test'
         });
         expect(base.idVehicle).toEqual(2);
         expect(base.nameVehicle).toEqual('nameV');
@@ -47,12 +49,12 @@ describe('WearProgressModels', () => {
         expect(base.kmsPerMonthVehicle).toEqual(40);
         expect(base.dateKmsVehicle.toDateString()).toEqual(date2.toDateString());
         expect(base.typeVehicle).toEqual('');
-        expect(base.iconVehicle).toEqual('');
+        expect(base.iconVehicle).toEqual('test');
         expect(base.percent).toEqual(0.5);
         expect(base.percentKm).toEqual(0.6);
         expect(base.percentTime).toEqual(0.7);
         expect(base.warning).toEqual(WarningWearEnum.DANGER);
-        expect(base.warningProgressBarIcon).toEqual('');
+        expect(base.warningProgressBarIcon).toEqual('test');
         expect(base.idConfiguration).toEqual(-1);
         expect(base.nameConfiguration).toEqual('');
         expect(base.listWearMaintenance[0].idMaintenance).toEqual(-1);
@@ -83,10 +85,11 @@ describe('WearProgressModels', () => {
             initMaintenance: true,
             wearMaintenance: true,
             listWearNotificationReplacement:[new WearNotificationReplacementProgressBarViewModel()],
-            listWearReplacement: [new WearReplacementProgressBarViewModel()]
+            listWearReplacement: [new WearReplacementProgressBarViewModel()],
+            iconMaintenance: 'test'
         });
         expect(base.codeMaintenanceFreq).toEqual('code');
-        expect(base.iconMaintenance).toEqual('');
+        expect(base.iconMaintenance).toEqual('test');
         expect(base.idMaintenance).toEqual(2);
         expect(base.descriptionMaintenance).toEqual('desc');
         expect(base.kmMaintenance).toEqual(100);
