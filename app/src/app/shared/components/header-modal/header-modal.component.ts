@@ -44,8 +44,8 @@ export class HeaderModalComponent implements OnChanges {
     return this.controlService.activeSegmentScroll(this.input.dataSegment.length);
   }
 
-  closeModal() {
-    this.controlService.closeModal(this.modalController);
+  async closeModal() {
+    await this.controlService.closeModal(this.modalController);
   }
 
 }

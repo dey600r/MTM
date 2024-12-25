@@ -20,9 +20,9 @@ describe('HeaderModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should close the modal', () => {
+  it('should close the modal', async () => {
     SpyMockConfig.SpyConfig.controlService.closeModal = jasmine.createSpy().and.returnValue(null);
-    component.closeModal();
+    await component.closeModal();
     expect(SpyMockConfig.SpyConfig.controlService.closeModal).toHaveBeenCalled();
   });
 });
