@@ -90,8 +90,7 @@ export class ExportService {
 
     exportJsonWeb(json: any, exportFileName: string) {
         const blob = new Blob([JSON.stringify(json, null, 2)], {type: 'application/json'});
-        // window.open(window.URL.createObjectURL(blob)); // OPEN IN A NEW TAB
-    
+
         let dwldLink = document.createElement("a");
         let url = URL.createObjectURL(blob);
         let isSafariBrowser = navigator.userAgent.indexOf('Safari') !=

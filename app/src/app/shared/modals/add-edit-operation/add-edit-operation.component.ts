@@ -75,7 +75,7 @@ export class AddEditOperationComponent implements OnInit {
     });
 
     this.operation = Object.assign({}, this.modalInputModel.data);
-    if (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE) {
+    if (this.isCreationOperatation(this.modalInputModel.type)) {
       this.operation.id = -1;
       this.operation.date = this.calendarService.getDateStringToDB(new Date());
     }
@@ -162,10 +162,10 @@ export class AddEditOperationComponent implements OnInit {
     this.operation.price = (this.operation.price.toString().includes(',') ?
       Number(this.operation.price.toString().replace(',', '.')) : this.operation.price);
     this.operationService.saveOperation(this.operation,
-      (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+      (this.isCreationOperatation(this.modalInputModel.type) ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
       this.closeModal();
       this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.SUCCESS,
-        (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation'),
+        (this.isCreationOperatation(this.modalInputModel.type) ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation'),
           { operation: this.operation.description });
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation', e);
@@ -264,6 +264,10 @@ export class AddEditOperationComponent implements OnInit {
 
   isValidDate(f: any): boolean {
     return f.opDate !== undefined && f.opDate.validity.valid;
+  }
+
+  isCreationOperatation(type: ModalTypeEnum): boolean {
+    return (type === ModalTypeEnum.CREATE || type === ModalTypeEnum.DUPLICATE);
   }
 
   isOperationTypeWithReplacement(): boolean {

@@ -1,4 +1,4 @@
-import { DashboardModel } from "@models/index";
+import { DashboardInputModal, DashboardModel } from "@models/index";
 import { LegendPosition } from "@swimlane/ngx-charts";
 
 describe('DashboardModels', () => {
@@ -61,5 +61,12 @@ describe('DashboardModels', () => {
         expect(base.showDataLabel).toEqual(true);
         expect(base.barPadding).toEqual(7);
         expect(base.groupPadding).toEqual(9);
+    });
+
+    it('should initialize dashboard input modal', () => {
+        const input: DashboardInputModal = new DashboardInputModal();
+        expect(input.operations.length).toEqual(0);
+        expect(input.vehicles.length).toEqual(0);
+        expect(input.vehicleSelected).toEqual(undefined);
     });
 });

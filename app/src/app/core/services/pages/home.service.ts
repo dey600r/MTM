@@ -196,6 +196,34 @@ export class HomeService {
         }
     }
 
+    initReplacement({rep, calKms, calMonths, percentKm, warningKms, warningMonths, percentMonth}) {
+        return {
+            idMaintenanceElement: rep.id,
+            nameMaintenanceElement: rep.name,
+            iconMaintenanceElement: rep.icon,
+            idOperation: -1,
+            descriptionOperation: '',
+            kmOperation: null,
+            dateOperation: null,
+            priceOperation: 0,
+            kmAcumulateMaintenance: 0,
+            timeAcumulateMaintenance: 0,
+            calculateKms: calKms,
+            calculateMonths: calMonths,
+            percentKms: percentKm,
+            warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
+            warningKms: warningKms,
+            warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
+            warningKmsIcon: this.iconService.getIconKms(warningKms),
+            warningKmsIconClass: this.iconService.getClassIcon(warningKms),
+            percentMonths: percentMonth,
+            warningMonths: warningMonths,
+            warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
+            warningMonthsIcon: this.iconService.getIconKms(warningMonths),
+            warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
+        };
+    }
+
     calculateInitReplacement(vehicle: VehicleModel, operations: OperationModel[],
                              main: MaintenanceModel): WearReplacementProgressBarViewModel[] {
         let result: WearReplacementProgressBarViewModel[] = [];
@@ -209,31 +237,7 @@ export class HomeService {
                 const percentMonth: number = this.calculatePercent(main.time, calMonths);
                 const warningKms: WarningWearEnum = this.getWarningMaintenance(percentKm, calKms < (main.km * -1));
                 const warningMonths: WarningWearEnum = this.getWarningMaintenance(percentMonth, calMonths < (main.time * -1));
-                result = [... result, {
-                    idMaintenanceElement: rep.id,
-                    nameMaintenanceElement: rep.name,
-                    iconMaintenanceElement: rep.icon,
-                    idOperation: -1,
-                    descriptionOperation: '',
-                    kmOperation: null,
-                    dateOperation: null,
-                    priceOperation: 0,
-                    kmAcumulateMaintenance: 0,
-                    timeAcumulateMaintenance: 0,
-                    calculateKms: calKms,
-                    calculateMonths: calMonths,
-                    percentKms: percentKm,
-                    warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
-                    warningKms: warningKms,
-                    warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
-                    warningKmsIcon: this.iconService.getIconKms(warningKms),
-                    warningKmsIconClass: this.iconService.getClassIcon(warningKms),
-                    percentMonths: percentMonth,
-                    warningMonths: warningMonths,
-                    warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
-                    warningMonthsIcon: this.iconService.getIconKms(warningMonths),
-                    warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
-                }];
+                result = [... result, this.initReplacement({rep, calKms, calMonths, percentKm, warningKms, warningMonths, percentMonth})];
             }
         });
         return result;
@@ -253,31 +257,7 @@ export class HomeService {
                 const percentMonth: number = this.calculatePercent(main.time, calMonths);
                 const warningKms: WarningWearEnum = this.getWarningWearNormal(main.wear, percentKm, calKms, null, main.km);
                 const warningMonths: WarningWearEnum = this.getWarningWearNormal(main.wear, percentMonth, calMonths, null, main.time);
-                result = [... result, {
-                    idMaintenanceElement: rep.id,
-                    nameMaintenanceElement: rep.name,
-                    iconMaintenanceElement: rep.icon,
-                    idOperation: -1,
-                    descriptionOperation: '',
-                    kmOperation: null,
-                    dateOperation: null,
-                    priceOperation: 0,
-                    kmAcumulateMaintenance: 0,
-                    timeAcumulateMaintenance: 0,
-                    calculateKms: calKms,
-                    calculateMonths: calMonths,
-                    percentKms: percentKm,
-                    warningIconClass: this.iconService.getClassIcon(this.calculateWearNotificationPriority(warningKms, warningMonths)),
-                    warningKms: warningKms,
-                    warningKmsProgressBarIcon: this.iconService.getClassProgressbar(warningKms),
-                    warningKmsIcon: this.iconService.getIconKms(warningKms),
-                    warningKmsIconClass: this.iconService.getClassIcon(warningKms),
-                    percentMonths: percentMonth,
-                    warningMonths: warningMonths,
-                    warningMonthsProgressBarIcon: this.iconService.getClassProgressbar(warningMonths),
-                    warningMonthsIcon: this.iconService.getIconKms(warningMonths),
-                    warningMonthsIconClass: this.iconService.getClassIcon(warningMonths)
-                }];
+                result = [... result, this.initReplacement({rep, calKms, calMonths, percentKm, warningKms, warningMonths, percentMonth})];
             }
         });
         return result;

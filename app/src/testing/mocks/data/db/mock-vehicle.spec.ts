@@ -7,14 +7,14 @@ import { MockDBConfiguration } from './mock-configuration.spec';
 export class MockDBVehicle {
 
     /* VEHICLE TYPE */
-    public static VehicleTypes: IVehicleTypeStorageModel[] = [
+    public static readonly VehicleTypes: IVehicleTypeStorageModel[] = [
         { code: Constants.VEHICLE_TYPE_CODE_MOTO, description: 'MOTORBIKE', id: 1 },
         { code: Constants.VEHICLE_TYPE_CODE_CAR, description: 'CAR', id: 2 },
         { code: 'O', description: 'OTHER', id: 3 },
     ];
 
     /* VEHICLES */
-    public static Vehicles: IVehicleStorageModel[] = [
+    public static readonly Vehicles: IVehicleStorageModel[] = [
         {
             model: 'R6',
             brand: 'Yamaha',

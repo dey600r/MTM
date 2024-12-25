@@ -1,6 +1,6 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SetupTest } from '@testing/index';
+import { SetupTest, SpyMockConfig } from '@testing/index';
 
 import { HeaderModalComponent } from './header-modal.component';
 
@@ -18,5 +18,11 @@ describe('HeaderModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should close the modal', () => {
+    SpyMockConfig.SpyConfig.controlService.closeModal = jasmine.createSpy().and.returnValue(null);
+    component.closeModal();
+    expect(SpyMockConfig.SpyConfig.controlService.closeModal).toHaveBeenCalled();
   });
 });

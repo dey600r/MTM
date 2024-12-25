@@ -8,11 +8,11 @@ import { Constants } from '@utils/index';
 import { MockAppMaintenance } from './mock-maintenance.spec';
 
 export class MockAppConfiguration {
-    static iconService: IconService = new IconService();
-    static calendarService: CalendarService = new CalendarService(null);
+    public static readonly iconService: IconService = new IconService();
+    public static readonly calendarService: CalendarService = new CalendarService(null);
 
     /* SYSTEM CONFIGURATION */
-    public static SystemConfigurations: SystemConfigurationModel[] = [
+    public static readonly SystemConfigurations: SystemConfigurationModel[] = [
         new SystemConfigurationModel(Constants.KEY_LAST_UPDATE_DB, 'v3.1.0', new Date(), 1),
         new SystemConfigurationModel(Constants.KEY_CONFIG_DISTANCE, Constants.SETTING_DISTANCE_KM, new Date(), 2),
         new SystemConfigurationModel(Constants.KEY_CONFIG_MONEY, Constants.SETTING_MONEY_EURO, new Date(), 3),
@@ -22,7 +22,7 @@ export class MockAppConfiguration {
     ];
 
     /* CONFIGURATION */
-    static Configurations: ConfigurationModel[] = [
+    public static readonly Configurations: ConfigurationModel[] = [
         new ConfigurationModel({
             name: 'DB.PRODUCTION', 
             nameKey: 'PRODUCTION',

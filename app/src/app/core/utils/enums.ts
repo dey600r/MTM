@@ -15,7 +15,8 @@ export enum WarningWearEnum {
     SUCCESS = 'success',
     WARNING = 'warning',
     DANGER = 'danger',
-    SKULL = 'skull'
+    SKULL = 'skull',
+    DONE = 'done'
 }
 
 export enum PageEnum {

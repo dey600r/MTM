@@ -111,6 +111,28 @@ describe('InfoCalendarService', () => {
 
         expect(allColors.some(x => x === 'day-circle-config-success')).toBeTruthy();
         expect(allColors.some(x => x === 'day-circle-config-all')).toBeTruthy();
+        expect(allColors.every(x => x !== 'day-circle-config-done')).toBeTruthy();
+    });
+
+    it('should calculate circle color advice', () => {
+        const allWears: WearVehicleProgressBarViewModel[] = homeService.getWearReplacementToVehicle(
+            MockAppData.Operations, MockAppData.Vehicles, MockAppData.Configurations, MockAppData.Maintenances);
+        const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears, MockAppData.Operations);
+        let allColors: string[] = [];
+        listInfoCalendar.forEach(v => {
+            v.listInfoCalendarMaintOp.forEach(m => {
+                m.listInfoCalendarReplacement.forEach(r => {
+                    const color: string = service.getCircleColor(listInfoCalendar, r);
+                    if (!allColors.some(x => x === color)) {
+                        allColors = [...allColors, color];
+                    }
+                });
+            });
+        });
+
+        expect(allColors.some(x => x === 'day-circle-config-success')).toBeTruthy();
+        expect(allColors.some(x => x === 'day-circle-config-all')).toBeTruthy();
+        expect(allColors.some(x => x === 'day-circle-config-done')).toBeTruthy();
     });
 
     it('should create info calendar replacement', () => {

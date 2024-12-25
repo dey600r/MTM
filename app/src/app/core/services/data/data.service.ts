@@ -33,8 +33,6 @@ export class DataService {
   private readonly maintenanceObservable = new BehaviorSubject([]);
   private readonly maintenanceElementObservable = new BehaviorSubject([]);
   private readonly systemConfigurationObservable = new BehaviorSubject([]);
-
-  constructor() {}
   
   // GETS
 
