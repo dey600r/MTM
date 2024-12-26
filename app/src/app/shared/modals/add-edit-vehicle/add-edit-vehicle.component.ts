@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum, ModalTypeEnum } from '@utils/index';
-import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel, ISettingModel, ModalHeaderInputModel } from '@models/index';
+import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel, ISettingModel, HeaderInputModel } from '@models/index';
 import {
   DataService, VehicleService, CommonService, CalendarService, ControlService, SettingsService
 } from '@services/index';
@@ -20,7 +20,7 @@ export class AddEditVehicleComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<VehicleModel> = new ModalInputModel<VehicleModel>();
-  modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
+  headerInput: HeaderInputModel = new HeaderInputModel();
   
   // MODEL FORM
   vehicle: VehicleModel = new VehicleModel();
@@ -53,7 +53,7 @@ export class AddEditVehicleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.modalHeaderInput = new ModalHeaderInputModel({
+    this.headerInput = new HeaderInputModel({
       title: (this.modalInputModel.type == ModalTypeEnum.CREATE ? 'PAGE_VEHICLE.AddNewVehicle' : 'PAGE_VEHICLE.EditVehicle')
     });
 

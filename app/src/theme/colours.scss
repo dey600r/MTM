@@ -190,7 +190,7 @@ button.days-btn.today p {
 
 .quizz-progress-success {
   ion-progress-bar {
-      --background: rgba(var(--ion-color-progressbar-success-progress));
+      --background: rgba(var(--ion-color-progressbar-success-progress), 0.4);
       --buffer-background: rgba(var(--ion-color-progressbar-success-progress), 0.4);
       --progress-background: rgba(var(--ion-color-progressbar-success-progress), 0.6);
   }
@@ -198,7 +198,7 @@ button.days-btn.today p {
 
 .quizz-progress-warning {
   ion-progress-bar {
-      --background: rgba(var(--ion-color-progressbar-warning-progress));
+      --background: rgba(var(--ion-color-progressbar-warning-progress), 0.4);
       --buffer-background: rgba(var(--ion-color-progressbar-warning-progress), 0.4);
       --progress-background: rgba(var(--ion-color-progressbar-warning-progress), 0.6);
   }
@@ -206,7 +206,7 @@ button.days-btn.today p {
 
 .quizz-progress-danger {
   ion-progress-bar {
-      --background: rgba(var(--ion-color-progressbar-danger-progress));
+      --background: rgba(var(--ion-color-progressbar-danger-progress), 0.4);
       --buffer-background: rgba(var(--ion-color-progressbar-danger-progress), 0.4);
       --progress-background: rgba(var(--ion-color-progressbar-danger-progress), 0.6);
   }

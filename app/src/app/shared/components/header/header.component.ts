@@ -5,17 +5,17 @@ import { ModalController } from '@ionic/angular';
 import { ControlService } from '@services/index';
 
 // UTILS
-import { ModalHeaderInputModel, ModalHeaderOutputModel } from '@models/index';
-import { ModalHeaderOutputEnum } from '@utils/index';
+import { HeaderInputModel, HeaderOutputModel } from '@models/index';
+import { HeaderOutputEnum } from '@utils/index';
 
 @Component({
-  selector: 'app-header-modal',
-  templateUrl: './header-modal.component.html',
+  selector: 'app-header',
+  templateUrl: './header.component.html',
 })
-export class HeaderModalComponent implements OnChanges {
+export class HeaderComponent implements OnChanges {
 
-  @Input() input: ModalHeaderInputModel = new ModalHeaderInputModel();
-  @Output() output: EventEmitter<ModalHeaderOutputModel> = new EventEmitter();
+  @Input() input: HeaderInputModel = new HeaderInputModel();
+  @Output() output: EventEmitter<HeaderOutputModel> = new EventEmitter();
 
   selectedSegment: number;
 
@@ -32,12 +32,16 @@ export class HeaderModalComponent implements OnChanges {
       }
   }
 
-  emitButtonHeader(event: any) {
-    this.output.emit(new ModalHeaderOutputModel(ModalHeaderOutputEnum.BUTTON, event));
+  emitButtonLeft(event: any) {
+    this.output.emit(new HeaderOutputModel(HeaderOutputEnum.BUTTON_LEFT, event));
+  }
+
+  emitButtonRight(event: any) {
+    this.output.emit(new HeaderOutputModel(HeaderOutputEnum.BUTTON_RIGHT, event));
   }
 
   emitSegmentHeader(event: any) {
-    this.output.emit(new ModalHeaderOutputModel(ModalHeaderOutputEnum.SEGMENT, event));
+    this.output.emit(new HeaderOutputModel(HeaderOutputEnum.SEGMENT, event));
   }
 
   activeSegmentScroll(): boolean {

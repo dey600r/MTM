@@ -12,18 +12,18 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 // COMPONENTS
 import { AppInfoComponent } from '@components/info/app-info.component';
 import { HeaderSkeletonComponent } from '@components/header-skeleton/header-skeleton.component';
-import { HeaderModalComponent } from '@components/header-modal/header-modal.component';
+import { HeaderComponent } from '@src/app/shared/components/header/header.component';
 
 @NgModule({ 
     declarations: [
         AppInfoComponent,
         HeaderSkeletonComponent,
-        HeaderModalComponent
+        HeaderComponent
     ],
     exports: [
         AppInfoComponent,
         HeaderSkeletonComponent,
-        HeaderModalComponent
+        HeaderComponent
     ], imports: [
         IonicModule,
         CommonModule,

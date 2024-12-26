@@ -1,4 +1,4 @@
-import { ModalHeaderOutputEnum, ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from '@utils/index';
+import { ModalOutputEnum, ModalTypeEnum, PageEnum, HeaderOutputEnum, WarningWearEnum } from '@utils/index';
 
 export class BaseModel {
     id: number;
@@ -103,34 +103,40 @@ export class BaseMaintenanceModel extends BaseDescriptionModel {
     }
 }
 
-export class ModalHeaderSegmentInputModel {
+export class HeaderSegmentInputModel {
     id: number;
     name: string;
     icon: string;
     selected: boolean;
-    constructor(id: number, name: string, icon: string, selected: boolean) {
-        this.id = id;
-        this.name = name;
-        this.icon = icon;
-        this.selected = selected;
+    progressColor: string;
+    progressValue: number;
+    constructor(data: Partial<HeaderSegmentInputModel> = {}) {
+        this.id = (data.id ?? 1);
+        this.name = (data.name ?? '');
+        this.icon = (data.icon ?? '');
+        this.selected = (data.selected ?? true);
+        this.progressColor = (data.progressColor ?? '');
+        this.progressValue = (data.progressValue ?? 0);
     }
 }
 
-export class ModalHeaderInputModel {
+export class HeaderInputModel {
     title: string;
-    iconButton: string;
-    dataSegment: ModalHeaderSegmentInputModel[];
-    constructor(data: Partial<ModalHeaderInputModel> = {}) {
+    iconButtonLeft: string;
+    iconButtonRight: string;
+    dataSegment: HeaderSegmentInputModel[];
+    constructor(data: Partial<HeaderInputModel> = {}) {
         this.title = (data.title ?? '');
-        this.iconButton = (data.iconButton ?? '');
+        this.iconButtonLeft = (data.iconButtonLeft ?? '');
+        this.iconButtonRight = (data.iconButtonRight ?? '');
         this.dataSegment = (data.dataSegment ?? []);
     }
 }
 
-export class ModalHeaderOutputModel {
-    type: ModalHeaderOutputEnum;
+export class HeaderOutputModel {
+    type: HeaderOutputEnum;
     data: any;
-    constructor(t: ModalHeaderOutputEnum, event: any = null) {
+    constructor(t: HeaderOutputEnum, event: any = null) {
         this.type = t;
         this.data = event;
     }

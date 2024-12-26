@@ -5,9 +5,12 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
+import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum } from '@utils/index';
 import { DataService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
-import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel, DashboardInputModal } from '@models/index';
+import { 
+  VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel, 
+  DashboardInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel
+} from '@models/index';
 
 // COMPONENTS
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
@@ -24,6 +27,7 @@ export class VehiclePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
+  headerInput: HeaderInputModel = new HeaderInputModel();
   dataReturned: ModalOutputModel;
 
   // DATA
@@ -33,7 +37,6 @@ export class VehiclePage extends BasePage implements OnInit {
   loadedHeader = false;
   loadedBody = false;
   measure: ISettingModel;
-  iconNameHeaderLeft = '';
 
   constructor(public platform: Platform,
               private readonly dataService: DataService,
@@ -82,7 +85,7 @@ export class VehiclePage extends BasePage implements OnInit {
         this.dashboardService.setSearchOperation();
       }
       this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
-      this.loadIconDashboard();
+      this.loadHeader(this.iconService.loadIconDashboard<VehicleModel>(this.vehicles));
       this.showSkeletonBodyNotInit(500);
       this.detector.detectChanges();
     });
@@ -185,8 +188,31 @@ export class VehiclePage extends BasePage implements OnInit {
     if (itemSliding) { itemSliding.close(); }
   }
 
-  loadIconDashboard(): void {
-    this.iconNameHeaderLeft = this.iconService.loadIconDashboard<VehicleModel>(this.vehicles);
+  /* HEADER */
+
+  loadHeader(iconLeft: string): void {
+    this.headerInput = new HeaderInputModel({
+      title: 'COMMON.GARAGE',
+      iconButtonLeft: iconLeft,
+      iconButtonRight: 'analytics',
+      dataSegment: [new HeaderSegmentInputModel({
+        id: 1,
+        name: 'PAGE_VEHICLE.YOURS_VEHICLES',
+        icon: 'home',
+        selected: true
+      })]
+    });
+  }
+
+  eventEmitHeader(output: HeaderOutputModel) {
+    switch(output.type) {
+      case HeaderOutputEnum.BUTTON_LEFT:
+        this.openDashboardVehicle();
+        break;
+      case HeaderOutputEnum.BUTTON_RIGHT:
+        this.openInfoVehicle();
+        break;
+    }
   }
 
   /* SKELETON */

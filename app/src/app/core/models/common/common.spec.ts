@@ -1,8 +1,8 @@
 import {
     BaseCodeDescriptionModel, BaseDescriptionModel, BaseIconCodeDescriptionModel, BaseIconNameDescriptionModel, BaseMaintenanceModel,
-    BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, ModalHeaderInputModel, ModalHeaderOutputModel, ModalHeaderSegmentInputModel, ModalInputModel, ModalOutputModel
+    BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel, ModalInputModel, ModalOutputModel
 } from "@models/index";
-import { ModalHeaderOutputEnum, ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from "@utils/index";
+import { HeaderOutputEnum, ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from "@utils/index";
 
 describe('CommonModel', () => {
 
@@ -147,38 +147,45 @@ describe('CommonModel', () => {
         expect(base.wear).toEqual(true);
     });
 
-    it('should initialize modalheaderinput model', () => {
-        let input: ModalHeaderInputModel = new ModalHeaderInputModel();
+    it('should initialize headerInput model', () => {
+        let input: HeaderInputModel = new HeaderInputModel();
         expect(input.title).toEqual('');
-        expect(input.iconButton).toEqual('');
+        expect(input.iconButtonLeft).toEqual('');
+        expect(input.iconButtonRight).toEqual('');
         expect(input.dataSegment.length).toEqual(0);
-        input = new ModalHeaderInputModel({
+        input = new HeaderInputModel({
             title: 'david',
-            iconButton: 'home', 
+            iconButtonLeft: 'home', 
+            iconButtonRight: 'cog',
             dataSegment: [
-                new ModalHeaderSegmentInputModel(1, 'first', 'seg', true),
-                new ModalHeaderSegmentInputModel(2, 'second', 'icon', false),
+                new HeaderSegmentInputModel({ id: 1, name: 'first', icon: 'seg', selected: true, progressColor: 'class', progressValue: 10 }),
+                new HeaderSegmentInputModel({ id: 2, name: 'second', icon: 'icon', selected: false, progressColor: 'class', progressValue: 20 }),
             ]
         });
         expect(input.title).toEqual('david');
-        expect(input.iconButton).toEqual('home');
+        expect(input.iconButtonLeft).toEqual('home');
+        expect(input.iconButtonRight).toEqual('cog');
         expect(input.dataSegment.length).toEqual(2);
         expect(input.dataSegment[0].id).toEqual(1);
         expect(input.dataSegment[0].name).toEqual('first');
         expect(input.dataSegment[0].icon).toEqual('seg');
         expect(input.dataSegment[0].selected).toBeTrue();
+        expect(input.dataSegment[0].progressColor).toEqual('class');
+        expect(input.dataSegment[0].progressValue).toEqual(10);
         expect(input.dataSegment[1].id).toEqual(2);
         expect(input.dataSegment[1].name).toEqual('second');
         expect(input.dataSegment[1].icon).toEqual('icon');
         expect(input.dataSegment[1].selected).toBeFalse();
+        expect(input.dataSegment[1].progressColor).toEqual('class');
+        expect(input.dataSegment[1].progressValue).toEqual(20);
     });
 
     it('should initialize modalheaderoutput model', () => {
-        let output: ModalHeaderOutputModel = new ModalHeaderOutputModel(ModalHeaderOutputEnum.BUTTON);
-        expect(output.type).toEqual(ModalHeaderOutputEnum.BUTTON);
+        let output: HeaderOutputModel = new HeaderOutputModel(HeaderOutputEnum.BUTTON_LEFT);
+        expect(output.type).toEqual(HeaderOutputEnum.BUTTON_LEFT);
         expect(output.data).toEqual(null);
-        output = new ModalHeaderOutputModel(ModalHeaderOutputEnum.SEGMENT, 1);
-        expect(output.type).toEqual(ModalHeaderOutputEnum.SEGMENT);
+        output = new HeaderOutputModel(HeaderOutputEnum.SEGMENT, 1);
+        expect(output.type).toEqual(HeaderOutputEnum.SEGMENT);
         expect(output.data).toEqual(1);
     });
 });

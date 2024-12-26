@@ -13,13 +13,14 @@ import {
 // MODELS
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
-  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel, ISettingModel, IInfoModel
+  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel, ISettingModel, IInfoModel,
+  HeaderInputModel, HeaderSegmentInputModel, HeaderOutputModel
 } from '@models/index';
 
 // UTILS
 import { 
   ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, InfoButtonEnum, 
-  ModalTypeEnum
+  ModalTypeEnum, HeaderOutputEnum
 } from '@utils/index';
 
 // COMPONENTS
@@ -41,6 +42,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   inputConfiguration: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   inputMaintenance: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   inputMaintenanceElement: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  headerInput: HeaderInputModel = new HeaderInputModel();
   dataReturned: ModalOutputModel;
 
   // DATA
@@ -54,9 +56,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   maintenanceElements: MaintenanceElementModel[] = [];
   maxKm = 0;
   measure: ISettingModel;
-  segmentHeader: any[] = [];
   segmentSelected = 1;
-  iconFilter = 'filter';
 
   initLoaded = true;
   loadedHeader = false;
@@ -95,17 +95,12 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   initInfoData() {
     this.segmentSelected = 1;
-    this.segmentHeader = [
-      { id: 1, title: 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS', icon: 'cog'},
-      { id: 2, title: 'PAGE_CONFIGURATION.MAINTENANCES', icon: 'build'},
-      { id: 3, title: 'PAGE_CONFIGURATION.REPLACEMENTS', icon: 'repeat'}
-    ];
 
     this.inputConfiguration = new ModalInputModel<IInfoModel>({
       parentPage: PageEnum.CONFIGURATION,
       data: {
         text: 'ALERT.ConfigurationEmpty',
-        icon: this.segmentHeader[0].icon,
+        icon: 'cog',
         info: InfoButtonEnum.NONE
       }
     });
@@ -113,7 +108,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
         parentPage: PageEnum.CONFIGURATION,
         data: {
           text: 'ALERT.MaintenanceEmpty',
-          icon: this.segmentHeader[1].icon,
+          icon: 'build',
           info: InfoButtonEnum.NONE
         }
       });
@@ -121,7 +116,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
         parentPage: PageEnum.CONFIGURATION,
         data: {
           text: 'ALERT.MaintenanceElementEmpty',
-          icon: this.segmentHeader[2].icon,
+          icon: 'repeat',
           info: InfoButtonEnum.NONE
         }
       });
@@ -282,11 +277,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       (filteredVehicles.length === 0 || this.maintenances.some(y => y.listMaintenanceElement.some(z => x.id === z.id))) &&
       (x.name.toLowerCase().includes(filteredText) || x.description.toLowerCase().includes(filteredText))));
 
-    this.loadIconSearch();
-  }
-
-  loadIconSearch() {
-    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.CONFIGURATION));
+    this.loadHeader();
   }
 
   /** CONFIGURATION */
@@ -532,6 +523,31 @@ export class ConfigurationPage extends BasePage implements OnInit {
     return !replacement.master && this.maintenances.some(x => x.listMaintenanceElement.some(y => y.id === replacement.id));
   }
 
+  /* HEADER */
+
+  loadHeader(): void {
+    this.headerInput = new HeaderInputModel({
+      title: 'COMMON.CONFIGURATIONS',
+      iconButtonRight: this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.CONFIGURATION)),
+      dataSegment: [
+        new HeaderSegmentInputModel({id: 1, name: 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS', icon: this.inputConfiguration.data.icon, selected: true }),
+        new HeaderSegmentInputModel({id: 2, name: 'PAGE_CONFIGURATION.MAINTENANCES', icon: this.inputMaintenance.data.icon, selected: false }),
+        new HeaderSegmentInputModel({id: 3, name: 'PAGE_CONFIGURATION.REPLACEMENTS', icon: this.inputMaintenanceElement.data.icon, selected: true }),
+      ]
+    });
+  }
+
+  eventEmitHeader(output: HeaderOutputModel) {
+    switch(output.type) {
+      case HeaderOutputEnum.BUTTON_RIGHT:
+        this.showPopover(output.data);
+        break;
+      case HeaderOutputEnum.SEGMENT:
+        this.segmentChanged(output.data);
+        break;
+    }
+  }
+    
   /* SKELETON */
 
   showSkeleton() {

@@ -9,7 +9,7 @@ import { ActionDBEnum, Constants, ModalTypeEnum, PageEnum, ToastTypeEnum } from 
 import {
   ModalInputModel, MaintenanceModel, ISettingModel,
   MaintenanceFreqModel, MaintenanceElementModel,
-  ModalHeaderInputModel
+  HeaderInputModel
 } from '@models/index';
 import { DataService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
@@ -22,7 +22,7 @@ export class AddEditMaintenanceComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<MaintenanceModel, number> = new ModalInputModel<MaintenanceModel, number>();
-  modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // MODEL FORM
   maintenance: MaintenanceModel = new MaintenanceModel();
@@ -58,7 +58,7 @@ export class AddEditMaintenanceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.modalHeaderInput = new ModalHeaderInputModel({
+    this.headerInput = new HeaderInputModel({
       title: (this.modalInputModel.type == ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddNewMaintenance' : 'PAGE_CONFIGURATION.EditMaintenance')
     });
 

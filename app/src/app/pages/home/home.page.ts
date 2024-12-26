@@ -14,9 +14,9 @@ import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel,
-  CalendarInputModal
+  CalendarInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
+import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum } from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -36,6 +36,7 @@ export class HomePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA
   searchDashboard: SearchDashboardModel = new SearchDashboardModel();
@@ -160,6 +161,7 @@ export class HomePage extends BasePage implements OnInit {
     }
     this.vehicleSelected = (this.vehicleSelected.idVehicle === -1 ?
       this.wears[0] : this.wears.find(x => x.idVehicle === this.vehicleSelected.idVehicle));
+    this.loadHeader(this.allWears, this.vehicleSelected.idVehicle);
     this.activateInfo = this.activateModeInfo(vehiclesActives, this.wears);
     this.initShowInfoMaintenance();
     this.timeOutLoader();
@@ -239,6 +241,44 @@ export class HomePage extends BasePage implements OnInit {
 
   activeSegmentScroll(): boolean {
     return this.controlService.activeSegmentScroll(this.wears.length);
+  }
+
+  /* HEADER */
+  
+  loadHeaderIconLeft(iconLeft: string) {
+    if(this.headerInput.iconButtonLeft !== iconLeft) {
+      this.headerInput.iconButtonLeft = iconLeft;
+    }
+  }
+
+  loadHeader(wears: WearVehicleProgressBarViewModel[], idVehicleSelected: number): void {
+    this.headerInput = new HeaderInputModel({
+      title: 'PAGE_HOME.HOME',
+      iconButtonLeft: 'calendar',
+      iconButtonRight: 'settings',
+      dataSegment: wears.map(x => new HeaderSegmentInputModel({
+        id: x.idVehicle,
+        name: x.nameVehicle,
+        icon: x.iconVehicle,
+        selected: (x.idVehicle === idVehicleSelected),
+        progressColor: x.warningProgressBarIcon,
+        progressValue: x.percent
+      }))
+    });
+  }
+
+  eventEmitHeader(output: HeaderOutputModel) {
+    switch(output.type) {
+      case HeaderOutputEnum.BUTTON_LEFT:
+        this.openInfoCalendar();
+        break;
+      case HeaderOutputEnum.BUTTON_RIGHT:
+        this.openSettings();
+        break;
+      case HeaderOutputEnum.SEGMENT:
+        this.segmentChanged(output.data);
+        break;
+    }
   }
 
   /* SKELETON */

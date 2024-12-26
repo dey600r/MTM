@@ -84,7 +84,8 @@ export enum CalendarTypeEnum {
     MAINTENANCE = 1
 }
 
-export enum ModalHeaderOutputEnum {
-    BUTTON = 0,
-    SEGMENT = 1
+export enum HeaderOutputEnum {
+    BUTTON_LEFT = 0,
+    BUTTON_RIGHT = 1,
+    SEGMENT = 2
 }

@@ -16,9 +16,9 @@ import {
   DashboardModel, InfoVehicleHistoricModel,
   InfoVehicleConfigurationModel, InfoVehicleHistoricReplacementModel, MaintenanceElementModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel,
-  ModalHeaderInputModel,
-  ModalHeaderSegmentInputModel,
-  ModalHeaderOutputModel
+  HeaderInputModel,
+  HeaderSegmentInputModel,
+  HeaderOutputModel
 } from '@models/index';
 
 // UTILS
@@ -34,7 +34,7 @@ export class InfoVehicleComponent implements OnInit {
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
   input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
-  modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA
   vehicles: VehicleModel[] = [];
@@ -133,14 +133,14 @@ export class InfoVehicleComponent implements OnInit {
 
     if (this.vehicles && this.vehicles.length > 0) {
       this.vehicleSelected = this.vehicles[0];
-      this.modalHeaderInput = new ModalHeaderInputModel({
+      this.headerInput = new HeaderInputModel({
         title: 'COMMON.SUMMARY_VEHICLES',
-        dataSegment: this.vehicles.map(x => new ModalHeaderSegmentInputModel(
-          x.id,
-          x.$getName,
-          x.vehicleType.icon,
-          (x.id == this.vehicleSelected.id)
-        ))
+        dataSegment: this.vehicles.map(x => new HeaderSegmentInputModel({
+          id: x.id,
+          name: x.$getName,
+          icon: x.vehicleType.icon,
+          selected: (x.id == this.vehicleSelected.id)
+        }))
       });
 
       // INFO CONFIGURATION VEHICLE
@@ -257,7 +257,7 @@ export class InfoVehicleComponent implements OnInit {
 
   // SEGMENT
 
-  eventEmitHeader(output: ModalHeaderOutputModel) {
+  eventEmitHeader(output: HeaderOutputModel) {
     this.segmentChanged(output.data);
   }
 

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // MODELS
-import { ModalInputModel, ModalOutputModel, ListModalModel, ModalHeaderInputModel } from '@models/index';
+import { ModalInputModel, ModalOutputModel, ListModalModel, HeaderInputModel } from '@models/index';
 
 // SERVICES
 import { ControlService } from '@services/index';
@@ -19,7 +19,7 @@ export class ListDataToUpdateComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<ListModalModel> = new ModalInputModel<ListModalModel>();
-  modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   constructor(private readonly controlService: ControlService,
               private readonly modalController: ModalController) {
@@ -27,7 +27,7 @@ export class ListDataToUpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.modalHeaderInput = new ModalHeaderInputModel({
+    this.headerInput = new HeaderInputModel({
       title: this.modalInputModel.data.titleHeader
     });
   }

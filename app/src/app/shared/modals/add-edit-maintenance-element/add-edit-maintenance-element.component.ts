@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 
 // UTILS
 import { ActionDBEnum, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
-import { ModalInputModel, MaintenanceElementModel, ModalHeaderInputModel } from '@models/index';
+import { ModalInputModel, MaintenanceElementModel, HeaderInputModel } from '@models/index';
 import { ConfigurationService, ControlService } from '@services/index';
 
 @Component({
@@ -15,7 +15,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<MaintenanceElementModel> = new ModalInputModel<MaintenanceElementModel>();
-  modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
+  headerInput: HeaderInputModel = new HeaderInputModel();
   
   // MODEL FORM
   maintenanceElement: MaintenanceElementModel = new MaintenanceElementModel();
@@ -29,7 +29,7 @@ export class AddEditMaintenanceElementComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.modalHeaderInput = new ModalHeaderInputModel({
+    this.headerInput = new HeaderInputModel({
       title: (this.modalInputModel.type == ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddNewReplacement': 'PAGE_CONFIGURATION.EditReplacement')
     });
 

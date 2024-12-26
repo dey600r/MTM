@@ -1,32 +1,4 @@
-<ion-header *ngIf="loadedHeader">
-  <ion-toolbar>
-    <!-- Button Calendar -->
-    <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openInfoCalendar()">
-      <ion-icon color="primary" size="large" name="calendar"></ion-icon>
-    </ion-button>
-    <!-- Tittle -->
-    <ion-title>
-      <ion-title color="text-header" class="align-center">{{ 'PAGE_HOME.HOME' | translate }}</ion-title>
-    </ion-title>
-    <!-- Button filter -->
-    <ion-button slot="end" fill="clear" (click)="openSettings()" class="btn-width-header">
-      <ion-icon color="primary" size="large" name="settings"></ion-icon>
-    </ion-button>
-  </ion-toolbar>
-  <!-- SEGMENT -->
-  <ion-segment *ngIf="(!activateInfo || !hideFabButton) && vehicleSelected" class="segment-button-fixed" 
-    [value]="this.vehicleSelected.idVehicle" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
-    <ion-segment-button *ngFor="let m of wears; let i = index;" [value]="m.idVehicle" layout="icon-start">
-      <ion-label>
-        {{ m.nameVehicle }}
-        <div [class]="'progress-bar' + m.warningProgressBarIcon">
-          <ion-progress-bar [value]="m.percent"></ion-progress-bar>
-        </div>
-      </ion-label>
-      <ion-icon size="small" [name]="m.iconVehicle"></ion-icon>
-    </ion-segment-button>
-  </ion-segment>
-</ion-header>
+<app-header *ngIf="loadedHeader" [input]="headerInput" (output)="eventEmitHeader($event)"></app-header>
 
 <ion-content *ngIf="loadedBody">
   <!-- INFO -->

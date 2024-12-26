@@ -9,10 +9,10 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 import { DashboardService, ControlService, IconService } from '@services/index';
 
 // MODELS
-import { IDashboardModel, IInfoModel, DashboardModel, OperationModel, ModalInputModel, ModalHeaderInputModel, ModalHeaderOutputModel, ModalHeaderSegmentInputModel, DashboardInputModal } from '@models/index';
+import { IDashboardModel, IInfoModel, DashboardModel, OperationModel, ModalInputModel, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel, DashboardInputModal } from '@models/index';
 
 // UTILS
-import { InfoButtonEnum, ModalHeaderOutputEnum, PageEnum } from '@utils/index';
+import { InfoButtonEnum, HeaderOutputEnum, PageEnum } from '@utils/index';
 
 // COMPONENTS
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // MODAL MODELS
     @Input() modalInputModel: ModalInputModel<DashboardInputModal> = new ModalInputModel<DashboardInputModal>();
     input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
-    modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
+    headerInput: HeaderInputModel = new HeaderInputModel();
 
     // MODEL FORM
     dashboardOpTypeExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
@@ -124,12 +124,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return (page === PageEnum.VEHICLE ? PageEnum.MODAL_DASHBOARD_VEHICLE : PageEnum.MODAL_DASHBOARD_OPERATION);
   }
 
-  eventEmitHeader(output: ModalHeaderOutputModel) {
+  eventEmitHeader(output: HeaderOutputModel) {
     switch(output.type) {
-      case ModalHeaderOutputEnum.BUTTON:
+      case HeaderOutputEnum.BUTTON_LEFT:
         this.showPopover(output.data);
         break
-      case ModalHeaderOutputEnum.SEGMENT:
+      case HeaderOutputEnum.SEGMENT:
         this.refreshChart(Number(output.data.detail.value));
         break;
     }
@@ -149,19 +149,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadHeader() {
-    let listVehicles: ModalHeaderSegmentInputModel[] = [];
+    let listVehicles: HeaderSegmentInputModel[] = [];
     if(this.isParentPageOperation()) {
       this.modalInputModel.data.vehicles.forEach(x => {
         if(!listVehicles.some(y => y.id === x.id)) {
-          listVehicles = [...listVehicles, new ModalHeaderSegmentInputModel(
-            x.id, x.$getName, x.vehicleType.icon, x.id === this.modalInputModel.data.vehicleSelected
-          )];
+          listVehicles = [...listVehicles, new HeaderSegmentInputModel({
+            id: x.id, name: x.$getName, icon: x.vehicleType.icon, selected: (x.id === this.modalInputModel.data.vehicleSelected)
+          })];
         }
       });
     }
-    this.modalHeaderInput = new ModalHeaderInputModel({
+    this.headerInput = new HeaderInputModel({
       title: 'COMMON.CHARTS',
-      iconButton: this.iconFilter,
+      iconButtonLeft: this.iconFilter,
       dataSegment: listVehicles
     });
   }

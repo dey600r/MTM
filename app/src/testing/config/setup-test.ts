@@ -22,7 +22,7 @@ import { routes } from '@src/app/app-routing.module';
 import { AppComponent } from '@app/app.component';
 import { HeaderSkeletonComponent } from '@components/header-skeleton/header-skeleton.component';
 import { AppInfoComponent } from '@components/info/app-info.component';
-import { HeaderModalComponent } from '@components/header-modal/header-modal.component';
+import { HeaderComponent } from '@components/header/header.component';
 import { ConfigurationPage } from '@pages/configuration/configuration.page';
 import { HomePage } from '@pages/home/home.page';
 import { OperationPage } from '@pages/operation/operation.page';
@@ -63,7 +63,7 @@ export class SetupTest {
       AppComponent,
       HeaderSkeletonComponent,
       AppInfoComponent,
-      HeaderModalComponent,
+      HeaderComponent,
       ConfigurationPage,
       HomePage,
       OperationPage,

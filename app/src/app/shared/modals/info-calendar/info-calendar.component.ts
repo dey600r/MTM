@@ -11,9 +11,9 @@ import {
   InfoCalendarReplacementViewModel, ISettingModel,
   ICalendarColorMode,
   InfoCalendarMaintOpViewModel,
-  ModalHeaderInputModel,
-  ModalHeaderOutputModel,
-  ModalHeaderSegmentInputModel,
+  HeaderInputModel,
+  HeaderOutputModel,
+  HeaderSegmentInputModel,
   CalendarInputModal
 } from '@models/index';
 
@@ -23,7 +23,7 @@ import {
 } from '@services/index';
 
 // UTILS
-import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, ModalHeaderOutputEnum, PageEnum, ToastTypeEnum } from '@utils/index';
+import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, HeaderOutputEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Component({
   selector: 'info-calendar',
@@ -34,7 +34,7 @@ export class InfoCalendarComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<CalendarInputModal> = new ModalInputModel<CalendarInputModal>();
-  modalHeaderInput: ModalHeaderInputModel = new ModalHeaderInputModel();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA
   listAllInfoCalendar: InfoCalendarVehicleViewModel[] = [];
@@ -84,28 +84,28 @@ export class InfoCalendarComponent implements OnInit {
   }
 
   initVehicleCalendar(input: CalendarInputModal) {
-    let listVehicles: ModalHeaderSegmentInputModel[] = [];
+    let listVehicles: HeaderSegmentInputModel[] = [];
     if(!!input.wear && input.wear.length > 0) {
       input.wear.forEach(x => {
         if(!listVehicles.some(y => y.id === x.idVehicle)) {
-          listVehicles = [...listVehicles, new ModalHeaderSegmentInputModel(
-            x.idVehicle, x.nameVehicle, x.iconVehicle, x.idVehicle === input.vehicleSelected
-          )]
+          listVehicles = [...listVehicles, new HeaderSegmentInputModel({
+            id: x.idVehicle, name: x.nameVehicle, icon: x.iconVehicle, selected: (x.idVehicle === input.vehicleSelected)
+          })];
         }
       });
     }
     if(!!input.operations && input.operations.length > 0) {
       input.operations.forEach(x => {
         if(!listVehicles.some(y => y.id === x.vehicle.id)) {
-          listVehicles = [...listVehicles, new ModalHeaderSegmentInputModel(
-            x.vehicle.id, x.vehicle.$getName, x.vehicle.vehicleType.icon, x.vehicle.id === input.vehicleSelected
-          )]
+          listVehicles = [...listVehicles, new HeaderSegmentInputModel({
+            id: x.vehicle.id, name: x.vehicle.$getName, icon: x.vehicle.vehicleType.icon, selected: (x.vehicle.id === input.vehicleSelected)
+          })];
         }
       });
     }
-    this.modalHeaderInput = new ModalHeaderInputModel({
+    this.headerInput = new HeaderInputModel({
       title: 'COMMON.CALENDAR',
-      iconButton: 'reload-circle',
+      iconButtonLeft: 'reload-circle',
       dataSegment: listVehicles
     });
   }
@@ -253,12 +253,12 @@ export class InfoCalendarComponent implements OnInit {
     }
   }
 
-  eventEmitHeader(output: ModalHeaderOutputModel) {
+  eventEmitHeader(output: HeaderOutputModel) {
     switch(output.type) {
-      case ModalHeaderOutputEnum.BUTTON:
+      case HeaderOutputEnum.BUTTON_LEFT:
         this.reload();
         break;
-      case ModalHeaderOutputEnum.SEGMENT:
+      case HeaderOutputEnum.SEGMENT:
         this.loadCalendar(Number(output.data.detail.value));
         break;
     }

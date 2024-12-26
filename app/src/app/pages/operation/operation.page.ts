@@ -11,10 +11,9 @@ import {
 } from '@services/index';
 import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel, IInfoModel, ISettingModel,
-  OperationTypeModel,
-  DashboardInputModal
+  OperationTypeModel, DashboardInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
+import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum } from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
@@ -31,6 +30,7 @@ export class OperationPage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  headerInput: HeaderInputModel = new HeaderInputModel();
   dataReturned: ModalOutputModel;
 
   // MODEL
@@ -38,15 +38,12 @@ export class OperationPage extends BasePage implements OnInit {
 
   // DATA
   operations: OperationModel[] = [];
-  operationsVehicle: OperationModel[] = [];
   allOperations: OperationModel[] = [];
   vehicles: VehicleModel[] = [];
   vehicleSelected = -1;
   initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
-  iconNameHeaderLeft = 'bar-chart';
-  iconFilter = 'filter';
   measure: ISettingModel;
   coin: ISettingModel;
 
@@ -100,27 +97,24 @@ export class OperationPage extends BasePage implements OnInit {
         this.vehicles = [];
         this.vehicleSelected = -1;
       }
+      this.loadHeader(this.getIconDashboard(this.operations), this.vehicles, this.vehicleSelected);
     });
 
     this.dataService.getOperations().subscribe(data => {
       this.filterDashboard = this.dashboardService.getSearchDashboard();
       if (!!data && data.length > 0) {
         this.allOperations = data;
-        this.loadOperationVehicles();
       } else {
         this.allOperations = [];
-        this.operationsVehicle = [];
       }
       this.dashboardService.setSearchOperation();
       this.showSkeletonBodyNotInit(500);
     });
 
     this.dashboardService.getObserverSearchOperation().subscribe(filter => {
-      this.loadOperationVehicles();
-      this.loadIconDashboard(this.operationsVehicle);
-      this.loadIconSearch();
       this.filterDashboard = filter;
-      this.operations = this.filterOperations(filter, this.operationsVehicle);
+      this.operations = this.filterOperations(filter, this.getOperationVehicles());
+      this.loadHeaderIconLeft(this.getIconDashboard(this.operations));
       this.detector.detectChanges();
     });
   }
@@ -134,7 +128,7 @@ export class OperationPage extends BasePage implements OnInit {
   /** MODALS */
   
   openDashboardOperation() {
-    if (this.operationsVehicle.length === 0) {
+    if (this.operations.length === 0) {
       this.showModalInfoOperation();
     } else {
       this.controlService.openModal(PageEnum.OPERATION, DashboardComponent, new ModalInputModel<DashboardInputModal>({
@@ -229,9 +223,8 @@ export class OperationPage extends BasePage implements OnInit {
   segmentChanged(event: any): void {
     this.showSkeletonBodyNotInit(500);
     this.vehicleSelected = Number(event.detail.value);
-    this.loadOperationVehicles();
-    this.operations = this.filterOperations(this.filterDashboard, this.operationsVehicle);
-    this.loadIconDashboard(this.operations);
+    this.operations = this.filterOperations(this.filterDashboard, this.getOperationVehicles());
+    this.loadHeaderIconLeft(this.getIconDashboard(this.operations));
   }
 
   activeSegmentScroll(): boolean {
@@ -250,18 +243,48 @@ export class OperationPage extends BasePage implements OnInit {
     return this.commonService.orderBy(dataFiltered, ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
   }
 
-  loadOperationVehicles(): void {
-    this.operationsVehicle = this.allOperations.filter(op => op.vehicle.id === this.vehicleSelected);
+  getOperationVehicles(): OperationModel[] {
+    return this.allOperations.filter(op => op.vehicle.id === this.vehicleSelected);
   }
 
-  /** ICONS */
-
-  loadIconDashboard(operations: OperationModel[]): void {
-    this.iconNameHeaderLeft = this.iconService.loadIconDashboard<OperationModel>(operations);
+  getIconDashboard(operation: OperationModel[]): string {
+    return this.iconService.loadIconDashboard<OperationModel>(operation);
   }
 
-  loadIconSearch() {
-    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.OPERATION));
+  /* HEADER */
+
+  loadHeaderIconLeft(iconLeft: string) {
+    if(this.headerInput.iconButtonLeft !== iconLeft) {
+      this.headerInput.iconButtonLeft = iconLeft;
+    }
+  }
+
+  loadHeader(iconLeft: string, vehicles: VehicleModel[], idVehicleSelected: number): void {
+    this.headerInput = new HeaderInputModel({
+      title: 'COMMON.OPERATIONS',
+      iconButtonLeft: iconLeft,
+      iconButtonRight: this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.OPERATION)),
+      dataSegment: vehicles.map(x => new HeaderSegmentInputModel({
+        id: x.id,
+        name: x.$getName,
+        icon: x.vehicleType.icon,
+        selected: (x.id === idVehicleSelected)
+      }))
+    });
+  }
+
+  eventEmitHeader(output: HeaderOutputModel) {
+    switch(output.type) {
+      case HeaderOutputEnum.BUTTON_LEFT:
+        this.openDashboardOperation();
+        break;
+      case HeaderOutputEnum.BUTTON_RIGHT:
+        this.showPopover(output.data);
+        break;
+      case HeaderOutputEnum.SEGMENT:
+        this.segmentChanged(output.data);
+        break;
+    }
   }
 
   /* SKELETON */

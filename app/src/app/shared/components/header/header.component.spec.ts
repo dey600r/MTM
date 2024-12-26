@@ -2,16 +2,16 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SetupTest, SpyMockConfig } from '@testing/index';
 
-import { HeaderModalComponent } from './header-modal.component';
+import { HeaderComponent } from './header.component';
 
-describe('HeaderModalComponent', () => {
-  let component: HeaderModalComponent;
-  let fixture: ComponentFixture<HeaderModalComponent>;
+describe('HeaderComponent', () => {
+  let component: HeaderComponent;
+  let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule(SetupTest.config).compileComponents();
 
-    fixture = TestBed.createComponent(HeaderModalComponent);
+    fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
