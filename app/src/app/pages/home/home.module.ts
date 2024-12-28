@@ -21,11 +21,13 @@ import { SharedModule } from '@modules/shared.module';
         FormsModule,
         RouterModule.forChild([{ path: '', component: HomePage }]),
         TranslateModule.forChild({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: (createTranslateLoader),
-                deps: [HttpClient]
-            }
+          defaultLanguage: 'es',
+          useDefaultLang: true,
+          loader: {
+              provide: TranslateLoader,
+              useFactory: (createTranslateLoader),
+              deps: [HttpClient]
+          }
         }),
         SharedModule], providers: [TranslateStore, provideHttpClient(withInterceptorsFromDi())] })
 export class HomePageModule {}

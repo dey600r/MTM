@@ -14,13 +14,13 @@ import {
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
   VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel, ISettingModel, IInfoModel,
-  HeaderInputModel, HeaderSegmentInputModel, HeaderOutputModel
+  HeaderInputModel, HeaderSegmentInputModel, HeaderOutputModel, SkeletonInputModel,
 } from '@models/index';
 
 // UTILS
 import { 
   ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, InfoButtonEnum, 
-  ModalTypeEnum, HeaderOutputEnum
+  ModalTypeEnum, HeaderOutputEnum, ConfigurationSkeletonSetting
 } from '@utils/index';
 
 // COMPONENTS
@@ -43,6 +43,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   inputMaintenance: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   inputMaintenanceElement: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   headerInput: HeaderInputModel = new HeaderInputModel();
+  skeletonInput: SkeletonInputModel = ConfigurationSkeletonSetting;
   dataReturned: ModalOutputModel;
 
   // DATA
@@ -58,7 +59,6 @@ export class ConfigurationPage extends BasePage implements OnInit {
   measure: ISettingModel;
   segmentSelected = 1;
 
-  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
 
@@ -85,12 +85,6 @@ export class ConfigurationPage extends BasePage implements OnInit {
   initPage() {
     this.initInfoData();
     this.initData();
-  }
-
-  ionViewDidEnter() {
-    if (this.initLoaded) {
-      this.showSkeleton();
-    }
   }
 
   initInfoData() {
@@ -146,7 +140,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allConfigurations = data; 
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
       this.dashboardService.setSearchConfiguration();
-      this.showSkeletonBodyNotInit(500);
+      this.changeLoadedBody(false);
       this.detector.detectChanges();
     });
 
@@ -154,7 +148,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allMaintenances = data;
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
       this.dashboardService.setSearchConfiguration();
-      this.showSkeletonBodyNotInit(500);
+      this.changeLoadedBody(false);
       this.detector.detectChanges();
     });
 
@@ -162,7 +156,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allMaintenanceElements = data;
       this.maintenanceElements = this.configurationService.orderMaintenanceElement(data); 
       this.dashboardService.setSearchConfiguration();
-      this.showSkeletonBodyNotInit(500);
+      this.changeLoadedBody(false);
       this.detector.detectChanges();
     });
 
@@ -174,7 +168,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   segmentChanged(event: any): void {
     this.segmentSelected = Number(event.detail.value);
-    this.showSkeletonBodyNotInit(500);
+    this.changeLoadedBody(false);
   }
 
   openModalSegmentSelected() {
@@ -550,24 +544,13 @@ export class ConfigurationPage extends BasePage implements OnInit {
     
   /* SKELETON */
 
-  showSkeleton() {
-    this.showSkeletonHeader(1200);
-    this.showSkeletonBody(1200);
+  changeLoadedHeader(load: boolean) {
+    this.loadedHeader = load;
+    this.skeletonInput.time = this.skeletonInput.time / 2;
   }
 
-  showSkeletonHeader(time: number) {
-    this.loadedHeader = false;
-    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
+  changeLoadedBody(load: boolean) {
+    this.loadedBody = load;
   }
 
-  showSkeletonBodyNotInit(time: number) {
-    this.loadedBody = false;
-    if(!this.initLoaded) {
-      this.showSkeletonBody(time);
-    }
-  }
-
-  showSkeletonBody(time: number) {
-    setTimeout(() => { this.loadedBody = true; }, time);
-  }
 }

@@ -6,8 +6,7 @@ import { ControlService } from './control.service';
 
 // CONFIGURATIONS
 import { MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
-import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
-import { environment } from '@environment/environment';
+import { PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel } from '@models/index';
 
 // LIBRARIES

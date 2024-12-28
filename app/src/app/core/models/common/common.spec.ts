@@ -1,6 +1,7 @@
 import {
     BaseCodeDescriptionModel, BaseDescriptionModel, BaseIconCodeDescriptionModel, BaseIconNameDescriptionModel, BaseMaintenanceModel,
-    BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel, ModalInputModel, ModalOutputModel
+    BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, BodySkeletonInputModel, BodySkeletonLabelsInputModel,
+    HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel, ModalInputModel, ModalOutputModel, SkeletonInputModel
 } from "@models/index";
 import { HeaderOutputEnum, ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from "@utils/index";
 
@@ -187,5 +188,59 @@ describe('CommonModel', () => {
         output = new HeaderOutputModel(HeaderOutputEnum.SEGMENT, 1);
         expect(output.type).toEqual(HeaderOutputEnum.SEGMENT);
         expect(output.data).toEqual(1);
+    });
+
+    it('should initialize skeletoninput model', () => {
+        let input = new SkeletonInputModel();
+        expect(input.time).toEqual(0);
+        expect(input.itemsHeader).toEqual([]);
+        expect(input.body.avatar).toEqual(false);
+        expect(input.body.items).toEqual([]);
+        expect(input.body.itemsLabel).toEqual([]);
+        input = new SkeletonInputModel({
+            time: 600, 
+            itemsHeader: [1, 3, 1, 3, 1, 3],
+            body: new BodySkeletonInputModel({
+                items: [1, 2, 3, 4, 5, 6], 
+                avatar: true, 
+                itemsLabel: [ new BodySkeletonLabelsInputModel({ 
+                    h3Width: 40, 
+                    h2Width: 30, 
+                    pWidth: [70, 70],
+                    divWidth: 50,
+                    divPWidth: [25, 25]
+                })] 
+            })
+        });
+        expect(input.time).toEqual(600);
+        expect(input.itemsHeader).toEqual([1, 3, 1, 3, 1, 3]);
+        expect(input.body.avatar).toEqual(true);
+        expect(input.body.items).toEqual([1, 2, 3, 4, 5, 6]);
+        expect(input.body.itemsLabel[0].h3Width).toEqual(40);
+        expect(input.body.itemsLabel[0].h2Width).toEqual(30);
+        expect(input.body.itemsLabel[0].pWidth).toEqual([70, 70]);
+        expect(input.body.itemsLabel[0].divWidth).toEqual(50);
+        expect(input.body.itemsLabel[0].divPWidth).toEqual([25, 25]);
+    });
+
+    it('should initialize bodyskeletonlabelsinput model', () => {
+        let input = new BodySkeletonLabelsInputModel();
+        expect(input.h3Width).toEqual(0);
+        expect(input.h2Width).toEqual(0);
+        expect(input.pWidth).toEqual([]);
+        expect(input.divWidth).toEqual(0);
+        expect(input.divPWidth).toEqual([]);
+        input = new BodySkeletonLabelsInputModel({ 
+            h3Width: 40, 
+            h2Width: 30, 
+            pWidth: [70, 70],
+            divWidth: 50,
+            divPWidth: [25, 25]
+        });
+        expect(input.h3Width).toEqual(40);
+        expect(input.h2Width).toEqual(30);
+        expect(input.pWidth).toEqual([70, 70]);
+        expect(input.divWidth).toEqual(50);
+        expect(input.divPWidth).toEqual([25, 25]);
     });
 });

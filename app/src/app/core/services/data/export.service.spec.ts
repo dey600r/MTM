@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
 // SERVICES
@@ -95,7 +95,6 @@ describe('ExportService', () => {
         SpyMockConfig.SpyConfig.file.createDir = jasmine.createSpy().and.returnValues(Promise.resolve(), Promise.reject(), Promise.reject());
         service.createOutputDirectory();
         tick();
-        flush();
         expect(SpyMockConfig.SpyConfig.file.checkDir).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.createDir).toHaveBeenCalled();
         SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValue(Promise.resolve());

@@ -14,9 +14,12 @@ import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel,
-  CalendarInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel
+  CalendarInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel,
+  SkeletonInputModel,
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum } from '@utils/index';
+import { 
+  PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, HomeSkeletonSetting
+} from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -36,6 +39,7 @@ export class HomePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
+  skeletonInput: SkeletonInputModel = HomeSkeletonSetting;
   headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA
@@ -46,7 +50,6 @@ export class HomePage extends BasePage implements OnInit {
   vehicleSelected: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
   operations: OperationModel[] = [];
   maintenances: MaintenanceModel[] = [];
-  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
   hideOpButton = false;
@@ -74,6 +77,7 @@ export class HomePage extends BasePage implements OnInit {
               private readonly detector: ChangeDetectorRef) {
     super(platform, translator);
     this.searchDashboard = this.dashboardService.getSearchDashboard();
+    this.loadHeader();
   }
 
   ngOnInit() {
@@ -127,12 +131,10 @@ export class HomePage extends BasePage implements OnInit {
           this.calculateDashboard(vehiclesActives, operations, configurations, maintenances);
         });
       } else {
-        this.timeOutLoader();
         this.activateInfo = this.activateModeInfo([], []);
         this.vehicleSelected = new WearVehicleProgressBarViewModel();
       }
     } else {
-      this.timeOutLoader();
       this.activateInfo = this.activateModeInfo([], []);
       this.vehicleSelected = new WearVehicleProgressBarViewModel();
     }
@@ -164,7 +166,6 @@ export class HomePage extends BasePage implements OnInit {
     this.loadHeader(this.allWears, this.vehicleSelected.idVehicle);
     this.activateInfo = this.activateModeInfo(vehiclesActives, this.wears);
     this.initShowInfoMaintenance();
-    this.timeOutLoader();
     this.detector.detectChanges();
   }
 
@@ -182,13 +183,6 @@ export class HomePage extends BasePage implements OnInit {
       this.loadedBody = false;
       this.dataService.setVehicles(this.dataService.getVehiclesData());
       this.controlService.setDateLastUse();
-    }
-    this.timeOutLoader();
-  }
-
-  timeOutLoader() {
-    if (this.initLoaded) {
-      this.showSkeleton();
     }
   }
 
@@ -232,7 +226,7 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   segmentChanged(event: any): void {
-    this.showSkeletonBodyNotInit(500);
+    this.changeLoadedBody(false);
     this.vehicleSelected = this.wears.find(x => x.idVehicle === Number(event.detail.value));
     this.initShowInfoMaintenance();
     this.activateInfo = this.activateModeInfo((this.vehicleSelected ? [new VehicleModel()] : []), this.wears);
@@ -244,14 +238,8 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   /* HEADER */
-  
-  loadHeaderIconLeft(iconLeft: string) {
-    if(this.headerInput.iconButtonLeft !== iconLeft) {
-      this.headerInput.iconButtonLeft = iconLeft;
-    }
-  }
 
-  loadHeader(wears: WearVehicleProgressBarViewModel[], idVehicleSelected: number): void {
+  loadHeader(wears: WearVehicleProgressBarViewModel[] = [], idVehicleSelected: number = 0): void {
     this.headerInput = new HeaderInputModel({
       title: 'PAGE_HOME.HOME',
       iconButtonLeft: 'calendar',
@@ -283,25 +271,13 @@ export class HomePage extends BasePage implements OnInit {
 
   /* SKELETON */
 
-  showSkeleton() {
-    this.showSkeletonHeader(2500);
-    this.showSkeletonBody(2500);
+  changeLoadedHeader(load: boolean) {
+    this.loadedHeader = load;
+    this.skeletonInput.time = this.skeletonInput.time / 2;
   }
 
-  showSkeletonHeader(time: number) {
-    this.loadedHeader = false;
-    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
-  }
-
-  showSkeletonBodyNotInit(time: number) {
-    this.loadedBody = false;
-    if(!this.initLoaded) {
-      this.showSkeletonBody(time);
-    }
-  }
-
-  showSkeletonBody(time: number) {
-    setTimeout(() => { this.loadedBody = true; }, time);
+  changeLoadedBody(load: boolean) {
+    this.loadedBody = load;
   }
 
   // MODALS

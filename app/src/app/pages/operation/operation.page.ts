@@ -11,9 +11,13 @@ import {
 } from '@services/index';
 import {
   OperationModel, VehicleModel, ModalInputModel, ModalOutputModel, SearchDashboardModel, IInfoModel, ISettingModel,
-  OperationTypeModel, DashboardInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel
+  OperationTypeModel, DashboardInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel,
+  SkeletonInputModel
 } from '@models/index';
-import { ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum } from '@utils/index';
+import { 
+  ConstantsColumns, Constants, ActionDBEnum, PageEnum, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, 
+  OperationSkeletonSetting 
+} from '@utils/index';
 
 // COMPONENTS
 import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-operation.component';
@@ -31,6 +35,7 @@ export class OperationPage extends BasePage implements OnInit {
   // MODAL
   input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   headerInput: HeaderInputModel = new HeaderInputModel();
+  skeletonInput: SkeletonInputModel = OperationSkeletonSetting;
   dataReturned: ModalOutputModel;
 
   // MODEL
@@ -41,7 +46,6 @@ export class OperationPage extends BasePage implements OnInit {
   allOperations: OperationModel[] = [];
   vehicles: VehicleModel[] = [];
   vehicleSelected = -1;
-  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
   measure: ISettingModel;
@@ -108,7 +112,7 @@ export class OperationPage extends BasePage implements OnInit {
         this.allOperations = [];
       }
       this.dashboardService.setSearchOperation();
-      this.showSkeletonBodyNotInit(500);
+      this.changeLoadedBody(false);
     });
 
     this.dashboardService.getObserverSearchOperation().subscribe(filter => {
@@ -117,12 +121,6 @@ export class OperationPage extends BasePage implements OnInit {
       this.loadHeaderIconLeft(this.getIconDashboard(this.operations));
       this.detector.detectChanges();
     });
-  }
-
-  ionViewDidEnter() {
-    if (this.initLoaded) {
-      this.showSkeleton();
-    }
   }
 
   /** MODALS */
@@ -221,7 +219,7 @@ export class OperationPage extends BasePage implements OnInit {
   }
 
   segmentChanged(event: any): void {
-    this.showSkeletonBodyNotInit(500);
+    this.changeLoadedBody(false);
     this.vehicleSelected = Number(event.detail.value);
     this.operations = this.filterOperations(this.filterDashboard, this.getOperationVehicles());
     this.loadHeaderIconLeft(this.getIconDashboard(this.operations));
@@ -289,24 +287,12 @@ export class OperationPage extends BasePage implements OnInit {
 
   /* SKELETON */
 
-  showSkeleton() {
-    this.showSkeletonHeader(1000);
-    this.showSkeletonBody(1000);
+  changeLoadedHeader(load: boolean) {
+    this.loadedHeader = load;
+    this.skeletonInput.time = this.skeletonInput.time / 2;
   }
 
-  showSkeletonHeader(time: number) {
-    this.loadedHeader = false;
-    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
-  }
-
-  showSkeletonBodyNotInit(time: number) {
-    this.loadedBody = false;
-    if(!this.initLoaded) {
-      this.showSkeletonBody(time);
-    }
-  }
-
-  showSkeletonBody(time: number) {
-    setTimeout(() => { this.loadedBody = true; }, time);
+  changeLoadedBody(load: boolean) {
+    this.loadedBody = load;
   }
 }

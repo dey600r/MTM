@@ -20,7 +20,8 @@ import { routes } from '@src/app/app-routing.module';
 
 // COMPONENTS
 import { AppComponent } from '@app/app.component';
-import { HeaderSkeletonComponent } from '@components/header-skeleton/header-skeleton.component';
+import { SkeletonComponent } from '@components/skeleton/skeleton.component';
+import { BodySkeletonComponent } from '@components/skeleton/body/body-skeleton.component';
 import { AppInfoComponent } from '@components/info/app-info.component';
 import { HeaderComponent } from '@components/header/header.component';
 import { ConfigurationPage } from '@pages/configuration/configuration.page';
@@ -61,7 +62,8 @@ export class SetupTest {
     ],
     declarations: [
       AppComponent,
-      HeaderSkeletonComponent,
+      SkeletonComponent,
+      BodySkeletonComponent,
       AppInfoComponent,
       HeaderComponent,
       ConfigurationPage,

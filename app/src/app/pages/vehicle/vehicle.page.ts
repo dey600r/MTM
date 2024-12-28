@@ -5,11 +5,15 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum } from '@utils/index';
+import { 
+  ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, 
+  VehicleSkeletonSetting
+} from '@utils/index';
 import { DataService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
 import { 
   VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel, 
-  DashboardInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel
+  DashboardInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel,
+  SkeletonInputModel
 } from '@models/index';
 
 // COMPONENTS
@@ -27,13 +31,13 @@ export class VehiclePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
+  skeletonInput: SkeletonInputModel = VehicleSkeletonSetting;
   headerInput: HeaderInputModel = new HeaderInputModel();
   dataReturned: ModalOutputModel;
 
   // DATA
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
-  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
   measure: ISettingModel;
@@ -55,12 +59,6 @@ export class VehiclePage extends BasePage implements OnInit {
 
   ngOnInit() {
     this.initPage();
-  }
-
-  ionViewDidEnter() {
-    if (this.initLoaded) {
-      this.showSkeleton();
-    }
   }
 
   /** INIT */
@@ -86,7 +84,7 @@ export class VehiclePage extends BasePage implements OnInit {
       }
       this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
       this.loadHeader(this.iconService.loadIconDashboard<VehicleModel>(this.vehicles));
-      this.showSkeletonBodyNotInit(500);
+      this.changeLoadedBody(false);
       this.detector.detectChanges();
     });
 
@@ -215,27 +213,15 @@ export class VehiclePage extends BasePage implements OnInit {
     }
   }
 
-  /* SKELETON */
-  
-  showSkeleton() {
-    this.showSkeletonHeader(1000);
-    this.showSkeletonBody(1000);
-  }
+    /* SKELETON */
 
-  showSkeletonHeader(time: number) {
-    this.loadedHeader = false;
-    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
-  }
-
-  showSkeletonBodyNotInit(time: number) {
-    this.loadedBody = false;
-    if(!this.initLoaded) {
-      this.showSkeletonBody(time);
+    changeLoadedHeader(load: boolean) {
+      this.loadedHeader = load;
+      this.skeletonInput.time = this.skeletonInput.time / 2;
     }
-  }
-
-  showSkeletonBody(time: number) {
-    setTimeout(() => { this.loadedBody = true; }, time);
-  }
+  
+    changeLoadedBody(load: boolean) {
+      this.loadedBody = load;
+    }
 
 }

@@ -16,13 +16,11 @@ import {
   DashboardModel, InfoVehicleHistoricModel,
   InfoVehicleConfigurationModel, InfoVehicleHistoricReplacementModel, MaintenanceElementModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel,
-  HeaderInputModel,
-  HeaderSegmentInputModel,
-  HeaderOutputModel
+  HeaderInputModel, HeaderSegmentInputModel, HeaderOutputModel, BodySkeletonInputModel,
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, InfoButtonEnum } from '@utils/index';
+import { ConstantsColumns, InfoButtonEnum, InfoVehicleConfSummarySkeletonSetting, InfoVehicleReplSummarySkeletonSetting } from '@utils/index';
 
 @Component({
   selector: 'app-info-vehicle',
@@ -34,6 +32,8 @@ export class InfoVehicleComponent implements OnInit {
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
   input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  inputBodySkeletonConfigurationSummary: BodySkeletonInputModel = InfoVehicleConfSummarySkeletonSetting;
+  inputBodySkeletonReplacementSummary: BodySkeletonInputModel = InfoVehicleReplSummarySkeletonSetting;
   headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA

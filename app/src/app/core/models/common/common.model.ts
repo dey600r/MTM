@@ -141,3 +141,40 @@ export class HeaderOutputModel {
         this.data = event;
     }
 }
+
+export class SkeletonInputModel {
+    time: number;
+    itemsHeader: number[];
+    body: BodySkeletonInputModel;
+    constructor(data: Partial<SkeletonInputModel> = {}) {
+        this.time = (data.time ?? 0);
+        this.itemsHeader = (data.itemsHeader ?? []);
+        this.body = (data.body ?? new BodySkeletonInputModel());
+    }
+}
+
+export class BodySkeletonInputModel {
+    items: number[];
+    avatar: boolean;
+    itemsLabel: BodySkeletonLabelsInputModel[];
+    constructor(data: Partial<BodySkeletonInputModel> = {}) {
+        this.items = (data.items ?? []);
+        this.avatar = (data.avatar ?? false);
+        this.itemsLabel = (data.itemsLabel ?? []);
+    }
+}
+
+export class BodySkeletonLabelsInputModel {
+    h3Width: number = 0;
+    h2Width: number = 0;
+    pWidth: number[] = []; 
+    divWidth: number = 0;
+    divPWidth: number[] = [];
+    constructor(data: Partial<BodySkeletonLabelsInputModel> = {}) {
+        this.h3Width = (data.h3Width ?? 0);
+        this.h2Width = (data.h2Width ?? 0);
+        this.pWidth = (data.pWidth ?? []);
+        this.divWidth = (data.divWidth ?? 0);
+        this.divPWidth = (data.divPWidth ?? []);
+    }
+}

@@ -211,8 +211,8 @@ export class ControlService {
         return modal;
     }
 
-    async closeModal(modalController: ModalController, modalOuput: ModalOutputModel = new ModalOutputModel()) {
-        await modalController.dismiss(modalOuput);
+    closeModal(modalController: ModalController, modalOuput: ModalOutputModel = new ModalOutputModel()) {
+        return modalController.dismiss(modalOuput);
     }
 
     // SEGMENTS
