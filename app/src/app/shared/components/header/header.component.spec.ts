@@ -8,8 +8,12 @@ describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule(SetupTest.config).compileComponents();
+  beforeEach(waitForAsync(async () => {
+    let config: any = SetupTest.config;
+    config.providers.push(
+      SpyMockConfig.ProviderControlService
+    );
+    await TestBed.configureTestingModule(SetupTest.config).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
@@ -20,9 +24,8 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should close the modal', async () => {
-    SpyMockConfig.SpyConfig.controlService.closeModal = jasmine.createSpy().and.returnValue(Promise.resolve(true));
-    const data = await component.closeModal();
-    expect(data).toEqual(true);
+  it('should close the modal', () => {
+    component.closeModal();
+    expect(SpyMockConfig.SpyConfig.controlService.closeModal).toHaveBeenCalled();
   });
 });

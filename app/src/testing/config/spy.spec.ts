@@ -93,6 +93,7 @@ export class SpyMockConfig {
     static readonly ProviderDataService = { provide: DataService, useValue: SpyMockConfig.SpyMockAppDataService() };
     static readonly ProviderDataBaseService = { provide: DataBaseService, useValue: SpyMockConfig.SpyConfig.dbService };
     static readonly ProviderExportService = { provide: ExportService, useValue: SpyMockConfig.SpyConfig.exportService };
+    static readonly ProviderControlService = { provide: ControlService, useValue: SpyMockConfig.SpyConfig.controlService };
 
     static SpyMockAppDataService() {
         const spy = SpyMockConfig.SpyConfig.dataService;

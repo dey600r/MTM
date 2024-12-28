@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Platform } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 
@@ -31,7 +31,9 @@ describe('AppComponent', () => {
     config.providers.push(
       SpyMockConfig.ProviderDataBaseService,
       SpyMockConfig.ProviderDataService,
-      SpyMockConfig.ProviderExportService);
+      SpyMockConfig.ProviderExportService,
+      SpyMockConfig.ProviderControlService
+    );
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await firstValueFrom(translate.use('es'));
@@ -43,8 +45,8 @@ describe('AppComponent', () => {
     platform = TestBed.inject(Platform);
     statusBar = TestBed.inject(StatusBar);
     dbService = TestBed.inject(DataBaseService);
-    //controlService = TestBed.inject(ControlService);
     exportService = TestBed.inject(ExportService);
+    controlService = TestBed.inject(ControlService);
     fixture.detectChanges();
   });
 
@@ -53,20 +55,17 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should initialize the app', async () => {
-    let spyControlService = SpyMockConfig.SpyConfig.controlService.activateButtonExist.and.returnValue(null);
+  it('should initialize the app', fakeAsync(async () => {
     component.initializeApp();
-    fixture.detectChanges();
-    await platform.ready();
-    fixture.whenStable().then(() => {
-        tick();
-        expect(platform.ready).toHaveBeenCalled();
-        expect(statusBar.styleLightContent).toHaveBeenCalled();
-        expect(dbService.initDB).toHaveBeenCalled();
-        expect(spyControlService).toHaveBeenCalled();
-        expect(exportService.createOutputDirectory).toHaveBeenCalled();
-    });
-  });
+    tick();
+    expect(platform.ready).toHaveBeenCalled();
+    expect(statusBar.styleLightContent).toHaveBeenCalled();
+    expect(dbService.initDB).toHaveBeenCalled();
+    expect(controlService.activateButtonExist).toHaveBeenCalled();
+    // expect(SpyMockConfig.SpyConfig.controlService.activateButtonExist).toHaveBeenCalled();
+    expect(exportService.createOutputDirectory).toHaveBeenCalled();
+
+  }));
 
   it('should translate app - ES', () => {
     expect(translate.instant('COMMON.SAVE')).toEqual(MockTranslate.ES.COMMON.SAVE);
@@ -77,9 +76,4 @@ describe('AppComponent', () => {
     expect(translate.instant('COMMON.SAVE')).toEqual(MockTranslate.EN.COMMON.SAVE);
   });
 
-  // afterAll(() => {
-  //   fixture.destroy();
-  //   //TestBed.resetTestEnvironment();
-  //   TestBed.resetTestingModule();
-  // });
 });

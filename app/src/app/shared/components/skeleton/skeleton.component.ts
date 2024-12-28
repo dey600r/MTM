@@ -23,7 +23,6 @@ export class SkeletonComponent implements OnChanges {
     if(changes.loadedBody !== undefined && !changes.loadedBody.currentValue) {
       this.showSkeletonBody(this.input.time);
     }
-    console.log(this.input.time);
   }
 
   showSkeletonHeader(time: number) {

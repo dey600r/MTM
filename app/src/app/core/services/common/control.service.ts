@@ -72,30 +72,6 @@ export class ControlService {
         this.exitButtonSubscripion.unsubscribe();
     }
 
-    // LOADING
-
-    async showLoader(parent: PageEnum) {
-        this.desactivateButtonExist();
-        const loader = await this.loadingController.create({
-            spinner: 'bubbles',
-            duration: 3000,
-            message: this.translator.instant('Loading...'),
-            translucent: true,
-            cssClass: 'custom-loader-class',
-            backdropDismiss: false
-        });
-
-        loader.onDidDismiss().then(() => {
-            this.activateButtonExist(parent);
-        });
-
-        await loader.present();
-    }
-
-    closeLoader() {
-        this.loadingController.getTop().then(r => { if (!!r) { r.dismiss(); } } );
-    }
-
     // CONFIRMS
     async showConfirm(parent: PageEnum, title: string, msg: string, buttonAccept: any, callbackCancel: any = () => { /* this is intentional */ }) {
         this.desactivateButtonExist();
@@ -212,7 +188,7 @@ export class ControlService {
     }
 
     closeModal(modalController: ModalController, modalOuput: ModalOutputModel = new ModalOutputModel()) {
-        return modalController.dismiss(modalOuput);
+        modalController?.dismiss(modalOuput);
     }
 
     // SEGMENTS

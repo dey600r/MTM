@@ -49,7 +49,7 @@ export class HeaderComponent implements OnChanges {
   }
 
   closeModal() {
-    return this.controlService.closeModal(this.modalController);
+    this.controlService.closeModal(this.modalController);
   }
 
 }
