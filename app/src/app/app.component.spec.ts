@@ -55,15 +55,17 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should initialize the app', fakeAsync(async () => {
+  it('should initialize the app', () => {
     component.initializeApp();
-    tick();
-    expect(platform.ready).toHaveBeenCalled();
-    expect(statusBar.styleLightContent).toHaveBeenCalled();
-    expect(dbService.initDB).toHaveBeenCalled();
-    expect(controlService.activateButtonExist).toHaveBeenCalled();
-    expect(exportService.createOutputDirectory).toHaveBeenCalled();
-  }));
+    fixture.whenStable().then(fakeAsync(() => {
+      tick();
+      expect(platform.ready).toHaveBeenCalled();
+      expect(statusBar.styleLightContent).toHaveBeenCalled();
+      expect(dbService.initDB).toHaveBeenCalled();
+      expect(controlService.activateButtonExist).toHaveBeenCalled();
+      expect(exportService.createOutputDirectory).toHaveBeenCalled();
+    }));
+  });
 
   it('should translate app - ES', () => {
     expect(translate.instant('COMMON.SAVE')).toEqual(MockTranslate.ES.COMMON.SAVE);
