@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Platform } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 
@@ -64,7 +64,6 @@ describe('AppComponent', () => {
       expect(dbService.initDB).toHaveBeenCalled();
       expect(controlService.activateButtonExist).toHaveBeenCalled();
       expect(exportService.createOutputDirectory).toHaveBeenCalled();
-      flush();
     }));
   });
 
