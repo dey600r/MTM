@@ -62,9 +62,7 @@ describe('AppComponent', () => {
     expect(statusBar.styleLightContent).toHaveBeenCalled();
     expect(dbService.initDB).toHaveBeenCalled();
     expect(controlService.activateButtonExist).toHaveBeenCalled();
-    // expect(SpyMockConfig.SpyConfig.controlService.activateButtonExist).toHaveBeenCalled();
     expect(exportService.createOutputDirectory).toHaveBeenCalled();
-
   }));
 
   it('should translate app - ES', () => {
