@@ -39,14 +39,14 @@ export class LogService {
         return log;
     }
 
-    logInfo(type: ToastTypeEnum, page: PageEnum, msg: string, err: any = null) {
+    async logInfo(type: ToastTypeEnum, page: PageEnum, msg: string, err: any = null) {
         if(!environment.production || (type !== ToastTypeEnum.SUCCESS && type !== ToastTypeEnum.INFO)) {
             const logFileName: string = this.generateNameLogFile();
             const logFilePath: string = this.getRootPathFiles();
             const log: string = this.generateMessageLog(type, page, msg, err);
 
             try {
-                this.file.checkFile(logFilePath, logFileName).then(value => {
+                await this.file.checkFile(logFilePath, logFileName).then(value => {
                     this.file.readAsText(logFilePath, logFileName).then(txt => {
                         this.file.writeExistingFile(logFilePath, logFileName, `${txt}\n${log}`).then(() => {
                         }).catch(err => console.error("Error saving loging " + err?.message));

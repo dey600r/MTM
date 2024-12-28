@@ -37,10 +37,10 @@ export class ExportService {
         return this.logService.getRootPathFiles(filePath) + '/' + fileName;
     }
 
-    createOutputDirectory() {
+    async createOutputDirectory() {
         const pathDataDirectory: string = this.logService.getDataDirectory();
         try {
-            this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
+            await this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
                 this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory exists`);
                 this.createDiretory(Constants.EXPORT_DIR_NAME);
                 this.createDiretory(Constants.IMPORT_DIR_NAME);
