@@ -16,7 +16,7 @@ import { SetupTest, SpyMockConfig, MockTranslate } from '@testing/index';
 // SERVICES
 import { ControlService, DataBaseService, ExportService } from '@services/index';
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let platform: Platform;
@@ -26,7 +26,7 @@ fdescribe('AppComponent', () => {
   let exportService: ExportService;
   let translate: TranslateService;
 
-  beforeEach(waitForAsync(async () => {
+  beforeEach(async () => {
     const config: any = SetupTest.config;
     config.providers.push(
       SpyMockConfig.ProviderDataBaseService,
@@ -37,7 +37,7 @@ fdescribe('AppComponent', () => {
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await firstValueFrom(translate.use('es'));
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);

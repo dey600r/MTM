@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { DomController } from '@ionic/angular';
 
 // SERVICES
@@ -34,19 +34,24 @@ describe('ThemeService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should be get LIGHT theme', async() => {
-        await service.changeTheme(Constants.SETTING_THEME_LIGHT);
+    it('should be get LIGHT theme', fakeAsync(() => {
+        service.changeTheme(Constants.SETTING_THEME_LIGHT);
+        tick(1000);
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('');
-    });
+        flush();
+    }));
 
-    it('should be get SKY theme', async() => {
-        await service.changeTheme(Constants.SETTING_THEME_SKY);
-
+    it('should be get SKY theme', fakeAsync(() => {
+        service.changeTheme(Constants.SETTING_THEME_SKY);
+        tick(1000);
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('#00B0B9');
-    });
+        flush();
+    }));
 
-    it('should be get DARK theme', async() => {
-        await service.changeTheme(Constants.SETTING_THEME_DARK);
+    it('should be get DARK theme', fakeAsync(() => {
+        service.changeTheme(Constants.SETTING_THEME_DARK);
+        tick(1000);
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('#8ab4f8');
-    });
+        flush();
+    }), 10000);
 });
