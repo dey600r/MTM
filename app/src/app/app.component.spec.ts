@@ -57,14 +57,15 @@ describe('AppComponent', () => {
 
   it('should initialize the app', () => {
     component.initializeApp();
-    fixture.whenStable().then(fakeAsync(() => {
-      tick();
+    fixture.detectChanges();
+    // fixture.whenStable().then(fakeAsync(() => {
+    //   tick();
       expect(platform.ready).toHaveBeenCalled();
       expect(statusBar.styleLightContent).toHaveBeenCalled();
       expect(dbService.initDB).toHaveBeenCalled();
       expect(controlService.activateButtonExist).toHaveBeenCalled();
       expect(exportService.createOutputDirectory).toHaveBeenCalled();
-    }));
+    // }));
   });
 
   it('should translate app - ES', () => {
