@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { LogService } from '../common';
 
-fdescribe('ExportService', () => {
+describe('ExportService', () => {
     let service: ExportService;
     let crudService: CRUDService;
     let translate: TranslateService;

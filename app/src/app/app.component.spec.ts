@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Platform } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 
@@ -58,14 +58,13 @@ describe('AppComponent', () => {
   it('should initialize the app', () => {
     component.initializeApp();
     fixture.detectChanges();
-    // fixture.whenStable().then(fakeAsync(() => {
-    //   tick();
+    fixture.whenStable().then(() => {
       expect(platform.ready).toHaveBeenCalled();
       expect(statusBar.styleLightContent).toHaveBeenCalled();
       expect(dbService.initDB).toHaveBeenCalled();
       expect(controlService.activateButtonExist).toHaveBeenCalled();
       expect(exportService.createOutputDirectory).toHaveBeenCalled();
-    // }));
+    });
   });
 
   it('should translate app - ES', () => {
