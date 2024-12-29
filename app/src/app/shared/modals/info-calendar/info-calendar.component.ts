@@ -329,6 +329,7 @@ export class InfoCalendarComponent implements OnInit {
         x.classList.remove(`${typeStyle}-circle-config-danger`);
         x.classList.remove(`${typeStyle}-circle-config-warning`);
         x.classList.remove(`${typeStyle}-circle-config-success`);
+        x.classList.remove(`${typeStyle}-circle-config-done`);
       });
       if ((this.calendarMode == CalendarModeEnum.YEAR || this.calendarMode == CalendarModeEnum.YEARS) && 
           !!notifications && notifications.length > 0) {
