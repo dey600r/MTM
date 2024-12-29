@@ -11,7 +11,9 @@ import * as shape from 'd3-shape';
 import {
   ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
   InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel, MaintenanceElementModel,
-  IDashboardExpensesModel, IDashboardModel, IDashboardSerieModel, ISettingModel
+  IDashboardExpensesModel, IDashboardModel, IDashboardSerieModel, ISettingModel,
+  HeaderOutputModel,
+  HeaderInputModel
 } from '@models/index';
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
@@ -33,6 +35,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<WearVehicleProgressBarViewModel, OperationModel> = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
@@ -384,6 +387,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  eventEmitHeader(output: HeaderOutputModel) {
+    this.showPopover(output.data);
+  }
+
   showPopover(ev: any) {
     this.openningPopover = true;
     this.controlService.showPopover(PageEnum.MODAL_INFO, ev, SearchDashboardPopOverComponent, this.modalInputModel);
@@ -392,6 +399,10 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   loadIconSearch() {
     this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(this.modalInputModel.parentPage));
+    this.headerInput = new HeaderInputModel({
+      title: this.labelNameVehicle,
+      iconButtonLeft: (this.isCalendar ? this.iconFilter: ''),
+    });
   }
 
   closeModal() {

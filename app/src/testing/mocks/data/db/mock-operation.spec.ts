@@ -8,7 +8,7 @@ import { MockDBVehicle } from './mock-vehicle.spec';
 export class MockDBOperation {
 
     /* OPERATION TYPES */
-    public static OperationTypes: IOperationTypeStorageModel[] = [
+    public static readonly OperationTypes: IOperationTypeStorageModel[] = [
         { code: Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP, description: 'MAINTENANCE_WORKSHOP', id: 1 },
         { code: Constants.OPERATION_TYPE_FAILURE_WORKSHOP, description: 'FAILURE_WORKSHOP', id: 2 },
         { code: Constants.OPERATION_TYPE_CLOTHES, description: 'CLOTHES', id: 3 },
@@ -21,7 +21,7 @@ export class MockDBOperation {
     ];
 
     /* OPERATIONS */
-    static Operations: IOperationStorageModel[] = [
+    public static readonly Operations: IOperationStorageModel[] = [
         {
             description: 'Compra moto',
             details: 'Compra hyosung GT125r 2006',
@@ -167,7 +167,7 @@ export class MockDBOperation {
         }
     ];
 
-    static OperationMaintenanceElement: IOperationMaintenanceElementStorageModel[] = [
+    public static readonly OperationMaintenanceElement: IOperationMaintenanceElementStorageModel[] = [
         { id: 1, idOperation: MockDBOperation.Operations[1].id, idMaintenanceElement: MockDBMaintenance.MaintenanceElements[0].id, price: 110 },
         { id: 2, idOperation: MockDBOperation.Operations[1].id, idMaintenanceElement: MockDBMaintenance.MaintenanceElements[2].id, price: 45 },
         { id: 3, idOperation: MockDBOperation.Operations[1].id, idMaintenanceElement: MockDBMaintenance.MaintenanceElements[3].id, price: 34 },

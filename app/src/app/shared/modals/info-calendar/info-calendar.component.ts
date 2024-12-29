@@ -9,9 +9,12 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   ModalInputModel, InfoCalendarVehicleViewModel,
   InfoCalendarReplacementViewModel, ISettingModel,
-  WearVehicleProgressBarViewModel,
   ICalendarColorMode,
-  InfoCalendarMaintOpViewModel
+  InfoCalendarMaintOpViewModel,
+  HeaderInputModel,
+  HeaderOutputModel,
+  HeaderSegmentInputModel,
+  CalendarInputModal
 } from '@models/index';
 
 // SERVICES
@@ -20,7 +23,7 @@ import {
 } from '@services/index';
 
 // UTILS
-import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, PageEnum, ToastTypeEnum } from '@utils/index';
+import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, HeaderOutputEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Component({
   selector: 'info-calendar',
@@ -30,9 +33,11 @@ import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, PageEn
 export class InfoCalendarComponent implements OnInit {
 
   // MODAL MODELS
-  @Input() modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
+  @Input() modalInputModel: ModalInputModel<CalendarInputModal> = new ModalInputModel<CalendarInputModal>();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA
+  listAllInfoCalendar: InfoCalendarVehicleViewModel[] = [];
   listInfoCalendar: InfoCalendarVehicleViewModel[] = [];
   listInfoCalendarSelected: InfoCalendarVehicleViewModel[] = [];
   dateMulti: any[];
@@ -46,7 +51,6 @@ export class InfoCalendarComponent implements OnInit {
   yearSelect = new Date().getFullYear();
   monthSelect = new Date().getMonth();
   activeSpinner = false;
-  hideVehicles: boolean[] = [];
   measure: ISettingModel;
   coin: ISettingModel;
   CALENDAR_TYPE = CalendarTypeEnum;
@@ -79,14 +83,41 @@ export class InfoCalendarComponent implements OnInit {
     this.initCalendar();
   }
 
-  initCalendar() {
-    this.listInfoCalendar = this.infoCalendarService.getInfoCalendar(this.modalInputModel.dataList, this.modalInputModel.data);
+  initVehicleCalendar(input: CalendarInputModal) {
+    let listVehicles: HeaderSegmentInputModel[] = [];
+    if(!!input.wear && input.wear.length > 0) {
+      input.wear.forEach(x => {
+        if(!listVehicles.some(y => y.id === x.idVehicle)) {
+          listVehicles = [...listVehicles, new HeaderSegmentInputModel({
+            id: x.idVehicle, name: x.nameVehicle, icon: x.iconVehicle, selected: (x.idVehicle === input.vehicleSelected)
+          })];
+        }
+      });
+    }
+    if(!!input.operations && input.operations.length > 0) {
+      input.operations.forEach(x => {
+        if(!listVehicles.some(y => y.id === x.vehicle.id)) {
+          listVehicles = [...listVehicles, new HeaderSegmentInputModel({
+            id: x.vehicle.id, name: x.vehicle.$getName, icon: x.vehicle.vehicleType.icon, selected: (x.vehicle.id === input.vehicleSelected)
+          })];
+        }
+      });
+    }
+    this.headerInput = new HeaderInputModel({
+      title: 'COMMON.CALENDAR',
+      iconButtonLeft: 'reload-circle',
+      dataSegment: listVehicles
+    });
+  }
+
+  loadCalendar(idVehicle: number) {
+    this.activeSpinner = true;
+    this.listInfoCalendar = this.listAllInfoCalendar.filter(x => x.idVehicle === idVehicle);
     let days: IDayConfig[] = [];
     let dateInit: Date = new Date();
     if (!!this.listInfoCalendar && this.listInfoCalendar.length) {
-      dateInit = this.commonService.min(this.modalInputModel.dataList, ConstantsColumns.COLUMN_MODEL_DATE_PURCHASE_VEHICLE);
-      this.listInfoCalendar.forEach((x, index) => {
-        this.hideVehicles[index] = (index !== 0);
+      dateInit = this.commonService.min(this.modalInputModel.data.wear, ConstantsColumns.COLUMN_MODEL_DATE_PURCHASE_VEHICLE);
+      this.listInfoCalendar.forEach(x => {
         x.listInfoCalendarMaintOp.forEach(y => {
           y.listInfoCalendarReplacement.forEach(z => {
             if (!days.some(d => d.date === z.date)) {
@@ -114,8 +145,16 @@ export class InfoCalendarComponent implements OnInit {
         daysConfig: days
     };
 
-    const today: Date = new Date();
-    this.applyNotificationsOnCalendar(this.calendarMode, today.getFullYear(), today.getMonth());
+    setTimeout(() => {
+      const today: Date = new Date();
+      this.applyNotificationsOnCalendar(this.calendarMode, today.getFullYear(), today.getMonth());
+    }, 300);
+  }
+
+  initCalendar() {
+    this.initVehicleCalendar(this.modalInputModel.data);
+    this.listAllInfoCalendar = this.infoCalendarService.getInfoCalendar(this.modalInputModel.data.wear, this.modalInputModel.data.operations);
+    this.loadCalendar(this.modalInputModel.data.vehicleSelected);
   }
 
   // EVENTS
@@ -214,6 +253,17 @@ export class InfoCalendarComponent implements OnInit {
     }
   }
 
+  eventEmitHeader(output: HeaderOutputModel) {
+    switch(output.type) {
+      case HeaderOutputEnum.BUTTON_LEFT:
+        this.reload();
+        break;
+      case HeaderOutputEnum.SEGMENT:
+        this.loadCalendar(Number(output.data.detail.value));
+        break;
+    }
+  }
+
   reload() {
     this.activeSpinner = true;
     this.dateMulti = [];
@@ -233,14 +283,11 @@ export class InfoCalendarComponent implements OnInit {
     if (dateFin !== null) {
       rangeDate = [...rangeDate, dateFin];
     }
-    this.hideVehicles = [];
     this.listInfoCalendarSelected = this.infoCalendarService.getInfoCalendarReplacementDate(this.listInfoCalendar, rangeDate);
     if (!this.listInfoCalendarSelected || this.listInfoCalendarSelected.length === 0) {
       this.notificationEmpty = this.translator.instant('ALERT.NotificationEmptyBetween',
         { dateIni: this.calendarService.getDateString(dateIni),
-          dateFin: this.calendarService.getDateString((dateFin === null ? dateIni : dateFin))});
-    } else {
-      this.listInfoCalendarSelected.forEach((x, index) => this.hideVehicles[index] = (index !== 0));
+          dateFin: this.calendarService.getDateString((dateFin ?? dateIni))});
     }
     this.paintMonthsNotifications(this.listInfoCalendarSelected);
     this.activeSpinner = false;
@@ -282,6 +329,7 @@ export class InfoCalendarComponent implements OnInit {
         x.classList.remove(`${typeStyle}-circle-config-danger`);
         x.classList.remove(`${typeStyle}-circle-config-warning`);
         x.classList.remove(`${typeStyle}-circle-config-success`);
+        x.classList.remove(`${typeStyle}-circle-config-done`);
       });
       if ((this.calendarMode == CalendarModeEnum.YEAR || this.calendarMode == CalendarModeEnum.YEARS) && 
           !!notifications && notifications.length > 0) {

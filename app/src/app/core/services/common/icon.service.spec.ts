@@ -64,11 +64,13 @@ describe('IconService', () => {
         expect(service.getIconOperationType(Constants.OPERATION_TYPE_TOOLS)).toEqual('construct');
         expect(service.getIconOperationType(Constants.OPERATION_TYPE_OTHER)).toEqual('body');
         expect(service.getIconOperationType(Constants.OPERATION_TYPE_SPARE_PARTS)).toEqual('repeat');
+        expect(service.getIconOperationType('test')).toEqual('repeat');
     });
 
     it('should load icon maintenance frequency', () => {
         expect(service.getIconMaintenance(Constants.MAINTENANCE_FREQ_ONCE_CODE)).toEqual('alarm');
         expect(service.getIconMaintenance(Constants.MAINTENANCE_FREQ_CALENDAR_CODE)).toEqual('calendar');
+        expect(service.getIconMaintenance('test')).toEqual('alarm');
     });
 
     it('should load icon maintenance element', () => {

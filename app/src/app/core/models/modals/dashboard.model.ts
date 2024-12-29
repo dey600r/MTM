@@ -1,5 +1,5 @@
 import { LegendPosition } from "@swimlane/ngx-charts";
-import { IDashboardColorModel } from "../index";
+import { IDashboardColorModel, OperationModel, VehicleModel } from "../index";
 
 export class DashboardModel<T> {
     view: [number, number];
@@ -68,4 +68,10 @@ export class DashboardModel<T> {
     mapColorScheme(colors: any[]): IDashboardColorModel {
         return { domain: colors };
     }
+}
+
+export class DashboardInputModal {
+    operations: OperationModel[] = [];
+    vehicles: VehicleModel[] = [];
+    vehicleSelected: number;
 }

@@ -6,8 +6,7 @@ import { ControlService } from './control.service';
 
 // CONFIGURATIONS
 import { MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
-import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
-import { environment } from '@environment/environment';
+import { PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel } from '@models/index';
 
 // LIBRARIES
@@ -61,35 +60,6 @@ describe('ControlService', () => {
         const platformIs = spyOn(platform, 'is').and.returnValue(false);
         service.activateButtonExist(PageEnum.VEHICLE);
         expect(platformIs).toHaveBeenCalled();
-    });
-
-    // LOADERS
-
-    it('should show loader', async () => {
-        const onDismiss: any = {
-            onDidDismiss: jasmine.createSpy().and.returnValue(Promise.resolve({})),
-            present: jasmine.createSpy().and.returnValue(Promise.resolve({}))
-        };
-        const createLoader = spyOn(loaderController, 'create').and.returnValue(Promise.resolve(onDismiss));
-        await service.showLoader(PageEnum.VEHICLE);
-        expect(createLoader).toHaveBeenCalled();
-        expect(onDismiss.onDidDismiss).toHaveBeenCalled();
-        expect(onDismiss.present).toHaveBeenCalled();
-    });
-
-    it('should close loader', fakeAsync (() => {
-        const onDismiss: any = { dismiss: jasmine.createSpy().and.returnValue(Promise.resolve()) };
-        const closeLoader = spyOn(loaderController, 'getTop').and.returnValue(Promise.resolve(onDismiss));
-        service.closeLoader();
-        tick();
-        expect(closeLoader).toHaveBeenCalled();
-        expect(onDismiss.dismiss).toHaveBeenCalled();
-    }));
-
-    it('should not close loader', () => {
-        const closeLoader = spyOn(loaderController, 'getTop').and.returnValue(Promise.resolve(null));
-        service.closeLoader();
-        expect(closeLoader).toHaveBeenCalled();
     });
 
     // CONFIRMS

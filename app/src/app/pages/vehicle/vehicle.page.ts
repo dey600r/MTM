@@ -5,9 +5,16 @@ import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
+import { 
+  ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, 
+  VehicleSkeletonSetting
+} from '@utils/index';
 import { DataService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
-import { VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel } from '@models/index';
+import { 
+  VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel, 
+  DashboardInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel,
+  SkeletonInputModel
+} from '@models/index';
 
 // COMPONENTS
 import { AddEditVehicleComponent } from '@modals/add-edit-vehicle/add-edit-vehicle.component';
@@ -24,16 +31,16 @@ export class VehiclePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
+  skeletonInput: SkeletonInputModel = VehicleSkeletonSetting;
+  headerInput: HeaderInputModel = new HeaderInputModel();
   dataReturned: ModalOutputModel;
 
   // DATA
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
-  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
   measure: ISettingModel;
-  iconNameHeaderLeft = '';
 
   constructor(public platform: Platform,
               private readonly dataService: DataService,
@@ -52,12 +59,6 @@ export class VehiclePage extends BasePage implements OnInit {
 
   ngOnInit() {
     this.initPage();
-  }
-
-  ionViewDidEnter() {
-    if (this.initLoaded) {
-      this.showSkeleton();
-    }
   }
 
   /** INIT */
@@ -82,8 +83,8 @@ export class VehiclePage extends BasePage implements OnInit {
         this.dashboardService.setSearchOperation();
       }
       this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
-      this.loadIconDashboard();
-      this.showSkeletonBodyNotInit(500);
+      this.loadHeader(this.iconService.loadIconDashboard<VehicleModel>(this.vehicles));
+      this.changeLoadedBody(false);
       this.detector.detectChanges();
     });
 
@@ -130,9 +131,11 @@ export class VehiclePage extends BasePage implements OnInit {
     if (this.vehicles.length === 0) {
       this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.INFO, 'ALERT.AddVehicleToExpenses', Constants.DELAY_TOAST_NORMAL);
     } else {
-      this.controlService.openModal(PageEnum.VEHICLE, DashboardComponent, new ModalInputModel<any, OperationModel>({
+      this.controlService.openModal(PageEnum.VEHICLE, DashboardComponent, new ModalInputModel<Partial<DashboardInputModal>>({
           type: ModalTypeEnum.UPDATE,
-          dataList: this.operations,
+          data: {
+            operations: this.operations
+          },
           parentPage: PageEnum.VEHICLE
         }));
     }
@@ -147,13 +150,13 @@ export class VehiclePage extends BasePage implements OnInit {
       'PAGE_VEHICLE.ConfirmDeleteVehicleOperation' : 'PAGE_VEHICLE.ConfirmDeleteVehicle');
 
     this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.VEHICLES'),
-      this.translator.instant(message, {vehicle: `${row.brand} ${row.model}`}),
+      this.translator.instant(message, {vehicle: row.$getName}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
           this.vehicleService.saveVehicle([row], ActionDBEnum.DELETE, ops).then(x => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.SUCCESS, 'PAGE_VEHICLE.DeleteSaveVehicle',
-              { vehicle: `${row.brand} ${row.model}` });
+              { vehicle: row.$getName });
           }).catch(e => {
             this.controlService.showToast(PageEnum.VEHICLE, ToastTypeEnum.DANGER, 'PAGE_VEHICLE.ErrorSaveVehicle', e);
           });
@@ -166,7 +169,7 @@ export class VehiclePage extends BasePage implements OnInit {
     let vehicleToSave: VehicleModel = vehicle;
     const message: string = (vehicleToSave.active ? 'PAGE_VEHICLE.ConfirmDesactivateNotificationVehicle' : 'PAGE_VEHICLE.ConfirmActivateNotificationVehicle');
     this.controlService.showConfirm(PageEnum.VEHICLE, this.translator.instant('COMMON.VEHICLES'),
-      this.translator.instant(message, {vehicle: `${vehicleToSave.brand} ${vehicleToSave.model}`}),
+      this.translator.instant(message, {vehicle: vehicleToSave.$getName}),
       {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
@@ -183,31 +186,42 @@ export class VehiclePage extends BasePage implements OnInit {
     if (itemSliding) { itemSliding.close(); }
   }
 
-  loadIconDashboard(): void {
-    this.iconNameHeaderLeft = this.iconService.loadIconDashboard<VehicleModel>(this.vehicles);
+  /* HEADER */
+
+  loadHeader(iconLeft: string): void {
+    this.headerInput = new HeaderInputModel({
+      title: 'COMMON.GARAGE',
+      iconButtonLeft: iconLeft,
+      iconButtonRight: 'analytics',
+      dataSegment: [new HeaderSegmentInputModel({
+        id: 1,
+        name: 'PAGE_VEHICLE.YOURS_VEHICLES',
+        icon: 'home',
+        selected: true
+      })]
+    });
   }
 
-  /* SKELETON */
-  
-  showSkeleton() {
-    this.showSkeletonHeader(1000);
-    this.showSkeletonBody(1000);
-  }
-
-  showSkeletonHeader(time: number) {
-    this.loadedHeader = false;
-    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
-  }
-
-  showSkeletonBodyNotInit(time: number) {
-    this.loadedBody = false;
-    if(!this.initLoaded) {
-      this.showSkeletonBody(time);
+  eventEmitHeader(output: HeaderOutputModel) {
+    switch(output.type) {
+      case HeaderOutputEnum.BUTTON_LEFT:
+        this.openDashboardVehicle();
+        break;
+      case HeaderOutputEnum.BUTTON_RIGHT:
+        this.openInfoVehicle();
+        break;
     }
   }
 
-  showSkeletonBody(time: number) {
-    setTimeout(() => { this.loadedBody = true; }, time);
-  }
+    /* SKELETON */
+
+    changeLoadedHeader(load: boolean) {
+      this.loadedHeader = load;
+      this.skeletonInput.time = this.skeletonInput.time / 2;
+    }
+  
+    changeLoadedBody(load: boolean) {
+      this.loadedBody = load;
+    }
 
 }

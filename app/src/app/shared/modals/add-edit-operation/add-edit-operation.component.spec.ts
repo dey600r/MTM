@@ -38,7 +38,6 @@ describe('AddEditOperationComponent', () => {
       data: MockAppData.Operations[0],
       parentPage: PageEnum.OPERATION
     });
-    //fixture.detectChanges();
   });
 
   it('should create', () => {

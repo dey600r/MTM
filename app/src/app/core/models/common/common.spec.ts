@@ -1,8 +1,9 @@
 import {
     BaseCodeDescriptionModel, BaseDescriptionModel, BaseIconCodeDescriptionModel, BaseIconNameDescriptionModel, BaseMaintenanceModel,
-    BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, ModalInputModel, ModalOutputModel
+    BaseModel, BaseNameDescriptionModel, BaseNameModel, BaseWarningIconModel, BodySkeletonInputModel, BodySkeletonLabelsInputModel,
+    HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel, ModalInputModel, ModalOutputModel, SkeletonInputModel
 } from "@models/index";
-import { ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from "@utils/index";
+import { HeaderOutputEnum, ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from "@utils/index";
 
 describe('CommonModel', () => {
 
@@ -145,5 +146,101 @@ describe('CommonModel', () => {
         expect(base.time).toEqual(12);
         expect(base.init).toEqual(true);
         expect(base.wear).toEqual(true);
+    });
+
+    it('should initialize headerInput model', () => {
+        let input: HeaderInputModel = new HeaderInputModel();
+        expect(input.title).toEqual('');
+        expect(input.iconButtonLeft).toEqual('');
+        expect(input.iconButtonRight).toEqual('');
+        expect(input.dataSegment.length).toEqual(0);
+        input = new HeaderInputModel({
+            title: 'david',
+            iconButtonLeft: 'home', 
+            iconButtonRight: 'cog',
+            dataSegment: [
+                new HeaderSegmentInputModel({ id: 1, name: 'first', icon: 'seg', selected: true, progressColor: 'class', progressValue: 10 }),
+                new HeaderSegmentInputModel({ id: 2, name: 'second', icon: 'icon', selected: false, progressColor: 'class', progressValue: 20 }),
+            ]
+        });
+        expect(input.title).toEqual('david');
+        expect(input.iconButtonLeft).toEqual('home');
+        expect(input.iconButtonRight).toEqual('cog');
+        expect(input.dataSegment.length).toEqual(2);
+        expect(input.dataSegment[0].id).toEqual(1);
+        expect(input.dataSegment[0].name).toEqual('first');
+        expect(input.dataSegment[0].icon).toEqual('seg');
+        expect(input.dataSegment[0].selected).toBeTrue();
+        expect(input.dataSegment[0].progressColor).toEqual('class');
+        expect(input.dataSegment[0].progressValue).toEqual(10);
+        expect(input.dataSegment[1].id).toEqual(2);
+        expect(input.dataSegment[1].name).toEqual('second');
+        expect(input.dataSegment[1].icon).toEqual('icon');
+        expect(input.dataSegment[1].selected).toBeFalse();
+        expect(input.dataSegment[1].progressColor).toEqual('class');
+        expect(input.dataSegment[1].progressValue).toEqual(20);
+    });
+
+    it('should initialize modalheaderoutput model', () => {
+        let output: HeaderOutputModel = new HeaderOutputModel(HeaderOutputEnum.BUTTON_LEFT);
+        expect(output.type).toEqual(HeaderOutputEnum.BUTTON_LEFT);
+        expect(output.data).toEqual(null);
+        output = new HeaderOutputModel(HeaderOutputEnum.SEGMENT, 1);
+        expect(output.type).toEqual(HeaderOutputEnum.SEGMENT);
+        expect(output.data).toEqual(1);
+    });
+
+    it('should initialize skeletoninput model', () => {
+        let input = new SkeletonInputModel();
+        expect(input.time).toEqual(0);
+        expect(input.itemsHeader).toEqual([]);
+        expect(input.body.avatar).toEqual(false);
+        expect(input.body.items).toEqual([]);
+        expect(input.body.itemsLabel).toEqual([]);
+        input = new SkeletonInputModel({
+            time: 600, 
+            itemsHeader: [1, 3, 1, 3, 1, 3],
+            body: new BodySkeletonInputModel({
+                items: [1, 2, 3, 4, 5, 6], 
+                avatar: true, 
+                itemsLabel: [ new BodySkeletonLabelsInputModel({ 
+                    h3Width: 40, 
+                    h2Width: 30, 
+                    pWidth: [70, 70],
+                    divWidth: 50,
+                    divPWidth: [25, 25]
+                })] 
+            })
+        });
+        expect(input.time).toEqual(600);
+        expect(input.itemsHeader).toEqual([1, 3, 1, 3, 1, 3]);
+        expect(input.body.avatar).toEqual(true);
+        expect(input.body.items).toEqual([1, 2, 3, 4, 5, 6]);
+        expect(input.body.itemsLabel[0].h3Width).toEqual(40);
+        expect(input.body.itemsLabel[0].h2Width).toEqual(30);
+        expect(input.body.itemsLabel[0].pWidth).toEqual([70, 70]);
+        expect(input.body.itemsLabel[0].divWidth).toEqual(50);
+        expect(input.body.itemsLabel[0].divPWidth).toEqual([25, 25]);
+    });
+
+    it('should initialize bodyskeletonlabelsinput model', () => {
+        let input = new BodySkeletonLabelsInputModel();
+        expect(input.h3Width).toEqual(0);
+        expect(input.h2Width).toEqual(0);
+        expect(input.pWidth).toEqual([]);
+        expect(input.divWidth).toEqual(0);
+        expect(input.divPWidth).toEqual([]);
+        input = new BodySkeletonLabelsInputModel({ 
+            h3Width: 40, 
+            h2Width: 30, 
+            pWidth: [70, 70],
+            divWidth: 50,
+            divPWidth: [25, 25]
+        });
+        expect(input.h3Width).toEqual(40);
+        expect(input.h2Width).toEqual(30);
+        expect(input.pWidth).toEqual([70, 70]);
+        expect(input.divWidth).toEqual(50);
+        expect(input.divPWidth).toEqual([25, 25]);
     });
 });

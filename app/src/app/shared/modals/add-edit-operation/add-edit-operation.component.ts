@@ -7,7 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 // UTILS
 import { Constants, ActionDBEnum, ConstantsColumns, PageEnum, ToastTypeEnum, ModalTypeEnum } from '@utils/index';
 import {
-  ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, ISettingModel
+  ModalInputModel, VehicleModel, OperationModel, OperationTypeModel, MaintenanceElementModel, ISettingModel,
+  HeaderInputModel
 } from '@models/index';
 import {
   DataService, OperationService, CommonService, ConfigurationService, ControlService,
@@ -23,11 +24,11 @@ export class AddEditOperationComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<OperationModel> = new ModalInputModel<OperationModel>();
-
+  headerInput: HeaderInputModel = new HeaderInputModel();
+  
   // MODEL FORM
   operation: OperationModel = new OperationModel();
   submited = false;
-  MODAL_TYPE_ENUM = ModalTypeEnum
 
   // DATA
   operations: OperationModel[] = [];
@@ -69,9 +70,12 @@ export class AddEditOperationComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.headerInput = new HeaderInputModel({
+      title: (this.modalInputModel.type == ModalTypeEnum.CREATE ? 'PAGE_OPERATION.AddNewOperation' : 'PAGE_OPERATION.EditOperation')
+    });
 
     this.operation = Object.assign({}, this.modalInputModel.data);
-    if (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE) {
+    if (this.isCreationOperatation(this.modalInputModel.type)) {
       this.operation.id = -1;
       this.operation.date = this.calendarService.getDateStringToDB(new Date());
     }
@@ -158,10 +162,10 @@ export class AddEditOperationComponent implements OnInit {
     this.operation.price = (this.operation.price.toString().includes(',') ?
       Number(this.operation.price.toString().replace(',', '.')) : this.operation.price);
     this.operationService.saveOperation(this.operation,
-      (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
+      (this.isCreationOperatation(this.modalInputModel.type) ? ActionDBEnum.CREATE : ActionDBEnum.UPDATE)).then(res => {
       this.closeModal();
       this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.SUCCESS,
-        (this.modalInputModel.type === ModalTypeEnum.CREATE || this.modalInputModel.type === ModalTypeEnum.DUPLICATE ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation'),
+        (this.isCreationOperatation(this.modalInputModel.type) ? 'PAGE_OPERATION.AddSaveOperation' : 'PAGE_OPERATION.EditSaveOperation'),
           { operation: this.operation.description });
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_OPERATION, ToastTypeEnum.DANGER, 'PAGE_OPERATION.ErrorSaveOperation', e);
@@ -260,6 +264,10 @@ export class AddEditOperationComponent implements OnInit {
 
   isValidDate(f: any): boolean {
     return f.opDate !== undefined && f.opDate.validity.valid;
+  }
+
+  isCreationOperatation(type: ModalTypeEnum): boolean {
+    return (type === ModalTypeEnum.CREATE || type === ModalTypeEnum.DUPLICATE);
   }
 
   isOperationTypeWithReplacement(): boolean {

@@ -28,7 +28,7 @@ module.exports = function(ctx) {
 
     console.log('Before-Build Hook - Copy ' + gradle_file + ' to ' + android_dir);
     fs.createReadStream(gradle_file).pipe(fs.createWriteStream(dest_gradle_file));
-    console.log('Before-Build Hook- Copy ' + gradle_file + ' to ' + android_app_dir);
+    console.log('Before-Build Hook - Copy ' + gradle_file + ' to ' + android_app_dir);
     fs.createReadStream(gradle_file).pipe(fs.createWriteStream(dest_gradle_app_file));
 
     console.log("----> START Before-Build Hook <----");

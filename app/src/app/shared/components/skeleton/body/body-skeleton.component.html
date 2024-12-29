@@ -1,0 +1,12 @@
+
+<ion-item *ngFor="let i of input.items">
+  <ion-avatar *ngIf="input.avatar" slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
+  <ion-label *ngFor="let j of input.itemsLabel">
+    <h3 *ngIf="j.h3Width !== 0"><ion-skeleton-text animated [style]="'width:' + j.h3Width + '%'"></ion-skeleton-text></h3>
+    <h2 *ngIf="j.h2Width !== 0"><ion-skeleton-text animated [style]="'width:' + j.h2Width + '%'"></ion-skeleton-text></h2>
+    <p *ngFor="let k of j.pWidth"><ion-skeleton-text animated [style]="'width:' + k + '%'"></ion-skeleton-text></p>
+    <div *ngIf="j.divWidth !== 0" class="table-row" [style]="'width:' + j.divWidth + '%'">
+      <p *ngFor="let k of j.divPWidth" class="main-item-div"><ion-skeleton-text animated [style]="'width:' + k + '%'"></ion-skeleton-text></p>
+    </div>
+  </ion-label>
+</ion-item>

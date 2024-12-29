@@ -1,32 +1,4 @@
-<ion-header *ngIf="loadedHeader">
-  <ion-toolbar>
-    <!-- Button Calendar -->
-    <ion-button class="btn-width-header" slot="start" fill="clear" (click)="openInfoCalendar()">
-      <ion-icon color="primary" size="large" name="calendar"></ion-icon>
-    </ion-button>
-    <!-- Tittle -->
-    <ion-title>
-      <ion-title color="text-header" class="align-center">{{ 'PAGE_HOME.HOME' | translate }}</ion-title>
-    </ion-title>
-    <!-- Button filter -->
-    <ion-button slot="end" fill="clear" (click)="openSettings()" class="btn-width-header">
-      <ion-icon color="primary" size="large" name="settings"></ion-icon>
-    </ion-button>
-  </ion-toolbar>
-  <!-- SEGMENT -->
-  <ion-segment *ngIf="(!activateInfo || !hideFabButton) && vehicleSelected" class="segment-button-fixed" 
-    [value]="this.vehicleSelected.idVehicle" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
-    <ion-segment-button *ngFor="let m of wears; let i = index;" [value]="m.idVehicle" layout="icon-start">
-      <ion-label>
-        {{ m.nameVehicle }}
-        <div [class]="'progress-bar' + m.warningProgressBarIcon">
-          <ion-progress-bar [value]="m.percent"></ion-progress-bar>
-        </div>
-      </ion-label>
-      <ion-icon size="small" [name]="m.iconVehicle"></ion-icon>
-    </ion-segment-button>
-  </ion-segment>
-</ion-header>
+<app-header *ngIf="loadedHeader" [input]="headerInput" (output)="eventEmitHeader($event)"></app-header>
 
 <ion-content *ngIf="loadedBody">
   <!-- INFO -->
@@ -153,24 +125,11 @@
   </ion-fab>
 </ion-content>
 
-<!-- SKELETON LOADER INITAL -->
-<ion-header *ngIf="!loadedHeader">
-  <app-header-skeleton [input]="[2, 4, 2, 4]"></app-header-skeleton>
-</ion-header>
+<!-- SKELETON -->
+<app-skeleton class="max-height" *ngIf="!loadedHeader || !loadedBody" 
+  [loadedHeader]="loadedHeader" 
+  [loadedBody]="loadedBody" 
+  [input]="skeletonInput" 
+  (loadedHeaderOutput)="changeLoadedHeader($event)" 
+  (loadedBodyOutput)="changeLoadedBody($event)"></app-skeleton>
 
-<ion-content *ngIf="!loadedBody">
-  <ion-list>
-    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]">
-      <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
-      <ion-label>
-        <h3 class="main-item-div"><ion-skeleton-text animated style="width: 85%"></ion-skeleton-text></h3>
-        <div class="table-row" style="width: 75%;">
-          <p class="main-item-div"><ion-skeleton-text animated style="width: 25%"></ion-skeleton-text></p>
-          <p class="main-item-div"><ion-skeleton-text animated style="width: 25%"></ion-skeleton-text></p>
-          <p class="main-item-div"><ion-skeleton-text animated style="width: 25%"></ion-skeleton-text></p>
-          <p class="main-item-div"><ion-skeleton-text animated style="width: 25%"></ion-skeleton-text></p>
-        </div>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-</ion-content>

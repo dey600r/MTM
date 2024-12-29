@@ -1,27 +1,4 @@
-<ion-header *ngIf="loadedHeader">
-  <ion-toolbar>
-    <!-- Button chart -->
-    <ion-button slot="start" fill="clear" (click)="openDashboardOperation()" class="btn-width-header">
-      <ion-icon size="large" [name]="iconNameHeaderLeft"></ion-icon>
-    </ion-button>
-    <!-- Tittle -->
-    <ion-title color="text-header" class="align-center">{{ 'COMMON.OPERATIONS' | translate }}</ion-title>
-    <!-- Button filter -->
-    <ion-button slot="end" fill="clear" (click)="showPopover($event)" class="btn-width-header">
-      <ion-icon size="large" [name]="iconFilter"></ion-icon>
-    </ion-button>
-  </ion-toolbar>
-  <!-- SEGMENT -->
-  <ion-segment class="segment-button-fixed" 
-    [value]="this.vehicleSelected" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
-    <ion-segment-button *ngFor="let v of vehicles; let i = index;" [value]="v.id" layout="icon-start">
-      <ion-label>
-        {{ v.brand + ' ' + v.model }}
-      </ion-label>
-      <ion-icon size="small" [name]="v.vehicleType.icon"></ion-icon>
-    </ion-segment-button>
-  </ion-segment>
-</ion-header>
+<app-header *ngIf="loadedHeader" [input]="headerInput" (output)="eventEmitHeader($event)"></app-header>
 
 <ion-content *ngIf="loadedBody">
   <!-- INFO -->
@@ -71,23 +48,10 @@
   </ion-fab>
 </ion-content>
 
-<!-- SKELETON LOADER INITAL -->
-<ion-header *ngIf="!loadedHeader">
-  <app-header-skeleton [input]="[2, 4, 2, 4]"></app-header-skeleton>
-</ion-header>
-
-<ion-content *ngIf="!loadedBody">
-  <ion-list>
-    <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]">
-      <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
-      <ion-label>
-        <h3><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></h3>
-        <h2><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></h2>
-      </ion-label>
-      <ion-label>
-        <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
-        <p><ion-skeleton-text animated style="width: 30%"></ion-skeleton-text></p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-</ion-content>
+<!-- SKELETON -->
+<app-skeleton class="max-height" *ngIf="!loadedHeader || !loadedBody" 
+  [loadedHeader]="loadedHeader" 
+  [loadedBody]="loadedBody" 
+  [input]="skeletonInput" 
+  (loadedHeaderOutput)="changeLoadedHeader($event)" 
+  (loadedBodyOutput)="changeLoadedBody($event)"></app-skeleton>

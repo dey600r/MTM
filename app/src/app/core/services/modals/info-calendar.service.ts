@@ -90,9 +90,9 @@ export class InfoCalendarService {
                             price: rep.price,
                             km: op.km,
                             time: 0,
-                            warning: WarningWearEnum.SUCCESS,
-                            warningIcon: this.iconService.getIconKms(WarningWearEnum.SUCCESS),
-                            warningIconClass: this.iconService.getClassIcon(WarningWearEnum.SUCCESS),
+                            warning: WarningWearEnum.DONE,
+                            warningIcon: this.iconService.getIconKms(WarningWearEnum.DONE),
+                            warningIconClass: this.iconService.getClassIcon(WarningWearEnum.DONE),
                             date: new Date(op.date),
                             dateFormat: this.calendarService.getDateString(op.date),
                         }];
@@ -327,6 +327,8 @@ export class InfoCalendarService {
             return 'day-circle-config-danger';
         } else if (listWarning[0] === WarningWearEnum.WARNING) {
             return 'day-circle-config-warning';
+        } else if (listWarning[0] === WarningWearEnum.DONE) {
+            return 'day-circle-config-done';
         } else {
             return 'day-circle-config-success';
         }

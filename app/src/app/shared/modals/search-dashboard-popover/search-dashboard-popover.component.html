@@ -44,7 +44,7 @@
             <div slot="label" class="label-required">
                 <ion-text>{{ 'COMMON.VEHICLES' | translate }}</ion-text>
             </div>
-            <ion-select-option [value]="v.id" *ngFor="let v of vehicles">{{ v.brand + ' - ' + v.model }}</ion-select-option>
+            <ion-select-option [value]="v.id" *ngFor="let v of vehicles">{{ v.$getName }}</ion-select-option>
         </ion-select>
     </ion-item>
     <ion-item *ngIf="showFilterMaintElement">

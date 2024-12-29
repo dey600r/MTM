@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 
 // UTILS
 import { ActionDBEnum, ConstantsColumns, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
-import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel, ISettingModel } from '@models/index';
+import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel, ISettingModel, HeaderInputModel } from '@models/index';
 import { DataService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
@@ -15,11 +15,11 @@ export class AddEditConfigurationComponent implements OnInit {
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<ConfigurationModel> = new ModalInputModel<ConfigurationModel>();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // MODEL FORM
   configuration: ConfigurationModel = new ConfigurationModel();
   submited = false;
-  MODAL_TYPE_ENUM = ModalTypeEnum;
 
   // DATA
   maintenances: MaintenanceModel[] = [];
@@ -35,8 +35,11 @@ export class AddEditConfigurationComponent implements OnInit {
     private readonly configurationService: ConfigurationService
   ) {
   }
-
+  
   ngOnInit() {
+    this.headerInput = new HeaderInputModel({
+      title: (this.modalInputModel.type == ModalTypeEnum.CREATE ? 'PAGE_CONFIGURATION.AddNewConfiguration' : 'PAGE_CONFIGURATION.EditConfiguration')
+    });
 
     const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {

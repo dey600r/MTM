@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- Button Left -->
+    <ion-button class="btn-width-header" slot="start" fill="clear" (click)="emitButtonLeft($event)">
+      <ion-icon *ngIf="this.input.iconButtonLeft !== ''" size="large" [name]="this.input.iconButtonLeft"></ion-icon>
+    </ion-button>
+    <!-- Tittle -->
+    <ion-title color="text-header" class="align-center">{{ this.input.title | translate }}</ion-title>
+    <!-- Button Right -->
+    <ion-button *ngIf="this.input.iconButtonRight !== ''" slot="end" fill="clear" (click)="emitButtonRight($event)" class="btn-width-header">
+      <ion-icon size="large" [name]="this.input.iconButtonRight"></ion-icon>
+    </ion-button>
+    <!-- Button Close -->
+    <ion-button *ngIf="this.input.iconButtonRight === ''" fill="clear" slot="end" (click)="closeModal()" class="btn-width-header">
+      <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+  <!-- SEGMENT -->
+  <ion-segment *ngIf="this.input.dataSegment.length > 0" class="segment-button-fixed" [value]="this.selectedSegment"
+      [scrollable]="activeSegmentScroll()" (ionChange)="emitSegmentHeader($event)">
+    <ion-segment-button *ngFor="let data of this.input.dataSegment; let i = index;" [value]="data.id" layout="icon-start">
+      <ion-label>
+        {{ data.name  | translate }}
+        <div *ngIf="data.progressColor !== ''" [class]="'progress-bar' + data.progressColor">
+          <ion-progress-bar [value]="data.progressValue"></ion-progress-bar>
+        </div>
+      </ion-label>
+      <ion-icon size="small" [name]="data.icon"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>

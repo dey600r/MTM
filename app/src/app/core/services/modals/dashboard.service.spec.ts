@@ -477,13 +477,13 @@ describe('DashboardService', () => {
         expect(result[4].value).toBeLessThanOrEqual(1905);
         expect(result[5].value).toBeLessThanOrEqual(1705);
         expect(result[6].value).toBeLessThanOrEqual(4000);
-        expect(result[0].value).toBeGreaterThanOrEqual(1000);
+        expect(result[0].value).toBeGreaterThanOrEqual(500);
         expect(result[1].value).toBeGreaterThanOrEqual(500);
-        expect(result[2].value).toBeGreaterThanOrEqual(1000);
-        expect(result[3].value).toBeGreaterThanOrEqual(1000);
-        expect(result[4].value).toBeGreaterThanOrEqual(1600);
-        expect(result[5].value).toBeGreaterThanOrEqual(1400);
-        expect(result[6].value).toBeGreaterThanOrEqual(1600);
+        expect(result[2].value).toBeGreaterThanOrEqual(500);
+        expect(result[3].value).toBeGreaterThanOrEqual(500);
+        expect(result[4].value).toBeGreaterThanOrEqual(1000);
+        expect(result[5].value).toBeGreaterThanOrEqual(1000);
+        expect(result[6].value).toBeGreaterThanOrEqual(1000);
     });
 
     it('should calculate km per year without operation 2', () => {

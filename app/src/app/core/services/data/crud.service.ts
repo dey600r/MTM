@@ -273,10 +273,10 @@ export class CRUDService {
       },
     ];
 
-  constructor(private storageService: StorageService,
-              private mapService: MapService,
-              private dataService: DataService,
-              private calendarService: CalendarService) {
+  constructor(private readonly storageService: StorageService,
+              private readonly mapService: MapService,
+              private readonly dataService: DataService,
+              private readonly calendarService: CalendarService) {
 
   }
 
@@ -292,8 +292,8 @@ export class CRUDService {
           for(let element of data[conf.table]) {  
           let parameters: any[] = [];
           conf.get.relatedTable.forEach(step => {
-              const dataTable: any[] = JSON.parse(JSON.stringify(step.getDataRelatedTableFunction()));
-              if(step.getDataRelatedTableRefFunction == null) {
+            const dataTable: any[] = step.getDataRelatedTableFunction();
+            if(step.getDataRelatedTableRefFunction == null) {
                 let idRelated: number = Number(element[step.foreignKey]);
                 parameters = [...parameters, dataTable.find(row => Number(row.id) === idRelated)];
               } else {
@@ -364,43 +364,43 @@ export class CRUDService {
   /* SAVER CONFIGURATION */
 
   saveDataStorage(listBehaviour: ISaveBehaviourModel[]): Promise<boolean[]> {
-      let listPromises: any[] = [];
-      listBehaviour.forEach(behaviour => {
+    let listPromises: any[] = [];
+    listBehaviour.forEach(behaviour => {
       switch(behaviour.action) {
-          case ActionDBEnum.CREATE:
+        case ActionDBEnum.CREATE:
           listPromises.push(this.launchActionDataStorage(behaviour, this.addItemToList));
           break;
-          case ActionDBEnum.UPDATE:
+        case ActionDBEnum.UPDATE:
           listPromises.push(this.launchActionDataStorage(behaviour, this.updateItemToList));
           break;
-          case ActionDBEnum.DELETE:
+        case ActionDBEnum.DELETE:
           listPromises.push(this.launchActionDataStorage(behaviour, this.deleteItemToList));
           break;
-          case ActionDBEnum.REFRESH:
+        case ActionDBEnum.REFRESH:
           this.loadListKeysStorage([behaviour.table]);
           break;
       }
-      });
+    });
 
-      return Promise.all(listPromises);
+    return Promise.all(listPromises);
   }
 
   launchActionDataStorage(saver: ISaveBehaviourModel, actionDataStorage: (saver: ISaveBehaviourModel, listDataStorage: any[]) => any[]): Promise<boolean> {
       return new Promise<boolean>((resolve, reject) => {
       const mapper: IMapperModel = this.databaseBehaviourConfiguration.find(x => x.table === saver.table);
       if(mapper !== null) {
-          let listDataToSave: any[] = [];
-          mapper.get.getDataFunction().forEach(x => listDataToSave.push(mapper.save.saveMapperFunction(x)));
-          if (saver.action !== ActionDBEnum.DELETE) {
+        let listDataToSave: any[] = [];
+        mapper.get.getDataFunction().forEach(x => listDataToSave.push(mapper.save.saveMapperFunction(x)));
+        if (saver.action !== ActionDBEnum.DELETE) {
           let newData: any[] = [];
           saver.data.forEach(x => newData.push(mapper.save.saveMapperFunction(x)));
           saver.data = newData;
-          }
-          listDataToSave = actionDataStorage(saver, listDataToSave);
-          this.mapperDataStorage({[saver.table]: listDataToSave});
-          this.storageService.setData(saver.table, listDataToSave).then(saved => {
+        }
+        listDataToSave = actionDataStorage(saver, listDataToSave);
+        this.mapperDataStorage({[saver.table]: listDataToSave});
+        this.storageService.setData(saver.table, listDataToSave).then(saved => {
           resolve(saved);
-          }).catch(e => reject(e));
+        }).catch(e => reject(e));
       } else {
           reject('Behaviour not found');
       }
@@ -412,56 +412,56 @@ export class CRUDService {
   }
 
   addItemToList(saver: ISaveBehaviourModel, listDataStorage: any[]): any[] {
-      let dataToSave: any[] = saver.data;
-      let listData: any[] = listDataStorage;
-      dataToSave.forEach((x, index) => {
+    let dataToSave: any[] = saver.data;
+    let listData: any[] = listDataStorage;
+    dataToSave.forEach((x, index) => {
       x.id = (listData.length === 0 ? 1 : listData[listData.length - 1].id + 1) + index;
       listData.push(x);
-      });
-      return listData;
+    });
+    return listData;
   }
 
   updateItemToList(saver: ISaveBehaviourModel, listDataStorage: any[]): any[] {
-      let dataToUpdate: any[] = saver.data;
-      let listData: any[] = listDataStorage;
-      dataToUpdate.forEach(item => {
+    let dataToUpdate: any[] = saver.data;
+    let listData: any[] = listDataStorage;
+    dataToUpdate.forEach(item => {
       let indexDataToUpdate = listData.findIndex(x => x.id === item.id);
       listData[indexDataToUpdate] = item;
-      });
-      return listData;
+    });
+    return listData;
   }
 
   deleteItemToList(saver: ISaveBehaviourModel, listDataStorage: any[]): any[] {
-      let idToDelete: any[] = saver.data;
-      let listData: any[] = listDataStorage;
-      let prop: string[] = (!!saver.prop && saver.prop.length > 0 ? saver.prop: [ConstantsColumns.COLUMN_MTM_ID]);
-      let listDataToDelete: any[] = [];
-      if (prop.length === 1) {
+    let idToDelete: any[] = saver.data;
+    let listData: any[] = listDataStorage;
+    let prop: string[] = (!!saver.prop && saver.prop.length > 0 ? saver.prop: [ConstantsColumns.COLUMN_MTM_ID]);
+    let listDataToDelete: any[] = [];
+    if (prop.length === 1) {
       listDataToDelete = listData.filter(x => idToDelete.some(y => y[ConstantsColumns.COLUMN_MTM_ID] === x[prop[0]]));
-      } else {
+    } else {
       listDataToDelete = listData.filter(x => prop.every((y, index) => x[y] === idToDelete[index][ConstantsColumns.COLUMN_MTM_ID]));
-      }
-      listDataToDelete.forEach(item => {
+    }
+    listDataToDelete.forEach(item => {
       let index: number = listData.findIndex(x => x.id === item.id);
       listData.splice(index, 1);
-      });
-      return listData;
+    });
+    return listData;
   }
 
   saveSystemConfiguration(key: string, value: string, id: number = -1, date: string = null): Promise<any> {
-      if (!!value) {
-          return this.saveDataStorage([{
-              action: ActionDBEnum.UPDATE,
-              table: ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
-              data: [{
-                  id: (id === -1 ? this.dataService.getSystemConfigurationData().find(x => x.key === key).id : id),
-                  key: key,
-                  value: value,
-                  updated: (date ?? this.calendarService.getDateStringToDB(new Date()))
-              }]
-          }]);
-      }
-      return null;
+    if (!!value) {
+        return this.saveDataStorage([{
+            action: ActionDBEnum.UPDATE,
+            table: ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION,
+            data: [{
+                id: (id === -1 ? this.dataService.getSystemConfigurationData().find(x => x.key === key).id : id),
+                key: key,
+                value: value,
+                updated: (date ?? this.calendarService.getDateStringToDB(new Date()))
+            }]
+        }]);
+    }
+    return null;
   }
 
 }

@@ -1,23 +1,5 @@
-<ion-header>
-  <ion-toolbar>
-      <!-- Title -->
-      <ion-title color="text-header" class="align-center">{{ 'COMMON.SUMMARY_VEHICLES' | translate }}</ion-title>
-      <!-- Button Close -->
-      <ion-button fill="clear" (click)="closeModal()" class="btn-width-header" slot="end">
-        <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
-      </ion-button>
-  </ion-toolbar>
-  <!-- SEGMENT -->
-  <ion-segment class="segment-button-fixed" 
-    [value]="this.vehicleSelected.id" [scrollable]="activeSegmentScroll()" (ionChange)="segmentChanged($event)">
-    <ion-segment-button *ngFor="let v of vehicles; let i = index;" [value]="v.id" layout="icon-start">
-      <ion-label>
-        {{ v.brand + ' ' + v.model }}
-      </ion-label>
-      <ion-icon size="small" [name]="v.vehicleType.icon"></ion-icon>
-    </ion-segment-button>
-  </ion-segment>
-</ion-header>
+<!-- HEADER MODAL -->
+<app-header [input]="headerInput" (output)="eventEmitHeader($event)"></app-header>
 
 <ion-content>
   <!-- INFO VEHICLE -->
@@ -136,16 +118,7 @@
       </ion-item>
     </div>
     <div *ngIf="!loadedBodyConfigurationSummary">
-      <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]">
-        <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
-        <ion-label>
-          <h3 class="main-item-div"><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></h3>
-          <div class="table-row" style="width: 60%;">
-            <p class="main-item-div"><ion-skeleton-text animated style="width: 35%"></ion-skeleton-text></p>
-            <p class="main-item-div"><ion-skeleton-text animated style="width: 35%"></ion-skeleton-text></p>
-          </div>
-        </ion-label>
-      </ion-item>
+      <app-body-skeleton [input]="inputBodySkeletonConfigurationSummary"></app-body-skeleton>
     </div>
   </ion-list>
   <!-- REPLACEMENT SUMMARY -->
@@ -238,22 +211,7 @@
       </ion-item>
     </div>
     <div *ngIf="!loadedBodyReplacementSummary">
-      <ion-item *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8]">
-        <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
-        <ion-label>
-          <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
-          <div class="table-row" style="width: 75%;">
-            <p class="main-item-div"><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
-            <p class="main-item-div"><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
-          </div>
-        </ion-label>
-        <ion-label></ion-label>
-        <ion-label>
-          <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
-          <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
-          <p><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></p>
-        </ion-label>
-      </ion-item>
+      <app-body-skeleton [input]="inputBodySkeletonReplacementSummary"></app-body-skeleton>
     </div>
   </ion-list>
 </ion-content>

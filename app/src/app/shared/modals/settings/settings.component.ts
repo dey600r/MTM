@@ -7,7 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 // MODELS
 import {
-  ModalInputModel, SystemConfigurationModel, WearVehicleProgressBarViewModel, ISettingModel
+  ModalInputModel, SystemConfigurationModel, WearVehicleProgressBarViewModel, ISettingModel,
+  HeaderInputModel
 } from '@models/index';
 
 // UTILS
@@ -26,6 +27,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     // MODAL MODELS
     @Input() modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
+    headerInput: HeaderInputModel = new HeaderInputModel();
 
     // MODEL FORM
 
@@ -78,6 +80,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.headerInput = new HeaderInputModel({
+      title: 'COMMON.SETTINGS'
+    });
+
     this.exportService.createOutputDirectory();
 
     // SETTINGS

@@ -15,7 +15,8 @@ export enum WarningWearEnum {
     SUCCESS = 'success',
     WARNING = 'warning',
     DANGER = 'danger',
-    SKULL = 'skull'
+    SKULL = 'skull',
+    DONE = 'done'
 }
 
 export enum PageEnum {
@@ -81,4 +82,10 @@ export enum ModalTypeEnum {
 export enum CalendarTypeEnum {
     OPERATION = 0,
     MAINTENANCE = 1
+}
+
+export enum HeaderOutputEnum {
+    BUTTON_LEFT = 0,
+    BUTTON_RIGHT = 1,
+    SEGMENT = 2
 }

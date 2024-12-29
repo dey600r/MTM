@@ -1,5 +1,7 @@
 import { CalendarTypeEnum } from '@utils/index';
 import { BaseWarningIconModel } from '../common/index';
+import { OperationModel } from '../pages/index';
+import { WearVehicleProgressBarViewModel } from './wear-progress-bar.model';
 
 export class InfoCalendarVehicleViewModel {
     idVehicle = -1;
@@ -37,4 +39,10 @@ export class InfoCalendarReplacementViewModel extends BaseWarningIconModel {
     time = 0;
     date: Date = new Date();
     dateFormat = '';
+}
+
+export class CalendarInputModal {
+    wear: WearVehicleProgressBarViewModel[] = [];
+    operations: OperationModel[] = [];
+    vehicleSelected: number = -1;
 }

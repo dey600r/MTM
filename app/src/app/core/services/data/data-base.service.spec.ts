@@ -48,7 +48,7 @@ describe('DataBaseService', () => {
         const spyStorageService = spyOn(serviceStorage, 'getData').and.returnValue(Promise.resolve(MockAppData.SystemConfigurations));
         const spySetStorageService = spyOn(serviceStorage, 'setData').and.resolveTo(true);
         const spyCRUDService = spyOn(crudService, 'loadAllTables').and.resolveTo();
-        const spyLogService = spyOn(serviceLog, 'logInfo').and.returnValue();
+        const spyLogService = spyOn(serviceLog, 'logInfo').and.returnValue(Promise.resolve());
         const spyHttp = spyOn(httpClient, 'get').and.returnValue(of(''));
         service.initDB();
         tick(200);
@@ -65,7 +65,7 @@ describe('DataBaseService', () => {
         const spyGetStorageService = spyOn(serviceStorage, 'getData').and.rejectWith();
         const spySetStorageService = spyOn(serviceStorage, 'setData').and.resolveTo(true);
         const spyCRUDService = spyOn(crudService, 'loadAllTables').and.resolveTo();
-        const spyLogService = spyOn(serviceLog, 'logInfo').and.returnValue();
+        const spyLogService = spyOn(serviceLog, 'logInfo').and.returnValue(Promise.resolve());
         const spyHttp = spyOn(httpClient, 'get').and.returnValue(of(JSON.stringify({
             data: {
                 [ConstantsTable.TABLE_MTM_SYSTEM_CONFIGURATION]: MockAppData.SystemConfigurations

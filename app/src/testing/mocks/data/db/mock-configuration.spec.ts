@@ -9,7 +9,7 @@ import { MockDBMaintenance } from './mock-maintenance.spec';
 export class MockDBConfiguration {
 
     /* SYSTEM CONFIGURATION */
-    public static SystemConfigurations: ISystemConfigurationStorageModel[] = [
+    public static readonly SystemConfigurations: ISystemConfigurationStorageModel[] = [
         { key: Constants.KEY_LAST_UPDATE_DB, value: 'v3.1.0', updated: new Date(), id: 1 },
         { key: Constants.KEY_CONFIG_DISTANCE, value: Constants.SETTING_DISTANCE_KM, updated: new Date(), id: 2 },
         { key: Constants.KEY_CONFIG_MONEY, value: Constants.SETTING_MONEY_EURO, updated: new Date(), id: 3 },
@@ -19,7 +19,7 @@ export class MockDBConfiguration {
     ];
 
     /* CONFIGURATION */
-    static Configurations: IConfigurationStorageModel[] = [
+    public static readonly Configurations: IConfigurationStorageModel[] = [
         {
             name: 'PRODUCTION', 
             description: 'PRODUCTION SETUP', 
@@ -40,7 +40,7 @@ export class MockDBConfiguration {
         }
     ];
 
-    static ConfigurationMaintenances: IConfigurationMaintenanceStorageModel[] = [
+    public static readonly ConfigurationMaintenances: IConfigurationMaintenanceStorageModel[] = [
         { id: 1, idConfiguration: MockDBConfiguration.Configurations[0].id, idMaintenance: MockDBMaintenance.Maintenances[0].id },
         { id: 2, idConfiguration: MockDBConfiguration.Configurations[0].id, idMaintenance: MockDBMaintenance.Maintenances[1].id },
         { id: 3, idConfiguration: MockDBConfiguration.Configurations[0].id, idMaintenance: MockDBMaintenance.Maintenances[4].id },

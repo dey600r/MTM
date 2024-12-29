@@ -17,6 +17,7 @@ describe('VehicleModels', () => {
         expect(base.kmEstimated).toEqual(null);
         expect(base.kmsPerMonth).toEqual(null);
         expect(base.active).toEqual(true);
+        expect(base.$getName).toBe(`${base.brand} ${base.model}`);
         const date1 = new Date(2022, 11, 10);
         const date2 = new Date(2022, 3, 2);
         base = new VehicleModel({
@@ -45,5 +46,6 @@ describe('VehicleModels', () => {
         expect(base.kmEstimated).toEqual(2500);
         expect(base.kmsPerMonth).toEqual(200);
         expect(base.active).toEqual(false);
+        expect(base.$getName).toEqual(`${base.brand} ${base.model}`);
     });
 });

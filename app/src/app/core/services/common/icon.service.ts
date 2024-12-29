@@ -19,6 +19,8 @@ export class IconService {
             case WarningWearEnum.DANGER:
             case WarningWearEnum.SKULL:
                 return ` quizz-progress-danger`;
+            default:
+                return '';
         }
     }
 
@@ -32,19 +34,27 @@ export class IconService {
                 return ` icon-color-danger`;
             case WarningWearEnum.SKULL:
                 return ` icon-color-skull`;
+            case WarningWearEnum.DONE:
+                return ` icon-color-done`;
+            default:
+                return '';
         }
     }
 
     getIconKms(warning: WarningWearEnum): string {
         switch (warning) {
-            case WarningWearEnum.SUCCESS:
-                return 'checkmark-circle';
-            case WarningWearEnum.WARNING:
-                return 'warning';
-            case WarningWearEnum.DANGER:
-                return 'nuclear';
-            case WarningWearEnum.SKULL:
-                return 'skull';
+          case WarningWearEnum.SUCCESS:
+            return 'checkmark-circle';
+          case WarningWearEnum.WARNING:
+            return 'warning';
+          case WarningWearEnum.DANGER:
+            return 'nuclear';
+          case WarningWearEnum.SKULL:
+            return 'skull';
+          case WarningWearEnum.DONE:
+            return 'checkmark-done-circle';
+          default:
+            return '';
         }
     }
 

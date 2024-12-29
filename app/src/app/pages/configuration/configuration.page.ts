@@ -13,13 +13,14 @@ import {
 // MODELS
 import {
   MaintenanceModel, MaintenanceElementModel, ConfigurationModel, ModalInputModel, ModalOutputModel,
-  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel, ISettingModel, IInfoModel
+  VehicleModel, OperationModel, ListModalModel, ListDataModalModel, SearchDashboardModel, ISettingModel, IInfoModel,
+  HeaderInputModel, HeaderSegmentInputModel, HeaderOutputModel, SkeletonInputModel,
 } from '@models/index';
 
 // UTILS
 import { 
   ConstantsColumns, ActionDBEnum, PageEnum, ToastTypeEnum, ModalOutputEnum, InfoButtonEnum, 
-  ModalTypeEnum
+  ModalTypeEnum, HeaderOutputEnum, ConfigurationSkeletonSetting
 } from '@utils/index';
 
 // COMPONENTS
@@ -41,6 +42,8 @@ export class ConfigurationPage extends BasePage implements OnInit {
   inputConfiguration: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   inputMaintenance: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   inputMaintenanceElement: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  headerInput: HeaderInputModel = new HeaderInputModel();
+  skeletonInput: SkeletonInputModel = ConfigurationSkeletonSetting;
   dataReturned: ModalOutputModel;
 
   // DATA
@@ -54,11 +57,8 @@ export class ConfigurationPage extends BasePage implements OnInit {
   maintenanceElements: MaintenanceElementModel[] = [];
   maxKm = 0;
   measure: ISettingModel;
-  segmentHeader: any[] = [];
   segmentSelected = 1;
-  iconFilter = 'filter';
 
-  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
 
@@ -87,25 +87,14 @@ export class ConfigurationPage extends BasePage implements OnInit {
     this.initData();
   }
 
-  ionViewDidEnter() {
-    if (this.initLoaded) {
-      this.showSkeleton();
-    }
-  }
-
   initInfoData() {
     this.segmentSelected = 1;
-    this.segmentHeader = [
-      { id: 1, title: 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS', icon: 'cog'},
-      { id: 2, title: 'PAGE_CONFIGURATION.MAINTENANCES', icon: 'build'},
-      { id: 3, title: 'PAGE_CONFIGURATION.REPLACEMENTS', icon: 'repeat'}
-    ];
 
     this.inputConfiguration = new ModalInputModel<IInfoModel>({
       parentPage: PageEnum.CONFIGURATION,
       data: {
         text: 'ALERT.ConfigurationEmpty',
-        icon: this.segmentHeader[0].icon,
+        icon: 'cog',
         info: InfoButtonEnum.NONE
       }
     });
@@ -113,7 +102,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
         parentPage: PageEnum.CONFIGURATION,
         data: {
           text: 'ALERT.MaintenanceEmpty',
-          icon: this.segmentHeader[1].icon,
+          icon: 'build',
           info: InfoButtonEnum.NONE
         }
       });
@@ -121,7 +110,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
         parentPage: PageEnum.CONFIGURATION,
         data: {
           text: 'ALERT.MaintenanceElementEmpty',
-          icon: this.segmentHeader[2].icon,
+          icon: 'repeat',
           info: InfoButtonEnum.NONE
         }
       });
@@ -151,7 +140,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allConfigurations = data; 
       this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
       this.dashboardService.setSearchConfiguration();
-      this.showSkeletonBodyNotInit(500);
+      this.changeLoadedBody(false);
       this.detector.detectChanges();
     });
 
@@ -159,7 +148,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allMaintenances = data;
       this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
       this.dashboardService.setSearchConfiguration();
-      this.showSkeletonBodyNotInit(500);
+      this.changeLoadedBody(false);
       this.detector.detectChanges();
     });
 
@@ -167,7 +156,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       this.allMaintenanceElements = data;
       this.maintenanceElements = this.configurationService.orderMaintenanceElement(data); 
       this.dashboardService.setSearchConfiguration();
-      this.showSkeletonBodyNotInit(500);
+      this.changeLoadedBody(false);
       this.detector.detectChanges();
     });
 
@@ -179,7 +168,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   segmentChanged(event: any): void {
     this.segmentSelected = Number(event.detail.value);
-    this.showSkeletonBodyNotInit(500);
+    this.changeLoadedBody(false);
   }
 
   openModalSegmentSelected() {
@@ -205,7 +194,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       listDataModel = [...listDataModel,
         new ListDataModalModel(
           x.id,
-          `${x.brand} ${x.model}`,
+          x.$getName,
           x.configuration.name,
           `${x.km} ${this.measure.value}`,
           x.vehicleType.icon,
@@ -282,11 +271,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
       (filteredVehicles.length === 0 || this.maintenances.some(y => y.listMaintenanceElement.some(z => x.id === z.id))) &&
       (x.name.toLowerCase().includes(filteredText) || x.description.toLowerCase().includes(filteredText))));
 
-    this.loadIconSearch();
-  }
-
-  loadIconSearch() {
-    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.CONFIGURATION));
+    this.loadHeader();
   }
 
   /** CONFIGURATION */
@@ -532,26 +517,40 @@ export class ConfigurationPage extends BasePage implements OnInit {
     return !replacement.master && this.maintenances.some(x => x.listMaintenanceElement.some(y => y.id === replacement.id));
   }
 
-  /* SKELETON */
+  /* HEADER */
 
-  showSkeleton() {
-    this.showSkeletonHeader(1200);
-    this.showSkeletonBody(1200);
+  loadHeader(): void {
+    this.headerInput = new HeaderInputModel({
+      title: 'COMMON.CONFIGURATIONS',
+      iconButtonRight: this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.CONFIGURATION)),
+      dataSegment: [
+        new HeaderSegmentInputModel({id: 1, name: 'PAGE_CONFIGURATION.YOURS_CONFIGURATIONS', icon: this.inputConfiguration.data.icon, selected: true }),
+        new HeaderSegmentInputModel({id: 2, name: 'PAGE_CONFIGURATION.MAINTENANCES', icon: this.inputMaintenance.data.icon, selected: false }),
+        new HeaderSegmentInputModel({id: 3, name: 'PAGE_CONFIGURATION.REPLACEMENTS', icon: this.inputMaintenanceElement.data.icon, selected: true }),
+      ]
+    });
   }
 
-  showSkeletonHeader(time: number) {
-    this.loadedHeader = false;
-    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
-  }
-
-  showSkeletonBodyNotInit(time: number) {
-    this.loadedBody = false;
-    if(!this.initLoaded) {
-      this.showSkeletonBody(time);
+  eventEmitHeader(output: HeaderOutputModel) {
+    switch(output.type) {
+      case HeaderOutputEnum.BUTTON_RIGHT:
+        this.showPopover(output.data);
+        break;
+      case HeaderOutputEnum.SEGMENT:
+        this.segmentChanged(output.data);
+        break;
     }
   }
+    
+  /* SKELETON */
 
-  showSkeletonBody(time: number) {
-    setTimeout(() => { this.loadedBody = true; }, time);
+  changeLoadedHeader(load: boolean) {
+    this.loadedHeader = load;
+    this.skeletonInput.time = this.skeletonInput.time / 2;
   }
+
+  changeLoadedBody(load: boolean) {
+    this.loadedBody = load;
+  }
+
 }

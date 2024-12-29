@@ -1,4 +1,4 @@
-import { ModalOutputEnum, ModalTypeEnum, PageEnum, WarningWearEnum } from '@utils/index';
+import { ModalOutputEnum, ModalTypeEnum, PageEnum, HeaderOutputEnum, WarningWearEnum } from '@utils/index';
 
 export class BaseModel {
     id: number;
@@ -100,5 +100,81 @@ export class BaseMaintenanceModel extends BaseDescriptionModel {
         this.wear = (data.wear !== undefined ? data.wear : false);
         this.fromKm = (data.fromKm !== undefined ? data.fromKm : 0);
         this.toKm = (data.toKm !== undefined ? data.toKm : null);
+    }
+}
+
+export class HeaderSegmentInputModel {
+    id: number;
+    name: string;
+    icon: string;
+    selected: boolean;
+    progressColor: string;
+    progressValue: number;
+    constructor(data: Partial<HeaderSegmentInputModel> = {}) {
+        this.id = (data.id ?? 1);
+        this.name = (data.name ?? '');
+        this.icon = (data.icon ?? '');
+        this.selected = (data.selected ?? true);
+        this.progressColor = (data.progressColor ?? '');
+        this.progressValue = (data.progressValue ?? 0);
+    }
+}
+
+export class HeaderInputModel {
+    title: string;
+    iconButtonLeft: string;
+    iconButtonRight: string;
+    dataSegment: HeaderSegmentInputModel[];
+    constructor(data: Partial<HeaderInputModel> = {}) {
+        this.title = (data.title ?? '');
+        this.iconButtonLeft = (data.iconButtonLeft ?? '');
+        this.iconButtonRight = (data.iconButtonRight ?? '');
+        this.dataSegment = (data.dataSegment ?? []);
+    }
+}
+
+export class HeaderOutputModel {
+    type: HeaderOutputEnum;
+    data: any;
+    constructor(t: HeaderOutputEnum, event: any = null) {
+        this.type = t;
+        this.data = event;
+    }
+}
+
+export class SkeletonInputModel {
+    time: number;
+    itemsHeader: number[];
+    body: BodySkeletonInputModel;
+    constructor(data: Partial<SkeletonInputModel> = {}) {
+        this.time = (data.time ?? 0);
+        this.itemsHeader = (data.itemsHeader ?? []);
+        this.body = (data.body ?? new BodySkeletonInputModel());
+    }
+}
+
+export class BodySkeletonInputModel {
+    items: number[];
+    avatar: boolean;
+    itemsLabel: BodySkeletonLabelsInputModel[];
+    constructor(data: Partial<BodySkeletonInputModel> = {}) {
+        this.items = (data.items ?? []);
+        this.avatar = (data.avatar ?? false);
+        this.itemsLabel = (data.itemsLabel ?? []);
+    }
+}
+
+export class BodySkeletonLabelsInputModel {
+    h3Width: number = 0;
+    h2Width: number = 0;
+    pWidth: number[] = []; 
+    divWidth: number = 0;
+    divPWidth: number[] = [];
+    constructor(data: Partial<BodySkeletonLabelsInputModel> = {}) {
+        this.h3Width = (data.h3Width ?? 0);
+        this.h2Width = (data.h2Width ?? 0);
+        this.pWidth = (data.pWidth ?? []);
+        this.divWidth = (data.divWidth ?? 0);
+        this.divPWidth = (data.divPWidth ?? []);
     }
 }

@@ -1,4 +1,4 @@
-import { InfoCalendarMaintOpViewModel, InfoCalendarReplacementViewModel, InfoCalendarVehicleViewModel } from "@models/index";
+import { CalendarInputModal, InfoCalendarMaintOpViewModel, InfoCalendarReplacementViewModel, InfoCalendarVehicleViewModel } from "@models/index";
 import { WarningWearEnum } from "@utils/index";
 
 describe('InfoCalendarModels', () => {
@@ -40,5 +40,12 @@ describe('InfoCalendarModels', () => {
         expect(base.warning).toEqual(WarningWearEnum.SUCCESS);
         expect(base.warningIcon).toEqual('');
         expect(base.warningIconClass).toEqual('');
+    });
+
+    it('should initialize calendar input modal', () => {
+        const input: CalendarInputModal = new CalendarInputModal();
+        expect(input.operations.length).toEqual(0);
+        expect(input.wear.length).toEqual(0);
+        expect(input.vehicleSelected).toEqual(-1);
     });
 });

@@ -11,15 +11,22 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 // COMPONENTS
 import { AppInfoComponent } from '@components/info/app-info.component';
-import { HeaderSkeletonComponent } from '@components/header-skeleton/header-skeleton.component';
+import { SkeletonComponent } from '@src/app/shared/components/skeleton/skeleton.component';
+import { BodySkeletonComponent } from '@src/app/shared/components/skeleton/body/body-skeleton.component';
+import { HeaderComponent } from '@src/app/shared/components/header/header.component';
 
-@NgModule({ declarations: [
+@NgModule({ 
+    declarations: [
         AppInfoComponent,
-        HeaderSkeletonComponent
+        SkeletonComponent,
+        BodySkeletonComponent,
+        HeaderComponent
     ],
     exports: [
         AppInfoComponent,
-        HeaderSkeletonComponent
+        SkeletonComponent,
+        BodySkeletonComponent,
+        HeaderComponent
     ], imports: [
         IonicModule,
         CommonModule,

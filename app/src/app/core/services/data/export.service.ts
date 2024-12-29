@@ -37,10 +37,10 @@ export class ExportService {
         return this.logService.getRootPathFiles(filePath) + '/' + fileName;
     }
 
-    createOutputDirectory() {
+    async createOutputDirectory() {
         const pathDataDirectory: string = this.logService.getDataDirectory();
         try {
-            this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
+            await this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
                 this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory exists`);
                 this.createDiretory(Constants.EXPORT_DIR_NAME);
                 this.createDiretory(Constants.IMPORT_DIR_NAME);
@@ -90,8 +90,7 @@ export class ExportService {
 
     exportJsonWeb(json: any, exportFileName: string) {
         const blob = new Blob([JSON.stringify(json, null, 2)], {type: 'application/json'});
-        // window.open(window.URL.createObjectURL(blob)); // OPEN IN A NEW TAB
-    
+
         let dwldLink = document.createElement("a");
         let url = URL.createObjectURL(blob);
         let isSafariBrowser = navigator.userAgent.indexOf('Safari') !=

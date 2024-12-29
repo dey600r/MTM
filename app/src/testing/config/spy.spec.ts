@@ -12,12 +12,11 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
-import { ControlService, DataBaseService, DataService, ExportService, LogService } from '@services/index';
+import { ControlService, DataBaseService, DataService, ExportService, LogService, StorageService } from '@services/index';
 import { DateFormatCalendarPipe } from '@pipes/date-format-calendar.pipe';
 
 // MOCK
 import { MockAppData } from '../mocks/mock-data-app.spec';
-import { ModalInputModel } from '@src/app/core/models';
 import { ConstantsTest } from './constants.spec';
 
 
@@ -56,7 +55,9 @@ export class SpyMockConfig {
             'getOperations', 'getOperationsData', 'getOperationTypeData', 'getMaintenance', 'getMaintenanceData',
             'getMaintenanceElement', 'getMaintenanceElementData', 'getVehicleType', 'getOperationType',
             'getMaintenanceFreq', 'getMaintenanceFreqData']),
-        controlService: jasmine.createSpyObj('ControlService', ['activateButtonExist', 'isAppFree', 'activeSegmentScroll', 'alertCustom']),
+        storageService: jasmine.createSpyObj('StorageService', ['getData', 'setData']),
+        controlService: jasmine.createSpyObj('ControlService', 
+            ['activateButtonExist', 'isAppFree', 'activeSegmentScroll', 'alertCustom', 'closeModal']),
         exportService: jasmine.createSpyObj('ExportService', ['createOutputDirectory']),
         logService: jasmine.createSpyObj('LogService', ['logInfo', 'getDataDirectory']),
         window: {
@@ -88,9 +89,11 @@ export class SpyMockConfig {
     ];
 
     static readonly ProviderLogService = { provide: LogService, useValue: SpyMockConfig.SpyConfig.logService };
+    static readonly ProviderStorageService = { provide: StorageService, useValue: SpyMockConfig.SpyConfig.storageService };
     static readonly ProviderDataService = { provide: DataService, useValue: SpyMockConfig.SpyMockAppDataService() };
     static readonly ProviderDataBaseService = { provide: DataBaseService, useValue: SpyMockConfig.SpyConfig.dbService };
     static readonly ProviderExportService = { provide: ExportService, useValue: SpyMockConfig.SpyConfig.exportService };
+    static readonly ProviderControlService = { provide: ControlService, useValue: SpyMockConfig.SpyConfig.controlService };
 
     static SpyMockAppDataService() {
         const spy = SpyMockConfig.SpyConfig.dataService;

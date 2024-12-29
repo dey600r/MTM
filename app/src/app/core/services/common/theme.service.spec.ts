@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { DomController } from '@ionic/angular';
 
 // SERVICES
@@ -34,24 +34,21 @@ describe('ThemeService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('should be get LIGHT theme', fakeAsync(() => {
-        service.changeTheme(Constants.SETTING_THEME_LIGHT);
-        tick(1000);
+    it('should be get LIGHT theme', waitForAsync(async () => {
+        const isOk = await service.changeTheme(Constants.SETTING_THEME_LIGHT);
+        expect(isOk).toBeTruthy();
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('');
-        flush();
     }));
 
-    it('should be get SKY theme', fakeAsync(() => {
-        service.changeTheme(Constants.SETTING_THEME_SKY);
-        tick(1000);
+    it('should be get SKY theme', waitForAsync(async () => {
+        const isOk = await service.changeTheme(Constants.SETTING_THEME_SKY);
+        expect(isOk).toBeTruthy();
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('#00B0B9');
-        flush();
     }));
 
-    it('should be get DARK theme', fakeAsync(() => {
-        service.changeTheme(Constants.SETTING_THEME_DARK);
-        tick(1000);
+    it('should be get DARK theme', waitForAsync(async () => {
+        const isOk = await service.changeTheme(Constants.SETTING_THEME_DARK);
+        expect(isOk).toBeTruthy();
         expect(document.documentElement.style.getPropertyValue('--ion-color-primary')).toEqual('#8ab4f8');
-        flush();
-    }), 10000);
+    }));
 });

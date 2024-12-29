@@ -34,7 +34,8 @@ import { SearchDashboardPopOverComponent } from '@modals/search-dashboard-popove
 import { ListDataToUpdateComponent } from '@modals/list-data-to-update/list-data-to-update.component';
 import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.component';
 
-@NgModule({ declarations: [
+@NgModule({ 
+    declarations: [
         AddEditConfigurationComponent,
         AddEditVehicleComponent,
         AddEditOperationComponent,

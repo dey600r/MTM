@@ -1,15 +1,5 @@
-<ion-header>
-    <ion-toolbar>
-        <!-- Title -->
-        <ion-title color="text-header" class="align-center padding-left30">
-          {{ (this.modalInputModel.type == MODAL_TYPE_ENUM.CREATE ? 'PAGE_CONFIGURATION.AddNewConfiguration' : 'PAGE_CONFIGURATION.EditConfiguration') | translate }}
-        </ion-title>
-        <!-- Button Close -->
-        <ion-button fill="clear" slot="end" (click)="closeModal()" class="btn-width-header">
-            <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
-        </ion-button>
-    </ion-toolbar>
-</ion-header>
+<!-- HEADER MODAL -->
+<app-header [input]="headerInput"></app-header>
   
 <ion-content>
     <!-- Form -->

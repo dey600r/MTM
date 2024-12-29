@@ -13,9 +13,13 @@ import {
 import {
   SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
-  ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel
+  ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel,
+  CalendarInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel,
+  SkeletonInputModel,
 } from '@models/index';
-import { PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum } from '@utils/index';
+import { 
+  PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, HomeSkeletonSetting
+} from '@utils/index';
 
 // COMPONENTS
 import { InfoNotificationComponent } from '@modals/info-notification/info-notification.component';
@@ -35,6 +39,8 @@ export class HomePage extends BasePage implements OnInit {
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
+  skeletonInput: SkeletonInputModel = HomeSkeletonSetting;
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA
   searchDashboard: SearchDashboardModel = new SearchDashboardModel();
@@ -44,7 +50,6 @@ export class HomePage extends BasePage implements OnInit {
   vehicleSelected: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
   operations: OperationModel[] = [];
   maintenances: MaintenanceModel[] = [];
-  initLoaded = true;
   loadedHeader = false;
   loadedBody = false;
   hideOpButton = false;
@@ -72,6 +77,7 @@ export class HomePage extends BasePage implements OnInit {
               private readonly detector: ChangeDetectorRef) {
     super(platform, translator);
     this.searchDashboard = this.dashboardService.getSearchDashboard();
+    this.loadHeader();
   }
 
   ngOnInit() {
@@ -125,12 +131,10 @@ export class HomePage extends BasePage implements OnInit {
           this.calculateDashboard(vehiclesActives, operations, configurations, maintenances);
         });
       } else {
-        this.timeOutLoader();
         this.activateInfo = this.activateModeInfo([], []);
         this.vehicleSelected = new WearVehicleProgressBarViewModel();
       }
     } else {
-      this.timeOutLoader();
       this.activateInfo = this.activateModeInfo([], []);
       this.vehicleSelected = new WearVehicleProgressBarViewModel();
     }
@@ -159,9 +163,9 @@ export class HomePage extends BasePage implements OnInit {
     }
     this.vehicleSelected = (this.vehicleSelected.idVehicle === -1 ?
       this.wears[0] : this.wears.find(x => x.idVehicle === this.vehicleSelected.idVehicle));
+    this.loadHeader(this.allWears, this.vehicleSelected.idVehicle);
     this.activateInfo = this.activateModeInfo(vehiclesActives, this.wears);
     this.initShowInfoMaintenance();
-    this.timeOutLoader();
     this.detector.detectChanges();
   }
 
@@ -179,13 +183,6 @@ export class HomePage extends BasePage implements OnInit {
       this.loadedBody = false;
       this.dataService.setVehicles(this.dataService.getVehiclesData());
       this.controlService.setDateLastUse();
-    }
-    this.timeOutLoader();
-  }
-
-  timeOutLoader() {
-    if (this.initLoaded) {
-      this.showSkeleton();
     }
   }
 
@@ -229,7 +226,7 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   segmentChanged(event: any): void {
-    this.showSkeletonBodyNotInit(500);
+    this.changeLoadedBody(false);
     this.vehicleSelected = this.wears.find(x => x.idVehicle === Number(event.detail.value));
     this.initShowInfoMaintenance();
     this.activateInfo = this.activateModeInfo((this.vehicleSelected ? [new VehicleModel()] : []), this.wears);
@@ -240,27 +237,47 @@ export class HomePage extends BasePage implements OnInit {
     return this.controlService.activeSegmentScroll(this.wears.length);
   }
 
-  /* SKELETON */
+  /* HEADER */
 
-  showSkeleton() {
-    this.showSkeletonHeader(2500);
-    this.showSkeletonBody(2500);
+  loadHeader(wears: WearVehicleProgressBarViewModel[] = [], idVehicleSelected: number = 0): void {
+    this.headerInput = new HeaderInputModel({
+      title: 'PAGE_HOME.HOME',
+      iconButtonLeft: 'calendar',
+      iconButtonRight: 'settings',
+      dataSegment: wears.map(x => new HeaderSegmentInputModel({
+        id: x.idVehicle,
+        name: x.nameVehicle,
+        icon: x.iconVehicle,
+        selected: (x.idVehicle === idVehicleSelected),
+        progressColor: x.warningProgressBarIcon,
+        progressValue: x.percent
+      }))
+    });
   }
 
-  showSkeletonHeader(time: number) {
-    this.loadedHeader = false;
-    setTimeout(() => { this.loadedHeader = true; this.initLoaded = false; }, time);
-  }
-
-  showSkeletonBodyNotInit(time: number) {
-    this.loadedBody = false;
-    if(!this.initLoaded) {
-      this.showSkeletonBody(time);
+  eventEmitHeader(output: HeaderOutputModel) {
+    switch(output.type) {
+      case HeaderOutputEnum.BUTTON_LEFT:
+        this.openInfoCalendar();
+        break;
+      case HeaderOutputEnum.BUTTON_RIGHT:
+        this.openSettings();
+        break;
+      case HeaderOutputEnum.SEGMENT:
+        this.segmentChanged(output.data);
+        break;
     }
   }
 
-  showSkeletonBody(time: number) {
-    setTimeout(() => { this.loadedBody = true; }, time);
+  /* SKELETON */
+
+  changeLoadedHeader(load: boolean) {
+    this.loadedHeader = load;
+    this.skeletonInput.time = this.skeletonInput.time / 2;
+  }
+
+  changeLoadedBody(load: boolean) {
+    this.loadedBody = load;
   }
 
   // MODALS
@@ -306,11 +323,14 @@ export class HomePage extends BasePage implements OnInit {
   }
 
   openInfoCalendar() {
-    if (!!this.wears && this.wears.length > 0) {
+    if ((!!this.wears && this.wears.length > 0) || (!!this.operations && this.operations.length > 0)) {
       this.controlService.openModal(PageEnum.HOME,
-        InfoCalendarComponent, new ModalInputModel<OperationModel[], WearVehicleProgressBarViewModel>({
-          data: this.operations,
-          dataList: this.wears,
+        InfoCalendarComponent, new ModalInputModel<CalendarInputModal>({
+          data: {
+            wear: this.wears,
+            operations: this.operations,
+            vehicleSelected: this.vehicleSelected.idVehicle
+          },
           parentPage: PageEnum.HOME
         }));
     } else {

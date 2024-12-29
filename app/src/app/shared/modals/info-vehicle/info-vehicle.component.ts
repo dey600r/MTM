@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { Platform, ModalController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -15,11 +15,12 @@ import {
   ConfigurationModel, IDashboardModel, IInfoModel, ISettingModel,
   DashboardModel, InfoVehicleHistoricModel,
   InfoVehicleConfigurationModel, InfoVehicleHistoricReplacementModel, MaintenanceElementModel,
-  MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel
+  MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel,
+  HeaderInputModel, HeaderSegmentInputModel, HeaderOutputModel, BodySkeletonInputModel,
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, InfoButtonEnum } from '@utils/index';
+import { ConstantsColumns, InfoButtonEnum, InfoVehicleConfSummarySkeletonSetting, InfoVehicleReplSummarySkeletonSetting } from '@utils/index';
 
 @Component({
   selector: 'app-info-vehicle',
@@ -31,6 +32,9 @@ export class InfoVehicleComponent implements OnInit {
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
   input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  inputBodySkeletonConfigurationSummary: BodySkeletonInputModel = InfoVehicleConfSummarySkeletonSetting;
+  inputBodySkeletonReplacementSummary: BodySkeletonInputModel = InfoVehicleReplSummarySkeletonSetting;
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA
   vehicles: VehicleModel[] = [];
@@ -69,7 +73,6 @@ export class InfoVehicleComponent implements OnInit {
 
   constructor(private readonly platform: Platform,
               private readonly screenOrientation: ScreenOrientation,
-              private readonly modalController: ModalController,
               private readonly controlService: ControlService,
               private readonly dataService: DataService,
               private readonly commonService: CommonService,
@@ -130,6 +133,15 @@ export class InfoVehicleComponent implements OnInit {
 
     if (this.vehicles && this.vehicles.length > 0) {
       this.vehicleSelected = this.vehicles[0];
+      this.headerInput = new HeaderInputModel({
+        title: 'COMMON.SUMMARY_VEHICLES',
+        dataSegment: this.vehicles.map(x => new HeaderSegmentInputModel({
+          id: x.id,
+          name: x.$getName,
+          icon: x.vehicleType.icon,
+          selected: (x.id == this.vehicleSelected.id)
+        }))
+      });
 
       // INFO CONFIGURATION VEHICLE
       this.listInfoVehicleConfiguration = this.infoVehicleService.calculateInfoVehicleConfiguration(
@@ -245,6 +257,10 @@ export class InfoVehicleComponent implements OnInit {
 
   // SEGMENT
 
+  eventEmitHeader(output: HeaderOutputModel) {
+    this.segmentChanged(output.data);
+  }
+
   initData(idVehicle: number) {
     this.initDataSelected(idVehicle);
     this.initShowInfo(this.vehicleSelected);
@@ -258,15 +274,4 @@ export class InfoVehicleComponent implements OnInit {
     this.changeDetector.detectChanges();
     setTimeout(() => { this.showSpinner = false; }, 150);
   }
-
-  activeSegmentScroll(): boolean {
-    return this.controlService.activeSegmentScroll(this.vehicles.length);
-  }
-
-  // MODAL
-
-  closeModal() {
-    this.controlService.closeModal(this.modalController);
-  }
-
 }
