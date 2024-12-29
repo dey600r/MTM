@@ -119,6 +119,7 @@ export class OperationPage extends BasePage implements OnInit {
       this.filterDashboard = filter;
       this.operations = this.filterOperations(filter, this.getOperationVehicles());
       this.loadHeaderIconLeft(this.getIconDashboard(this.operations));
+      this.loadHeaderIconRight();
       this.detector.detectChanges();
     });
   }
@@ -248,12 +249,22 @@ export class OperationPage extends BasePage implements OnInit {
   getIconDashboard(operation: OperationModel[]): string {
     return this.iconService.loadIconDashboard<OperationModel>(operation);
   }
+  getIconSearch(): string {
+    return this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.OPERATION));
+  }
 
   /* HEADER */
 
-  loadHeaderIconLeft(iconLeft: string) {
-    if(this.headerInput.iconButtonLeft !== iconLeft) {
-      this.headerInput.iconButtonLeft = iconLeft;
+  loadHeaderIconLeft(icon: string) {
+    if(this.headerInput.iconButtonLeft !== icon) {
+      this.headerInput.iconButtonLeft = icon;
+    }
+  }
+
+  loadHeaderIconRight() {
+    const icon = this.getIconSearch();
+    if(this.headerInput.iconButtonRight !== icon) {
+      this.headerInput.iconButtonRight = icon;
     }
   }
 
@@ -261,7 +272,7 @@ export class OperationPage extends BasePage implements OnInit {
     this.headerInput = new HeaderInputModel({
       title: 'COMMON.OPERATIONS',
       iconButtonLeft: iconLeft,
-      iconButtonRight: this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.OPERATION)),
+      iconButtonRight: this.getIconSearch(),
       dataSegment: vehicles.map(x => new HeaderSegmentInputModel({
         id: x.id,
         name: x.$getName,
