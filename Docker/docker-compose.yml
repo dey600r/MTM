@@ -4,7 +4,7 @@ version: '3'
 services:
   sonarqube:
     container_name: sonarqube
-    image: sonarqube:9.9.4-community
+    image: sonarqube:10.7.0-community
     command: "-Dsonar.search.javaAdditionalOpts=-Dnode.store.allow_mmap=false"
     depends_on:
       - db
@@ -15,13 +15,16 @@ services:
       ES_JAVA_OPTS: '-Xms256m -Xmx256m'
       SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
     volumes:
+      - sonarqube-conf:/opt/sonarqube/conf
       - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube-bundled-plugins:/opt/sonarqube/lib/bundled-plugins
     ports:
       - "9001:9000"
     networks:
       - network_ci
+
   db:
     container_name: sonarqube_db
     image: postgres:16
@@ -63,9 +66,11 @@ networks:
   network_ci:
 
 volumes:
+  sonarqube-conf:
   sonarqube_data:
   sonarqube_extensions:
   sonarqube_logs:
+  sonarqube-bundled-plugins:
   postgresql16:
   postgresql16_data:
   jenkins_data:
