@@ -529,7 +529,7 @@ describe('DashboardService', () => {
         let result: IDashboardModel[] = service.calculateKmPerYearWithOperations(dataVehicle, MockAppData.Operations.filter(x => x.vehicle.id === dataVehicle.id));
         let year: number = new Date().getFullYear();
         expect(result.length).toEqual(year - new Date(dataVehicle.datePurchase).getFullYear() + 1);
-        expect(result[0].name).toEqual((year - 17).toString());
+        expect(result[0].name).toEqual((year - 18).toString());
         expect(result[0].value).toBeLessThanOrEqual(6920);
         expect(result[0].value).toBeGreaterThanOrEqual(-1);
     });
