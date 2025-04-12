@@ -10,6 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { DataBaseService, ControlService, ExportService } from '@services/index';
 import { PageEnum } from '@utils/index';
 
+declare let window: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -34,6 +36,18 @@ export class AppComponent {
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';
       this.translator.use(userLang);
+
+      // console.log("Plataforma lista. Cordova disponible:", !!window.cordova);
+
+      // if (window.cordova && window.resolveLocalFileSystemURL) {
+      //   window.resolveLocalFileSystemURL(window.cordova.file.dataDirectory, (fs) => {
+      //     console.log("Acceso correcto al directorio:", fs.name);
+      //   }, (error) => {
+      //     console.error("Error accediendo al sistema de archivos:", error);
+      //   });
+      // } else {
+      //   console.error("Cordova no está disponible en este entorno.");
+      // }
     }).finally(() => {
       // CONFIGURATION
       this.statusBar.styleLightContent();

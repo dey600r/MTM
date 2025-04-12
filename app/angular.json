@@ -151,6 +151,39 @@
                 }
               ]
             },
+            "production-windows": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": false,
+                  "inlineCritical": true
+                },
+                "fonts": true
+              },
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
             "ci": {
               "progress": false
             }
@@ -165,6 +198,9 @@
           "configurations": {
             "production-android": {
               "buildTarget": "app:build:production-android"
+            },
+            "production-windows": {
+              "buildTarget": "app:build:production-windows"
             },
             "ci": {
             }
@@ -308,6 +344,9 @@
             "production-android": {
               "devServerTarget": "app:serve:production-android"
             },
+            "production-windows": {
+              "devServerTarget": "app:serve:production-windows"
+            },
             "ci": {
               "devServerTarget": "app:serve:ci"
             }
@@ -321,6 +360,9 @@
           "configurations": {
             "production-android": {
               "browserTarget": "app:build:production-android"
+            },
+            "production-windows": {
+              "browserTarget": "app:build:production-windows"
             }
           }
         },
@@ -334,6 +376,10 @@
             "production-android": {
               "cordovaBuildTarget": "app:ionic-cordova-build:production-android",
               "devServerTarget": "app:serve:production"
+            },
+            "production-windows": {
+              "cordovaBuildTarget": "app:ionic-cordova-build:production-windows",
+              "devServerTarget": "app:serve:windows"
             }
           }
         }

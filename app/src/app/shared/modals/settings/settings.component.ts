@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
@@ -75,7 +75,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 private readonly translator: TranslateService,
                 private readonly themeService: ThemeService,
                 private readonly syncService: SyncService,
-                private readonly logService: LogService
+                private readonly logService: LogService,
+                private readonly platform: Platform
       ) {
   }
 
@@ -162,7 +163,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   exportDBToJson() {
     this.crudService.getAllDataFromStorage().then((json: any) => {
       const exportFileName: string = this.exportService.generateNameExportFile(Constants.EXPORT_FILE_NAME);
-      try {
+      if(this.platform.is('android')) {
         this.file.writeFile(this.logService.getRootPathFiles(Constants.EXPORT_DIR_NAME), exportFileName,
           JSON.stringify(json), { replace : true}).then(() => {
               this.getLastExportFile();
@@ -170,10 +171,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
             }).catch(err => {
               this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingFile', err);
             });
-        } catch(e: any) {
-          this.exportService.exportJsonWeb(json, exportFileName);          
-          this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
-        }
+      } else {
+        this.exportService.exportJsonWeb(json, exportFileName);          
+        this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'FileStorage is not available');
+      }
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorExportDB', e);
     });
@@ -234,7 +235,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.crudService.getAllDataFromStorage().then((json: any) => {
       const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_FILE_NAME);
       // Write backup file
-      try {
+      if(this.platform.is('android')) {
         this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
           JSON.stringify(json), { replace : true}).then(() => {
             // IMPORT DB
@@ -243,9 +244,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
           this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorWritingBackupFile', err);
           this.clearInputFile(event);
         });
-      } catch(e: any) {
+      } else {
         this.importJsonToDB(contentFile, event);
-        this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
+        this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'FileStorage is not available');
       }
     }).catch(e => {
       this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorBackupDB', e);
@@ -275,7 +276,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   // GET LIST FILES
   getLastExportFile() {
-    try {
+    if(this.platform.is('android')) {
       this.file.listDir(this.logService.getRootPathFiles(), Constants.EXPORT_DIR_NAME).then((listFiles: Entry[]) => {
         this.lastExport = '';
         const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
@@ -286,8 +287,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       }).catch(err => {
         this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles', err);
       });
-    } catch(e: any) {
-      this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
+    } else {
+      this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'FileStorage is not available');
     }
   }
 
@@ -309,7 +310,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       {path: this.exportService.getRootRealRelativePath(Constants.IMPORT_DIR_NAME)});
     const guide3Translate: string = this.translator.instant('PAGE_HOME.GuideStep3');
     this.controlService.alertInfo(PageEnum.MODAL_SETTINGS,
-      `${guide1Translate}</br>${guide2Translate}</br>${guide3Translate}`, guideTranslate);
+      `${guide1Translate}\n ${guide2Translate}\n ${guide3Translate}`, guideTranslate);
   }
 
   // DELETE FILES
@@ -327,7 +328,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   deleteFiles(path: string) {
-    try {
+    if(this.platform.is('android')) {
       this.file.listDir(this.logService.getRootPathFiles(), path).then((listFiles: Entry[]) => {
         const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
         if (!!listActual && listActual.length > 0) {
@@ -343,8 +344,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       }).catch(err => {
         this.controlService.showToast(PageEnum.MODAL_SETTINGS, ToastTypeEnum.DANGER, 'PAGE_HOME.ErrorListingFiles', err);
       });
-    } catch(e: any) {
-      this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'This function is not available', e);
+    } else {
+      this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.MODAL_SETTINGS, 'FileStorage is not available');
     }
   }
 
