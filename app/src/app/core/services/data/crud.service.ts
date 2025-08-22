@@ -154,11 +154,12 @@ export class CRUDService {
               getDataRelatedTableFunction: () => this.dataService.getMaintenanceElementData(),
               getDataRelatedTableRefFunction: () => this.dataService.getMaintenanceElementRelData(),
               customMapperBeforeStorage: (data: MaintenanceElementModel[], related: IMaintenanceElementRelStorageModel[]) => {
-                data.forEach(x => {
+                return data.map(x => {
+                  const newItem = {...x};
                   let item = related.find(y => x.id == y.idMaintenanceElement);
-                  x.idMaintenanceRel = item.id;
+                  newItem.idMaintenanceRel = item.id;
+                  return newItem;
                 });
-                return data;
               }
             },
             {
@@ -188,11 +189,12 @@ export class CRUDService {
               getDataRelatedTableFunction: () => this.dataService.getMaintenanceData(),
               getDataRelatedTableRefFunction: () => this.dataService.getConfigurationMaintenanceData(),
               customMapperBeforeStorage: (data: MaintenanceModel[], related: IConfigurationMaintenanceStorageModel[]) => {
-                data.forEach(x => {
+                return data.map(x => {
+                  const newItem = {...x};
                   let item = related.find(y => x.id == y.idMaintenance);
-                  x.idConfigurationRel = item.id;
+                  newItem.idConfigurationRel = item.id;
+                  return newItem;
                 });
-                return data;
               }
             }
           ]
@@ -257,12 +259,13 @@ export class CRUDService {
               getDataRelatedTableFunction: () => this.dataService.getMaintenanceElementData(),
               getDataRelatedTableRefFunction: () => this.dataService.getOperationMaintenanceElementData(),
               customMapperBeforeStorage: (data: MaintenanceElementModel[], related: IOperationMaintenanceElementStorageModel[]) => {
-                data.forEach(x => {
+                return data.map(x => {
+                  const newItem = {...x};
                   let item = related.find(y => x.id == y.idMaintenanceElement);
-                  x.price = item.price;
-                  x.idOperationRel = item.id;
+                  newItem.price = item.price;
+                  newItem.idOperationRel = item.id;
+                  return newItem;
                 });
-                return data;
               }
             }
           ]
