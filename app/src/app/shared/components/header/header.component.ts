@@ -9,8 +9,9 @@ import { HeaderInputModel, HeaderOutputModel } from '@models/index';
 import { HeaderOutputEnum } from '@utils/index';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    standalone: false
 })
 export class HeaderComponent implements OnChanges {
 

@@ -23,9 +23,10 @@ import {
 import { ConstantsColumns, InfoButtonEnum, InfoVehicleConfSummarySkeletonSetting, InfoVehicleReplSummarySkeletonSetting } from '@utils/index';
 
 @Component({
-  selector: 'app-info-vehicle',
-  templateUrl: './info-vehicle.component.html',
-  styleUrls: ['./info-vehicle.component.scss'],
+    selector: 'app-info-vehicle',
+    templateUrl: './info-vehicle.component.html',
+    styleUrls: ['./info-vehicle.component.scss'],
+    standalone: false
 })
 export class InfoVehicleComponent implements OnInit {
 

@@ -7,9 +7,10 @@ import { ModalInputModel, MaintenanceElementModel, HeaderInputModel } from '@mod
 import { ConfigurationService, ControlService } from '@services/index';
 
 @Component({
-  selector: 'app-add-edit-maintenance-element',
-  templateUrl: 'add-edit-maintenance-element.component.html',
-  styleUrls: []
+    selector: 'app-add-edit-maintenance-element',
+    templateUrl: 'add-edit-maintenance-element.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class AddEditMaintenanceElementComponent implements OnInit {
 

@@ -31,9 +31,10 @@ import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-o
 import { BasePage } from '@pages/base.page';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss']
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
+    standalone: false
 })
 export class HomePage extends BasePage implements OnInit {
 

@@ -11,9 +11,10 @@ import { ControlService } from '@services/index';
 import { ModalOutputEnum } from '@utils/index';
 
 @Component({
-  selector: 'app-list-data-to-update',
-  templateUrl: './list-data-to-update.component.html',
-  styleUrls: [],
+    selector: 'app-list-data-to-update',
+    templateUrl: './list-data-to-update.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class ListDataToUpdateComponent implements OnInit {
 

@@ -18,9 +18,10 @@ import { InfoButtonEnum, HeaderOutputEnum, PageEnum } from '@utils/index';
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
-  selector: 'dashboard',
-  templateUrl: 'dashboard.component.html',
-  styleUrls: []
+    selector: 'dashboard',
+    templateUrl: 'dashboard.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 

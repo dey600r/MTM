@@ -14,9 +14,10 @@ import {
 import { DataService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
-  selector: 'app-add-edit-maintenance',
-  templateUrl: 'add-edit-maintenance.component.html',
-  styleUrls: []
+    selector: 'app-add-edit-maintenance',
+    templateUrl: 'add-edit-maintenance.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class AddEditMaintenanceComponent implements OnInit {
 

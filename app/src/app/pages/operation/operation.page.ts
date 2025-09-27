@@ -26,9 +26,10 @@ import { DashboardComponent } from '@app/shared/modals/dashboard/dashboard.compo
 import { BasePage } from '@pages/base.page';
 
 @Component({
-  selector: 'app-operation',
-  templateUrl: 'operation.page.html',
-  styleUrls: ['operation.page.scss']
+    selector: 'app-operation',
+    templateUrl: 'operation.page.html',
+    styleUrls: ['operation.page.scss'],
+    standalone: false
 })
 export class OperationPage extends BasePage implements OnInit {
 

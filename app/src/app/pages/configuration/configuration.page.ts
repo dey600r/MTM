@@ -32,9 +32,10 @@ import { BasePage } from '@pages/base.page';
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
-  selector: 'app-configuration',
-  templateUrl: 'configuration.page.html',
-  styleUrls: []
+    selector: 'app-configuration',
+    templateUrl: 'configuration.page.html',
+    styleUrls: [],
+    standalone: false
 })
 export class ConfigurationPage extends BasePage implements OnInit {
 

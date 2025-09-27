@@ -16,9 +16,10 @@ import {
 } from '@services/index';
 
 @Component({
-  selector: 'app-add-edit-operation',
-  templateUrl: 'add-edit-operation.component.html',
-  styleUrls: []
+    selector: 'app-add-edit-operation',
+    templateUrl: 'add-edit-operation.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class AddEditOperationComponent implements OnInit {
 

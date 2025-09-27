@@ -19,9 +19,10 @@ import { environment } from '@environment/environment';
 import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService, ExportService, DataService, CRUDService, LogService } from '@services/index';
 
 @Component({
-  selector: 'settings',
-  templateUrl: 'settings.component.html',
-  styleUrls: ['settings.component.scss']
+    selector: 'settings',
+    templateUrl: 'settings.component.html',
+    styleUrls: ['settings.component.scss'],
+    standalone: false
 })
 export class SettingsComponent implements OnInit, OnDestroy {
 

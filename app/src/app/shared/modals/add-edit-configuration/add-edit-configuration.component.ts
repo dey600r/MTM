@@ -7,9 +7,10 @@ import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceEleme
 import { DataService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
-  selector: 'app-add-edit-configuration',
-  templateUrl: 'add-edit-configuration.component.html',
-  styleUrls: []
+    selector: 'app-add-edit-configuration',
+    templateUrl: 'add-edit-configuration.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class AddEditConfigurationComponent implements OnInit {
 

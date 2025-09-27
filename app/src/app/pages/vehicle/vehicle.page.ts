@@ -23,9 +23,10 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
 import { BasePage } from '@pages/base.page';
 
 @Component({
-  selector: 'app-vehicle',
-  templateUrl: 'vehicle.page.html',
-  styleUrls: ['vehicle.page.scss']
+    selector: 'app-vehicle',
+    templateUrl: 'vehicle.page.html',
+    styleUrls: ['vehicle.page.scss'],
+    standalone: false
 })
 export class VehiclePage extends BasePage implements OnInit {
 

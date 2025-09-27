@@ -26,9 +26,10 @@ import {
 import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, HeaderOutputEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 
 @Component({
-  selector: 'info-calendar',
-  templateUrl: 'info-calendar.component.html',
-  styleUrls: ['info-calendar.component.scss']
+    selector: 'info-calendar',
+    templateUrl: 'info-calendar.component.html',
+    styleUrls: ['info-calendar.component.scss'],
+    standalone: false
 })
 export class InfoCalendarComponent implements OnInit {
 

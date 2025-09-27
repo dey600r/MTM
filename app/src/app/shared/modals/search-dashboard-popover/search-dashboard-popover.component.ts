@@ -21,8 +21,9 @@ import {
 @Component({
     selector: 'app-search-dashboard-popover',
     templateUrl: 'search-dashboard-popover.component.html',
-    styleUrls: []
-  })
+    styleUrls: [],
+    standalone: false
+})
   export class SearchDashboardPopOverComponent implements OnInit {
 
     // MODAL MODELS

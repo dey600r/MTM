@@ -12,9 +12,10 @@ import {
 } from '@services/index';
 
 @Component({
-  selector: 'app-add-edit-vehicle',
-  templateUrl: 'add-edit-vehicle.component.html',
-  styleUrls: []
+    selector: 'app-add-edit-vehicle',
+    templateUrl: 'add-edit-vehicle.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class AddEditVehicleComponent implements OnInit {
 

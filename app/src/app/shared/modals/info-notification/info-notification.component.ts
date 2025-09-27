@@ -27,9 +27,10 @@ import {
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
-  selector: 'info-notification',
-  templateUrl: 'info-notification.component.html',
-  styleUrls: ['info-notification.component.scss']
+    selector: 'info-notification',
+    templateUrl: 'info-notification.component.html',
+    styleUrls: ['info-notification.component.scss'],
+    standalone: false
 })
 export class InfoNotificationComponent implements OnInit, OnDestroy {
 
