@@ -9,15 +9,9 @@ import { IonCalendarModule } from '@heliomarpm/ion-calendar';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // LIBRARIES ANGULAR
-import { TranslateModule } from '@ngx-translate/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-// UTILS
-import { DataBaseService, CommonService } from '@services/index';
-
 // MODULES
-import { PipeModule } from '@modules/pipes.module';
 import { SharedModule } from '@modules/shared.module';
 
 // COMPONENTS
@@ -67,14 +61,10 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
         FormsModule,
         IonCalendarModule,
         NgxChartsModule,
-        PipeModule,
         SharedModule,
-        TranslateModule.forChild()
     ], providers: [
         File,
-        ScreenOrientation,
-        DataBaseService,
-        CommonService,
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+        ScreenOrientation
+    ] 
+})
 export class ComponentModule { }

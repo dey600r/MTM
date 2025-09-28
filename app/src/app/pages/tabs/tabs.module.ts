@@ -7,9 +7,7 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-import { provideTranslate } from '@providers/index';
 
 @NgModule({
     declarations: [TabsPage], 
@@ -21,8 +19,6 @@ import { provideTranslate } from '@providers/index';
         TranslateModule.forChild()
     ], 
     providers: [ 
-        provideTranslate,
-        provideHttpClient(withInterceptorsFromDi())
     ] 
 })
 export class TabsPageModule {}
