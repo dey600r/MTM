@@ -26,7 +26,6 @@ import { AppComponent } from './app.component';
 // MODULES
 import { ComponentModule } from '@modules/component.module';
 import { PipeModule } from '@modules/pipes.module';
-import { MapService } from './core/services';
 
 @NgModule({ 
     declarations: [AppComponent],
@@ -49,7 +48,6 @@ import { MapService } from './core/services';
             registrationStrategy: 'registerWhenStable:30000'
         })], 
     providers: [
-        // MapService,
         StatusBar,
         InAppBrowser,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
