@@ -69,7 +69,8 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
         NgxChartsModule,
         PipeModule,
         SharedModule,
-        TranslateModule.forChild()], providers: [
+        TranslateModule.forChild()
+    ], providers: [
         File,
         ScreenOrientation,
         DataBaseService,
