@@ -34,9 +34,6 @@ describe('AppComponent', () => {
     await TestBed.configureTestingModule(config).compileComponents();
     translate = TestBed.inject(TranslateService);
     await firstValueFrom(translate.use('es'));
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     platform = TestBed.inject(Platform);
@@ -65,7 +62,7 @@ describe('AppComponent', () => {
     }));
   });
 
-  it('should translate app - ES', () => {
+  it('should translate app - ES', async () => {
     expect(translate.instant('COMMON.SAVE')).toEqual(MockTranslate.ES.COMMON.SAVE);
   });
 

@@ -9,6 +9,7 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 // LIBRARIES
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
@@ -18,6 +19,7 @@ import { DateFormatCalendarPipe } from '@pipes/date-format-calendar.pipe';
 // MOCK
 import { MockAppData } from '../mocks/mock-data-app.spec';
 import { ConstantsTest } from './constants.spec';
+import { environment } from '@src/environments/environment';
 
 
 export class SpyMockConfig {
@@ -34,7 +36,7 @@ export class SpyMockConfig {
             height: jasmine.createSpy().and.returnValue(700),
         },
         screenOrientation: {
-            onChange: jasmine.createSpy().and.returnValue(new Observable((res) => { res.next(); }))
+            onChange: jasmine.createSpy().and.returnValue(new Observable((res) => { res.next(null); }))
         },
         file: {
             checkDir: jasmine.createSpy().and.returnValue(Promise.resolve()),
@@ -72,6 +74,7 @@ export class SpyMockConfig {
         PopoverController,
         DateFormatCalendarPipe,
         InAppBrowser,
+        provideTranslateHttpLoader({ prefix: environment.pathTranslate, suffix: '.json'}),
         provideHttpClient(withInterceptorsFromDi()),
         //{ provide: LogService, useValue: SpyMockConfig.SpyConfig.logService },
         { provide: StatusBar, useValue: SpyMockConfig.SpyConfig.statusBar },
@@ -83,6 +86,7 @@ export class SpyMockConfig {
 
     static readonly ProvidersServices = [
         InAppBrowser,
+        provideTranslateHttpLoader({ prefix: environment.pathTranslate, suffix: '.json'}),
         provideHttpClient(withInterceptorsFromDi()),
         { provide: Storage, useValue: SpyMockConfig.SpyConfig.window },
         { provide: File, useValue: SpyMockConfig.SpyConfig.file }

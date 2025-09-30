@@ -32,6 +32,7 @@
       "@assets/*": ["src/assets/*"],
       "@environment/*": ["src/environments/*"],
       "@services/*": ["src/app/core/services/*"],
+      "@providers/*": ["src/app/core/providers/*"],
       "@models/*": ["src/app/core/models/*"],
       "@utils/*": ["src/app/core/utils/*"],
       "@shared/*": ["src/app/shared/*"],

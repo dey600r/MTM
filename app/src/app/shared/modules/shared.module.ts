@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 
 // LIBRARIES ANGULAR
 import { TranslateModule } from '@ngx-translate/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+
+// UTILS
+import { PipeModule } from '@modules/pipes.module';
 
 // COMPONENTS
 import { AppInfoComponent } from '@components/info/app-info.component';
-import { SkeletonComponent } from '@src/app/shared/components/skeleton/skeleton.component';
-import { BodySkeletonComponent } from '@src/app/shared/components/skeleton/body/body-skeleton.component';
-import { HeaderComponent } from '@src/app/shared/components/header/header.component';
+import { SkeletonComponent } from '@components/skeleton/skeleton.component';
+import { BodySkeletonComponent } from '@components/skeleton/body/body-skeleton.component';
+import { HeaderComponent } from '@components/header/header.component';
 
 @NgModule({ 
     declarations: [
@@ -23,16 +25,26 @@ import { HeaderComponent } from '@src/app/shared/components/header/header.compon
         HeaderComponent
     ],
     exports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        PipeModule,
         AppInfoComponent,
         SkeletonComponent,
         BodySkeletonComponent,
         HeaderComponent
-    ], imports: [
+    ], 
+    imports: [
         IonicModule,
         CommonModule,
         FormsModule,
-        TranslateModule.forChild()], 
-        providers: [provideHttpClient(withInterceptorsFromDi())
-
-    ]})
+        TranslateModule
+    ],
+    providers: [
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+    ]
+})
 export class SharedModule { }

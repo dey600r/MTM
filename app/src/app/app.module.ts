@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { RouteReuseStrategy } from '@angular/router';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
@@ -12,56 +12,36 @@ import { CommonModule } from '@angular/common';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
-// LIBRARIES ANGULAR
-import { TranslateModule, TranslateLoader, TranslateStore } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { ServiceWorkerModule } from '@angular/service-worker';
-
 // UTILS
-import { environment } from '@environment/environment';
+import { provideServiceWorker, provideTranslate } from '@providers/index';
 
 // COMPONENTS
 import { AppComponent } from './app.component';
 
 // MODULES
 import { ComponentModule } from '@modules/component.module';
-import { PipeModule } from '@modules/pipes.module';
-import { MapService } from './core/services';
 
-@NgModule({ declarations: [
-        AppComponent
-    ],
+@NgModule({ 
+    declarations: [AppComponent],
     exports: [],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        BrowserAnimationsModule,
-        IonicModule.forRoot(),
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: (createTranslateLoader),
-                deps: [HttpClient]
-            }
-        }),
+    bootstrap: [AppComponent], 
+    imports: [
+        BrowserModule,
         AppRoutingModule,
+        IonicModule.forRoot(),
         CommonModule,
         FormsModule,
-        PipeModule,
         ComponentModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: environment.production,
-            // Register the ServiceWorker as soon as the application is stable
-            // or after 30 seconds (whichever comes first).
-            registrationStrategy: 'registerWhenStable:30000'
-        })], providers: [
-        MapService,
-        StatusBar,
-        TranslateStore,
-        InAppBrowser,
+    ], 
+    providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideAnimationsAsync(),
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-        provideHttpClient(withInterceptorsFromDi())
+        provideServiceWorker,
+        provideTranslate,
+        StatusBar,
+        InAppBrowser,
     ] })
 export class AppModule {}
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.pathTranslate, '.json');
-}
+

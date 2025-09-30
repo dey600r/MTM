@@ -1,5 +1,5 @@
 import { Platform } from '@ionic/angular';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 // UTILS
@@ -22,12 +22,13 @@ import { CRUDService } from './crud.service';
 })
 export class DataBaseService {
 
-  constructor(private readonly plt: Platform,
-              private readonly http: HttpClient,
-              private readonly storageService: StorageService,
-              private readonly mapService: MapService,
-              private readonly crudService: CRUDService,
-              private readonly logService: LogService) { }
+  // INJECTIONS
+  private readonly plt: Platform = inject(Platform);
+  private readonly http: HttpClient = inject(HttpClient);
+  private readonly storageService: StorageService = inject(StorageService);
+  private readonly mapService: MapService = inject(MapService);
+  private readonly crudService: CRUDService = inject(CRUDService);
+  private readonly logService: LogService = inject(LogService);
 
   initDB() {
     this.plt.ready().then(() => {

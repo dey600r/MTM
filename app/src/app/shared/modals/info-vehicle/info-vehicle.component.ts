@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 
 // SERVICES
 import {
-  CommonService, ControlService, DashboardService, DataService,  InfoVehicleService, SettingsService
+  CommonService, DashboardService, DataService,  InfoVehicleService, SettingsService
 } from '@services/index';
 
 // MODELS
@@ -23,11 +23,22 @@ import {
 import { ConstantsColumns, InfoButtonEnum, InfoVehicleConfSummarySkeletonSetting, InfoVehicleReplSummarySkeletonSetting } from '@utils/index';
 
 @Component({
-  selector: 'app-info-vehicle',
-  templateUrl: './info-vehicle.component.html',
-  styleUrls: ['./info-vehicle.component.scss'],
+    selector: 'app-info-vehicle',
+    templateUrl: './info-vehicle.component.html',
+    styleUrls: ['./info-vehicle.component.scss'],
+    standalone: false
 })
 export class InfoVehicleComponent implements OnInit {
+
+  // INJECTIONS
+  private readonly platform: Platform = inject(Platform);
+  private readonly screenOrientation: ScreenOrientation = inject(ScreenOrientation);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly commonService: CommonService = inject(CommonService);
+  private readonly infoVehicleService: InfoVehicleService = inject(InfoVehicleService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly dashboardService: DashboardService = inject(DashboardService);
+  private readonly changeDetector: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<any, VehicleModel> = new ModalInputModel<any, VehicleModel>();
@@ -70,16 +81,6 @@ export class InfoVehicleComponent implements OnInit {
 
   // SUSBSCRIPTION
   screenSubscription: Subscription = new Subscription();
-
-  constructor(private readonly platform: Platform,
-              private readonly screenOrientation: ScreenOrientation,
-              private readonly controlService: ControlService,
-              private readonly dataService: DataService,
-              private readonly commonService: CommonService,
-              private readonly infoVehicleService: InfoVehicleService,
-              private readonly settingsService: SettingsService,
-              private readonly dashboardService: DashboardService,
-              private readonly changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.initSummary();

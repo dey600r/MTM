@@ -1,8 +1,5 @@
-import { Component, ChangeDetectorRef, ViewChild, OnInit } from '@angular/core';
-import { IonSelect, Platform } from '@ionic/angular';
-
-// LIBRARIES
-import { TranslateService } from '@ngx-translate/core';
+import { Component, ChangeDetectorRef, ViewChild, OnInit, inject } from '@angular/core';
+import { IonSelect } from '@ionic/angular';
 
 // SERVICES
 import { 
@@ -32,11 +29,23 @@ import { BasePage } from '@pages/base.page';
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
-  selector: 'app-configuration',
-  templateUrl: 'configuration.page.html',
-  styleUrls: []
+    selector: 'app-configuration',
+    templateUrl: 'configuration.page.html',
+    styleUrls: [],
+    standalone: false
 })
 export class ConfigurationPage extends BasePage implements OnInit {
+
+  // INJECTIONS
+  private readonly dataService: DataService = inject(DataService);
+  private readonly commonService: CommonService = inject(CommonService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly configurationService: ConfigurationService = inject(ConfigurationService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly vehicleService: VehicleService = inject(VehicleService);
+  private readonly dashboardService: DashboardService = inject(DashboardService);
+  private readonly iconService: IconService = inject(IconService);
+  private readonly detector: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   // MODAL
   inputConfiguration: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
@@ -64,18 +73,8 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   @ViewChild('selectVehicles', { static: false }) selectVehicles: IonSelect;
 
-  constructor(public platform: Platform,
-              private readonly dataService: DataService,
-              public translator: TranslateService,
-              private readonly commonService: CommonService,
-              private readonly controlService: ControlService,
-              private readonly configurationService: ConfigurationService,
-              private readonly settingsService: SettingsService,
-              private readonly vehicleService: VehicleService,
-              private readonly dashboardService: DashboardService,
-              private readonly iconService: IconService,
-              private readonly detector: ChangeDetectorRef) {
-    super(platform, translator);
+  constructor() {
+    super();
   }
 
   ngOnInit(): void {
@@ -314,7 +313,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
         text: this.translator.instant('COMMON.ACCEPT'),
         handler: () => {
           vehiclesDeleteConfig.forEach((x, index) => {
-            x.configuration.id = 1;
+            x.configuration = this.configurations.find(y => y.id == 1);
           });
           this.configurationService.saveConfiguration(row, ActionDBEnum.DELETE, vehiclesDeleteConfig).then(x => {
             this.controlService.showToast(PageEnum.CONFIGURATION, ToastTypeEnum.SUCCESS,
@@ -349,13 +348,13 @@ export class ConfigurationPage extends BasePage implements OnInit {
     let vehiclesToSave: VehicleModel[] = [];
     if (vehiclesChangeToConfigurationDefault.length > 0) {
       vehiclesChangeToConfigurationDefault.forEach(x => {
-        x.configuration.id = 1;
+        x.configuration = this.configurations.find(y => y.id == 1);
         vehiclesToSave = [...vehiclesToSave, x];
       });
     }
     if (vehiclesChangeToConfigurationSelected.length > 0) {
       vehiclesChangeToConfigurationSelected.forEach(x => {
-        x.configuration.id = configuration.id;
+        x.configuration = this.configurations.find(y => configuration.id == y.id);
         vehiclesToSave = [...vehiclesToSave, x];
       });
     }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
@@ -14,11 +14,20 @@ import {
 import { DataService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
-  selector: 'app-add-edit-maintenance',
-  templateUrl: 'add-edit-maintenance.component.html',
-  styleUrls: []
+    selector: 'app-add-edit-maintenance',
+    templateUrl: 'add-edit-maintenance.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class AddEditMaintenanceComponent implements OnInit {
+
+  // INJECTIONS
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly configurationService: ConfigurationService = inject(ConfigurationService);
+  private readonly translator: TranslateService = inject(TranslateService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<MaintenanceModel, number> = new ModalInputModel<MaintenanceModel, number>();
@@ -43,14 +52,7 @@ export class AddEditMaintenanceComponent implements OnInit {
   translateCancel = '';
   customActionSheetOptions: any = {};
 
-  constructor(
-    private readonly modalController: ModalController,
-    private readonly dataService: DataService,
-    private readonly configurationService: ConfigurationService,
-    private readonly translator: TranslateService,
-    private readonly controlService: ControlService,
-    private readonly settingsService: SettingsService
-  ) {
+  constructor() {
     this.customActionSheetOptions = { header: this.translator.instant('COMMON.REPLACEMENT') };
     this.translateSelect = this.translator.instant('COMMON.SELECT');
     this.translateAccept = this.translator.instant('COMMON.ACCEPT');

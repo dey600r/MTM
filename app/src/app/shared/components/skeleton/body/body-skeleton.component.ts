@@ -4,8 +4,9 @@ import { Component, Input } from '@angular/core';
 import { BodySkeletonInputModel } from '@models/index';
 
 @Component({
-  selector: 'app-body-skeleton',
-  templateUrl: './body-skeleton.component.html',
+    selector: 'app-body-skeleton',
+    templateUrl: './body-skeleton.component.html',
+    standalone: false
 })
 export class BodySkeletonComponent {
   

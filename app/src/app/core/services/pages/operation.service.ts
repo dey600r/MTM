@@ -14,9 +14,9 @@ import { CRUDService, DataService, MapService } from '../data/index';
 })
 export class OperationService {
 
-    constructor(private crudService: CRUDService,
-                private mapService: MapService,
-                private dataService: DataService) {
+    constructor(private readonly crudService: CRUDService,
+                private readonly mapService: MapService,
+                private readonly dataService: DataService) {
     }
 
     // SAVE OPERATION
