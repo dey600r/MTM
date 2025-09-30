@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 // LIBRARIES IONIC
-import { IonicModule } from '@ionic/angular';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { IonCalendarModule } from '@heliomarpm/ion-calendar';
 import { File } from '@awesome-cordova-plugins/file/ngx';
@@ -56,9 +53,6 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
         SearchDashboardPopOverComponent,
         ListDataToUpdateComponent
     ], imports: [
-        IonicModule,
-        CommonModule,
-        FormsModule,
         IonCalendarModule,
         NgxChartsModule,
         SharedModule,

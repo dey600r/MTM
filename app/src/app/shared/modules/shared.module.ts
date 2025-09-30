@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,7 +9,7 @@ import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 
 // UTILS
-import { PipeModule } from '@app/shared/modules/pipes.module';
+import { PipeModule } from '@modules/pipes.module';
 
 // COMPONENTS
 import { AppInfoComponent } from '@components/info/app-info.component';
@@ -34,9 +34,17 @@ import { HeaderComponent } from '@components/header/header.component';
         SkeletonComponent,
         BodySkeletonComponent,
         HeaderComponent
-    ], imports: [
     ], 
+    imports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        TranslateModule
+    ],
     providers: [
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
     ]
 })
 export class SharedModule { }
