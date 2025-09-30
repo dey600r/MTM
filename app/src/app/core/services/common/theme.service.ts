@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DomController } from '@ionic/angular';
 
 // UTILS
@@ -9,7 +9,8 @@ import { Constants, DarkTheme, SkyTheme } from '@utils/index';
 })
 export class ThemeService {
 
-    constructor(private readonly domCtrl: DomController) {}
+    // INJECTIONS
+    private readonly domCtrl: DomController = inject(DomController);
 
     changeTheme(themeCode: string) {
         return new Promise<boolean>((resolve) => {

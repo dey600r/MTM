@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // SERVICES
@@ -15,16 +15,16 @@ import { HeaderOutputEnum } from '@utils/index';
 })
 export class HeaderComponent implements OnChanges {
 
+  // INJECTIONS
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly controlService: ControlService = inject(ControlService);
+
+  // INPUTS / OUTPUTS
   @Input() input: HeaderInputModel = new HeaderInputModel();
   @Output() output: EventEmitter<HeaderOutputModel> = new EventEmitter();
 
+  // DATA
   selectedSegment: number;
-
-  constructor(
-    private readonly modalController: ModalController,
-    private readonly controlService: ControlService
-  ) {
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
       if(this.input.dataSegment && this.input.dataSegment.length > 0) {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // SERVICES
 import { IconService, CalendarService } from '../common/index';
@@ -18,9 +18,9 @@ import { CalendarTypeEnum, WarningWearEnum } from '@utils/index';
 })
 export class InfoCalendarService {
 
-    constructor(private readonly calendarService: CalendarService,
-                private readonly iconService: IconService) {
-    }
+    // INJECTIONS
+    private readonly calendarService: CalendarService = inject(CalendarService);
+    private readonly iconService: IconService = inject(IconService);
 
     // INFO CALENDAR
 

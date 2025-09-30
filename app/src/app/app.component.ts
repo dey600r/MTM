@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
@@ -18,14 +18,16 @@ import { PageEnum } from '@utils/index';
 })
 export class AppComponent {
 
-  constructor(
-    private readonly platform: Platform,
-    private readonly statusBar: StatusBar,
-    private readonly dbService: DataBaseService,
-    private readonly translator: TranslateService,
-    private readonly controlService: ControlService,
-    private readonly exportService: ExportService
-  ) {
+  // INJECTIONS
+  private readonly platform: Platform = inject(Platform);
+  private readonly statusBar: StatusBar = inject(StatusBar);
+  private readonly dbService: DataBaseService = inject(DataBaseService);
+  private readonly translator: TranslateService = inject(TranslateService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly exportService: ExportService = inject(ExportService);
+  
+  constructor()
+  {
     this.initializeApp();
   }
 

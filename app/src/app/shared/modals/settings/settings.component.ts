@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
@@ -26,59 +26,56 @@ import { SettingsService, DataBaseService, ControlService, ThemeService, SyncSer
 })
 export class SettingsComponent implements OnInit, OnDestroy {
 
-    // MODAL MODELS
-    @Input() modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
-    headerInput: HeaderInputModel = new HeaderInputModel();
+  // INJECTIONS
+  private readonly changeDetector: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly dbService: DataBaseService = inject(DataBaseService);
+  private readonly crudService: CRUDService = inject(CRUDService);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly exportService: ExportService = inject(ExportService);
+  private readonly file: File = inject(File);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly translator: TranslateService = inject(TranslateService);
+  private readonly themeService: ThemeService = inject(ThemeService);
+  private readonly syncService: SyncService = inject(SyncService);
+  private readonly logService: LogService = inject(LogService);
 
-    // MODEL FORM
+  // MODAL MODELS
+  @Input() modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
-    // DATA SETTINGS
-    listSettings: SystemConfigurationModel[] = [];
-    listDistances: any[] = [];
-    distanceSelected: any = {};
-    listMoney: ISettingModel[] = [];
-    moneySelected: any = {};
+  // DATA SETTINGS
+  listSettings: SystemConfigurationModel[] = [];
+  listDistances: any[] = [];
+  distanceSelected: any = {};
+  listMoney: ISettingModel[] = [];
+  moneySelected: any = {};
 
-    // DATA THEMES
-    listThemes: ISettingModel[] = [];
-    themeSelected: any = { code: 'L'};
+  // DATA THEMES
+  listThemes: ISettingModel[] = [];
+  themeSelected: any = { code: 'L'};
 
-    // DATA EXPORTS AND IMPORTS
-    listImportsFile: Entry[] = [];
-    importFileSelected = '';
-    lastExport = '';
-    pathExports = '';
-    pathImports = '';
+  // DATA EXPORTS AND IMPORTS
+  listImportsFile: Entry[] = [];
+  importFileSelected = '';
+  lastExport = '';
+  pathExports = '';
+  pathImports = '';
 
-    // DATA PRIVACY POLICY
-    acceptPrivacyPolicy: boolean;
+  // DATA PRIVACY POLICY
+  acceptPrivacyPolicy: boolean;
 
-    // SYNC
-    syncEmail = '';
-    syncCode = '';
-    synchronizingDownload = false;
-    synchronizingUpload = false;
-    pwdSync = 0;
+  // SYNC
+  syncEmail = '';
+  syncCode = '';
+  synchronizingDownload = false;
+  synchronizingUpload = false;
+  pwdSync = 0;
 
-    // VERSION
-    versionApp: string = `Version app: ${environment.lastVersion}`;
-    versionDateApp: string = `${environment.lastUpdate}`;
-
-    constructor(private readonly changeDetector: ChangeDetectorRef,
-                private readonly modalController: ModalController,
-                private readonly dbService: DataBaseService,
-                private readonly crudService: CRUDService,
-                private readonly dataService: DataService,
-                private readonly settingsService: SettingsService,
-                private readonly exportService: ExportService,
-                private readonly file: File,
-                private readonly controlService: ControlService,
-                private readonly translator: TranslateService,
-                private readonly themeService: ThemeService,
-                private readonly syncService: SyncService,
-                private readonly logService: LogService
-      ) {
-  }
+  // VERSION
+  versionApp: string = `Version app: ${environment.lastVersion}`;
+  versionDateApp: string = `${environment.lastUpdate}`;
 
   ngOnInit() {
     this.headerInput = new HeaderInputModel({

@@ -1,5 +1,5 @@
-import { NgModule, provideZoneChangeDetection } from '@angular/core';
-import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { RouteReuseStrategy } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -34,8 +34,6 @@ import { ComponentModule } from '@modules/component.module';
         ComponentModule,
     ], 
     providers: [
-        // provideZoneChangeDetection({ eventCoalescing: true }),
-        // provideClientHydration(withEventReplay()), 
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimationsAsync(),
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

@@ -1,8 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Platform } from '@ionic/angular';
-
-// LIBRARIES
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 
 // UTILS
 import { 
@@ -30,6 +26,16 @@ import { BasePage } from '@pages/base.page';
 })
 export class VehiclePage extends BasePage implements OnInit {
 
+  // INJECTIONS
+  private readonly dataService: DataService = inject(DataService);
+  private readonly vehicleService: VehicleService = inject(VehicleService);
+  private readonly commonService: CommonService = inject(CommonService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly dashboardService: DashboardService = inject(DashboardService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly detector: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private readonly iconService: IconService = inject(IconService);
+
   // MODAL
   input: ModalInputModel = new ModalInputModel();
   skeletonInput: SkeletonInputModel = VehicleSkeletonSetting;
@@ -43,17 +49,8 @@ export class VehiclePage extends BasePage implements OnInit {
   loadedBody = false;
   measure: ISettingModel;
 
-  constructor(public platform: Platform,
-              private readonly dataService: DataService,
-              public translator: TranslateService,
-              private readonly vehicleService: VehicleService,
-              private readonly commonService: CommonService,
-              private readonly controlService: ControlService,
-              private readonly dashboardService: DashboardService,
-              private readonly settingsService: SettingsService,
-              private readonly detector: ChangeDetectorRef,
-              private readonly iconService: IconService) {
-      super(platform, translator);
+  constructor() {
+      super();
   }
 
   /** INIT */

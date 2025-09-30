@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -19,11 +19,11 @@ import { CommonService, CalendarService, IconService } from '../common/index';
 })
 export class HomeService {
 
-    constructor(private commonService: CommonService,
-                private calendarService: CalendarService,
-                private translator: TranslateService,
-                private iconService: IconService) {
-    }
+    // IJECTIONS
+    private readonly commonService: CommonService = inject(CommonService);
+    private readonly calendarService: CalendarService = inject(CalendarService);
+    private readonly translator: TranslateService = inject(TranslateService);
+    private readonly iconService: IconService = inject(IconService);
 
     /** HOME NOTIFICATIONS */
 

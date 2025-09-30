@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
@@ -22,6 +22,18 @@ import {
     standalone: false
 })
 export class AddEditOperationComponent implements OnInit {
+
+  // INJECTIONS
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly translator: TranslateService = inject(TranslateService);
+  private readonly operationService: OperationService = inject(OperationService);
+  private readonly commonService: CommonService = inject(CommonService);
+  private readonly calendarService: CalendarService = inject(CalendarService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly configurationService: ConfigurationService = inject(ConfigurationService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly vehicleService: VehicleService = inject(VehicleService);
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<OperationModel> = new ModalInputModel<OperationModel>();
@@ -50,18 +62,7 @@ export class AddEditOperationComponent implements OnInit {
   translateCancel = '';
   translateSelect = '';
 
-  constructor(
-    private readonly modalController: ModalController,
-    private readonly dataService: DataService,
-    private readonly translator: TranslateService,
-    private readonly operationService: OperationService,
-    private readonly commonService: CommonService,
-    private readonly calendarService: CalendarService,
-    private readonly controlService: ControlService,
-    private readonly configurationService: ConfigurationService,
-    private readonly settingsService: SettingsService,
-    private readonly vehicleService: VehicleService
-  ) {
+  constructor() {
     this.formatDate = this.calendarService.getFormatCalendar();
     this.translateWorkshop = this.translator.instant('COMMON.WORKSHOP');
     this.translateMe = this.translator.instant('COMMON.ME');
@@ -94,6 +95,11 @@ export class AddEditOperationComponent implements OnInit {
 
     // GET VEHICLES
     this.vehicles = this.dataService.getVehiclesData();
+    if (!!this.vehicles && this.vehicles.length > 0 && this.modalInputModel.type === ModalTypeEnum.CREATE) {
+      const vehicleAssigned = this.vehicles.find(x => x.id === this.operation.vehicle.id);
+      if(vehicleAssigned)  
+        this.operation.vehicle = vehicleAssigned;
+    }
 
     // GET OPERATION TYPE
     this.operationType = this.commonService.orderBy(

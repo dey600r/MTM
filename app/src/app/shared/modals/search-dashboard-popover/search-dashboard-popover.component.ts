@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 
 // LIBRARY ANGULAR
@@ -25,6 +25,15 @@ import {
     standalone: false
 })
   export class SearchDashboardPopOverComponent implements OnInit {
+
+    // INJECTIONS
+    private readonly popoverController: PopoverController = inject(PopoverController);
+    private readonly dataService: DataService = inject(DataService);
+    private readonly dashboardService: DashboardService = inject(DashboardService);
+    private readonly commonService: CommonService = inject(CommonService);
+    private readonly configurationService: ConfigurationService = inject(ConfigurationService);
+    private readonly translator: TranslateService = inject(TranslateService);
+    private readonly settingsService: SettingsService = inject(SettingsService);
 
     // MODAL MODELS
     @Input() modalInputModel: ModalInputModel = new ModalInputModel();
@@ -66,13 +75,7 @@ import {
     showDoghnut = false;
     showMyData = false;
 
-    constructor(private readonly popoverController: PopoverController,
-                private readonly dataService: DataService,
-                private readonly dashboardService: DashboardService,
-                private readonly commonService: CommonService,
-                private readonly configurationService: ConfigurationService,
-                private readonly translator: TranslateService,
-                private readonly settingsService: SettingsService) {
+    constructor() {
         this.searchDashboard = this.dashboardService.getSearchDashboard();
         this.filterMonth = this.searchDashboard.showPerMont;
         this.translateAccept = this.translator.instant('COMMON.ACCEPT');

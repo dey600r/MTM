@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // SERVICES
 import { StorageService } from './storage.service';
@@ -30,6 +30,12 @@ import { ConstantsTable, TypeOfTableEnum, ConstantsColumns, ActionDBEnum } from 
   providedIn: 'root'
 })
 export class CRUDService {
+
+  // INJECTIONS
+  private readonly storageService: StorageService = inject(StorageService);
+  private readonly mapService: MapService = inject(MapService);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly calendarService: CalendarService = inject(CalendarService);
 
   // MAPPER BEHAVIOUR
   private readonly databaseBehaviourConfiguration: IMapperModel[] = [
@@ -275,13 +281,6 @@ export class CRUDService {
         }
       },
     ];
-
-  constructor(private readonly storageService: StorageService,
-              private readonly mapService: MapService,
-              private readonly dataService: DataService,
-              private readonly calendarService: CalendarService) {
-
-  }
 
   /* MAPPER CONFIGURATION */
   getMapperConfiguration(): IMapperModel[] {

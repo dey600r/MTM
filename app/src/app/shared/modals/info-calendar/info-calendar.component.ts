@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
@@ -33,6 +33,16 @@ import { CalendarModeEnum, CalendarTypeEnum, Constants, ConstantsColumns, Header
 })
 export class InfoCalendarComponent implements OnInit {
 
+  // INJECTIONS
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly calendarService: CalendarService = inject(CalendarService);
+  private readonly infoCalendarService: InfoCalendarService = inject(InfoCalendarService);
+  private readonly commonService: CommonService = inject(CommonService);
+  private readonly translator: TranslateService = inject(TranslateService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly dataService: DataService = inject(DataService);
+
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<CalendarInputModal> = new ModalInputModel<CalendarInputModal>();
   headerInput: HeaderInputModel = new HeaderInputModel();
@@ -59,14 +69,7 @@ export class InfoCalendarComponent implements OnInit {
   // TRANSLATE
   notificationEmpty = '';
 
-  constructor(private readonly modalController: ModalController,
-              private readonly calendarService: CalendarService,
-              private readonly infoCalendarService: InfoCalendarService,
-              private readonly commonService: CommonService,
-              private readonly translator: TranslateService,
-              private readonly controlService: ControlService,
-              private readonly settingsService: SettingsService,
-              private readonly dataService: DataService) {
+  constructor() {
       this.notificationEmpty = this.translator.instant('NotificationEmpty');
       this.formatCalendar = this.calendarService.getFormatCalendar();
   }
@@ -146,9 +149,8 @@ export class InfoCalendarComponent implements OnInit {
         daysConfig: days
     };
 
-    setTimeout(() => {
-      const today: Date = new Date();
-      this.applyNotificationsOnCalendar(this.calendarMode, today.getFullYear(), today.getMonth());
+    setTimeout(() => { 
+      this.applyNotificationsFromMemoryOnCalendar(this.calendarMode);
     }, 300);
   }
 

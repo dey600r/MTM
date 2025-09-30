@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
@@ -19,6 +19,16 @@ import {
 })
 export class AddEditVehicleComponent implements OnInit {
 
+  // INJECTIONS
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly translator: TranslateService = inject(TranslateService);
+  private readonly vehicleService: VehicleService = inject(VehicleService);
+  private readonly commonService: CommonService = inject(CommonService);
+  private readonly calendarService: CalendarService = inject(CalendarService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<VehicleModel> = new ModalInputModel<VehicleModel>();
   headerInput: HeaderInputModel = new HeaderInputModel();
@@ -38,16 +48,7 @@ export class AddEditVehicleComponent implements OnInit {
   translateYearBetween = '';
   translateSelect = '';
 
-  constructor(
-    private readonly modalController: ModalController,
-    private readonly dataService: DataService,
-    private readonly translator: TranslateService,
-    private readonly vehicleService: VehicleService,
-    private readonly commonService: CommonService,
-    private readonly calendarService: CalendarService,
-    private readonly controlService: ControlService,
-    private readonly settingsService: SettingsService
-  ) {
+  constructor() {
     this.formatDate = this.calendarService.getFormatCalendar();
     this.translateYearBetween = this.translator.instant('PAGE_VEHICLE.AddYearBetween', { year: new Date().getFullYear()});
     this.translateSelect = this.translator.instant('COMMON.SELECT');
@@ -73,13 +74,15 @@ export class AddEditVehicleComponent implements OnInit {
     // GET CONFIGURATIONS
     this.configurations = this.commonService.orderBy(
       this.dataService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+    if (!!this.configurations && this.configurations.length > 0 && this.modalInputModel.type === ModalTypeEnum.CREATE) {
+      this.vehicle.configuration = this.configurations[0];
+    }
 
     // GET VEHICLE TYPE
-    const dataVehicleType = this.dataService.getVehicleTypeData();
-    if (!!dataVehicleType && dataVehicleType.length > 0 && this.modalInputModel.type === ModalTypeEnum.CREATE) {
-      this.vehicle.vehicleType = new VehicleTypeModel(dataVehicleType[0].code, dataVehicleType[0].description, dataVehicleType[0].id);
+    this.vehicleTypes = this.dataService.getVehicleTypeData();
+    if (!!this.vehicleTypes && this.vehicleTypes.length > 0 && this.modalInputModel.type === ModalTypeEnum.CREATE) {
+      this.vehicle.vehicleType = this.vehicleTypes[0];
     }
-    this.vehicleTypes = dataVehicleType;
 
     // GET OPERATIONS
     // Filter to get less elemnts to better perfomance

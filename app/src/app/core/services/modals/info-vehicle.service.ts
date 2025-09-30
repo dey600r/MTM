@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -24,12 +24,13 @@ import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum, WarningWearEnum }
 })
 export class InfoVehicleService {
 
-    constructor(private homeService: HomeService,
-                private calendarService: CalendarService,
-                private translator: TranslateService,
-                private controlService: ControlService,
-                private commonService: CommonService,
-                private iconService: IconService) {}
+    // INJECTIONS
+    private readonly homeService: HomeService = inject(HomeService);
+    private readonly calendarService: CalendarService = inject(CalendarService);
+    private readonly translator: TranslateService = inject(TranslateService);
+    private readonly controlService: ControlService = inject(ControlService);
+    private readonly commonService: CommonService = inject(CommonService);
+    private readonly iconService: IconService = inject(IconService);
 
     // INFO VEHICLE CONFIGURATION
 

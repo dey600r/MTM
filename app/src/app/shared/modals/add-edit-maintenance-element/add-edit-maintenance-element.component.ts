@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // UTILS
@@ -14,6 +14,11 @@ import { ConfigurationService, ControlService } from '@services/index';
 })
 export class AddEditMaintenanceElementComponent implements OnInit {
 
+  // INJECTIONS
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly configurationService: ConfigurationService = inject(ConfigurationService);
+
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<MaintenanceElementModel> = new ModalInputModel<MaintenanceElementModel>();
   headerInput: HeaderInputModel = new HeaderInputModel();
@@ -21,13 +26,6 @@ export class AddEditMaintenanceElementComponent implements OnInit {
   // MODEL FORM
   maintenanceElement: MaintenanceElementModel = new MaintenanceElementModel();
   submited = false;
-
-  constructor(
-    private readonly modalController: ModalController,
-    private readonly controlService: ControlService,
-    private readonly configurationService: ConfigurationService
-  ) {
-  }
 
   ngOnInit() {
     this.headerInput = new HeaderInputModel({

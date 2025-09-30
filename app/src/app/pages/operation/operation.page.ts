@@ -1,8 +1,6 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, ChangeDetectorRef, OnInit, inject } from '@angular/core';
 
 // LIBRARIES
-import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import {
@@ -33,6 +31,16 @@ import { BasePage } from '@pages/base.page';
 })
 export class OperationPage extends BasePage implements OnInit {
 
+  // INJECTIONS
+  private readonly dataService: DataService = inject(DataService);
+  private readonly commonService: CommonService = inject(CommonService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly operationService: OperationService = inject(OperationService);
+  private readonly dashboardService: DashboardService = inject(DashboardService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly detector: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private readonly iconService: IconService = inject(IconService);
+
   // MODAL
   input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
   headerInput: HeaderInputModel = new HeaderInputModel();
@@ -52,17 +60,8 @@ export class OperationPage extends BasePage implements OnInit {
   measure: ISettingModel;
   coin: ISettingModel;
 
-  constructor(public platform: Platform,
-              private readonly dataService: DataService,
-              public translator: TranslateService,
-              private readonly commonService: CommonService,
-              private readonly controlService: ControlService,
-              private readonly operationService: OperationService,
-              private readonly dashboardService: DashboardService,
-              private readonly settingsService: SettingsService,
-              private readonly detector: ChangeDetectorRef,
-              private readonly iconService: IconService) {
-    super(platform, translator);
+  constructor() {
+    super();
   }
 
   ngOnInit(): void {

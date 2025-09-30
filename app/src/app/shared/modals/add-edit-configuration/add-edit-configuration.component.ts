@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 // UTILS
@@ -14,6 +14,14 @@ import { DataService, CommonService, ConfigurationService, ControlService, Setti
 })
 export class AddEditConfigurationComponent implements OnInit {
 
+  // INJECTIONS
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly commonService: CommonService = inject(CommonService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly configurationService: ConfigurationService = inject(ConfigurationService);
+
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<ConfigurationModel> = new ModalInputModel<ConfigurationModel>();
   headerInput: HeaderInputModel = new HeaderInputModel();
@@ -26,16 +34,6 @@ export class AddEditConfigurationComponent implements OnInit {
   maintenances: MaintenanceModel[] = [];
   toggleMaintenaces: boolean[] = [];
   measure: ISettingModel;
-
-  constructor(
-    private readonly modalController: ModalController,
-    private readonly dataService: DataService,
-    private readonly commonService: CommonService,
-    private readonly controlService: ControlService,
-    private readonly settingsService: SettingsService,
-    private readonly configurationService: ConfigurationService
-  ) {
-  }
   
   ngOnInit() {
     this.headerInput = new HeaderInputModel({
