@@ -4,9 +4,10 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { SkeletonInputModel } from '@models/index';
 
 @Component({
-  selector: 'app-skeleton',
-  templateUrl: './skeleton.component.html',
-  styleUrls: ['./skeleton.component.scss'],
+    selector: 'app-skeleton',
+    templateUrl: './skeleton.component.html',
+    styleUrls: ['./skeleton.component.scss'],
+    standalone: false
 })
 export class SkeletonComponent implements OnChanges {
   

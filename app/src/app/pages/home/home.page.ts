@@ -1,9 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-
-// LIBRARIES
-import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
 import {
@@ -31,11 +28,23 @@ import { AddEditOperationComponent } from '@modals/add-edit-operation/add-edit-o
 import { BasePage } from '@pages/base.page';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss']
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
+    standalone: false
 })
 export class HomePage extends BasePage implements OnInit {
+
+  // INJECTIONS
+  private readonly dataService: DataService = inject(DataService);
+  private readonly dashboardService: DashboardService = inject(DashboardService);
+  private readonly configurationService: ConfigurationService = inject(ConfigurationService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly themeService: ThemeService = inject(ThemeService);
+  private readonly homeService: HomeService = inject(HomeService);
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly detector: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   // MODAL
   input: ModalInputModel = new ModalInputModel();
@@ -64,18 +73,8 @@ export class HomePage extends BasePage implements OnInit {
   vehicleSubscription: Subscription = new Subscription();
   maintenanceSubscription: Subscription = new Subscription();
 
-  constructor(public platform: Platform,
-              private readonly dataService: DataService,
-              public translator: TranslateService,
-              private readonly dashboardService: DashboardService,
-              private readonly configurationService: ConfigurationService,
-              private readonly controlService: ControlService,
-              private readonly settingsService: SettingsService,
-              private readonly themeService: ThemeService,
-              private readonly homeService: HomeService,
-              private readonly modalController: ModalController,
-              private readonly detector: ChangeDetectorRef) {
-    super(platform, translator);
+  constructor() {
+    super();
     this.searchDashboard = this.dashboardService.getSearchDashboard();
     this.loadHeader();
   }

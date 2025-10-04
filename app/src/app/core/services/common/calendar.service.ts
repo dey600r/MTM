@@ -15,8 +15,7 @@ import { VehicleModel } from '@models/index';
 })
 export class CalendarService {
 
-    constructor(private readonly translator: TranslateService) {
-    }
+    constructor(private readonly translator: TranslateService) { }
 
     // COMMON UTILS METHODS STRINGS
 
@@ -33,20 +32,20 @@ export class CalendarService {
     }
 
     getFormatCalendar() {
-        return this.translator.currentLang === 'es' ? Constants.DATE_FORMAT_ES : Constants.DATE_FORMAT_EN;
+        return this.translator.getCurrentLang() === 'es' ? Constants.DATE_FORMAT_ES : Constants.DATE_FORMAT_EN;
     }
 
     getFormatCalendarWeekStart() {
-        return this.translator.currentLang === 'es' ? 1 : 0;
+        return this.translator.getCurrentLang() === 'es' ? 1 : 0;
     }
 
     getFormatCalendarWeek() {
-        return this.translator.currentLang === 'es' ?
+        return this.translator.getCurrentLang() === 'es' ?
             ['D', 'L', 'M', 'X', 'J', 'V', 'S'] : ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     }
 
     getFormatCalendarMonth() {
-        return this.translator.currentLang === 'es' ?
+        return this.translator.getCurrentLang() === 'es' ?
             ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DEC'] :
             ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     }

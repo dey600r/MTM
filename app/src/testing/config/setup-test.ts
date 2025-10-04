@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 // EXTERNAL LIBRARIES
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // TESTING LIBRARIES
@@ -52,13 +52,7 @@ export class SetupTest {
       CommonModule,
       FormsModule,
       IonicModule.forRoot(),
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: (createTranslateLoader),
-          deps: [HttpClient]
-        }
-      })
+      TranslateModule.forRoot()
     ],
     declarations: [
       AppComponent,
@@ -90,8 +84,4 @@ export class SetupTest {
   } ;
 }
 
-// tslint:disable-next-line: typedef
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.pathTranslate, '.json');
-}
 

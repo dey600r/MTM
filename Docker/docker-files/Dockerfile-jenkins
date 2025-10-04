@@ -1,4 +1,4 @@
-FROM jenkins/jenkins
+FROM jenkins/jenkins:2.502-jdk21
 
 LABEL DeyJG <dey125r@gmail.com>
 

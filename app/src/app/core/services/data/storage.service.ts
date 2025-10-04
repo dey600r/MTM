@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // SERVICES
 import { LogService } from '../common/log.service';
@@ -11,11 +11,9 @@ import { ToastTypeEnum, PageEnum } from '@utils/index';
   })
   export class StorageService {
 
-    private storage: Storage;
-  
-    constructor(private readonly logService: LogService) {
-      this.storage = window.localStorage;
-    }
+    //INJECTIONS
+    private readonly logService: LogService = inject(LogService);
+    private readonly storage: Storage = window.localStorage;
 
     public setData(key: string, value: any[]): Promise<boolean> {
       return new Promise<boolean>((resolve, reject) => {

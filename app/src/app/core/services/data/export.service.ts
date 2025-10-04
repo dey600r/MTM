@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // LIBRARIES
 import { File } from '@awesome-cordova-plugins/file/ngx';
@@ -14,9 +14,9 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 })
 export class ExportService {
 
-    constructor(private readonly file: File,
-                private readonly logService: LogService) {
-    }
+    // INJECTIONS
+    private readonly file: File = inject(File);
+    private readonly logService: LogService = inject(LogService);
 
     /** EXPORTS AND IMPORTS */
 

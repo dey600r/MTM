@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -16,9 +16,9 @@ import { SystemConfigurationModel, ISettingModel } from '@models/index';
 })
 export class SettingsService {
 
-    constructor(private translator: TranslateService,
-                private crudService: CRUDService) {
-    }
+    // INJECTIONS
+    private readonly translator: TranslateService = inject(TranslateService);
+    private readonly crudService: CRUDService = inject(CRUDService);
 
     /** SETTINGS */
 

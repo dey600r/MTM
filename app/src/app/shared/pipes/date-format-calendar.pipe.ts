@@ -3,7 +3,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { CalendarService } from '@services/index';
 
 
-@Pipe({name: 'dateFormatCalendarPipe'})
+@Pipe({
+    name: 'dateFormatCalendarPipe',
+    standalone: false
+})
 export class DateFormatCalendarPipe implements PipeTransform {
     constructor(private calendarService: CalendarService) {
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // SERVICES
 import { StorageService } from './storage.service';
@@ -30,6 +30,12 @@ import { ConstantsTable, TypeOfTableEnum, ConstantsColumns, ActionDBEnum } from 
   providedIn: 'root'
 })
 export class CRUDService {
+
+  // INJECTIONS
+  private readonly storageService: StorageService = inject(StorageService);
+  private readonly mapService: MapService = inject(MapService);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly calendarService: CalendarService = inject(CalendarService);
 
   // MAPPER BEHAVIOUR
   private readonly databaseBehaviourConfiguration: IMapperModel[] = [
@@ -154,11 +160,12 @@ export class CRUDService {
               getDataRelatedTableFunction: () => this.dataService.getMaintenanceElementData(),
               getDataRelatedTableRefFunction: () => this.dataService.getMaintenanceElementRelData(),
               customMapperBeforeStorage: (data: MaintenanceElementModel[], related: IMaintenanceElementRelStorageModel[]) => {
-                data.forEach(x => {
+                return data.map(x => {
+                  const newItem = {...x};
                   let item = related.find(y => x.id == y.idMaintenanceElement);
-                  x.idMaintenanceRel = item.id;
+                  newItem.idMaintenanceRel = item.id;
+                  return newItem;
                 });
-                return data;
               }
             },
             {
@@ -188,11 +195,12 @@ export class CRUDService {
               getDataRelatedTableFunction: () => this.dataService.getMaintenanceData(),
               getDataRelatedTableRefFunction: () => this.dataService.getConfigurationMaintenanceData(),
               customMapperBeforeStorage: (data: MaintenanceModel[], related: IConfigurationMaintenanceStorageModel[]) => {
-                data.forEach(x => {
+                return data.map(x => {
+                  const newItem = {...x};
                   let item = related.find(y => x.id == y.idMaintenance);
-                  x.idConfigurationRel = item.id;
+                  newItem.idConfigurationRel = item.id;
+                  return newItem;
                 });
-                return data;
               }
             }
           ]
@@ -257,12 +265,13 @@ export class CRUDService {
               getDataRelatedTableFunction: () => this.dataService.getMaintenanceElementData(),
               getDataRelatedTableRefFunction: () => this.dataService.getOperationMaintenanceElementData(),
               customMapperBeforeStorage: (data: MaintenanceElementModel[], related: IOperationMaintenanceElementStorageModel[]) => {
-                data.forEach(x => {
+                return data.map(x => {
+                  const newItem = {...x};
                   let item = related.find(y => x.id == y.idMaintenanceElement);
-                  x.price = item.price;
-                  x.idOperationRel = item.id;
+                  newItem.price = item.price;
+                  newItem.idOperationRel = item.id;
+                  return newItem;
                 });
-                return data;
               }
             }
           ]
@@ -272,13 +281,6 @@ export class CRUDService {
         }
       },
     ];
-
-  constructor(private readonly storageService: StorageService,
-              private readonly mapService: MapService,
-              private readonly dataService: DataService,
-              private readonly calendarService: CalendarService) {
-
-  }
 
   /* MAPPER CONFIGURATION */
   getMapperConfiguration(): IMapperModel[] {

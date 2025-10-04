@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, inject } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
@@ -18,41 +18,42 @@ import { InfoButtonEnum, HeaderOutputEnum, PageEnum } from '@utils/index';
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
-  selector: 'dashboard',
-  templateUrl: 'dashboard.component.html',
-  styleUrls: []
+    selector: 'dashboard',
+    templateUrl: 'dashboard.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-    // MODAL MODELS
-    @Input() modalInputModel: ModalInputModel<DashboardInputModal> = new ModalInputModel<DashboardInputModal>();
-    input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
-    headerInput: HeaderInputModel = new HeaderInputModel();
+  // INJECTIONS
+  private readonly platform: Platform = inject(Platform);
+  private readonly screenOrientation: ScreenOrientation = inject(ScreenOrientation);
+  private readonly changeDetector: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dashboardService: DashboardService = inject(DashboardService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly iconService: IconService = inject(IconService);
 
-    // MODEL FORM
-    dashboardOpTypeExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
-    dashboardReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
-    dashboardVehicleExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
-    currentPopover = null;
+  // MODAL MODELS
+  @Input() modalInputModel: ModalInputModel<DashboardInputModal> = new ModalInputModel<DashboardInputModal>();
+  input: ModalInputModel<IInfoModel> = new ModalInputModel<IInfoModel>();
+  headerInput: HeaderInputModel = new HeaderInputModel();
 
-    // DATA
-    allOperations: OperationModel[] = [];
-    operations: OperationModel[] = [];
-    iconFilter = 'filter';
-    showSpinner = false;
-    openningPopover = false;
+  // MODEL FORM
+  dashboardOpTypeExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardVehicleExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  currentPopover = null;
 
-    // SUBSCRIPTION
-    searchSubscription: Subscription = new Subscription();
-    screenSubscription: Subscription = new Subscription();
+  // DATA
+  allOperations: OperationModel[] = [];
+  operations: OperationModel[] = [];
+  iconFilter = 'filter';
+  showSpinner = false;
+  openningPopover = false;
 
-    constructor(private readonly platform: Platform,
-                private readonly screenOrientation: ScreenOrientation,
-                private readonly changeDetector: ChangeDetectorRef,
-                private readonly dashboardService: DashboardService,
-                private readonly controlService: ControlService,
-                private readonly iconService: IconService) {
-  }
+  // SUBSCRIPTION
+  searchSubscription: Subscription = new Subscription();
+  screenSubscription: Subscription = new Subscription();
 
   ngOnInit() {
 

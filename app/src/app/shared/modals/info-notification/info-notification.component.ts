@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, inject } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
@@ -27,11 +27,28 @@ import {
 import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-dashboard-popover/search-dashboard-popover.component';
 
 @Component({
-  selector: 'info-notification',
-  templateUrl: 'info-notification.component.html',
-  styleUrls: ['info-notification.component.scss']
+    selector: 'info-notification',
+    templateUrl: 'info-notification.component.html',
+    styleUrls: ['info-notification.component.scss'],
+    standalone: false
 })
 export class InfoNotificationComponent implements OnInit, OnDestroy {
+
+  // INJECTIONS
+  private readonly platform: Platform = inject(Platform);
+  private readonly modalController: ModalController = inject(ModalController);
+  private readonly dashboardService: DashboardService = inject(DashboardService);
+  private readonly calendarService: CalendarService = inject(CalendarService);
+  private readonly infoCalendarService: InfoCalendarService = inject(InfoCalendarService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly screenOrientation: ScreenOrientation = inject(ScreenOrientation);
+  private readonly changeDetector: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private readonly translator: TranslateService = inject(TranslateService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly dataService: DataService = inject(DataService);
+  private readonly homeService: HomeService = inject(HomeService);
+  private readonly infoVehicleService: InfoVehicleService = inject(InfoVehicleService);
+  private readonly iconService: IconService = inject(IconService);
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<WearVehicleProgressBarViewModel, OperationModel> = new ModalInputModel<WearVehicleProgressBarViewModel, OperationModel>();
@@ -72,22 +89,6 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   searchDashboardRecordsSubscription: Subscription = new Subscription();
   screenSubscription: Subscription = new Subscription();
   component: any;
-
-  constructor(private readonly platform: Platform,
-              private readonly modalController: ModalController,
-              private readonly dashboardService: DashboardService,
-              private readonly calendarService: CalendarService,
-              private readonly infoCalendarService: InfoCalendarService,
-              private readonly controlService: ControlService,
-              private readonly screenOrientation: ScreenOrientation,
-              private readonly changeDetector: ChangeDetectorRef,
-              private readonly translator: TranslateService,
-              private readonly settingsService: SettingsService,
-              private readonly dataService: DataService,
-              private readonly homeService: HomeService,
-              private readonly infoVehicleService: InfoVehicleService,
-              private readonly iconService: IconService) {
-  }
 
   ngOnInit() {
     this.getSettings();

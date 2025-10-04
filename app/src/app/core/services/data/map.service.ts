@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // LIBRARIES ANGULAR
 import { TranslateService } from '@ngx-translate/core';
@@ -24,9 +24,9 @@ import { ConstantsColumns } from '@utils/index';
 })
 export class MapService {
 
-  constructor(private readonly translator: TranslateService,
-              private readonly iconService: IconService,
-              private readonly calendarService: CalendarService) {}
+  private readonly translator: TranslateService = inject(TranslateService);
+  private readonly iconService: IconService = inject(IconService);
+  private readonly calendarService: CalendarService = inject(CalendarService);
 
   /* MASTER DATA */
 

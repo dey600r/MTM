@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // LIBRARIES
 import { File } from '@awesome-cordova-plugins/file/ngx';
@@ -26,16 +26,18 @@ import { SystemConfigurationModel } from '@models/index';
 })
 export class SyncService {
 
-  login = false;
+  // INJECTIONS
+  private readonly dbService: DataBaseService = inject(DataBaseService);
+  private readonly crudService: CRUDService = inject(CRUDService);
+  private readonly exportService: ExportService = inject(ExportService);
+  private readonly controlService: ControlService = inject(ControlService);
+  private readonly settingsService: SettingsService = inject(SettingsService);
+  private readonly file: File = inject(File);
+  private readonly logService: LogService = inject(LogService);
+  private readonly commonService: CommonService = inject(CommonService);
 
-  constructor(private readonly dbService: DataBaseService,
-              private readonly crudService: CRUDService,
-              private readonly exportService: ExportService,
-              private readonly controlService: ControlService,
-              private readonly settingsService: SettingsService,
-              private readonly file: File,
-              private readonly logService: LogService,
-              private readonly commonService: CommonService) { }
+  // DATA
+  login = false;
 
   // syncRegisterUser(email: string, pwd: string) {
   //   const auth = getAuth();
