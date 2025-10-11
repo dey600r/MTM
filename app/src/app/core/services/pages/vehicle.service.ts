@@ -14,7 +14,7 @@ import { ConstantsTable, ConstantsColumns, ActionDBEnum } from '@utils/index';
 })
 export class VehicleService {
 
-    constructor(private crudService: CRUDService) {
+    constructor(private readonly crudService: CRUDService) {
     }
 
     saveVehicle(vehicles: VehicleModel[], action: ActionDBEnum, operations: OperationModel[] = []) {

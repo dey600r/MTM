@@ -1,5 +1,5 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { AlertController, LoadingController, ModalController, Platform, PopoverController, ToastController } from '@ionic/angular';
+import { TestBed } from '@angular/core/testing';
+import { AlertController, ModalController, Platform, PopoverController, ToastController } from '@ionic/angular';
 
 // SERVICES
 import { ControlService } from './control.service';
@@ -18,7 +18,6 @@ describe('ControlService', () => {
     let translate: TranslateService;
     let modalController: ModalController;
     let toastController: ToastController;
-    let loaderController: LoadingController;
     let alertController: AlertController;
     let popoverController: PopoverController;
     let platform: Platform;
@@ -31,7 +30,6 @@ describe('ControlService', () => {
         service = TestBed.inject(ControlService);
         modalController = TestBed.inject(ModalController);
         toastController = TestBed.inject(ToastController);
-        loaderController = TestBed.inject(LoadingController);
         alertController = TestBed.inject(AlertController);
         popoverController = TestBed.inject(PopoverController);
         platform = TestBed.inject(Platform);

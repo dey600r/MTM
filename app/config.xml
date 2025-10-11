@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="364" id="mtm.ionic.dey125r" version="3.6.4" windows-packageVersion="3.6.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>MtM</name>
+<widget android-versionCode="368" id="mtm.ionic.dey125rtest" version="3.6.8" windows-packageVersion="3.6.8" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>MtM Test</name>
     <description>Motor Track Manager</description>
     <author email="deyhome.mtm@gmail.com" href="https://mtmweb-cd867.web.app/home">DeyHome</author>
     <content src="index.html" />
@@ -12,8 +12,8 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <preference name="ScrollEnabled" value="false" />
-    <preference name="android-minSdkVersion" value="23" />
-    <preference name="android-targetSdkVersion" value="34" />
+    <preference name="android-minSdkVersion" value="24" />
+    <preference name="android-targetSdkVersion" value="35" />
     <preference name="WindowsStoreIdentityName" value="52193DeyHome.MotortrackManager" />
     <preference name="WindowsStorePublisherName" value="DeyApps" />
     <preference name="WindowsStoreDisplayName" value="Motor Track Manager" />
@@ -22,7 +22,7 @@
     <preference name="BackupWebStorage" value="none" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="StatusBarOverlaysWebView" value="false" />
-    <preference name="AndroidGradlePluginVersion" value="8.3.0" />
+    <preference name="AndroidGradlePluginVersion" value="8.7.3" />
     <platform name="android">
         <hook src="scripts/beforeBuild.js" type="before_build" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="src/assets/icon/icon-splash.png" />
@@ -60,7 +60,7 @@
         <preference name="ElectronSettingsFilePath" value="resources/windows/settings/settings.json" />
         <preference name="ElectronUseWebView2" value="true" />
         <preference name="ElectronUseAsar" value="true" />
-        <icon src="resources/windows/icon/icon.png" target="app" />
-        <icon src="resources/windows/icon/icon-installer.png" target="installer" />
+        <icon src="resources/windows/icon/app.png" target="app" />
+        <icon src="resources/windows/icon/installer.png" target="installer" />
     </platform>
 </widget>

@@ -6,9 +6,10 @@ import { Component, Input } from '@angular/core';
 import { ModalInputModel, IInfoModel } from '@models/index';
 
 @Component({
-  selector: 'app-info',
-  templateUrl: 'app-info.component.html',
-  styleUrls: ['app-info.component.scss']
+    selector: 'app-info',
+    templateUrl: 'app-info.component.html',
+    styleUrls: ['app-info.component.scss'],
+    standalone: false
 })
 export class AppInfoComponent {
   // MODAL MODELS

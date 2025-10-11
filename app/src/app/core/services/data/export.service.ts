@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 // LIBRARIES
@@ -15,10 +15,10 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 })
 export class ExportService {
 
-    constructor(private readonly file: File,
-                private readonly logService: LogService,
-                private readonly platform: Platform) {
-    }
+    // INJECTIONS
+    private readonly file: File = inject(File);
+    private readonly logService: LogService = inject(LogService);
+    private readonly platform: Platform = inject(Platform);
 
     /** EXPORTS AND IMPORTS */
 

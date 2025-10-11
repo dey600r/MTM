@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { ToastController, AlertController, Platform, ModalController, PopoverController, LoadingController } from '@ionic/angular';
+import { inject, Injectable } from '@angular/core';
+import { ToastController, AlertController, Platform, ModalController, PopoverController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARY ANGULAR
@@ -18,22 +18,22 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 })
 export class ControlService {
 
+    // INJECTIONS
+    private readonly translator: TranslateService = inject(TranslateService);
+    private readonly alertController: AlertController = inject(AlertController);
+    private readonly toastController: ToastController = inject(ToastController);
+    private readonly modalController: ModalController = inject(ModalController);
+    private readonly popoverController: PopoverController = inject(PopoverController);
+    private readonly platform: Platform = inject(Platform);
+    private readonly iab: InAppBrowser = inject(InAppBrowser);
+    private readonly logService: LogService = inject(LogService);
+
+    // DATA
     private dateLastUse = new Date();
     private readonly listPages: PageEnum[] = [PageEnum.HOME, PageEnum.VEHICLE, PageEnum.OPERATION, PageEnum.CONFIGURATION];
 
     // SUBSCRIPTION
     private exitButtonSubscripion: Subscription = new Subscription();
-
-    constructor(private readonly translator: TranslateService,
-                private readonly alertController: AlertController,
-                private readonly toastController: ToastController,
-                private readonly modalController: ModalController,
-                private readonly popoverController: PopoverController,
-                private readonly loadingController: LoadingController,
-                private readonly platform: Platform,
-                private readonly iab: InAppBrowser,
-                private readonly logService: LogService) {
-    }
 
     getDateLastUse(): Date {
         return this.dateLastUse;

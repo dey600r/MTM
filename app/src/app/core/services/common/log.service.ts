@@ -1,5 +1,5 @@
+import { inject, Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { Injectable } from '@angular/core';
 
 // LIBRARIES
 import { File } from '@awesome-cordova-plugins/file/ngx';
@@ -13,9 +13,9 @@ import { environment } from '@environment/environment';
 })
 export class LogService {
 
-    constructor(private platform: Platform,
-        private readonly file: File) {
-    }
+    // INJECTIONS
+    private readonly file: File = inject(File);
+    private platform: Platform = inject(Platform);
 
     private generateNameLogFile(): string {
         const today: Date = new Date();

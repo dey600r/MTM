@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Platform } from '@ionic/angular';
 
@@ -26,6 +26,13 @@ import {
 })
 export class DashboardService {
 
+    // INJECTIONS
+    private readonly commonService: CommonService = inject(CommonService);
+    private readonly calendarService: CalendarService = inject(CalendarService);
+    private readonly translator: TranslateService = inject(TranslateService);
+    private readonly platform: Platform = inject(Platform);
+
+    // DATA
     private searchDashboard: SearchDashboardModel = new SearchDashboardModel();
     public behaviourSearchOperation: BehaviorSubject<SearchDashboardModel>
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
@@ -35,12 +42,6 @@ export class DashboardService {
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
     public behaviourSearchConfiguration: BehaviorSubject<SearchDashboardModel>
         = new BehaviorSubject<SearchDashboardModel>(this.searchDashboard);
-
-    constructor(private readonly commonService: CommonService,
-                private readonly calendarService: CalendarService,
-                private readonly translator: TranslateService,
-                private readonly platform: Platform) {
-    }
 
     getSizeWidthHeight(w: number, h: number): [number, number] {
         const width: number = (w > 768 && h > 600 ? 600 : w);

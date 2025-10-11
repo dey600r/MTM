@@ -18,10 +18,10 @@ import { CRUDService, DataService, MapService } from '../data/index';
 })
 export class ConfigurationService {
 
-    constructor(private commonService: CommonService,
-                private crudService: CRUDService,
-                private mapService: MapService,
-                private dataService: DataService) {
+    constructor(private readonly commonService: CommonService,
+                private readonly crudService: CRUDService,
+                private readonly mapService: MapService,
+                private readonly dataService: DataService) {
     }
 
     // COMMON
