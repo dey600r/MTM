@@ -1,0 +1,34 @@
+# Utiliza una imagen Windows con Node y el Windows SDK
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
+
+SHELL ["powershell", "-Command"]
+
+# Instalar Node.js LTS
+RUN Invoke-WebRequest -Uri "https://nodejs.org/dist/v20.11.1/node-v20.11.1-x64.msi" -OutFile "node.msi" ; \
+    Start-Process msiexec.exe -Wait -ArgumentList '/i node.msi /quiet' ; \
+    Remove-Item node.msi
+
+# Instalar Ionic y Cordova globalmente
+RUN npm i -g @angular/cli@19.2.17 @ionic/cli@latest cordova@12.0.0
+
+# Crear directorio de trabajo
+WORKDIR C:\app
+
+# Copiar archivos del proyecto
+COPY package*.json ./
+RUN npm ci
+COPY . .
+
+# Configurar el SDK de Windows
+ENV windowsKitPath="C:\\Program Files (x86)\\Windows Kits\\10\\bin\\x64"
+
+# Construir la app Electron y empaquetar APPX
+RUN ionic cordova platform add electron ; \
+    ionic cordova build electron --release ; \
+    if (Test-Path 'platforms\\electron\\build\\win-unpacked') { \
+        Write-Host '✅ Build completado correctamente.' \
+    } else { \
+        Write-Host '❌ Error: no se generó win-unpacked.' ; exit 1 \
+    }
+
+CMD ["powershell"]

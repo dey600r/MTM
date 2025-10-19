@@ -1,6 +1,6 @@
 android {
     //ndkPath "C:/Users/dey125r/AppData/Local/Android/Sdk/ndk/25.1.8937393"
-    ndkVersion "25.1.8937393" 
+    ndkVersion "28.2.13676358" 
     // defaultConfig {
     //     externalNativeBuild {
     //         ndk {

@@ -1,8 +1,8 @@
 {
   "name": "MtM",
-  "version": "v3.6.6",
+  "version": "v3.6.5",
   "minVersion": "v3.3.0",
-  "dateVersion": "2025-10-10 12:00:00",
+  "dateVersion": "2025-10-18 12:00:00",
   "author": "David Jimenez Galiana",
   "homepage": "deyhome.mtm@gmail.com",
   "scripts": {
@@ -16,9 +16,10 @@
     "build:release-jenkins": "sh mtm-deploy-store.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
     "deploy:release-firebase": "mtm-deploy-firebase.bat",
-    "deploy:release-apk": "mtm-deploy-apk.bat production",
+    "deploy:release-apk": "mtm-deploy-apk.bat",
     "deploy:test-android": "ionic cordova build android --debug && ionic cordova run android --no-build --debug --device",
     "deploy:debug-android": "ionic cordova run android --device -l --debug --ssl --info --host=192.168.1.18 --port=8100",
+    "deploy:test-electron": "ionic cordova run electron --debug",
     "sonarqube": "ng test --code-coverage --watch=false && sonar-scanner.bat"
   },
   "private": true,
