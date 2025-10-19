@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="364" id="mtm.ionic.dey125r" version="3.6.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="365" id="mtm.ionic.dey125r" version="3.6.5" windows-packageVersion="3.6.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM</name>
     <description>Motor Track Manager</description>
     <author email="deyhome.mtm@gmail.com" href="https://mtmweb-cd867.web.app/home">DeyHome</author>
@@ -14,14 +14,17 @@
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="24" />
     <preference name="android-targetSdkVersion" value="35" />
+    <preference name="WindowsStoreIdentityName" value="52193DeyHome.MotortrackManager" />
+    <preference name="WindowsStorePublisherName" value="DeyApps" />
+    <preference name="WindowsStoreDisplayName" value="Motor Track Manager" />
+    <preference name="windows-target-version" value="10.0" />
+    <preference name="windows-phone-target-version" value="10.0" />
     <preference name="BackupWebStorage" value="none" />
-    <preference name="SplashScreenDelay" value="0" />
-    <preference name="ShowSplashScreen" value="false" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="AndroidGradlePluginVersion" value="8.7.3" />
     <platform name="android">
-        <hook src="scripts/beforeBuild.js" type="before_build" />
+        <hook src="scripts/beforeBuild-android.js" type="before_build" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="src/assets/icon/icon-splash.png" />
         <preference name="AndroidWindowSplashScreenBackground" value="#2A2A2A" />
         <preference name="AndroidXEnabled" value="true" />
@@ -41,4 +44,12 @@
         <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
     </platform>
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <platform name="electron">
+        <hook src="scripts/beforeBuild-electron.js" type="before_build" />
+        <preference name="ElectronSettingsFilePath" value="resources/windows/settings/settings.json" />
+        <preference name="ElectronUseWebView2" value="true" />
+        <preference name="ElectronUseAsar" value="true" />
+        <icon src="resources/windows/icon/app.png" target="app" />
+        <icon src="resources/windows/icon/installer.png" target="installer" />
+    </platform>
 </widget>
