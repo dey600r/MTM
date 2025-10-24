@@ -1,5 +1,5 @@
 module.exports = function(ctx) {
-    console.log("----> START Before-Build Hook <----");
+
     const fs = require('fs');
     const path = require('path');
     const rootdir = ctx.opts.projectRoot;
@@ -8,6 +8,7 @@ module.exports = function(ctx) {
     const gradle_file = rootdir + '/scripts/build-extras.gradle';
     const dest_gradle_file = android_dir + '/build-extras.gradle';
     const dest_gradle_app_file = android_app_dir + '/build-extras.gradle';
+    console.log(`📦 Building gradles file from ${android_app_dir} → ${dest_gradle_file}`);
 
     console.log("Before-Build Hook - rootdir", rootdir);
     console.log("Before-Build Hook - android_dir", android_dir);
@@ -31,5 +32,5 @@ module.exports = function(ctx) {
     console.log('Before-Build Hook - Copy ' + gradle_file + ' to ' + android_app_dir);
     fs.createReadStream(gradle_file).pipe(fs.createWriteStream(dest_gradle_app_file));
 
-    console.log("----> START Before-Build Hook <----");
+    console.log('✅ Succesfully building gradles.');
 }

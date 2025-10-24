@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { File } from '@awesome-cordova-plugins/file/ngx';
@@ -17,20 +18,21 @@ export class ExportService {
     // INJECTIONS
     private readonly file: File = inject(File);
     private readonly logService: LogService = inject(LogService);
+    private readonly platform: Platform = inject(Platform);
 
     /** EXPORTS AND IMPORTS */
 
     getRootRealRelativePath(filePath: string = ''): string {
         const dataDirectory: string = this.getRealRelativeDirectory();
-        return `${dataDirectory.substring(this.logService.getRootDirectory().length, dataDirectory.length)}${this.logService.getRootRelativePath(filePath)}`;
+        if(this.platform.is('android')) {
+            return `${dataDirectory.substring(this.logService.getRootDirectory().length, dataDirectory.length)}${this.logService.getRootRelativePath(filePath)}`;
+        } else {
+            return dataDirectory;
+        }
     }
 
-    getRealRelativeDirectory(): string {
-        return (!!this.file.externalDataDirectory ? this.file.externalDataDirectory : this.getRealPathWindows());
-    }
-
-    getRealPathWindows(): string {
-        return `C:\\Users\\<USER>\\AppData\\Local\\Packages\\<52193DeyHome.MotortrackManager>\\LocalState\\${Constants.OUTPUT_DIR_NAME}`;
+    private getRealRelativeDirectory(): string {
+        return (!!this.file.externalDataDirectory ? this.file.externalDataDirectory : '/Downloads');
     }
 
     getPathFile(fileName: string, filePath: string = '') {
@@ -38,28 +40,30 @@ export class ExportService {
     }
 
     async createOutputDirectory() {
-        const pathDataDirectory: string = this.logService.getDataDirectory();
-        try {
-            await this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
-                this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory exists`);
-                this.createDiretory(Constants.EXPORT_DIR_NAME);
-                this.createDiretory(Constants.IMPORT_DIR_NAME);
-            }).catch(errCheck => {
-                this.file.createDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME, false).then(newDir => {
-                    this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory created`);
+        if(this.platform.is('android')) {
+            const pathDataDirectory: string = this.logService.getDataDirectory();
+            try {
+                await this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {
+                    this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory exists`);
                     this.createDiretory(Constants.EXPORT_DIR_NAME);
                     this.createDiretory(Constants.IMPORT_DIR_NAME);
-                }).catch(errCreate => {
-                    this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, errCreate);
+                }).catch(errCheck => {
+                    this.file.createDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME, false).then(newDir => {
+                        this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `${Constants.OUTPUT_DIR_NAME} directory created`);
+                        this.createDiretory(Constants.EXPORT_DIR_NAME);
+                        this.createDiretory(Constants.IMPORT_DIR_NAME);
+                    }).catch(errCreate => {
+                        this.logService.logInfo(ToastTypeEnum.DANGER, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, errCreate);
+                    });
                 });
-            });
-        } catch(e: any) {
-            this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, e);
+            } catch(e: any) {
+                this.logService.logInfo(ToastTypeEnum.WARNING, PageEnum.HOME, `Error creating ${Constants.OUTPUT_DIR_NAME} directory`, e);
+            }
         }
         
     }
 
-    createDiretory(dirName: string) {
+    private createDiretory(dirName: string) {
         try {
             const pathRootFiles: string = this.logService.getRootPathFiles();
             this.file?.checkDir(pathRootFiles, dirName).then(dir => {

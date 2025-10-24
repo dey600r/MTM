@@ -1,0 +1,40 @@
+# Imagen base ligera con Java 17 (necesario para Cordova)
+FROM openjdk:17-jdk-slim
+
+LABEL maintainer="tu_nombre <tu_email>"
+LABEL description="Ionic 8 + Angular 19 + Cordova + Electron (Node 22.12.0)"
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=C.UTF-8
+ENV NODE_VERSION=22.12.0
+
+# INSTALL TOOLS
+RUN echo "Installing TOOLS ..." && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    curl git unzip zip ca-certificates build-essential python3 \
+    libx11-dev libxkbfile-dev libsecret-1-dev \
+    libnss3 libgtk-3-0 libasound2 libxtst6 libxss1 fakeroot \
+    dpkg rpm wine64 winbind && \
+    rm -rf /var/lib/apt/lists/* && \
+    echo "Finishing ..."
+
+# INSTALL NODE
+RUN echo "Installing NODEJS 22 ..." && \
+    curl -fsSL https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz -o node.tar.xz && \
+    tar -xJf node.tar.xz -C /usr/local --strip-components=1 && \
+    rm node.tar.xz && \
+    npm install -g npm@latest && \
+    echo "Finishing ..."
+
+# INSTALL DEPENDENCIES
+RUN echo "Other configurations ..." && \
+    npm install -g \
+    @angular/cli@19 \
+    @ionic/cli@latest \
+    cordova@latest \
+    electron@latest \
+    native-run && \
+    echo "Finishing ..."
+
+# WORKSPACE
+WORKDIR /home/workspace

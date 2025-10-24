@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { File } from '@awesome-cordova-plugins/file/ngx';
@@ -14,6 +15,7 @@ export class LogService {
 
     // INJECTIONS
     private readonly file: File = inject(File);
+    private platform: Platform = inject(Platform);
 
     private generateNameLogFile(): string {
         const today: Date = new Date();
@@ -45,20 +47,24 @@ export class LogService {
             const logFilePath: string = this.getRootPathFiles();
             const log: string = this.generateMessageLog(type, page, msg, err);
 
-            try {
-                await this.file.checkFile(logFilePath, logFileName).then(value => {
-                    this.file.readAsText(logFilePath, logFileName).then(txt => {
-                        this.file.writeExistingFile(logFilePath, logFileName, `${txt}\n${log}`).then(() => {
-                        }).catch(err => console.error("Error saving loging " + err?.message));
-                    }, err => {
-                        console.error("Error reading loging " + err?.message);
+            if(this.platform.is('android')) {
+                try {
+                    await this.file.checkFile(logFilePath, logFileName).then(value => {
+                        this.file.readAsText(logFilePath, logFileName).then(txt => {
+                            this.file.writeExistingFile(logFilePath, logFileName, `${txt}\n${log}`).then(() => {
+                            }).catch(err => console.error("Error saving loging " + err?.message));
+                        }, err => {
+                            console.error("Error reading loging " + err?.message);
+                        });
+                    }, reject => {
+                        this.file.writeFile(logFilePath, logFileName, log).then(() => {
+                        }).catch(err => console.error("Error creating loging " + err?.message));
                     });
-                }, reject => {
-                    this.file.writeFile(logFilePath, logFileName, log).then(() => {
-                    }).catch(err => console.error("Error creating loging " + err?.message));
-                });
-            } catch(e: any) {
-                console.warn('Web mode ' + e);
+                } catch(e: any) {
+                    console.error('ERROR FileStorage ' + e);
+                }
+            } else {
+                console.warn('Web mode - no log file created');
             }
         }
     }
