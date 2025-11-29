@@ -107,7 +107,8 @@ export class MockTranslate {
             DOWNLOAD: 'Download',
             UPLOAD: 'Upload',
             EMAIL: 'Email',
-            PASSWORD: 'Password'
+            PASSWORD: 'Password',
+            AVERAGE: 'Average'
         },
         PAGE_HOME: {
             HOME: 'Home',
@@ -492,7 +493,8 @@ export class MockTranslate {
             DOWNLOAD: 'Descargar',
             UPLOAD: 'Actualizar',
             EMAIL: 'Correo',
-            PASSWORD: 'Contraseña'
+            PASSWORD: 'Contraseña',
+            AVERAGE: 'Media'
         },
         PAGE_HOME: {
             HOME: 'Inicio',

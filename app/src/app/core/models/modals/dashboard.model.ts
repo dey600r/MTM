@@ -1,9 +1,10 @@
-import { LegendPosition } from "@swimlane/ngx-charts";
-import { IDashboardColorModel, OperationModel, VehicleModel } from "../index";
+import { LegendPosition, ScaleType } from "@swimlane/ngx-charts";
+import { IDashboardColorModel, IDashboardSerieModel, OperationModel, VehicleModel } from "../index";
 
 export class DashboardModel<T> {
     view: [number, number];
     data: T[];
+    dataLine: IDashboardSerieModel[];
     showXAxis: boolean;
     showYAxis: boolean;
     gradient: boolean;
@@ -14,6 +15,7 @@ export class DashboardModel<T> {
     yAxisLabel: string;
     legendTitle: string;
     colorScheme: any;
+    colorLineScheme: any;
     showLabels: boolean;
     isDoughnut: boolean;
     legendPosition: LegendPosition;
@@ -28,6 +30,8 @@ export class DashboardModel<T> {
     private setData1(data: Partial<DashboardModel<T>>) {
         this.view = (data.view ? data.view : [840, 400]);
         this.data = (data.data ? data.data : []);
+        this.dataLine = (data.dataLine ? data.dataLine : []);
+        this.colorLineScheme = (data.colorLineScheme === undefined || data.colorLineScheme === null ? this.getColorSchemeDefault() : this.mapColorScheme(data.colorLineScheme));
         this.colorScheme = (data.colorScheme === undefined || data.colorScheme === null ? this.getColorSchemeDefault() : this.mapColorScheme(data.colorScheme));
         this.showXAxis = (data.showXAxis !== undefined ? data.showXAxis : true);
         this.showYAxis = (data.showYAxis !== undefined ? data.showYAxis : true);
@@ -66,7 +70,12 @@ export class DashboardModel<T> {
     }
 
     mapColorScheme(colors: any[]): IDashboardColorModel {
-        return { domain: colors };
+        return { 
+            name: 'singleLightBlue',
+            selectable: true,
+            group: ScaleType.Ordinal,
+            domain: colors 
+        };
     }
 }
 

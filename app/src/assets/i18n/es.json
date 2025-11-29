@@ -107,7 +107,8 @@
         "DOWNLOAD": "Descargar",
         "UPLOAD": "Actualizar",
         "EMAIL": "Correo",
-        "PASSWORD": "Contraseña"
+        "PASSWORD": "Contraseña",
+        "AVERAGE": "Media"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",

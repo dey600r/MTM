@@ -113,6 +113,8 @@ export class InfoVehicleService {
     // INFO SUMMARY VEHICLE
 
     getLabelAverageKmVehicle(data: IDashboardModel[], measure: ISettingModel) {
+        if (data === undefined || data === null || data.length === 0)
+            return '';
         const model = <IDashboardModel>{};
         const sum: number = this.commonService.sum(data, this.commonService.nameOf(() => model.value));
         return this.translator.instant('PAGE_HOME.VehicleAverageKm', { km1: Math.floor(sum / data.length), km2: data[data.length - 1].value, measure: measure.value });

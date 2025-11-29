@@ -74,6 +74,9 @@ describe('WearProgressModels', () => {
         expect(base.wearMaintenance).toEqual(false);
         expect(base.listWearNotificationReplacement).toEqual([]);
         expect(base.listWearReplacement).toEqual([]);
+        expect(base.percent).toEqual(0);
+        expect(base.warning).toEqual(WarningWearEnum.SUCCESS);
+        expect(base.warningProgressBarIcon).toEqual('');
         base = new WearMaintenanceProgressBarViewModel({
             codeMaintenanceFreq: 'code',
             idMaintenance: 2,
@@ -86,7 +89,10 @@ describe('WearProgressModels', () => {
             wearMaintenance: true,
             listWearNotificationReplacement:[new WearNotificationReplacementProgressBarViewModel()],
             listWearReplacement: [new WearReplacementProgressBarViewModel()],
-            iconMaintenance: 'test'
+            iconMaintenance: 'test',
+            percent: 50,
+            warning: WarningWearEnum.WARNING,
+            warningProgressBarIcon: 'test'
         });
         expect(base.codeMaintenanceFreq).toEqual('code');
         expect(base.iconMaintenance).toEqual('test');
@@ -100,6 +106,9 @@ describe('WearProgressModels', () => {
         expect(base.wearMaintenance).toEqual(true);
         expect(base.listWearNotificationReplacement[0].numWarning).toEqual(0);
         expect(base.listWearReplacement[0].idOperation).toEqual(-1);
+        expect(base.percent).toEqual(50);
+        expect(base.warning).toEqual(WarningWearEnum.WARNING);
+        expect(base.warningProgressBarIcon).toEqual('test');
     });
 
     it('should initialize WearReplacementProgressBarView model', () => {

@@ -7,6 +7,7 @@ describe('DashboardModels', () => {
         let base: DashboardModel<number> = new DashboardModel();
         expect(base.view).toEqual([840, 400]);
         expect(base.data).toEqual([]);
+        expect(base.dataLine).toEqual([]);
         expect(base.showXAxis).toEqual(true);
         expect(base.showYAxis).toEqual(true);
         expect(base.gradient).toEqual(true);
@@ -17,6 +18,7 @@ describe('DashboardModels', () => {
         expect(base.yAxisLabel).toEqual('');
         expect(base.legendTitle).toEqual('');
         expect(base.colorScheme).toEqual(base.getColorSchemeDefault());
+        expect(base.colorLineScheme).toEqual(base.getColorSchemeDefault());
         expect(base.showLabels).toEqual(true);
         expect(base.isDoughnut).toEqual(false);
         expect(base.legendPosition).toEqual(LegendPosition.Right);
@@ -26,7 +28,9 @@ describe('DashboardModels', () => {
         base = new DashboardModel<number>({
             view: [1, 2],
             data: [4, 5, 6],
+            dataLine: [{id: 1, name: 'test', series: [ { name: 'test', value: 7 }]}],
             colorScheme: ['david'],
+            colorLineScheme: ['david'],
             showXAxis: false,
             showYAxis: false,
             gradient: false,
@@ -45,6 +49,7 @@ describe('DashboardModels', () => {
         });
         expect(base.view).toEqual([1, 2]);
         expect(base.data).toEqual([4, 5, 6]);
+        expect(base.dataLine).toEqual([{id: 1, name: 'test', series: [ { name: 'test', value: 7 }]}]);
         expect(base.showXAxis).toEqual(false);
         expect(base.showYAxis).toEqual(false);
         expect(base.gradient).toEqual(false);
@@ -55,6 +60,7 @@ describe('DashboardModels', () => {
         expect(base.yAxisLabel).toEqual('y');
         expect(base.legendTitle).toEqual('title');
         expect(base.colorScheme).toEqual(base.mapColorScheme(['david']));
+        expect(base.colorLineScheme).toEqual(base.mapColorScheme(['david']));
         expect(base.showLabels).toEqual(false);
         expect(base.isDoughnut).toEqual(true);
         expect(base.legendPosition).toEqual(LegendPosition.Below);

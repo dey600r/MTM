@@ -31,6 +31,13 @@ describe('IconService', () => {
         expect(service.getClassIcon(WarningWearEnum.SKULL)).toEqual(' icon-color-skull');
     });
 
+    it('should get class cardprogressbar from success/warning/danger/skull status', () => {
+        expect(service.getClassCardProgressbar(WarningWearEnum.SUCCESS)).toEqual(' card-progress-success');
+        expect(service.getClassCardProgressbar(WarningWearEnum.WARNING)).toEqual(' card-progress-warning');
+        expect(service.getClassCardProgressbar(WarningWearEnum.DANGER)).toEqual(' card-progress-danger');
+        expect(service.getClassCardProgressbar(WarningWearEnum.SKULL)).toEqual(' card-progress-danger');
+    });
+
     it('should get icon km/month from success/warning/danger/skull status', () => {
         expect(service.getIconKms(WarningWearEnum.SUCCESS)).toEqual('checkmark-circle');
         expect(service.getIconKms(WarningWearEnum.WARNING)).toEqual('warning');

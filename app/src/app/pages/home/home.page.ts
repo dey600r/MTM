@@ -8,11 +8,11 @@ import {
   SettingsService, ThemeService, HomeService
 } from '@services/index';
 import {
-  SearchDashboardModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
+  WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, ISettingModel, IInfoModel,
   ConfigurationModel, WearReplacementProgressBarViewModel, SystemConfigurationModel,
   CalendarInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel,
-  SkeletonInputModel,
+  SkeletonInputModel
 } from '@models/index';
 import { 
   PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, HomeSkeletonSetting
@@ -52,7 +52,6 @@ export class HomePage extends BasePage implements OnInit {
   headerInput: HeaderInputModel = new HeaderInputModel();
 
   // DATA
-  searchDashboard: SearchDashboardModel = new SearchDashboardModel();
   activateInfo = false;
   wears: WearVehicleProgressBarViewModel[] = [];
   allWears: WearVehicleProgressBarViewModel[] = [];
@@ -75,7 +74,6 @@ export class HomePage extends BasePage implements OnInit {
 
   constructor() {
     super();
-    this.searchDashboard = this.dashboardService.getSearchDashboard();
     this.loadHeader();
   }
 
@@ -150,7 +148,7 @@ export class HomePage extends BasePage implements OnInit {
       this.wears = [...this.wears, Object.assign({}, x)];
       let listWears: WearMaintenanceProgressBarViewModel[] = [];
       x.listWearMaintenance.forEach(z => {
-      if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
+        if (z.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_ONCE_CODE ||
           z.fromKmMaintenance <= x.kmEstimatedVehicle && (z.toKmMaintenance === null || z.toKmMaintenance >= x.kmEstimatedVehicle)) {
           listWears = [...listWears, z];
         }
@@ -249,7 +247,7 @@ export class HomePage extends BasePage implements OnInit {
         icon: x.iconVehicle,
         selected: (x.idVehicle === idVehicleSelected),
         progressColor: x.warningProgressBarIcon,
-        progressValue: x.percent
+        progressValue: x.percent * 100
       }))
     });
   }
@@ -307,10 +305,21 @@ export class HomePage extends BasePage implements OnInit {
     };
     listGroupWearMaintenance.forEach(x => {
       groupWearVehicle.listWearMaintenance = [...groupWearVehicle.listWearMaintenance, {
-        codeMaintenanceFreq: x.codeMaintenanceFreq, idMaintenance: x.idMaintenance, descriptionMaintenance: x.descriptionMaintenance,
-        kmMaintenance: x.kmMaintenance, timeMaintenance: x.timeMaintenance, fromKmMaintenance: x.fromKmMaintenance,
-        toKmMaintenance: x.toKmMaintenance, initMaintenance: x.initMaintenance, wearMaintenance: x.wearMaintenance, 
-        listWearNotificationReplacement: [], listWearReplacement: [wr], iconMaintenance: x.iconMaintenance
+        codeMaintenanceFreq: x.codeMaintenanceFreq, 
+        idMaintenance: x.idMaintenance, 
+        descriptionMaintenance: x.descriptionMaintenance,
+        kmMaintenance: x.kmMaintenance, 
+        timeMaintenance: x.timeMaintenance, 
+        fromKmMaintenance: x.fromKmMaintenance,
+        toKmMaintenance: x.toKmMaintenance, 
+        initMaintenance: x.initMaintenance, 
+        listWearReplacement: [wr], 
+        iconMaintenance: x.iconMaintenance,
+        percent: x.percent,
+        warning: x.warning,
+        warningProgressBarIcon: x.warningProgressBarIcon,
+        wearMaintenance: x.wearMaintenance, 
+        listWearNotificationReplacement: [] 
       }];
     });
     this.controlService.openModal(PageEnum.HOME, InfoNotificationComponent,
@@ -362,12 +371,12 @@ export class HomePage extends BasePage implements OnInit {
       }));
   }
 
-  openUpdateModalMaintenance(itemSliding: any, w: WearMaintenanceProgressBarViewModel = null): void {
+  openUpdateModalMaintenance(event: any, w: WearMaintenanceProgressBarViewModel = null): void {
+    event.stopPropagation();
     let rowMaintenance: MaintenanceModel = new MaintenanceModel();
     if (w !== null) {
       rowMaintenance = this.maintenances.find(x => x.id === w.idMaintenance);
     }
-    if (itemSliding) { itemSliding.close(); }
     this.controlService.openModal(PageEnum.HOME, AddEditMaintenanceComponent, new ModalInputModel<MaintenanceModel, number>({
         type: ModalTypeEnum.UPDATE,
         data: rowMaintenance,
@@ -376,8 +385,8 @@ export class HomePage extends BasePage implements OnInit {
       }));
   }
 
-  desactivateMaintenance(itemSliding: any, w: WearMaintenanceProgressBarViewModel): void {
-    if (itemSliding) { itemSliding.close(); }
+  desactivateMaintenance(event: any, w: WearMaintenanceProgressBarViewModel): void {
+    event.stopPropagation();
     if (this.vehicleSelected.idConfiguration === 1) {
       this.controlService.showToast(PageEnum.HOME, ToastTypeEnum.WARNING, 'PAGE_HOME.ValidateDeleteConfigurationMaintenance',
               {maintenance: w.descriptionMaintenance, configuration: this.vehicleSelected.nameConfiguration},

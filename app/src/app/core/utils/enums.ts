@@ -33,12 +33,14 @@ export enum PageEnum {
     MODAL_DASHBOARD_OPERATION = 11,
     MODAL_INFO = 12,
     MODAL_CALENDAR = 13,
-    MODAL_SETTINGS = 14
+    MODAL_SETTINGS = 14,
+    MODAL_INFO_VEHICLE = 15
 }
 
 export enum FilterKmTimeEnum {
     KM = 'KM',
-    TIME = 'TIME'
+    TIME = 'TIME',
+    CASH = 'CASH'
 }
 
 export enum ToastTypeEnum {

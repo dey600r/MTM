@@ -107,7 +107,8 @@
         "DOWNLOAD": "Download",
         "UPLOAD": "Upload",
         "EMAIL": "Email",
-        "PASSWORD": "Password"
+        "PASSWORD": "Password",
+        "AVERAGE": "Average"
     },
     "PAGE_HOME": {
         "HOME": "Home",

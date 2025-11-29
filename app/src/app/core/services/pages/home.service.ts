@@ -27,6 +27,42 @@ export class HomeService {
 
     /** HOME NOTIFICATIONS */
 
+    calculatePercentWearVehicle(wearMaintenance: WearMaintenanceProgressBarViewModel[]): number {
+        let total = 0;
+        let totalWarning = 0;
+        let totalDone = 0;
+        wearMaintenance.forEach(main => total += main.listWearReplacement.length);
+        wearMaintenance.forEach(main => main.listWearNotificationReplacement.filter(notif =>
+            notif.warning === WarningWearEnum.WARNING)
+                .forEach(notif => totalWarning += (notif.numWarning * 0.75)));
+        wearMaintenance.forEach(main => main.listWearNotificationReplacement.filter(notif =>
+            notif.warning === WarningWearEnum.SUCCESS)
+                .forEach(notif => totalDone += notif.numWarning));
+        return (total === 0 ? 0 : (totalDone + totalWarning) / total);     
+    }
+
+    calculatePercentWearMaintenance(listNotif: WearNotificationReplacementProgressBarViewModel[]): number {
+        let total = 0;
+        let totalDone = 0;
+        listNotif.forEach(x => {
+            total += x.totalWarning;
+            if(x.warning === WarningWearEnum.SUCCESS || x.warning === WarningWearEnum.WARNING) {
+                totalDone += x.numWarning;
+            }
+        });
+        return (total === 0 ? 0 : (totalDone * 100 / total));
+    }
+
+    calculateWarningWearMaintenance(listNotif: WearNotificationReplacementProgressBarViewModel[]): WarningWearEnum {
+        if (listNotif.some(x => x.warning === WarningWearEnum.SKULL || x.warning === WarningWearEnum.DANGER)) {
+            return WarningWearEnum.DANGER;
+        } else if (listNotif.some(x => x.warning === WarningWearEnum.WARNING)) {
+            return WarningWearEnum.WARNING;
+        } else {
+            return WarningWearEnum.SUCCESS;
+        }
+    }
+
     // VEHICLE REPLACEMENTS WEAR
     getWearReplacementToVehicle(operations: OperationModel[], vehicles: VehicleModel[],
                                 configurations: ConfigurationModel[],
@@ -44,6 +80,9 @@ export class HomeService {
                         const listReplacementWear: WearReplacementProgressBarViewModel[] =
                             this.calculateReplacement(vehicle, operations, main);
                         if (!!listReplacementWear && listReplacementWear.length > 0) {
+                            const listNotif = this.calculateWearNotificationReplacement(listReplacementWear);
+                            const totalPercent = this.calculatePercentWearMaintenance(listNotif);
+                            const warning = this.calculateWarningWearMaintenance(listNotif);
                             wearMaintenance = [...wearMaintenance, {
                                 codeMaintenanceFreq: main.maintenanceFreq.code,
                                 iconMaintenance: main.maintenanceFreq.icon,
@@ -55,23 +94,17 @@ export class HomeService {
                                 toKmMaintenance: main.toKm,
                                 initMaintenance: main.init,
                                 wearMaintenance: main.wear,
-                                listWearNotificationReplacement: this.calculateWearNotificationReplacement(listReplacementWear),
+                                percent: totalPercent,
+                                warning: warning,
+                                warningProgressBarIcon: this.iconService.getClassCardProgressbar(warning),
+                                listWearNotificationReplacement: listNotif,
                                 listWearReplacement: listReplacementWear
                             }];
                         }
                     });
-                    let total = 0;
-                    let totalWarning = 0;
-                    let totalDone = 0;
-                    const totalWear = wearMaintenance.filter(main => (main.fromKmMaintenance <= vehicle.kmEstimated ||
-                        (main.toKmMaintenance !== null && main.toKmMaintenance >= vehicle.kmEstimated)));
-                    totalWear.forEach(main => total += main.listWearReplacement.length);
-                    totalWear.forEach(main => main.listWearNotificationReplacement.filter(notif =>
-                        notif.warning === WarningWearEnum.WARNING)
-                            .forEach(notif => totalWarning += (notif.numWarning * 0.75)));
-                    totalWear.forEach(main => main.listWearNotificationReplacement.filter(notif =>
-                        notif.warning === WarningWearEnum.SUCCESS)
-                            .forEach(notif => totalDone += notif.numWarning));
+                    const totalPercent = this.calculatePercentWearVehicle(
+                        wearMaintenance.filter(main => (main.fromKmMaintenance <= vehicle.kmEstimated ||
+                            (main.toKmMaintenance !== null && main.toKmMaintenance >= vehicle.kmEstimated))));
                     const warningWear: WarningWearEnum = this.getPercentVehicle(wearMaintenance, vehicle.kmEstimated);
                     result = [...result, {
                         idVehicle: vehicle.id,
@@ -83,11 +116,11 @@ export class HomeService {
                         dateKmsVehicle: vehicle.dateKms,
                         typeVehicle: vehicle.vehicleType.code,
                         iconVehicle: vehicle.vehicleType.icon,
-                        percent: (totalDone + totalWarning) / total,
+                        percent: totalPercent,
                         percentKm: 0,
                         percentTime: 0,
                         warning: warningWear,
-                        warningProgressBarIcon: this.iconService.getClassProgressbar(warningWear),
+                        warningProgressBarIcon: this.iconService.getClassCardProgressbar(warningWear),
                         idConfiguration: config.id,
                         nameConfiguration: config.name,
                         listWearMaintenance: this.orderMaintenanceWear(wearMaintenance)
@@ -438,6 +471,9 @@ export class HomeService {
                                 toKmMaintenance: wearMain.toKmMaintenance,
                                 initMaintenance: wearMain.initMaintenance,
                                 wearMaintenance: wearMain.wearMaintenance,
+                                percent: wearMain.percent,
+                                warning: wearMain.warning,
+                                warningProgressBarIcon: wearMain.warningProgressBarIcon,
                                 listWearNotificationReplacement: wearMain.listWearNotificationReplacement,
                                 listWearReplacement: [{
                                     idMaintenanceElement: wearRep.idMaintenanceElement,

@@ -380,7 +380,10 @@
   }
   
   .main-avatar {
-    padding: 20px 0px 0px 14px;
+    //padding: 20px 0px 0px 14px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
   }
   
   .main-icon {
@@ -458,6 +461,47 @@ ion-datetime-button::part(native) {
 
 ion-calendar ion-button.button-has-icon-only {
     min-width: 0px;
+}
+
+// CARDS
+
+ion-card .list-md {
+    background: none;
+}
+
+ion-card ion-item::part(native) {
+  background: transparent;
+}
+
+ion-card-header {
+    padding-bottom: 5px;
+}
+
+ion-card .card-content-md p {
+    margin-top: 6px;
+    margin-left: 4px;
+}
+
+.card-with-progress-bar {
+  position: relative;
+  overflow: hidden; // para que la barra no se salga del card
+}
+
+.card-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+}
+
+ion-segment-button .card-progress-bar {
+  bottom: 7px;
+  height: 4px;
+}
+
+.progress {
+  height: 100%;
 }
 
 // OTHERS

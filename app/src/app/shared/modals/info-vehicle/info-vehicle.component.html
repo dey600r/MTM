@@ -131,6 +131,24 @@
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideReplacementSummary">
+      <combo-chart-component
+        class="justify-center"
+        [view]="dashboardReplacementVehicle.view"
+        [scheme]="dashboardReplacementVehicle.colorScheme"
+        [results]="dashboardReplacementVehicle.data"
+        [colorSchemeLine]="dashboardReplacementVehicle.colorScheme"
+        [lineChart]="dashboardReplacementVehicle.dataLine"
+        [gradient]="dashboardReplacementVehicle.gradient"
+        [xAxis]="dashboardReplacementVehicle.showXAxis"
+        [yAxis]="dashboardReplacementVehicle.showYAxis"
+        [legendTitle]="dashboardReplacementVehicle.legendTitle"
+        [legend]="dashboardReplacementVehicle.showLegend"
+        [legendPosition]="dashboardReplacementVehicle.legendPosition"
+        [showXAxisLabel]="dashboardReplacementVehicle.showXAxisLabel"
+        [showYAxisLabel]="dashboardReplacementVehicle.showYAxisLabel"
+        [xAxisLabel]="dashboardReplacementVehicle.xAxisLabel"
+        [yAxisLabel]="dashboardReplacementVehicle.yAxisLabel">
+      </combo-chart-component>
       <ion-item *ngFor="let rep of selectedInfoReplacement; let i = index;" button (click)="showInfoReplacement[i] = !showInfoReplacement[i];">
         <div class="main-item-div">
           <div class="table-row">

@@ -1,13 +1,16 @@
-import { ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnInit, OnDestroy } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 
+// COMPONENTS
+import { SearchDashboardPopOverComponent } from '../search-dashboard-popover/search-dashboard-popover.component';
+
 // SERVICES
 import {
-  CommonService, DashboardService, DataService,  InfoVehicleService, SettingsService
+  CommonService, ControlService, DashboardService, DataService,  IconService,  InfoVehicleService, SettingsService
 } from '@services/index';
 
 // MODELS
@@ -17,10 +20,14 @@ import {
   InfoVehicleConfigurationModel, InfoVehicleHistoricReplacementModel, MaintenanceElementModel,
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel,
   HeaderInputModel, HeaderSegmentInputModel, HeaderOutputModel, BodySkeletonInputModel,
+  SearchDashboardModel,
 } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, InfoButtonEnum, InfoVehicleConfSummarySkeletonSetting, InfoVehicleReplSummarySkeletonSetting } from '@utils/index';
+import { 
+  ConstantsColumns, HeaderOutputEnum, InfoButtonEnum, InfoVehicleConfSummarySkeletonSetting, 
+  InfoVehicleReplSummarySkeletonSetting, PageEnum
+} from '@utils/index';
 
 @Component({
     selector: 'app-info-vehicle',
@@ -28,7 +35,7 @@ import { ConstantsColumns, InfoButtonEnum, InfoVehicleConfSummarySkeletonSetting
     styleUrls: ['./info-vehicle.component.scss'],
     standalone: false
 })
-export class InfoVehicleComponent implements OnInit {
+export class InfoVehicleComponent implements OnInit, OnDestroy {
 
   // INJECTIONS
   private readonly platform: Platform = inject(Platform);
@@ -38,6 +45,8 @@ export class InfoVehicleComponent implements OnInit {
   private readonly infoVehicleService: InfoVehicleService = inject(InfoVehicleService);
   private readonly settingsService: SettingsService = inject(SettingsService);
   private readonly dashboardService: DashboardService = inject(DashboardService);
+  private readonly iconService: IconService = inject(IconService);
+  private readonly controlService: ControlService = inject(ControlService);
   private readonly changeDetector: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   // MODAL MODELS
@@ -57,10 +66,9 @@ export class InfoVehicleComponent implements OnInit {
   showInfoReplacement: boolean[] = [];
 
   // CHARTS
-  dataDashboardInformationVehicle: any[] = [];
   dashboardInformationVehicle: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
-  dataDashboardConfigurationVehicle: any[] = [];
   dashboardConfigurationVehicle: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardReplacementVehicle: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
 
   // MODELS
   listInfoVehicleConfiguration: InfoVehicleConfigurationModel[] = [];
@@ -78,12 +86,20 @@ export class InfoVehicleComponent implements OnInit {
   labelIconClassPercent = '';
   labelIconPercent = '';
   labelVehicleAverageKm = '';
+  openningPopover = false;
 
   // SUSBSCRIPTION
   screenSubscription: Subscription = new Subscription();
+  searchDashboardSubscription: Subscription = new Subscription();
+  searchDashboardRecordsSubscription: Subscription = new Subscription();
 
   ngOnInit() {
     this.initSummary();
+  }
+
+  ngOnDestroy() {
+    this.searchDashboardSubscription.unsubscribe();
+    this.screenSubscription.unsubscribe();
   }
 
   // INIT DATA
@@ -121,6 +137,19 @@ export class InfoVehicleComponent implements OnInit {
     }
   }
 
+  loadHeader() {
+    this.headerInput = new HeaderInputModel({
+        title: 'COMMON.SUMMARY_VEHICLES',
+        iconButtonLeft: this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.MODAL_INFO_VEHICLE)),
+        dataSegment: this.vehicles.map(x => new HeaderSegmentInputModel({
+          id: x.id,
+          name: x.$getName,
+          icon: x.vehicleType.icon,
+          selected: (x.id == this.vehicleSelected.id)
+        }))
+      });
+  }
+
   initConfigurationSummary() {
     // INFO VEHICLE CONFIGURATION
     const configurations: ConfigurationModel[] = this.commonService.orderBy(
@@ -134,15 +163,7 @@ export class InfoVehicleComponent implements OnInit {
 
     if (this.vehicles && this.vehicles.length > 0) {
       this.vehicleSelected = this.vehicles[0];
-      this.headerInput = new HeaderInputModel({
-        title: 'COMMON.SUMMARY_VEHICLES',
-        dataSegment: this.vehicles.map(x => new HeaderSegmentInputModel({
-          id: x.id,
-          name: x.$getName,
-          icon: x.vehicleType.icon,
-          selected: (x.id == this.vehicleSelected.id)
-        }))
-      });
+      this.loadHeader();
 
       // INFO CONFIGURATION VEHICLE
       this.listInfoVehicleConfiguration = this.infoVehicleService.calculateInfoVehicleConfiguration(
@@ -154,35 +175,58 @@ export class InfoVehicleComponent implements OnInit {
     }
   }
 
+  getObserverSearchDashboard() {
+    this.searchDashboardSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
+      if (!this.openningPopover) {
+        let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        this.initChartInformationVehicle(windowSize, filter);
+        this.initChartConfigurationVehicle(windowSize);
+        this.initChartReplacementVehicle(windowSize, filter);
+        this.loadHeader();
+      }
+    });
+  }
+
+  getObserverSearchDashboardRecords() {
+    this.searchDashboardRecordsSubscription = this.dashboardService.getObserverSearchDashboardRecords().subscribe(filter => {
+      if (!this.openningPopover) {
+        let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        this.initChartReplacementVehicle(windowSize, filter);
+        this.loadHeader();
+      }
+    });
+  }
+
   initChartSummary() {
-    let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
-    this.initChartInformationVehicle(windowSize);
-    this.initChartConfigurationVehicle(windowSize);
+    this.getObserverSearchDashboard();
+    this.getObserverSearchDashboardRecords();
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
-      this.dataDashboardInformationVehicle.forEach(x => x.data.view = windowSize);
+      let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardInformationVehicle.view = windowSize;
-      this.dataDashboardConfigurationVehicle.forEach(x => x.data.view = windowSize);
       this.dashboardConfigurationVehicle.view = windowSize;
+      this.dashboardReplacementVehicle.view = windowSize;
       this.changeDetector.detectChanges();
     });
   }
 
-  initChartInformationVehicle(windowSize: [number, number]) {
-    this.vehicles.forEach(x => {
-      this.dataDashboardInformationVehicle = [...this.dataDashboardInformationVehicle, {
-        id: x.id,
-        data: this.dashboardService.getDashboardInformationVehicle(windowSize, x, this.operations.filter(o => o.vehicle.id === x.id)) }];
-    });
-    
+  initChartInformationVehicle(windowSize: [number, number], filter: SearchDashboardModel) {
+    if(!this.hideVehicleSummary) {
+      this.dashboardInformationVehicle = this.dashboardService.getDashboardInformationVehicle(windowSize, this.vehicleSelected, this.operations.filter(o => o.vehicle.id === this.vehicleSelected.id), filter);
+    }
   }
 
   initChartConfigurationVehicle(windowSize: [number, number]) {
-    this.listInfoVehicleConfiguration.forEach(x => {
-      this.dataDashboardConfigurationVehicle = [...this.dataDashboardConfigurationVehicle, {
-        id: x.idVehicle,
-        data: this.dashboardService.getDashboardConfigurationVehicle(windowSize, x) }];
-    });
+    if(!this.hideConfigurationSummary) {
+      const infoVehicleConfiguration = this.getInfoVehicleConfigurationModel(this.vehicleSelected.id);
+      this.dashboardConfigurationVehicle = this.dashboardService.getDashboardConfigurationVehicle(windowSize, infoVehicleConfiguration);
+    }
+  }
+
+  initChartReplacementVehicle(windowSize: [number, number], filter: SearchDashboardModel) {
+    if(!this.hideReplacementSummary) {
+      const infoReplacementVehicle = this.getInfoVehicleReplacementModel(this.vehicleSelected.id);
+      this.dashboardReplacementVehicle = this.dashboardService.getDashboardReplacementVehicle(windowSize, infoReplacementVehicle.listHistoricReplacements, filter);
+    }
   }
 
   initShowInfo(vehicleSelected: VehicleModel) {
@@ -212,14 +256,25 @@ export class InfoVehicleComponent implements OnInit {
     }
   }
 
+  getInfoVehicleConfigurationModel(idVehicle: number): InfoVehicleConfigurationModel {
+    return this.listInfoVehicleConfiguration.find(x => x.idVehicle === idVehicle);
+  }
+
+  getInfoVehicleReplacementModel(idVehicle: number): InfoVehicleHistoricModel {
+    return this.listInfoVehicleReplacement.find(x => x.id === idVehicle);
+  }
+
   initDataSelected(idVehicle: number) {
     if (this.vehicles && this.vehicles.length > 0) {
       this.vehicleSelected = this.vehicles.find(x => x.id === idVehicle);
-      this.selectedInfoVehicleConfiguration = this.listInfoVehicleConfiguration.find(x => x.idVehicle === idVehicle);
-      this.selectedInfoReplacement = this.listInfoVehicleReplacement.find(x => x.id === idVehicle).listHistoricReplacements;
-      this.dashboardInformationVehicle = this.dataDashboardInformationVehicle.find(x => x.id === this.selectedInfoVehicleConfiguration.idVehicle).data;
-      this.dashboardConfigurationVehicle = this.dataDashboardConfigurationVehicle.find(x => x.id === this.selectedInfoVehicleConfiguration.idVehicle).data;
+      this.selectedInfoVehicleConfiguration = this.getInfoVehicleConfigurationModel(idVehicle);
+      this.selectedInfoReplacement = this.getInfoVehicleReplacementModel(idVehicle).listHistoricReplacements;
     }
+  }
+
+  refreshChart(idVehicle: number) {
+    this.initData(idVehicle);
+    this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
   }
 
   // METHODS
@@ -238,6 +293,8 @@ export class InfoVehicleComponent implements OnInit {
       setTimeout(() => {
         this.loadedBodyReplacementSummary = true;
         this.hideReplacementSummary = false;
+        const search: SearchDashboardModel = this.dashboardService.getSearchDashboard();
+        this.dashboardService.setSearchDashboardRecords(search.filterKmTime, search.showStrict);
       }, 350);
     } else {
       this.hideReplacementSummary = true;
@@ -250,16 +307,38 @@ export class InfoVehicleComponent implements OnInit {
       setTimeout(() => {
         this.loadedBodyConfigurationSummary = true;
         this.hideConfigurationSummary = false;
+        this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
       }, 350);
     } else {
       this.hideConfigurationSummary = true;
     }
   }
 
-  // SEGMENT
+  // HEADER
 
   eventEmitHeader(output: HeaderOutputModel) {
-    this.segmentChanged(output.data);
+    switch (output.type){
+      case HeaderOutputEnum.SEGMENT:
+        this.segmentChanged(output.data);
+        break;
+      case HeaderOutputEnum.BUTTON_LEFT:
+        this.showPopover(output.data);
+        break;
+    }
+  }
+
+  showPopover(ev: any) {
+    this.openningPopover = true;
+    this.controlService.showPopover(PageEnum.MODAL_INFO_VEHICLE, ev, SearchDashboardPopOverComponent, 
+      new ModalInputModel<any, VehicleModel>({
+        parentPage: PageEnum.MODAL_INFO_VEHICLE,
+        dataList: this.modalInputModel.dataList
+      }));
+    setTimeout(() => this.openningPopover = false, 200);
+  }
+
+  loadIconSearch() {
+    this.headerInput.iconButtonLeft = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(this.modalInputModel.parentPage));
   }
 
   initData(idVehicle: number) {
@@ -271,7 +350,7 @@ export class InfoVehicleComponent implements OnInit {
 
   segmentChanged(event: any): void {
     this.showSpinner = true; // Windows 10: Fix no change good the data of the chart when the tabs is changed
-    this.initData(Number(event.detail.value));
+    this.refreshChart(Number(event.detail.value));
     this.changeDetector.detectChanges();
     setTimeout(() => { this.showSpinner = false; }, 150);
   }

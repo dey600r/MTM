@@ -24,6 +24,20 @@ export class IconService {
         }
     }
 
+    getClassCardProgressbar(warning: WarningWearEnum): string {
+        switch (warning) {
+            case WarningWearEnum.SUCCESS:
+                return ` card-progress-success`;
+            case WarningWearEnum.WARNING:
+                return ` card-progress-warning`;
+            case WarningWearEnum.DANGER:
+            case WarningWearEnum.SKULL:
+                return ` card-progress-danger`;
+            default:
+                return '';
+        }
+    }
+
     getClassIcon(warning: WarningWearEnum): string {
         switch (warning) {
             case WarningWearEnum.SUCCESS:

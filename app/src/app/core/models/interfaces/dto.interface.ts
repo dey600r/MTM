@@ -1,3 +1,4 @@
+import { Color } from "@swimlane/ngx-charts";
 import { InfoButtonEnum, PageEnum } from "@utils/enums";
 
 export interface IInfoModel {
@@ -47,20 +48,13 @@ export interface IDashboardSerieModel {
     series: any[];
 }
 
-export interface IDashboardColorModel {
-    domain: any[];
+export interface IDashboardColorModel extends Color {
 }
 
 export interface ISettingModel {
     code: string;
     value: string;
     valueLarge: string;
-}
-
-export interface IDashboardExpensesModel<T> {
-    allSum: T;
-    operationSum: T;
-    replacementSum: T;
 }
 
 export interface ICalendarColorMode {

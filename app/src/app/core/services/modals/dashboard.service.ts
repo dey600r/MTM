@@ -10,7 +10,9 @@ import {
     DashboardModel, OperationModel, SearchDashboardModel, VehicleModel, WearVehicleProgressBarViewModel,
     WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel,
     InfoVehicleConfigurationModel, IDisplaySearcherControlModel, IObserverSearcherControlModel,
-    ISearcherControlModel, IDashboardModel, IDashboardSerieModel, ISettingModel, IDashboardExpensesModel
+    ISearcherControlModel, IDashboardModel, IDashboardSerieModel, ISettingModel,
+    InfoVehicleHistoricReplacementModel,
+    InfoVehicleReplacementModel
 } from '@models/index';
 
 // SERVICES
@@ -51,68 +53,23 @@ export class DashboardService {
 
     /** DASHBOADS */
 
-    // VEHICLE OP TYPE EXPENSES
-    getDashboardModelVehicleExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
-        return new DashboardModel<IDashboardModel>({
-            view: view,
-            data: this.mapOperationToDashboardVehicleExpenses(data, filter), 
-            showXAxis: filter.showAxis, 
-            showYAxis: filter.showAxis,
-            showLegend: filter.showLegend,
-            legendTitle: this.translator.instant('COMMON.VEHICLES'),
-            showXAxisLabel: filter.showAxisLabel,
-            xAxisLabel: this.translator.instant('COMMON.VEHICLES'),
-            showYAxisLabel: filter.showAxisLabel,
-            yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
-            isDoughnut: filter.doghnut,
-            showDataLabel: filter.showDataLabel
-        });
-    }
-
-    mapOperationToDashboardVehicleExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
-        let result: IDashboardModel[] = [];
-        const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
-        operationPreFilter.forEach(x => {
-            if (!result.some((z: any) => z.id === x.vehicle.id)) {
-                const operationSum: OperationModel[] = operationPreFilter.filter(z => z.vehicle.id === x.vehicle.id &&
-                    this.getFilterOperationType(z, filter));
-                let sumPrice = 0;
-                operationSum.forEach(os => {
-                    sumPrice += os.price;
-                    if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
-                        const sumPriceRepl: MaintenanceElementModel[] = this.getFilterReplacement(os.listMaintenanceElement, filter);
-                        if (!!sumPriceRepl && sumPriceRepl.length > 0) {
-                            sumPrice += this.commonService.sum(sumPriceRepl, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
-                        }
-                    }
-                });
-                const resultPrice: number = (filter.expensePerKm ? Math.round((sumPrice / x.vehicle.km) * 100) / 100 : sumPrice);
-                result = [...result, this.getDataDashboard(`${x.vehicle.brand}-${x.vehicle.model}`, resultPrice, x.vehicle.id)];
-            }
-        });
-        return result;
-    }
-
-    // VEHICLE PER MONTH EXPENSES
-    getDashboardModelVehiclePerTime(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): IDashboardExpensesModel<DashboardModel<IDashboardModel>> {
-        const result: IDashboardExpensesModel<IDashboardModel[]> = this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter);
-        return {
-            allSum: this.initDashboardModelVehiclePerTime(view, result.allSum, filter, 'COMMON.EXPENSE'),
-            operationSum: this.initDashboardModelVehiclePerTime(view, result.operationSum, filter, 'COMMON.LABOR_EXPENSE'),
-            replacementSum: this.initDashboardModelVehiclePerTime(view, result.replacementSum, filter, 'COMMON.REPLACEMENT_EXPENSE')
-        };
-    }
-
-    initDashboardModelVehiclePerTime(view: [number, number], data: IDashboardModel[], filter: SearchDashboardModel, translateY: string): DashboardModel<IDashboardModel> {
-        return new DashboardModel<IDashboardModel>({
+    mapDataToDashboardChart<T>(view: [number, number], 
+                                data: T[], 
+                                filter: SearchDashboardModel, 
+                                translateLegend: string,
+                                translateX: string,
+                                translateY: string,
+                                lines: IDashboardSerieModel[] = []): DashboardModel<T> {
+        return new DashboardModel<T>({
             view: view,
             data: data, 
+            dataLine: lines,
             showXAxis: filter.showAxis, 
             showYAxis: filter.showAxis,
             showLegend: filter.showLegend,
-            legendTitle: this.translator.instant('COMMON.DATE'),
+            legendTitle: this.translator.instant(translateLegend),
             showXAxisLabel: filter.showAxisLabel,
-            xAxisLabel: this.translator.instant('COMMON.DATE'),
+            xAxisLabel: this.translator.instant(translateX),
             showYAxisLabel: filter.showAxisLabel,
             yAxisLabel: this.translator.instant(translateY),
             isDoughnut: filter.doghnut,
@@ -120,13 +77,67 @@ export class DashboardService {
         });
     }
 
-    mapOperationToDashboardVehiclePerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardExpensesModel<IDashboardModel[]> {
-        let result: IDashboardModel[] = [];
-        let resultOperation: IDashboardModel[] = [];
-        let resultReplacement: IDashboardModel[] = [];
+    // VEHICLE OP TYPE EXPENSES
+    getDashboardModelVehicleExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardSerieModel> {
+        const result: IDashboardSerieModel[] = this.mapOperationToDashboardVehicleExpenses(data, filter);
+        return this.mapDataToDashboardChart<IDashboardSerieModel>(view, result, filter, 'COMMON.VEHICLES', 'COMMON.VEHICLES', 'COMMON.EXPENSE');
+    }
+
+    mapOperationToDashboardVehicleExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardSerieModel[] {
+        let result: IDashboardSerieModel[] = [];
+        const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
+        operationPreFilter.forEach(x => {
+            if (!result.some((z: any) => z.id === x.vehicle.id)) {
+                const operationSum: OperationModel[] = operationPreFilter.filter(z => z.vehicle.id === x.vehicle.id &&
+                    this.getFilterOperationType(z, filter));
+
+                let sumPerOpType: IDashboardModel[] = [];
+                operationSum.forEach(os => {
+                    let sumPrice = os.price;
+                    if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
+                        const sumPriceRepl: MaintenanceElementModel[] = this.getFilterReplacement(os.listMaintenanceElement, filter);
+                        if (!!sumPriceRepl && sumPriceRepl.length > 0) {
+                            sumPrice += this.commonService.sum(sumPriceRepl, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                        }
+                    }
+
+                    const resultPrice: number = (filter.expensePerKm ? Math.round((sumPrice / x.vehicle.km) * 100) / 100 : sumPrice);
+                    const opType: IDashboardModel = sumPerOpType.find((s: any) => s.id === os.operationType.id);
+                    if(!opType) {
+                        sumPerOpType = [...sumPerOpType, this.getDataDashboard(os.operationType.description, resultPrice, os.operationType.id)];
+                    } else {
+                        opType.value += resultPrice;
+                    }
+                    
+                });
+                result = [...result, this.getDataSeriesDashboard(`${x.vehicle.brand}-${x.vehicle.model}`, sumPerOpType, x.vehicle.id)];
+            }
+        });
+        return result;
+    }
+
+    // VEHICLE PER MONTH EXPENSES
+    getDashboardModelVehiclePerTime(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardSerieModel> {
+        const result: IDashboardSerieModel[] = this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter);
+        return this.mapDataToDashboardChart<IDashboardSerieModel>(view, 
+            result,
+            filter, 'COMMON.DATE', 'COMMON.DATE', 'COMMON.EXPENSE');
+    }
+
+    getDashboardModelReplacementPerTime(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardSerieModel> {
+        const result: IDashboardSerieModel[] = this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter);
+        return this.mapDataToDashboardChart<IDashboardSerieModel>(view, result, filter, 'COMMON.DATE', 'COMMON.DATE', 'COMMON.LABOR_EXPENSE');
+    }
+
+    mapOperationToDashboardVehiclePerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardSerieModel[] {
+        let result: IDashboardSerieModel[] = [];
         if (!!data && data.length > 0) {
             const operationPreFilter: OperationModel[] = this.getPrefilterOperation(data, filter);
             if (!!operationPreFilter && operationPreFilter.length > 0) {
+
+                let replAxis: string = this.translator.instant('PAGE_CONFIGURATION.REPLACEMENTS');
+                const opAxis: string = this.translator.instant('COMMON.LABOR');
+
                 const iterator: number = filter.showPerMont;
                 const minYear: number =
                     new Date(this.commonService.min(operationPreFilter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
@@ -152,20 +163,19 @@ export class DashboardService {
                                     }
                                 }
                             });
-                            const dataAxis: string = this.getRangeDates(i, j, iterator);
-                            result = [...result, this.getDataDashboard(dataAxis, sumPriceOperation + sumPriceReplacement)];
-                            resultOperation = [...resultOperation, this.getDataDashboard(dataAxis, sumPriceOperation)];
-                            resultReplacement = [...resultReplacement, this.getDataDashboard(dataAxis, sumPriceReplacement)];
+                            if(sumPriceOperation > 0 || sumPriceReplacement > 0) {
+                                const dataAxis: string = this.getRangeDates(i, j, iterator);                            
+                                result = [...result, this.getDataSeriesDashboard(dataAxis, [
+                                    this.getDataDashboard(replAxis, sumPriceReplacement),
+                                    this.getDataDashboard(opAxis, sumPriceOperation)
+                                 ])];
+                            }
                         }
                     }
                 }
             }
         }
-        return {
-            allSum: result,
-            operationSum: resultOperation,
-            replacementSum: resultReplacement
-        };
+        return result;
     }
 
     getRangeDates(i: number, j: number, iterator: number): string {
@@ -182,20 +192,8 @@ export class DashboardService {
 
     // OPERATION TYPE EXPENSES
     getDashboardModelOpTypeExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
-        return new DashboardModel<IDashboardModel>({
-            view: view,
-            data: this.mapOperationToDashboardOpTypeExpenses(data, filter), 
-            showXAxis: filter.showAxis, 
-            showYAxis: filter.showAxis,
-            showLegend: filter.showLegend,
-            legendTitle: this.translator.instant('COMMON.OPERATION_TYPE'),
-            showXAxisLabel: filter.showAxisLabel,
-            xAxisLabel: this.translator.instant('COMMON.OPERATION_TYPE'),
-            showYAxisLabel: filter.showAxisLabel,
-            yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
-            isDoughnut: filter.doghnut,
-            showDataLabel: filter.showDataLabel
-        });
+        const result: IDashboardModel[] = this.mapOperationToDashboardOpTypeExpenses(data, filter);
+        return this.mapDataToDashboardChart<IDashboardModel>(view, result, filter, 'COMMON.OPERATION_TYPE', 'COMMON.OPERATION_TYPE', 'COMMON.EXPENSE');
     }
 
     mapOperationToDashboardOpTypeExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
@@ -234,20 +232,8 @@ export class DashboardService {
 
     // REPLACEMENTS EXPENSES
     getDashboardModelReplacementExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
-        return new DashboardModel<IDashboardModel>({
-            view: view,
-            data: this.mapOperationToDashboardReplacementExpenses(data, filter), 
-            showXAxis: filter.showAxis, 
-            showYAxis: filter.showAxis,
-            showLegend: filter.showLegend,
-            legendTitle: this.translator.instant('COMMON.OPERATION_TYPE'),
-            showXAxisLabel: filter.showAxisLabel,
-            xAxisLabel: this.translator.instant('COMMON.OPERATION_TYPE'),
-            showYAxisLabel: filter.showAxisLabel,
-            yAxisLabel: this.translator.instant('COMMON.EXPENSE'),
-            isDoughnut: filter.doghnut,
-            showDataLabel: filter.showDataLabel
-        });
+        const result: IDashboardModel[] = this.mapOperationToDashboardReplacementExpenses(data, filter);
+        return this.mapDataToDashboardChart<IDashboardModel>(view, result, filter, 'COMMON.OPERATION_TYPE', 'COMMON.OPERATION_TYPE', 'COMMON.EXPENSE');
     }
 
     mapOperationToDashboardReplacementExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
@@ -428,11 +414,15 @@ export class DashboardService {
     //#region INFO VEHICLE
 
     // CHART INFO VEHICLE
-    getDashboardInformationVehicle(view: [number, number], vehicle: VehicleModel, operations: OperationModel[]): DashboardModel<IDashboardModel> {
-        return new DashboardModel<IDashboardModel>({
-            view: view,
-            data: this.calculaterKmPerYear(vehicle, operations)
-        });
+    getDashboardInformationVehicle(view: [number, number], vehicle: VehicleModel, operations: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+        return this.mapDataToDashboardChart<IDashboardModel>(
+            view, 
+            this.calculaterKmPerYear(vehicle, operations), 
+            filter,
+            'COMMON.YEAR',
+            'COMMON.YEAR',
+            'COMMON.KILOMETERS'
+        )
     }
 
     calculaterKmPerYear(vehicle: VehicleModel, operations: OperationModel[]): IDashboardModel[] {
@@ -622,6 +612,55 @@ export class DashboardService {
         });
     }
 
+    // CHART REPLACEMENT VEHICLE
+
+    getDashboardReplacementVehicle(view: [number, number], data: InfoVehicleHistoricReplacementModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
+        let resultBar: IDashboardModel[] = [];
+        let resultLineAverage: IDashboardModel[] = [];
+        let resultLineMax: IDashboardModel[] = [];
+        let resultLineMin: IDashboardModel[] = [];
+
+        // TRANSLATE TYPE
+        let propAverage: string = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().kmAverage);
+        let propData: string = this.commonService.nameOf(() => new InfoVehicleReplacementModel().km);
+        let translateY: string = 'COMMON.KILOMETERS';
+        if(filter.filterKmTime === FilterKmTimeEnum.TIME) {
+            propAverage = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().timeAverage);
+            propData = this.commonService.nameOf(() => new InfoVehicleReplacementModel().time);
+            translateY = 'COMMON.MONTHS';
+        } else if(filter.filterKmTime === FilterKmTimeEnum.CASH) {
+            propAverage = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().priceAverage);
+            propData = this.commonService.nameOf(() => new InfoVehicleReplacementModel().price);
+            translateY = 'COMMON.PRICE';
+        }
+
+        data.forEach(x => {
+            resultBar = [...resultBar, this.getDataDashboard(x.name, x[propData] ?? 0, x.id)];
+            let max: number = x[propAverage];
+            let min: number = x[propAverage];
+            if(x.listReplacements && x.listReplacements.length > 0) {
+                max = this.commonService.max(x.listReplacements, propData);
+                min = this.commonService.min(x.listReplacements, propData);
+            }
+            resultLineAverage = [...resultLineAverage, this.getDataDashboard(x.name, x[propAverage])];
+            resultLineMax = [...resultLineMax, this.getDataDashboard(x.name, max)];
+            resultLineMin = [...resultLineMin, this.getDataDashboard(x.name, min)];
+        });
+        return this.mapDataToDashboardChart<IDashboardModel>(
+            view, 
+            resultBar, 
+            filter,
+            'COMMON.REPLACEMENT',
+            'COMMON.REPLACEMENT',
+            translateY,
+            [
+                this.getDataSeriesDashboard('Max', resultLineMax),
+                this.getDataSeriesDashboard(this.translator.instant('COMMON.AVERAGE'), resultLineAverage),
+                this.getDataSeriesDashboard('Min', resultLineMin)
+            ]
+        );
+    }
+
     //#endregion INFO VEHICLE
 
     //#region GET OBSERVER SEARCHER
@@ -686,9 +725,27 @@ export class DashboardService {
         }
     }
 
+    getSegmentFilterKmTimeOptions(parentPage: PageEnum): any[] {
+        switch (parentPage) {
+            case PageEnum.HOME:
+                return [
+                    { value: FilterKmTimeEnum.KM, icon: 'navigate' },
+                    { value: FilterKmTimeEnum.TIME, icon: 'alarm' }
+                ]
+            case PageEnum.MODAL_INFO_VEHICLE:
+                return [
+                    { value: FilterKmTimeEnum.KM, icon: 'navigate' },
+                    { value: FilterKmTimeEnum.TIME, icon: 'alarm' },
+                    { value: FilterKmTimeEnum.CASH, icon: 'cash' }
+                ]
+            default:
+                return [];
+        }
+    }
+
     getConfigDisplay(): IDisplaySearcherControlModel {
         return {
-            showFilterKmTime: [PageEnum.HOME],
+            showFilterKmTime: [PageEnum.HOME, PageEnum.MODAL_INFO_VEHICLE],
             showSearchText: [PageEnum.OPERATION, PageEnum.CONFIGURATION],
             showFilterOpType: [PageEnum.HOME, PageEnum.OPERATION, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
             showFilterVehicle: [PageEnum.CONFIGURATION],
@@ -696,10 +753,10 @@ export class DashboardService {
             showFilterMonth: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_OPERATION],
             showStrict: [PageEnum.HOME],
             showExpensePerKm: [PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
-            showAxis: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
-            showLegend: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
-            showAxisLabel: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
-            showDataLabel: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
+            showAxis: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION, PageEnum.MODAL_INFO_VEHICLE],
+            showLegend: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION, PageEnum.MODAL_INFO_VEHICLE],
+            showAxisLabel: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION, PageEnum.MODAL_INFO_VEHICLE],
+            showDataLabel: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION, PageEnum.MODAL_INFO_VEHICLE],
             showDoghnut: [PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION],
             showMyData: [PageEnum.HOME, PageEnum.MODAL_DASHBOARD_VEHICLE, PageEnum.MODAL_DASHBOARD_OPERATION]
         };

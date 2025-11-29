@@ -15,7 +15,7 @@ import { DashboardService, CommonService, DataService, SettingsService, Configur
 
 // UTILS
 import { 
-    FilterMonthsEnum, ConstantsColumns, PageEnum
+    FilterMonthsEnum, ConstantsColumns, PageEnum, FilterKmTimeEnum
 } from '@utils/index';
 
 @Component({
@@ -52,6 +52,7 @@ import {
     filterMonth: FilterMonthsEnum = FilterMonthsEnum.YEAR;
     searchDashboard: SearchDashboardModel = new SearchDashboardModel();
     months: any[] = [];
+    segmentFilterKmTimeOptions: any[] = [];
 
     // TRANSLATE
     translateAccept = '';
@@ -97,6 +98,7 @@ import {
 
     ngOnInit() {
         this.config = this.dashboardService.getConfigSearcher();
+        this.segmentFilterKmTimeOptions = this.dashboardService.getSegmentFilterKmTimeOptions(this.modalInputModel.parentPage);
 
         // FILTER VEHICLES
         this.filterVehicle = [];

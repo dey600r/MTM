@@ -21,11 +21,11 @@
     <ion-segment-button *ngFor="let data of this.input.dataSegment; let i = index;" [value]="data.id" layout="icon-start">
       <ion-label>
         {{ data.name  | translate }}
-        <div *ngIf="data.progressColor !== ''" [class]="'progress-bar' + data.progressColor">
-          <ion-progress-bar [value]="data.progressValue"></ion-progress-bar>
-        </div>
       </ion-label>
       <ion-icon size="small" [name]="data.icon"></ion-icon>
+      <div [class]="'card-progress-bar' +  data.progressColor" *ngIf="data.progressColor !== ''">
+        <div [class]="'progress' +  data.progressColor + '-bar'" [style.width.%]="data.progressValue"></div>
+      </div>
     </ion-segment-button>
   </ion-segment>
 </ion-header>
