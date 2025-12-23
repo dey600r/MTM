@@ -7,9 +7,10 @@ import { TranslateService } from '@ngx-translate/core';
 import {
     OperationModel,
     ConfigurationModel, VehicleModel, MaintenanceModel, WearVehicleProgressBarViewModel,
-    WearMaintenanceProgressBarViewModel, WearReplacementProgressBarViewModel, WearNotificationReplacementProgressBarViewModel
+    WearMaintenanceProgressBarViewModel, WearReplacementProgressBarViewModel, WearNotificationReplacementProgressBarViewModel,
+    IReplaclementEventFailurePrediction, MaintenanceElementModel
 } from '@models/index';
-import { ConstantsColumns, WarningWearEnum, Constants } from '@utils/index';
+import { ConstantsColumns, WarningWearEnum, Constants, FailurePredictionTypeEnum } from '@utils/index';
 
 // SERVICES
 import { CommonService, CalendarService, IconService } from '../common/index';
@@ -617,5 +618,67 @@ export class HomeService {
         } else {
             return WarningWearEnum.SUCCESS;
         }
+    }
+
+    // HELPER METHODS FOR MACHINE LERNING TYPES
+
+    isEventFailure(code: string): boolean {
+        return code === Constants.OPERATION_TYPE_FAILURE_HOME ||
+            code === Constants.OPERATION_TYPE_FAILURE_WORKSHOP;
+    }
+
+    isEventPreventive(code: string): boolean {
+        return code === Constants.OPERATION_TYPE_MAINTENANCE_HOME ||
+            code === Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP;
+    }
+
+    calculateEventFailurePrediction(operations: OperationModel[], idReplacement: number = 0): IReplaclementEventFailurePrediction[] {
+        if(!operations || operations.length === 0) return [];
+        
+        const vehicleEventsPerReplacement: IReplaclementEventFailurePrediction[] = [];
+        const mapEvent = (op: OperationModel, me: MaintenanceElementModel) => {
+        return { 
+                tkm: op.km, 
+                ttime: this.calendarService.monthDiff(new Date(op.vehicle.datePurchase), new Date(op.date)),
+                type: this.isEventFailure(op.operationType.code) ? FailurePredictionTypeEnum.FAIL : FailurePredictionTypeEnum.MAINT,
+                cost: me.price + op.price
+            }
+            };
+        
+        const opPrefiltered = operations.filter(op => 
+        this.isEventFailure(op.operationType.code) ||
+        this.isEventPreventive(op.operationType.code));
+        opPrefiltered.forEach(op => {
+        op.listMaintenanceElement.forEach(me => {
+            if(idReplacement == 0 || idReplacement === me.id) {
+            const repEvent = vehicleEventsPerReplacement.find(e => e.idReplacement === me.id && e.idVehicle === op.vehicle.id);
+            if(!repEvent) {
+                vehicleEventsPerReplacement.push({ 
+                idReplacement: me.id, 
+                nameReplacement: me.name,
+                idVehicle: op.vehicle.id,
+                brandVehicle: op.vehicle.brand,
+                modelVehicle: op.vehicle.model,
+                events: [mapEvent(op, me)]
+                });
+            } else {
+                repEvent.events.push(mapEvent(op, me));
+            }
+            }
+        });
+        });
+
+        vehicleEventsPerReplacement.forEach(x => {
+        const listevent = [...x.events];
+        x.events = [];
+        listevent.forEach((ev, index) => x.events.push({
+            tkm: (index == 0 ? ev.tkm : ev.tkm - listevent[index - 1].tkm),
+            ttime: (index == 0 ? ev.ttime : ev.ttime - listevent[index - 1].ttime),
+            cost: ev.cost,
+            type: ev.type
+        }));
+        })
+
+        return vehicleEventsPerReplacement;
     }
 }

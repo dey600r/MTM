@@ -108,7 +108,15 @@
         "UPLOAD": "Actualizar",
         "EMAIL": "Correo",
         "PASSWORD": "Contraseña",
-        "AVERAGE": "Media"
+        "AVERAGE": "Media",
+        "PROBABILITY": "Probabilidad",
+        "CURRENT": "Actual",
+        "OPTIMAL": "Optimo",
+        "PREDICTIONS": "Predicciones",
+        "PREDICTIVE_MAINTENANCE": "Mantenimiento predictivo",
+        "PREDICTIVE_COST": "Coste predictivo",
+        "OPTIMISTIC": "Optimista",
+        "PESSIMISTIC": "Pesimista"
     },
     "PAGE_HOME": {
         "HOME": "Inicio",
@@ -298,7 +306,8 @@
         "ErrorSyncUpload": "Ha ocurrido un error en la subida: {{error}}",
         "ErrorSyncDataNotFound": "No se encuentran datos en la nube. Primero debería actualizarlos.",
         "ErrorSyncVersion": "La version de MtM debería ser {{version}} pero está instalada {{versionNow}}. Deberias actualizar los datos {{versionSync}} en la nube o descargar la nueva versión.",
-        "ErrorFunctionNotAvailable": "Esta función no esta disponible"
+        "ErrorFunctionNotAvailable": "Esta función no esta disponible",
+        "InfoProbabilityFailReplacement": "Hay una probabilidad de un {{probability}}% con un coste previsto de {{price}}{{coin}} de cambiar el {{replacement}} con una vida de {{life}} {{measure}}."
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Mantenimiento Taller",

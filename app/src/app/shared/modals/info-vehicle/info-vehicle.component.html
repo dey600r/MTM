@@ -121,6 +121,91 @@
       <app-body-skeleton [input]="inputBodySkeletonConfigurationSummary"></app-body-skeleton>
     </div>
   </ion-list>
+  <!-- FAILURE PROBABILITY -->
+  <ion-list *ngIf="vehicles.length > 0 && !noDataOperations">
+    <ion-list-header (click)="showInfoFailureProbabilityLoad()" class="padding-list-header">
+      <ion-icon size="large" name="flash"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.PREDICTIVE_COST' | translate }}</h3>
+      <ion-button fill="clear">
+        <ion-icon size="small" color="primary" [name]="hideFailureProbabilitySummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+      </ion-button>
+    </ion-list-header>
+    <div *ngIf="!hideFailureProbabilitySummary">
+      <ngx-charts-bubble-chart
+        class="justify-center"
+        [view]="dashboardFailureProbabilityVehicle.view"
+        [scheme]="dashboardFailureProbabilityVehicle.colorScheme"
+        [results]="dashboardFailureProbabilityVehicle.data"
+        [xAxis]="dashboardFailureProbabilityVehicle.showXAxis"
+        [yAxis]="dashboardFailureProbabilityVehicle.showYAxis"
+        [legendTitle]="dashboardFailureProbabilityVehicle.legendTitle"
+        [legend]="dashboardFailureProbabilityVehicle.showLegend"
+        [legendPosition]="dashboardFailureProbabilityVehicle.legendPosition"
+        [showXAxisLabel]="dashboardFailureProbabilityVehicle.showXAxisLabel"
+        [showYAxisLabel]="dashboardFailureProbabilityVehicle.showYAxisLabel"
+        [xAxisLabel]="dashboardFailureProbabilityVehicle.xAxisLabel"
+        [yAxisLabel]="dashboardFailureProbabilityVehicle.yAxisLabel"
+        [xScaleMin]="dashboardFailureProbabilityVehicle.xScaleMin"
+        [xScaleMax]="dashboardFailureProbabilityVehicle.xScaleMax"
+        [yScaleMin]="dashboardFailureProbabilityVehicle.yScaleMin"
+        [yScaleMax]="dashboardFailureProbabilityVehicle.yScaleMax"
+        [minRadius]="dashboardFailureProbabilityVehicle.minRadius"
+        [maxRadius]="dashboardFailureProbabilityVehicle.maxRadius">
+      </ngx-charts-bubble-chart>
+      <ion-item *ngFor="let fail of selectedInfoPrediction">
+        <div class="main-item-div">
+          <div class="table-row">
+            <div>
+              <!-- Icons -->
+              <ion-avatar slot="start" class="main-avatar">
+                <ion-icon size="large" class="icon-color" [name]="fail.iconReplacement"></ion-icon>
+              </ion-avatar>
+            </div>
+            <div class="main-div">
+              <ion-label class="auto-width label-event-force">
+                <div class="table-row">
+                  <div class="second-div">
+                    <h2 class="second-div-title">{{ fail.nameReplacement }}</h2>
+                  </div>
+                  <div class="third-div">
+                    <div class="table-row">
+                      <ion-icon size="large" class="icon-color sub-icon" name="walk"></ion-icon>
+                      <p class="icon-color text-size-small">{{ fail.kilometers.t }}{{ measure.value }}</p>
+                    </div>
+                    <div class="table-row">
+                      <ion-icon size="large" class="icon-color sub-icon" [name]="fail.kilometers.icon"></ion-icon>
+                      <p class="icon-color text-size-small">{{ fail.kilometers.probability }}%</p>
+                    </div>
+                    <div class="table-row">
+                      <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
+                      <p class="icon-color text-size-small">{{ fail.kilometers.cost }}{{ coin.value }}</p>
+                    </div>
+                  </div>
+                  <div class="third-div">
+                    <div class="table-row">
+                      <ion-icon size="large" class="icon-color sub-icon" name="alarm"></ion-icon>
+                      <p class="icon-color text-size-small">{{ fail.times.t }} {{ 'COMMON.MONTHS' | translate}}</p>
+                    </div>
+                    <div class="table-row">
+                      <ion-icon size="large" class="icon-color sub-icon" [name]="fail.times.icon"></ion-icon>
+                      <p class="icon-color text-size-small">{{ fail.times.probability }}%</p>
+                    </div>
+                    <div class="table-row">
+                      <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
+                      <p class="icon-color text-size-small">{{ fail.times.cost }}{{ coin.value }}</p>
+                    </div>
+                  </div>
+                </div>
+              </ion-label>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+    </div>
+    <div *ngIf="!loadedBodyFailureProbabilitySummary">
+      <app-body-skeleton [input]="inputBodySkeletonConfigurationSummary"></app-body-skeleton>
+    </div>
+  </ion-list>
   <!-- REPLACEMENT SUMMARY -->
   <ion-list *ngIf="vehicles.length > 0">
     <ion-list-header (click)="showInfoReplacementLoad()" class="padding-list-header">

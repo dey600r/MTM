@@ -60,6 +60,52 @@ export class InfoVehicleConfigurationMaintenanceElementModel extends BaseNameMod
     }
 }
 
+export class InfoVehiclePredictionOverviewModel extends BaseModel {
+    listFailurePredictions: InfoVehicleFailurePredictionModel[];
+    constructor(id: number = -1, list: InfoVehicleFailurePredictionModel[] = []) {
+        super(id);
+        this.listFailurePredictions = list;
+    }
+}
+
+export class InfoVehicleFailurePredictionModel {
+    idReplacement: number;
+    nameReplacement: string;
+    iconReplacement: string;
+    kilometers: InfoVehicleFailurePredictionEventModel;
+    times: InfoVehicleFailurePredictionEventModel;
+    constructor(data: Partial<InfoVehicleFailurePredictionModel> = {}) {
+        this.idReplacement = (data.idReplacement !== undefined ? data.idReplacement : -1);
+        this.nameReplacement = (data.nameReplacement ? data.nameReplacement : '');
+        this.iconReplacement = (data.iconReplacement ? data.iconReplacement : '');
+        this.kilometers = (data.kilometers ? data.kilometers : new InfoVehicleFailurePredictionEventModel());
+        this.times = (data.times ? data.times : new InfoVehicleFailurePredictionEventModel());
+    }
+}
+
+export class InfoVehicleFailurePredictionEventModel {
+    beta: number;
+    eta: number;
+    t: number;
+    cost: number;
+    probability: number;
+    icon: string;
+    optimalT: number;
+    optimalCost: number;
+    optimalProbability: number;
+    constructor(data: Partial<InfoVehicleFailurePredictionEventModel> = {}) {
+        this.beta = (data.beta !== undefined ? data.beta : 0);
+        this.eta = (data.eta !== undefined ? data.eta : 0);
+        this.t = (data.t !== undefined ? data.t : 0);
+        this.cost = (data.cost !== undefined ? data.cost : 0);
+        this.probability = (data.probability !== undefined ? data.probability : 0);
+        this.icon = (data.icon ? data.icon : '');
+        this.optimalT = (data.optimalT !== undefined ? data.optimalT : 0);
+        this.optimalCost = (data.optimalCost !== undefined ? data.optimalCost : 0);
+        this.optimalProbability = (data.optimalProbability !== undefined ? data.optimalProbability : 0)
+    }
+}
+
 export class InfoVehicleHistoricModel extends BaseModel {
     listHistoricReplacements: InfoVehicleHistoricReplacementModel[];
     constructor(id: number = -1, list: InfoVehicleHistoricReplacementModel[] = []) {

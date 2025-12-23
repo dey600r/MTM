@@ -22,9 +22,16 @@ export class DashboardModel<T> {
     showDataLabel: boolean;
     barPadding: number;
     groupPadding: number;
+    xScaleMin: number;
+    xScaleMax: number;
+    yScaleMin: number;
+    yScaleMax: number;
+    minRadius: number;
+    maxRadius: number;
     constructor(data: Partial<DashboardModel<T>> = {}) {
         this.setData1(data);
         this.setData2(data);
+        this.setData3(data);
     }
 
     private setData1(data: Partial<DashboardModel<T>>) {
@@ -51,6 +58,15 @@ export class DashboardModel<T> {
         this.showDataLabel = (data.showDataLabel !== undefined ? data.showDataLabel : false);
         this.barPadding = (data.barPadding !== undefined ? data.barPadding : 2);
         this.groupPadding = (data.groupPadding !== undefined ? data.groupPadding : 4);
+    }
+
+    private setData3(data: Partial<DashboardModel<T>>) {
+        this.xScaleMin = (data.xScaleMin != undefined ? data.xScaleMin : 0);
+        this.xScaleMax = (data.xScaleMax != undefined ? data.xScaleMax : 0);
+        this.yScaleMin = (data.yScaleMin != undefined ? data.yScaleMin : 0);
+        this.yScaleMax = (data.yScaleMax != undefined ? data.yScaleMax : 0);
+        this.minRadius = (data.minRadius != undefined ? data.minRadius : 0);
+        this.maxRadius = (data.maxRadius != undefined ? data.maxRadius : 0);
     }
 
     getColorSchemeDefault(): IDashboardColorModel {

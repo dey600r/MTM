@@ -21,6 +21,9 @@ import {
   MaintenanceModel, ModalInputModel, OperationModel, VehicleModel, InfoVehicleReplacementModel,
   HeaderInputModel, HeaderSegmentInputModel, HeaderOutputModel, BodySkeletonInputModel,
   SearchDashboardModel,
+  InfoVehiclePredictionOverviewModel,
+  InfoVehicleFailurePredictionModel,
+  IDashboardSerieModel,
 } from '@models/index';
 
 // UTILS
@@ -59,6 +62,9 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
   // DATA
   vehicles: VehicleModel[] = [];
   operations: OperationModel[] = [];
+  configurations: ConfigurationModel[] = [];
+  maintenances: MaintenanceModel[] = [];
+  maintenanceElements: MaintenanceElementModel[] = [];
   vehicleSelected: VehicleModel = new VehicleModel();
   measure: ISettingModel;
   coin: ISettingModel;
@@ -68,16 +74,22 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
   // CHARTS
   dashboardInformationVehicle: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
   dashboardConfigurationVehicle: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardFailureProbabilityVehicle: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   dashboardReplacementVehicle: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
 
   // MODELS
   listInfoVehicleConfiguration: InfoVehicleConfigurationModel[] = [];
   selectedInfoVehicleConfiguration: InfoVehicleConfigurationModel = new InfoVehicleConfigurationModel();
+  listInfoVehiclePrediction: InfoVehiclePredictionOverviewModel[] = [];
+  selectedInfoPrediction: InfoVehicleFailurePredictionModel[] = []
   listInfoVehicleReplacement: InfoVehicleHistoricModel[] = [];
   selectedInfoReplacement: InfoVehicleHistoricReplacementModel[] = [];
   hideVehicleSummary = false;
   hideConfigurationSummary = true;
   loadedBodyConfigurationSummary = true;
+  hideFailureProbabilitySummary = true;
+  loadedBodyFailureProbabilitySummary = true;
+  noDataOperations = true;
   hideReplacementSummary = true;
   loadedBodyReplacementSummary = true;
   showSpinner = false;
@@ -150,28 +162,48 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
       });
   }
 
+  preloadVehicleConfiguration(vehicle: VehicleModel, operations: OperationModel[], 
+      configurations: ConfigurationModel[], maintenances: MaintenanceModel[]) { 
+    if(!this.listInfoVehicleConfiguration.some(x => x.idVehicle === vehicle.id)) {
+      const result = this.infoVehicleService.calculateInfoVehicleConfiguration(operations, [vehicle], configurations, maintenances);
+      if(result.length > 0)
+        this.listInfoVehicleConfiguration = [...this.listInfoVehicleConfiguration, result[0]];
+    }
+  }
+
+  preloadVehicleReplacement(vehicle: VehicleModel, operations: OperationModel[], configurations: ConfigurationModel[], 
+      maintenances: MaintenanceModel[], maintenanceElements: MaintenanceElementModel[] ) {
+    if(!this.listInfoVehicleReplacement.some(x => x.id === vehicle.id)) {
+      const result = this.infoVehicleService.calculateInfoReplacementHistoric(
+          [vehicle], maintenances, operations, configurations, maintenanceElements);
+      if(result.length > 0)
+        this.listInfoVehicleReplacement = [...this.listInfoVehicleReplacement, result[0]];
+    }
+  }
+
+  preloadVehiclePrediction(vehicle: VehicleModel, operations: OperationModel[], listInfoVehicleReplacement: InfoVehicleHistoricModel[]) {
+    if(!this.listInfoVehiclePrediction.some(x => x.id === vehicle.id)) {
+      const result = this.infoVehicleService.calculateInfoVehicleFailurePrediction(
+          operations.filter(x => x.vehicle.id === vehicle.id), listInfoVehicleReplacement);
+      if(result.length > 0) 
+        this.listInfoVehiclePrediction = [...this.listInfoVehiclePrediction, result[0]];
+    }
+  }
+
   initConfigurationSummary() {
     // INFO VEHICLE CONFIGURATION
-    const configurations: ConfigurationModel[] = this.commonService.orderBy(
+    this.configurations = this.commonService.orderBy(
       this.dataService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
-    const maintenances: MaintenanceModel[] = this.commonService.orderBy(
+    this.maintenances = this.commonService.orderBy(
       this.dataService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
-    const maintenanceElements: MaintenanceElementModel[] = this.dataService.getMaintenanceElementData();
+    this.maintenanceElements = this.dataService.getMaintenanceElementData();
     this.operations = this.dataService.getOperationsData();
     this.vehicles = this.modalInputModel.dataList.filter(v =>
-      configurations.find(c => c.id === v.configuration.id).listMaintenance.length > 0);
+      this.configurations.find(c => c.id === v.configuration.id).listMaintenance.length > 0);
 
     if (this.vehicles && this.vehicles.length > 0) {
       this.vehicleSelected = this.vehicles[0];
       this.loadHeader();
-
-      // INFO CONFIGURATION VEHICLE
-      this.listInfoVehicleConfiguration = this.infoVehicleService.calculateInfoVehicleConfiguration(
-        this.operations, this.vehicles, configurations, maintenances);
-
-      // INFO VEHICLE REPLACEMENTS
-      this.listInfoVehicleReplacement = this.infoVehicleService.calculateInfoReplacementHistoric(
-        this.vehicles, maintenances, this.operations, configurations, maintenanceElements);
     }
   }
 
@@ -181,6 +213,7 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
         let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         this.initChartInformationVehicle(windowSize, filter);
         this.initChartConfigurationVehicle(windowSize);
+        this.initChartFailureProbabilityVehicle(windowSize, filter);
         this.initChartReplacementVehicle(windowSize, filter);
         this.loadHeader();
       }
@@ -191,6 +224,7 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
     this.searchDashboardRecordsSubscription = this.dashboardService.getObserverSearchDashboardRecords().subscribe(filter => {
       if (!this.openningPopover) {
         let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        this.initChartFailureProbabilityVehicle(windowSize, filter);
         this.initChartReplacementVehicle(windowSize, filter);
         this.loadHeader();
       }
@@ -204,6 +238,7 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
       let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
       this.dashboardInformationVehicle.view = windowSize;
       this.dashboardConfigurationVehicle.view = windowSize;
+      this.dashboardFailureProbabilityVehicle.view = windowSize;
       this.dashboardReplacementVehicle.view = windowSize;
       this.changeDetector.detectChanges();
     });
@@ -217,19 +252,29 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
 
   initChartConfigurationVehicle(windowSize: [number, number]) {
     if(!this.hideConfigurationSummary) {
-      const infoVehicleConfiguration = this.getInfoVehicleConfigurationModel(this.vehicleSelected.id);
+      const infoVehicleConfiguration = this.getInfoVehicleConfigurationModel(this.vehicleSelected);
       this.dashboardConfigurationVehicle = this.dashboardService.getDashboardConfigurationVehicle(windowSize, infoVehicleConfiguration);
     }
   }
 
+  initChartFailureProbabilityVehicle(windowSize: [number, number], filter: SearchDashboardModel) {
+    if(!this.hideFailureProbabilitySummary) {
+      const infoPredictionVehicle = this.getInfoVehicleFailurePredictionModel(this.vehicleSelected);
+      if(infoPredictionVehicle)
+        this.dashboardFailureProbabilityVehicle = this.dashboardService.getDashboardFailureProbability(windowSize, infoPredictionVehicle.listFailurePredictions, filter);
+   }
+  }
+
   initChartReplacementVehicle(windowSize: [number, number], filter: SearchDashboardModel) {
     if(!this.hideReplacementSummary) {
-      const infoReplacementVehicle = this.getInfoVehicleReplacementModel(this.vehicleSelected.id);
-      this.dashboardReplacementVehicle = this.dashboardService.getDashboardReplacementVehicle(windowSize, infoReplacementVehicle.listHistoricReplacements, filter);
+      const infoReplacementVehicle = this.getInfoVehicleReplacementModel(this.vehicleSelected);
+      if(infoReplacementVehicle)
+        this.dashboardReplacementVehicle = this.dashboardService.getDashboardReplacementVehicle(windowSize, infoReplacementVehicle.listHistoricReplacements, filter);
     }
   }
 
   initShowInfo(vehicleSelected: VehicleModel) {
+    this.noDataOperations = this.getInfoOperationsModel(this.vehicleSelected.id).length === 0;
     this.initShowInfoMaintenance(vehicleSelected);
     this.initShowInfoReplacement(vehicleSelected);
   }
@@ -238,6 +283,7 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
     this.hideVehicleSummary = false;
     this.hideConfigurationSummary = true;
     this.hideReplacementSummary = true;
+    this.hideFailureProbabilitySummary = true;
   }
 
   initShowInfoMaintenance(vehicleSelected: VehicleModel) {
@@ -256,19 +302,37 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
     }
   }
 
-  getInfoVehicleConfigurationModel(idVehicle: number): InfoVehicleConfigurationModel {
-    return this.listInfoVehicleConfiguration.find(x => x.idVehicle === idVehicle);
+  getInfoVehicleConfigurationModel(vehicle: VehicleModel): InfoVehicleConfigurationModel {
+    this.preloadVehicleConfiguration(vehicle, this.operations, this.configurations, this.maintenances);
+    return this.listInfoVehicleConfiguration.find(x => x.idVehicle === vehicle.id);
   }
 
-  getInfoVehicleReplacementModel(idVehicle: number): InfoVehicleHistoricModel {
-    return this.listInfoVehicleReplacement.find(x => x.id === idVehicle);
+  getInfoVehicleReplacementModel(vehicle: VehicleModel): InfoVehicleHistoricModel {
+    this.preloadVehicleReplacement(vehicle, this.operations, this.configurations, this.maintenances, this.maintenanceElements);
+    return this.listInfoVehicleReplacement.find(x => x.id === vehicle.id);
+  }
+
+  getInfoVehicleFailurePredictionModel(vehicle: VehicleModel): InfoVehiclePredictionOverviewModel {
+    this.preloadVehiclePrediction(vehicle, this.operations, this.listInfoVehicleReplacement);
+    return this.listInfoVehiclePrediction.find(x => x.id === vehicle.id);
+  }
+
+  getInfoOperationsModel(idVehicle: number): OperationModel[] {
+    return this.operations.filter(o => o.vehicle.id === idVehicle);
   }
 
   initDataSelected(idVehicle: number) {
     if (this.vehicles && this.vehicles.length > 0) {
       this.vehicleSelected = this.vehicles.find(x => x.id === idVehicle);
-      this.selectedInfoVehicleConfiguration = this.getInfoVehicleConfigurationModel(idVehicle);
-      this.selectedInfoReplacement = this.getInfoVehicleReplacementModel(idVehicle).listHistoricReplacements;
+      this.selectedInfoVehicleConfiguration = this.getInfoVehicleConfigurationModel(this.vehicleSelected);
+
+      const infoVehicleReplacement = this.getInfoVehicleReplacementModel(this.vehicleSelected);
+      if(infoVehicleReplacement)
+        this.selectedInfoReplacement = infoVehicleReplacement.listHistoricReplacements;
+
+      const infoVehiclePrediction = this.getInfoVehicleFailurePredictionModel(this.vehicleSelected);
+      if(infoVehiclePrediction)
+        this.selectedInfoPrediction = infoVehiclePrediction.listFailurePredictions;
     }
   }
 
@@ -298,6 +362,20 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
       }, 350);
     } else {
       this.hideReplacementSummary = true;
+    }
+  }
+
+  showInfoFailureProbabilityLoad() {
+    if (this.hideFailureProbabilitySummary) {
+      this.loadedBodyFailureProbabilitySummary = false;
+      setTimeout(() => {
+        this.loadedBodyFailureProbabilitySummary = true;
+        this.hideFailureProbabilitySummary = false;
+        const search: SearchDashboardModel = this.dashboardService.getSearchDashboard();
+        this.dashboardService.setSearchDashboardRecords(search.filterKmTime, search.showStrict);
+      }, 350);
+    } else {
+      this.hideFailureProbabilitySummary = true;
     }
   }
 

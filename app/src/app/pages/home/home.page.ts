@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 
 // UTILS
 import {
-  DataService, DashboardService, ConfigurationService, ControlService,
+  DataService, ConfigurationService, ControlService,
   SettingsService, ThemeService, HomeService
 } from '@services/index';
 import {
@@ -15,7 +15,8 @@ import {
   SkeletonInputModel
 } from '@models/index';
 import { 
-  PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, HomeSkeletonSetting
+  PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, HomeSkeletonSetting,
+  FailurePredictionTypeEnum
 } from '@utils/index';
 
 // COMPONENTS
@@ -37,7 +38,6 @@ export class HomePage extends BasePage implements OnInit {
 
   // INJECTIONS
   private readonly dataService: DataService = inject(DataService);
-  private readonly dashboardService: DashboardService = inject(DashboardService);
   private readonly configurationService: ConfigurationService = inject(ConfigurationService);
   private readonly controlService: ControlService = inject(ControlService);
   private readonly settingsService: SettingsService = inject(SettingsService);
@@ -79,7 +79,7 @@ export class HomePage extends BasePage implements OnInit {
 
   ngOnInit() {
     this.initPage();
-  }
+  }  
 
   /** INIT */
 

@@ -88,6 +88,16 @@ export class IconService {
       }
     }
 
+    loadIconProbability(probability: number): string {
+      if (probability >= 65) {
+        return 'thunderstorm';
+      } else if (probability >= 25 && probability < 65) {
+        return 'rainy';
+      } else {
+        return 'sunny';
+      }
+    }
+
     // VEHICLE
 
     getIconVehicle(codeVehicleType: string): string {

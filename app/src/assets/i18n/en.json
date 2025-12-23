@@ -108,7 +108,15 @@
         "UPLOAD": "Upload",
         "EMAIL": "Email",
         "PASSWORD": "Password",
-        "AVERAGE": "Average"
+        "AVERAGE": "Average",
+        "PROBABILITY": "Probability",
+        "CURRENT": "Current",
+        "OPTIMAL": "Optimal",
+        "PREDICTIONS": "Predictions",
+        "PREDICTIVE_MAINTENANCE": "Predictive Maintenance",
+        "PREDICTIVE_COST": "Predictive cost",
+        "OPTIMISTIC": "Optimistic",
+        "PESSIMISTIC": "Pessimistic"
     },
     "PAGE_HOME": {
         "HOME": "Home",
@@ -298,7 +306,8 @@
         "ErrorSyncUpload": "There was a upload error: {{error}}",
         "ErrorSyncDataNotFound": "No data found in cloud. You should upload first",
         "ErrorSyncVersion": "The version of MTM should be higher than {{version}} but it is installed {{versionNow}}. You should upload first {{versionSync}} in cloud or the new version should be installed.",
-        "ErrorFunctionNotAvailable": "This function is not available"
+        "ErrorFunctionNotAvailable": "This function is not available",
+        "InfoProbabilityFailReplacement": "There is a {{probability}}% probability with an expected cost of {{price}}{{coin}} to change the {{replacement}} with a life of {{life}} {{measure}}."
     },
     "DB": {
         "MAINTENANCE_WORKSHOP": "Maintenance Workshop",

@@ -1,5 +1,5 @@
 import { Color } from "@swimlane/ngx-charts";
-import { InfoButtonEnum, PageEnum } from "@utils/enums";
+import { FailurePredictionTypeEnum, InfoButtonEnum, PageEnum } from "@utils/enums";
 
 export interface IInfoModel {
     text: string;
@@ -42,6 +42,14 @@ export interface IDashboardModel {
     value: any;
 }
 
+export interface IDashboardRatioModel {
+    id: number;
+    name: string;
+    x: number;
+    y: number;
+    r: number;
+}
+
 export interface IDashboardSerieModel {
     id: number;
     name: string;
@@ -60,4 +68,43 @@ export interface ISettingModel {
 export interface ICalendarColorMode {
     iterator: number;
     color: string;
+}
+
+export interface IReplaclementEventFailurePrediction {
+    idReplacement: number;
+    nameReplacement: string;
+    idVehicle: number;
+    brandVehicle: string;
+    events: IEventFailurePrediction[];
+    modelVehicle: string;
+}
+
+export interface IEventFailurePrediction {
+    tkm: number;
+    ttime: number;
+    type: FailurePredictionTypeEnum;
+    cost: number;
+}
+
+export interface IIWeibullParams {
+    beta: number;
+    eta: number;
+}
+
+export interface IOptimalCostTime {
+    Tmin: number;
+    Tmax: number;
+    optimalT: number;
+    optimalCostPerKm: number;
+}
+
+export interface IProbabilityTime {
+    T: number;
+    probability: number;
+    cost: number;
+}
+
+export interface IOptimalPredictiveMaintenance {
+    optimal: IOptimalCostTime;
+    dataPredictive: IProbabilityTime[];
 }

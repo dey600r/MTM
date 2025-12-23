@@ -11,16 +11,18 @@ import {
     WearMaintenanceProgressBarViewModel, OperationTypeModel, MaintenanceElementModel, WearReplacementProgressBarViewModel,
     InfoVehicleConfigurationModel, IDisplaySearcherControlModel, IObserverSearcherControlModel,
     ISearcherControlModel, IDashboardModel, IDashboardSerieModel, ISettingModel,
-    InfoVehicleHistoricReplacementModel,
-    InfoVehicleReplacementModel
+    InfoVehicleHistoricReplacementModel, InfoVehicleReplacementModel, InfoVehicleFailurePredictionModel,
+    IDashboardRatioModel, IReplaclementEventFailurePrediction, IProbabilityTime
 } from '@models/index';
 
 // SERVICES
 import { CommonService, CalendarService } from '../common/index';
+import { MachineLearningService } from '../data/index';
 
 // UTILS
 import { 
     ConstantsColumns, FilterMonthsEnum, Constants, FilterKmTimeEnum, WarningWearEnum, PageEnum,
+    FailurePredictionTypeEnum,
 } from '@utils/index';
 
 @Injectable({
@@ -31,6 +33,7 @@ export class DashboardService {
     // INJECTIONS
     private readonly commonService: CommonService = inject(CommonService);
     private readonly calendarService: CalendarService = inject(CalendarService);
+    private readonly meService: MachineLearningService = inject(MachineLearningService);
     private readonly translator: TranslateService = inject(TranslateService);
     private readonly platform: Platform = inject(Platform);
 
@@ -60,6 +63,23 @@ export class DashboardService {
                                 translateX: string,
                                 translateY: string,
                                 lines: IDashboardSerieModel[] = []): DashboardModel<T> {
+        return this.mapDataToDashboardChartRatio<T>(view, data, filter, translateLegend, translateX, translateY, lines, 0, 0, 0, 0, 0, 0);
+    }
+
+    mapDataToDashboardChartRatio<T>(view: [number, number], 
+                                data: T[], 
+                                filter: SearchDashboardModel, 
+                                translateLegend: string,
+                                translateX: string,
+                                translateY: string,
+                                lines: IDashboardSerieModel[] = [],
+                                xScaleMax: number = 0,
+                                xScaleMin: number = 0,
+                                yScaleMax: number = 0,
+                                yScaleMin: number = 0,
+                                maxRadius: number = 0,
+                                minRadius: number = 0
+                            ): DashboardModel<T> {
         return new DashboardModel<T>({
             view: view,
             data: data, 
@@ -73,9 +93,17 @@ export class DashboardService {
             showYAxisLabel: filter.showAxisLabel,
             yAxisLabel: this.translator.instant(translateY),
             isDoughnut: filter.doghnut,
-            showDataLabel: filter.showDataLabel
+            showDataLabel: filter.showDataLabel,
+            xScaleMax,
+            xScaleMin,
+            yScaleMax,
+            yScaleMin,
+            maxRadius,
+            minRadius
         });
     }
+
+
 
     // VEHICLE OP TYPE EXPENSES
     getDashboardModelVehicleExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardSerieModel> {
@@ -295,6 +323,85 @@ export class DashboardService {
             filter.searchMaintenanceElement.some(f => x.id === f.id)));
     }
 
+    // FAILURE PROGRESS PROBABILITY
+    getDashboardFailureProgressProbability(view: [number, number], events: IReplaclementEventFailurePrediction[], 
+                                filter: SearchDashboardModel): DashboardModel<IDashboardSerieModel> {
+        let translateX = this.translator.instant('COMMON.KILOMETERS');
+        if (filter.filterKmTime === FilterKmTimeEnum.TIME) {
+            translateX = this.translator.instant('COMMON.MONTHS');
+        }
+        return new DashboardModel<IDashboardSerieModel>({
+            view: view,
+            data: this.mapOperationsToDashboardFailureProgressProbability(events, filter), 
+            colorScheme: ['#D91CF6', '#1CEAF6', '#5FF61C'],
+            showXAxis: filter.showAxis, 
+            showYAxis: filter.showAxis,
+            showLegend: filter.showLegend,
+            legendTitle: this.translator.instant('COMMON.PREDICTIONS'),
+            showXAxisLabel: filter.showAxisLabel,
+            xAxisLabel: translateX,
+            showYAxisLabel: filter.showAxisLabel,
+            yAxisLabel: this.translator.instant('COMMON.PROBABILITY'),
+            isDoughnut: filter.doghnut,
+            showDataLabel: filter.showDataLabel
+        });
+    }
+
+    alignSeries(data: IDashboardSerieModel[]): IDashboardSerieModel[] {
+        // 1. eje X común
+        const set = new Set<number>();
+        data.forEach(s =>
+            s.series.forEach(p => set.add(Number(p.name)))
+        );
+        const axis = Array.from(set).sort((a, b) => a - b);
+
+        // 2. re-muestrear
+        return data.map(s => 
+            this.getDataSeriesDashboard(s.name,
+                axis.map(t => this.getDataDashboard(t.toString(), this.meService.interpolateValue(s.series, t)))
+        ));
+    }
+
+    calculateProgressProbability(failuresT: number[], censoredT: number[],
+            failuresC: number[], censoredC: number[]) {
+        const { beta, eta } = this.meService.estimateWeibullParams(failuresT, censoredT);
+        return {
+            best: this.meService.findOptimalTProbability(beta, eta, failuresC, censoredC),
+            min: this.meService.findOptimalTProbability(1, eta, failuresC, censoredC),
+            max: this.meService.findOptimalTProbability(3.5, eta, failuresC, censoredC)
+        };
+    }
+
+    mapOperationsToDashboardFailureProgressProbability(events: IReplaclementEventFailurePrediction[], 
+                                filter: SearchDashboardModel): IDashboardSerieModel[] {
+        let result: IDashboardSerieModel[] = [];
+        if (!!events && events.length > 0) {
+            const getfailsLine = (data: IProbabilityTime[]) => data.map(dp => this.getDataDashboard(`${dp.T.toString()}`, dp.probability));
+            events.forEach(ev => {
+                const failures = ev.events.filter(e => e.type === FailurePredictionTypeEnum.FAIL);
+                const censored = ev.events.filter(e => e.type !== FailurePredictionTypeEnum.FAIL);
+                const failuresCost = failures.map(x => x.cost);
+                const censoredCost = censored.map(x => x.cost);
+
+                let data: { best, min, max } = null;
+                
+                if(filter.filterKmTime === FilterKmTimeEnum.KM) {
+                    data = this.calculateProgressProbability(failures.map(e => e.tkm), censored.map(e => e.tkm), failuresCost, censoredCost);
+                } else {
+                    data = this.calculateProgressProbability(failures.map(e => e.ttime), censored.map(e => e.ttime), failuresCost, censoredCost);
+                }
+
+                if(!!data && !!data.best && data.best.dataPredictive !== null)
+                    result = [...result, this.getDataSeriesDashboard(this.translator.instant('COMMON.OPTIMAL'), getfailsLine(data.best.dataPredictive))];
+                if(!!data && !!data.min && data.min.dataPredictive !== null)
+                    result = [...result, this.getDataSeriesDashboard(this.translator.instant('COMMON.PESSIMISTIC'), getfailsLine(data.min.dataPredictive))];
+                if(!!data && !!data.max && data.max.dataPredictive !== null)
+                    result = [...result, this.getDataSeriesDashboard(this.translator.instant('COMMON.OPTIMISTIC'), getfailsLine(data.max.dataPredictive))];
+            });
+        }
+        return this.alignSeries(result);
+    }
+
     // RECORDS MAINTENANCES
     getDashboardRecordMaintenances(view: [number, number], data: WearVehicleProgressBarViewModel, filter: SearchDashboardModel,
                                    measure: ISettingModel): DashboardModel<IDashboardSerieModel> {
@@ -409,6 +516,10 @@ export class DashboardService {
 
     getDataSeriesDashboard(n: string, s: any[], i: number = -1): IDashboardSerieModel {
         return { id: i, name: n, series: s};
+    }
+
+    getDataRatioDashboard(n: string, x: number, y: number, r: number, i: number = -1): IDashboardRatioModel {
+        return { id: i, name: n, x: x, y: y, r: r};
     }
 
     //#region INFO VEHICLE
@@ -612,6 +723,41 @@ export class DashboardService {
         });
     }
 
+    // CHART FAILURE PROBABILITY
+
+    getDashboardFailureProbability(view: [number, number], data: InfoVehicleFailurePredictionModel[], filter: SearchDashboardModel): DashboardModel<IDashboardSerieModel> { 
+        let resultBubble: IDashboardSerieModel[] = [];
+
+        // TRANSLATE TYPE
+        const translateCurrent: string = this.translator.instant('COMMON.CURRENT');
+        const translateOptimal: string = this.translator.instant('COMMON.OPTIMAL');
+        let propData: string = this.commonService.nameOf(() => new InfoVehicleFailurePredictionModel().kilometers);
+        let translateY: string = 'COMMON.KILOMETERS';
+        if(filter.filterKmTime === FilterKmTimeEnum.TIME) {
+            propData = this.commonService.nameOf(() => new InfoVehicleFailurePredictionModel().times);
+            translateY = 'COMMON.MONTHS';
+        }
+
+        data.forEach(optimal => {
+            resultBubble = [...resultBubble, this.getDataSeriesDashboard(optimal.nameReplacement, 
+               [
+                this.getDataRatioDashboard(translateCurrent, optimal[propData].t, optimal[propData].probability, optimal[propData].cost),
+                this.getDataRatioDashboard(translateOptimal, optimal[propData].optimalT, optimal[propData].optimalProbability, optimal[propData].optimalCost)
+               ]
+            )];
+        });
+
+        return this.mapDataToDashboardChartRatio<IDashboardSerieModel>(
+            view, 
+            resultBubble, 
+            filter,
+            'COMMON.REPLACEMENT',
+            translateY,
+            'COMMON.PROBABILITY',
+            [], 0, 0, 100, 0, 20, 4
+        );
+    }
+
     // CHART REPLACEMENT VEHICLE
 
     getDashboardReplacementVehicle(view: [number, number], data: InfoVehicleHistoricReplacementModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
@@ -630,8 +776,6 @@ export class DashboardService {
             translateY = 'COMMON.MONTHS';
         } else if(filter.filterKmTime === FilterKmTimeEnum.CASH) {
             propAverage = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().priceAverage);
-            propData = this.commonService.nameOf(() => new InfoVehicleReplacementModel().price);
-            translateY = 'COMMON.PRICE';
         }
 
         data.forEach(x => {

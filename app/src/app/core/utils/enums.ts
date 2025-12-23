@@ -91,3 +91,8 @@ export enum HeaderOutputEnum {
     BUTTON_RIGHT = 1,
     SEGMENT = 2
 }
+
+export enum FailurePredictionTypeEnum {
+    MAINT = 'PREVENTIVE',
+    FAIL = 'FAILURE'
+}
