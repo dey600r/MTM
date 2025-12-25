@@ -165,7 +165,6 @@ export class MachineLearningService {
   findOptimalTProbability(beta: number, eta: number, failures: number[], censored: number[], steps: number = 10): IOptimalPredictiveMaintenance {
     let result: IOptimalPredictiveMaintenance = { optimal: null, dataPredictive: [] };
     result.optimal = this.findOptimalT(beta, eta, failures, censored);
-    //console.log("T* óptimo (km):", Math.round(result.optimal.optimalT), "Coste medio:", result.optimal.optimalCostPerKm.toFixed(5), "Coste a los 10000km", (opt1.optimalCostPerKm * 10000).toFixed(2), `MIN: ${opt1.Tmin} & MAX: ${opt1.Tmax}`);
 
     const stepSize = Math.floor((result.optimal.Tmax - result.optimal.Tmin) / steps) + 1;
 
@@ -175,7 +174,6 @@ export class MachineLearningService {
         probability: this.normalizeProbability(this.weibullFailureProbability(t, beta, eta)),
         cost: this.normalizeCost(result.optimal.optimalCostPerKm * t)
       });
-      //console.log(`\nProbabilidad de fallo en los próximos ${t} km:`, (probIn1000km * 100).toFixed(4) + "%");
     }
     return result;
   }
