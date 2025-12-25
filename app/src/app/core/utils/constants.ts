@@ -9,6 +9,9 @@ export class Constants {
     // WIDHTS
     public static readonly MAX_WIDTH_SEGMENT_SCROLABLE = 800;
 
+    // SCROLL
+    public static readonly MAX_ROWS_INFINITE_SCROLL = 18;
+
     // FORMAT
     public static readonly DATE_FORMAT_ES = 'DD/MM/YYYY';
     public static readonly DATE_FORMAT_EN = 'MM/DD/YYYY';

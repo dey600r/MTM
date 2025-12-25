@@ -62,7 +62,7 @@
           <ion-card-content>
 
             <div class="table-row" *ngIf="showInfoMaintenance[i]">
-              <ion-list class="second-item-div">
+              <ion-list class="second-item-div" lines="none">
                 <ion-item button *ngFor="let wr of wm.listWearReplacement" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]; openInfoNotification(this.vehicleSelected, wm, wr)">
                   <div>
                     <!-- AVATAR REPLACEMENT -->

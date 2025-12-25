@@ -10,7 +10,7 @@
       <ion-col *ngFor="let i of input.card.items" 
           [sizeLg]="input.card.sizelg" [sizeMd]="input.card.sizemd" [sizeSm]="input.card.sizesm" [sizeXs]="input.card.sizexs">
         <ion-card>
-          <ion-list>
+          <ion-list lines="none">
             <app-body-skeleton [input]="input.body"></app-body-skeleton>
           </ion-list>
         </ion-card>
