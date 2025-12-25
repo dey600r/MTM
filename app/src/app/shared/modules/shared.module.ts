@@ -15,6 +15,7 @@ import { PipeModule } from '@modules/pipes.module';
 // COMPONENTS
 import { AppInfoComponent } from '@components/info/app-info.component';
 import { SkeletonComponent } from '@components/skeleton/skeleton.component';
+import { HeaderSkeletonComponent } from '@components/skeleton/header/header-skeleton.component';
 import { BodySkeletonComponent } from '@components/skeleton/body/body-skeleton.component';
 import { HeaderComponent } from '@components/header/header.component';
 import { ComboChartComponent, ComboSeriesVerticalComponent } from '@components/combo-chart/index';
@@ -23,6 +24,7 @@ import { ComboChartComponent, ComboSeriesVerticalComponent } from '@components/c
     declarations: [
         AppInfoComponent,
         SkeletonComponent,
+        HeaderSkeletonComponent,
         BodySkeletonComponent,
         HeaderComponent,
         ComboChartComponent,
@@ -37,6 +39,7 @@ import { ComboChartComponent, ComboSeriesVerticalComponent } from '@components/c
         NgxChartsModule,
         AppInfoComponent,
         SkeletonComponent,
+        HeaderSkeletonComponent,
         BodySkeletonComponent,
         HeaderComponent,
         ComboChartComponent,

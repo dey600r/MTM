@@ -7,57 +7,57 @@
   <!-- List Vehicles -->    
   <ion-grid *ngIf="!activateInfo">
     <ion-row>
-      <ion-col *ngFor="let wm of this.vehicleSelected.listWearMaintenance; let i = index;"  size-lg="4" size-md="6" size-sm="12" size-xs="12">
-      <ion-card button class="card-with-progress-bar" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
-        <ion-card-header>
-          <div class="table-row">
-            <div>
-              <!-- AVATAR MAINTENANCE -->
-              <ion-avatar slot="start" class="main-avatar">
-                <ion-icon size="large" class="icon-color" [name]="wm.iconMaintenance"></ion-icon>
-              </ion-avatar>
-            </div>
-            <div class="main-div">
+      <ion-col *ngFor="let wm of this.vehicleSelected.listWearMaintenance; let i = index;" size-lg="4" size-md="6" size-sm="12" size-xs="12">
+        <ion-card button class="card-with-progress-bar" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
+          <ion-card-header>
+            <div class="table-row">
               <div>
-                <div class="table-row">
-                  <!-- TITLE MAINTENANCE -->
-                  <div class="margin-right5 table-row">
-                    <ion-label class="h-row2">{{ wm.descriptionMaintenance }}</ion-label>
-                  </div>
-                  <!-- BUTTON OPEN INFORMATION -->
-                  <div class="icon-notification">
-                    <ion-button class="margin0" fill="clear" (click)="openUpdateModalMaintenance($event, wm)">
-                      <ion-icon size="small" color="primary" slot="icon-only" name="build"></ion-icon>
-                    </ion-button>
-                    <ion-button class="margin0" fill="clear" (click)="desactivateMaintenance($event, wm)">
-                      <ion-icon size="small" color="danger" name="notifications-off"></ion-icon>
-                    </ion-button>
-                  </div>
-                </div>
-                <div class="table-row">
-                  <!-- ICON INFORMATION SUMMARY REPLACEMENTS MAINTENANCE -->
-                  <div class="margin-right5 table-row">
-                    <div class="table-row" *ngFor="let wnr of wm.listWearNotificationReplacement">
-                      <ion-icon [class]="'icon-row2' + wnr.warningIconClass" [color]="wnr.warningIconClass"
-                        size="small" [name]="wnr.warningIcon"></ion-icon>
-                      <p class="p-row2">{{ wnr.numWarning + '/' + wnr.totalWarning }}</p>
+                <!-- AVATAR MAINTENANCE -->
+                <ion-avatar slot="start" class="main-avatar">
+                  <ion-icon size="large" class="icon-color" [name]="wm.iconMaintenance"></ion-icon>
+                </ion-avatar>
+              </div>
+              <div class="main-div">
+                <div>
+                  <div class="table-row">
+                    <!-- TITLE MAINTENANCE -->
+                    <div class="margin-right5 table-row">
+                      <ion-label class="h-row2">{{ wm.descriptionMaintenance }}</ion-label>
+                    </div>
+                    <!-- BUTTON OPEN INFORMATION -->
+                    <div class="icon-notification">
+                      <ion-button class="margin0" fill="clear" (click)="openUpdateModalMaintenance($event, wm)">
+                        <ion-icon size="small" color="primary" slot="icon-only" name="build"></ion-icon>
+                      </ion-button>
+                      <ion-button class="margin0" fill="clear" (click)="desactivateMaintenance($event, wm)">
+                        <ion-icon size="small" color="danger" name="notifications-off"></ion-icon>
+                      </ion-button>
                     </div>
                   </div>
-                  <!-- OPTIONS MANTENAINCES -->
-                  <div class="icon-notification">
-                    <ion-icon *ngIf="wm.fromKmMaintenance !== 0" size="small"
-                      class="icon-row3 icon-color" name="walk"></ion-icon>
-                    <ion-icon *ngIf="wm.toKmMaintenance !== null" size="small"
-                      class="icon-row3 icon-color" name="trail-sign"></ion-icon>
-                    <ion-icon *ngIf="wm.initMaintenance" size="small"
-                      class="icon-row3 icon-color" name="navigate-circle"></ion-icon>
-                    <ion-icon *ngIf="!wm.initMaintenance && wm.wearMaintenance" size="small"
-                      class="icon-row3 icon-color" name="notifications-circle"></ion-icon>
+                  <div class="table-row">
+                    <!-- ICON INFORMATION SUMMARY REPLACEMENTS MAINTENANCE -->
+                    <div class="margin-right5 table-row">
+                      <div class="table-row" *ngFor="let wnr of wm.listWearNotificationReplacement">
+                        <ion-icon [class]="'icon-row2' + wnr.warningIconClass" [color]="wnr.warningIconClass"
+                          size="small" [name]="wnr.warningIcon"></ion-icon>
+                        <p class="p-row2">{{ wnr.numWarning + '/' + wnr.totalWarning }}</p>
+                      </div>
+                    </div>
+                    <!-- OPTIONS MANTENAINCES -->
+                    <div class="icon-notification">
+                      <ion-icon *ngIf="wm.fromKmMaintenance !== 0" size="small"
+                        class="icon-row3 icon-color" name="walk"></ion-icon>
+                      <ion-icon *ngIf="wm.toKmMaintenance !== null" size="small"
+                        class="icon-row3 icon-color" name="trail-sign"></ion-icon>
+                      <ion-icon *ngIf="wm.initMaintenance" size="small"
+                        class="icon-row3 icon-color" name="navigate-circle"></ion-icon>
+                      <ion-icon *ngIf="!wm.initMaintenance && wm.wearMaintenance" size="small"
+                        class="icon-row3 icon-color" name="notifications-circle"></ion-icon>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
           </ion-card-header>
           <ion-card-content>
 
@@ -126,9 +126,9 @@
 
 <!-- SKELETON -->
 <app-skeleton class="max-height" *ngIf="!loadedHeader || !loadedBody" 
-  [loadedHeader]="loadedHeader" 
-  [loadedBody]="loadedBody" 
-  [input]="skeletonInput" 
-  (loadedHeaderOutput)="changeLoadedHeader($event)" 
-  (loadedBodyOutput)="changeLoadedBody($event)"></app-skeleton>
+[loadedHeader]="loadedHeader" 
+[loadedBody]="loadedBody" 
+[input]="skeletonInput" 
+(loadedHeaderOutput)="changeLoadedHeader($event)" 
+(loadedBodyOutput)="changeLoadedBody($event)"></app-skeleton>
 
