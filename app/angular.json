@@ -136,11 +136,13 @@
                 }
               ],
               "optimization": true,
+              "buildOptimizer": true,
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
+              "serviceWorker": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -161,19 +163,14 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": false,
-                  "inlineCritical": true
-                },
-                "fonts": true
-              },
+              "optimization": true,
+              "buildOptimizer": false,
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
+              "serviceWorker": false,
               "budgets": [
                 {
                   "type": "initial",

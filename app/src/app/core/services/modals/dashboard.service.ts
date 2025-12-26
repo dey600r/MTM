@@ -108,7 +108,7 @@ export class DashboardService {
     // VEHICLE OP TYPE EXPENSES
     getDashboardModelVehicleExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardSerieModel> {
         const result: IDashboardSerieModel[] = this.mapOperationToDashboardVehicleExpenses(data, filter);
-        return this.mapDataToDashboardChart<IDashboardSerieModel>(view, result, filter, 'COMMON.VEHICLES', 'COMMON.VEHICLES', 'COMMON.EXPENSE');
+        return this.mapDataToDashboardChart<IDashboardSerieModel>(view, result, filter, 'COMMON.OPERATION_TYPE', 'COMMON.VEHICLES', 'COMMON.EXPENSE');
     }
 
     mapOperationToDashboardVehicleExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardSerieModel[] {
@@ -149,12 +149,12 @@ export class DashboardService {
         const result: IDashboardSerieModel[] = this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter);
         return this.mapDataToDashboardChart<IDashboardSerieModel>(view, 
             result,
-            filter, 'COMMON.DATE', 'COMMON.DATE', 'COMMON.EXPENSE');
+            filter, 'COMMON.OPERATION_TYPE', 'COMMON.DATE', 'COMMON.EXPENSE');
     }
 
     getDashboardModelReplacementPerTime(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardSerieModel> {
         const result: IDashboardSerieModel[] = this.mapOperationToDashboardVehiclePerTimeExpenses(data, filter);
-        return this.mapDataToDashboardChart<IDashboardSerieModel>(view, result, filter, 'COMMON.DATE', 'COMMON.DATE', 'COMMON.LABOR_EXPENSE');
+        return this.mapDataToDashboardChart<IDashboardSerieModel>(view, result, filter, 'COMMON.OPERATIONS', 'COMMON.DATE', 'COMMON.LABOR_EXPENSE');
     }
 
     mapOperationToDashboardVehiclePerTimeExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardSerieModel[] {
@@ -261,7 +261,7 @@ export class DashboardService {
     // REPLACEMENTS EXPENSES
     getDashboardModelReplacementExpenses(view: [number, number], data: OperationModel[], filter: SearchDashboardModel): DashboardModel<IDashboardModel> {
         const result: IDashboardModel[] = this.mapOperationToDashboardReplacementExpenses(data, filter);
-        return this.mapDataToDashboardChart<IDashboardModel>(view, result, filter, 'COMMON.OPERATION_TYPE', 'COMMON.OPERATION_TYPE', 'COMMON.EXPENSE');
+        return this.mapDataToDashboardChart<IDashboardModel>(view, result, filter, 'PAGE_CONFIGURATION.REPLACEMENTS', 'COMMON.OPERATION_TYPE', 'COMMON.EXPENSE');
     }
 
     mapOperationToDashboardReplacementExpenses(data: OperationModel[], filter: SearchDashboardModel): IDashboardModel[] {
