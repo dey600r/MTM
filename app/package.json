@@ -1,8 +1,8 @@
 {
   "name": "MtM",
-  "version": "v3.6.5",
+  "version": "v3.6.6",
   "minVersion": "v3.3.0",
-  "dateVersion": "2025-10-18 12:00:00",
+  "dateVersion": "2025-12-28 12:00:00",
   "author": "David Jimenez Galiana",
   "homepage": "deyhome.mtm@gmail.com",
   "scripts": {

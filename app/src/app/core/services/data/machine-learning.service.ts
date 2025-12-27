@@ -42,6 +42,7 @@ export class MachineLearningService {
   normalizeCost(c: number): number {
     if (c < 0.01) return Number(c.toFixed(4));
     if (c < 1) return Number(c.toFixed(2));
+    if (c < 10) return Number(c.toFixed(1));
     return Math.round(c / 10) * 10;
   }
 

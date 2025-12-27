@@ -769,17 +769,21 @@ export class DashboardService {
         // TRANSLATE TYPE
         let propAverage: string = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().kmAverage);
         let propData: string = this.commonService.nameOf(() => new InfoVehicleReplacementModel().km);
+        let propBar: string = this.commonService.nameOf(() => new InfoVehicleReplacementModel().km);
         let translateY: string = 'COMMON.KILOMETERS';
         if(filter.filterKmTime === FilterKmTimeEnum.TIME) {
             propAverage = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().timeAverage);
             propData = this.commonService.nameOf(() => new InfoVehicleReplacementModel().time);
+            propBar = this.commonService.nameOf(() => new InfoVehicleReplacementModel().time);
             translateY = 'COMMON.MONTHS';
         } else if(filter.filterKmTime === FilterKmTimeEnum.CASH) {
             propAverage = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().priceAverage);
+            propData = this.commonService.nameOf(() => new InfoVehicleReplacementModel().price);
+            translateY = 'COMMON.PRICE';
         }
 
         data.forEach(x => {
-            resultBar = [...resultBar, this.getDataDashboard(x.name, x[propData] ?? 0, x.id)];
+            resultBar = [...resultBar, this.getDataDashboard(x.name, x[propBar] ?? 0, x.id)];
             let max: number = x[propAverage];
             let min: number = x[propAverage];
             if(x.listReplacements && x.listReplacements.length > 0) {
@@ -794,7 +798,7 @@ export class DashboardService {
             view, 
             resultBar, 
             filter,
-            'COMMON.REPLACEMENT',
+            'COMMON.OPERATIONS',
             'COMMON.REPLACEMENT',
             translateY,
             [
