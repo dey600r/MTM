@@ -107,7 +107,16 @@ export class MockTranslate {
             DOWNLOAD: 'Download',
             UPLOAD: 'Upload',
             EMAIL: 'Email',
-            PASSWORD: 'Password'
+            PASSWORD: 'Password',
+            AVERAGE: 'Average',
+            PROBABILITY: "Probability",
+            CURRENT: "Current",
+            OPTIMAL: "Optimal",
+            PREDICTIONS: "Predictions",
+            PREDICTIVE_MAINTENANCE: "Predictive Maintenance",
+            PREDICTIVE_COST: "Predictive cost",
+            OPTIMISTIC: "Optimistic",
+            PESSIMISTIC: "Pessimistic"
         },
         PAGE_HOME: {
             HOME: 'Home',
@@ -296,7 +305,8 @@ export class MockTranslate {
             ErrorSyncUpload: 'There was a upload error: {{error}}',
             ErrorSyncDataNotFound: 'No data found in cloud. You should upload first',
             ErrorSyncVersion: 'The version of MTM should be higher than {{version}} but it is installed {{versionNow}}. You should upload first {{versionSync}} in cloud or the new version should be installed.',
-            ErrorFunctionNotAvailable: "This function is not available"
+            ErrorFunctionNotAvailable: "This function is not available",
+            InfoProbabilityFailReplacement: "There is a {{probability}}% probability with an expected cost of {{price}}{{coin}} to change the {{replacement}} with a life of {{life}} {{measure}}."
         },
         DB: {
             MAINTENANCE_WORKSHOP: 'Maintenance Workshop',
@@ -492,7 +502,16 @@ export class MockTranslate {
             DOWNLOAD: 'Descargar',
             UPLOAD: 'Actualizar',
             EMAIL: 'Correo',
-            PASSWORD: 'Contraseña'
+            PASSWORD: 'Contraseña',
+            AVERAGE: 'Media',
+            PROBABILITY: "Probabilidad",
+            CURRENT: "Actual",
+            OPTIMAL: "Optimo",
+            PREDICTIONS: "Predicciones",
+            PREDICTIVE_MAINTENANCE: "Mantenimiento predictivo",
+            PREDICTIVE_COST: "Coste predictivo",
+            OPTIMISTIC: "Optimista",
+            PESSIMISTIC: "Pesimista"
         },
         PAGE_HOME: {
             HOME: 'Inicio',
@@ -681,7 +700,8 @@ export class MockTranslate {
             ErrorSyncUpload: 'Ha ocurrido un error en la subida: {{error}}',
             ErrorSyncDataNotFound: 'No se encuentran datos en la nube. Primero debería actualizarlos.',
             ErrorSyncVersion: 'La version de MtM debería ser {{version}} pero está instalada {{versionNow}}. Deberias actualizar los datos {{versionSync}} en la nube o descargar la nueva versión.',
-            ErrorFunctionNotAvailable: "Esta función no esta disponible"
+            ErrorFunctionNotAvailable: "Esta función no esta disponible",
+            InfoProbabilityFailReplacement: "Hay una probabilidad de un {{probability}}% con un coste previsto de {{price}}{{coin}} de cambiar el {{replacement}} con una vida de {{life}} {{measure}}."
         },
         DB: {
             MAINTENANCE_WORKSHOP: 'Mantenimiento Taller',

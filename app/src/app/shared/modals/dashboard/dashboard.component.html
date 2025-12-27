@@ -11,7 +11,7 @@
             <h3 *ngIf="isParentPageVehicle()" class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerVehicle' | translate }}</h3>
             <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
         </ion-list-header>
-        <ngx-charts-bar-vertical *ngIf="!showSpinner" class="justify-center"
+        <ngx-charts-bar-vertical-stacked *ngIf="!showSpinner" class="justify-center"
             [view]="dashboardVehicleExpenses.view"
             [scheme]="dashboardVehicleExpenses.colorScheme"
             [results]="dashboardVehicleExpenses.data"
@@ -26,7 +26,7 @@
             [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
             [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
             [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
-        </ngx-charts-bar-vertical>
+        </ngx-charts-bar-vertical-stacked>
         <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
             <ion-spinner class="spinner" name="lines"></ion-spinner>
         </div>

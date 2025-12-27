@@ -48,6 +48,9 @@ export class WearMaintenanceProgressBarViewModel {
     toKmMaintenance = 0;
     initMaintenance = false;
     wearMaintenance = false;
+    percent = 0;
+    warning: WarningWearEnum = WarningWearEnum.SUCCESS;
+    warningProgressBarIcon = '';
     listWearNotificationReplacement: WearNotificationReplacementProgressBarViewModel[] = [];
     listWearReplacement: WearReplacementProgressBarViewModel[] = [];
     constructor(data: Partial<WearMaintenanceProgressBarViewModel> = {}) {
@@ -63,6 +66,9 @@ export class WearMaintenanceProgressBarViewModel {
         this.listWearNotificationReplacement = (data.listWearNotificationReplacement ? data.listWearNotificationReplacement : []);
         this.listWearReplacement = (data.listWearReplacement ? data.listWearReplacement : []);
         this.iconMaintenance = (data.iconMaintenance ? data.iconMaintenance : '');
+        this.percent = (data.percent !== undefined ? data.percent : 0);
+        this.warning = (data.warning !== undefined ? data.warning : WarningWearEnum.SUCCESS);
+        this.warningProgressBarIcon = (data.warningProgressBarIcon ? data.warningProgressBarIcon : '');
     }
 }
 

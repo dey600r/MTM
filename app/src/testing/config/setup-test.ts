@@ -21,6 +21,7 @@ import { routes } from '@src/app/app-routing.module';
 // COMPONENTS
 import { AppComponent } from '@app/app.component';
 import { SkeletonComponent } from '@components/skeleton/skeleton.component';
+import { HeaderSkeletonComponent } from '@components/skeleton/header/header-skeleton.component';
 import { BodySkeletonComponent } from '@components/skeleton/body/body-skeleton.component';
 import { AppInfoComponent } from '@components/info/app-info.component';
 import { HeaderComponent } from '@components/header/header.component';
@@ -57,6 +58,7 @@ export class SetupTest {
     declarations: [
       AppComponent,
       SkeletonComponent,
+      HeaderSkeletonComponent,
       BodySkeletonComponent,
       AppInfoComponent,
       HeaderComponent,

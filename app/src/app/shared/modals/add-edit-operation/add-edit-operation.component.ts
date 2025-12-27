@@ -82,10 +82,6 @@ export class AddEditOperationComponent implements OnInit {
       this.operation.date = this.calendarService.getDateStringToDB(new Date());
     }
 
-    if(this.modalInputModel.type == ModalTypeEnum.CREATE) {
-      this.operation.operationType.id = null;
-    }
-
     // GET SETTINGS
     const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {
@@ -95,7 +91,7 @@ export class AddEditOperationComponent implements OnInit {
 
     // GET VEHICLES
     this.vehicles = this.dataService.getVehiclesData();
-    if (!!this.vehicles && this.vehicles.length > 0 && this.modalInputModel.type === ModalTypeEnum.CREATE) {
+    if (!!this.vehicles && this.vehicles.length > 0 && this.isCreationOperatation(this.modalInputModel.type)) {
       const vehicleAssigned = this.vehicles.find(x => x.id === this.operation.vehicle.id);
       if(vehicleAssigned)  
         this.operation.vehicle = vehicleAssigned;
@@ -112,6 +108,13 @@ export class AddEditOperationComponent implements OnInit {
     if (!!this.operation.listMaintenanceElement && this.operation.listMaintenanceElement.length > 0) {
       this.maintenanceElementSelect = this.operation.listMaintenanceElement;
       this.idMaintenanceElementSelect = this.operation.listMaintenanceElement.map(x => x.id);
+    }
+
+    // CONFIG FOR CREATE OR DUPLICATE
+    if(this.modalInputModel.type == ModalTypeEnum.CREATE) {
+      this.operation.operationType.id = null;
+    } else if(this.modalInputModel.type == ModalTypeEnum.DUPLICATE) {
+      this.operation.operationType = this.operationType.find(x => x.id === this.operation.operationType.id);
     }
 
     // GET OPERATIONS

@@ -4,38 +4,43 @@
   <!-- INFO -->
   <app-info *ngIf="operations.length === 0" [inputInfo]="input"></app-info>
   <!-- LIST -->
-  <ion-list *ngIf="operations.length > 0" class="segment-top margin-bottom45">
-    <ion-item-sliding *ngFor="let op of operations; let i = index;" #itemSliding>
-      <ion-item button>
-        <!-- Icons -->
-        <ion-avatar slot="start" class="max-width10" (click)="openUpdateOperationModal(op)">
-          <ion-icon size="large" class="icon-color" [name]="op.operationType.icon"></ion-icon>
-        </ion-avatar>
-        <!-- Labels -->
-        <ion-label class="min-width40 label-event-force" (click)="openUpdateOperationModal(op)">
-          <h2 class="text-overflow">{{ op.description }}</h2>
-          <h3>{{ op.km }} {{measure.value}}</h3>
-        </ion-label>
-        <ion-label class="padding-left10 label-event-force" (click)="openUpdateOperationModal(op)">
-          <p class="p-style">{{ op.date | dateFormatCalendarPipe }}</p>
-          <p class="p-style">{{ this.calculatePriceOperation(op) }} {{coin.value}}</p>
-        </ion-label>
-        <!-- Buttons delete -->
-        <div class="align-right fix-width69">
-          <ion-button class="btn-width-row" fill="clear" (click)="deleteOperation(op)">
-            <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
-          </ion-button>
-        </div>
-      </ion-item>
-    
-      <!-- SLIDING END -->
-      <ion-item-options side="end">
-        <ion-item-option class="day-circle-config-blue" (click)="openDuplicateOperationModal(itemSliding, op)">
-          <ion-icon slot="icon-only" name="duplicate"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
+  <ion-list *ngIf="operations.length > 0" class="segment-top">
+    @for (op of operations; track op; let index = $index) {
+      <ion-item-sliding #itemSliding>
+        <ion-item button>
+          <!-- Icons -->
+          <ion-avatar slot="start" class="max-width10" (click)="openUpdateOperationModal(op)">
+            <ion-icon size="large" class="icon-color" [name]="op.operationType.icon"></ion-icon>
+          </ion-avatar>
+          <!-- Labels -->
+          <ion-label class="min-width40 label-event-force" (click)="openUpdateOperationModal(op)">
+            <h2 class="text-overflow">{{ op.description }}</h2>
+            <h3>{{ op.km }} {{measure.value}}</h3>
+          </ion-label>
+          <ion-label class="padding-left10 label-event-force" (click)="openUpdateOperationModal(op)">
+            <p class="p-style">{{ op.date | dateFormatCalendarPipe }}</p>
+            <p class="p-style">{{ this.calculatePriceOperation(op) }} {{coin.value}}</p>
+          </ion-label>
+          <!-- Buttons delete -->
+          <div class="align-right fix-width69">
+            <ion-button class="btn-width-row" fill="clear" (click)="deleteOperation(op)">
+              <ion-icon size="large" class="btn-color" name="trash"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+      
+        <!-- SLIDING END -->
+        <ion-item-options side="end">
+          <ion-item-option class="day-circle-config-blue" (click)="openDuplicateOperationModal(itemSliding, op)">
+            <ion-icon slot="icon-only" name="duplicate"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
   </ion-list>
+  <ion-infinite-scroll (ionInfinite)="onInfiniteScroll($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
   <ion-fab *ngIf="this.vehicles.length > 0" horizontal="end" vertical="bottom" slot="fixed">
     <ion-fab-button (click)="openCreateOperationModal()">
       <ion-icon name="add-circle"></ion-icon>

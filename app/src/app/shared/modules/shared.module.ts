@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 // LIBRARIES ANGULAR
 import { TranslateModule } from '@ngx-translate/core';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // UTILS
 import { PipeModule } from '@modules/pipes.module';
@@ -14,15 +15,20 @@ import { PipeModule } from '@modules/pipes.module';
 // COMPONENTS
 import { AppInfoComponent } from '@components/info/app-info.component';
 import { SkeletonComponent } from '@components/skeleton/skeleton.component';
+import { HeaderSkeletonComponent } from '@components/skeleton/header/header-skeleton.component';
 import { BodySkeletonComponent } from '@components/skeleton/body/body-skeleton.component';
 import { HeaderComponent } from '@components/header/header.component';
+import { ComboChartComponent, ComboSeriesVerticalComponent } from '@components/combo-chart/index';
 
 @NgModule({ 
     declarations: [
         AppInfoComponent,
         SkeletonComponent,
+        HeaderSkeletonComponent,
         BodySkeletonComponent,
-        HeaderComponent
+        HeaderComponent,
+        ComboChartComponent,
+        ComboSeriesVerticalComponent
     ],
     exports: [
         IonicModule,
@@ -30,16 +36,21 @@ import { HeaderComponent } from '@components/header/header.component';
         FormsModule,
         TranslateModule,
         PipeModule,
+        NgxChartsModule,
         AppInfoComponent,
         SkeletonComponent,
+        HeaderSkeletonComponent,
         BodySkeletonComponent,
-        HeaderComponent
+        HeaderComponent,
+        ComboChartComponent,
+        ComboSeriesVerticalComponent
     ], 
     imports: [
         IonicModule,
         CommonModule,
         FormsModule,
-        TranslateModule
+        TranslateModule,
+        NgxChartsModule
     ],
     providers: [
     ],

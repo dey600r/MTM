@@ -9,15 +9,17 @@ import {
     InfoVehicleConfigurationMaintenanceElementModel, VehicleModel, OperationModel, WearVehicleProgressBarViewModel,
     WearMaintenanceProgressBarViewModel, WearReplacementProgressBarViewModel, InfoVehicleHistoricModel,
     InfoVehicleHistoricReplacementModel, InfoVehicleReplacementModel, MaintenanceElementModel,
-    IDashboardModel, ISettingModel
+    IDashboardModel, ISettingModel, InfoVehicleFailurePredictionModel, InfoVehicleFailurePredictionEventModel,
+    InfoVehiclePredictionOverviewModel, IEventFailurePrediction,
 } from '@models/index';
 
 // SERVICES
 import { HomeService } from '../pages/home.service';
 import { CalendarService, ControlService, CommonService, IconService } from '../common/index';
+import { MachineLearningService } from '../data/index';
 
 // UTILS
-import { Constants, ConstantsColumns, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
+import { Constants, ConstantsColumns, FailurePredictionTypeEnum, PageEnum, ToastTypeEnum, WarningWearEnum } from '@utils/index';
 
 @Injectable({
     providedIn: 'root'
@@ -26,6 +28,7 @@ export class InfoVehicleService {
 
     // INJECTIONS
     private readonly homeService: HomeService = inject(HomeService);
+    private readonly meService: MachineLearningService = inject(MachineLearningService);
     private readonly calendarService: CalendarService = inject(CalendarService);
     private readonly translator: TranslateService = inject(TranslateService);
     private readonly controlService: ControlService = inject(ControlService);
@@ -113,6 +116,8 @@ export class InfoVehicleService {
     // INFO SUMMARY VEHICLE
 
     getLabelAverageKmVehicle(data: IDashboardModel[], measure: ISettingModel) {
+        if (data === undefined || data === null || data.length === 0)
+            return '';
         const model = <IDashboardModel>{};
         const sum: number = this.commonService.sum(data, this.commonService.nameOf(() => model.value));
         return this.translator.instant('PAGE_HOME.VehicleAverageKm', { km1: Math.floor(sum / data.length), km2: data[data.length - 1].value, measure: measure.value });
@@ -168,6 +173,69 @@ export class InfoVehicleService {
             });
         this.controlService.showMsgToast(PageEnum.MODAL_INFO, ToastTypeEnum.INFO, msg, Constants.DELAY_TOAST_HIGHER);
       }
+    
+    // INFO VEHICLE FAILURE PREDICTION
+
+    calculateInfoVehicleFailurePrediction(operations: OperationModel[], data: InfoVehicleHistoricModel[]): InfoVehiclePredictionOverviewModel[] {
+        let result: InfoVehiclePredictionOverviewModel[] = [];
+        const events = this.homeService.calculateEventFailurePrediction(operations);
+        
+        events.filter(x => x.events.length > 1).forEach(ev => {
+            let infoVehicle: InfoVehicleHistoricModel = data.find(x => x.id === ev.idVehicle);
+            if(infoVehicle) {
+                let infoRepl: InfoVehicleHistoricReplacementModel = infoVehicle.listHistoricReplacements.find(x => x.id === ev.idReplacement);
+                if(infoRepl) {
+                    const { kilometers, times } = this.calculateProbabilityPerEvent(infoRepl.km, infoRepl.time, ev.events);
+           
+                    const newPrediction = new InfoVehicleFailurePredictionModel({
+                        idReplacement: ev.idReplacement,
+                        nameReplacement: ev.nameReplacement,
+                        iconReplacement: infoRepl.iconReplacement,
+                        kilometers: kilometers,
+                        times: times
+                    });
+
+                    const vehiclePrediction = result.find(x => x.id === ev.idVehicle);
+                    if(!vehiclePrediction) 
+                        result = [...result, new InfoVehiclePredictionOverviewModel(ev.idVehicle, [newPrediction])];
+                    else 
+                        vehiclePrediction.listFailurePredictions = [...vehiclePrediction.listFailurePredictions, newPrediction];
+                }
+            }
+        });
+
+        return result;
+    }
+
+    calculateProbabilityPerEvent(tkm: number, ttime: number, events: IEventFailurePrediction[]): { kilometers: InfoVehicleFailurePredictionEventModel, times: InfoVehicleFailurePredictionEventModel } {
+        const failures = events.filter(e => e.type === FailurePredictionTypeEnum.FAIL);
+        const censored = events.filter(e => e.type !== FailurePredictionTypeEnum.FAIL);
+
+        const failureCost = failures.map(x => x.cost);
+        const censoredCost = censored.map(x => x.cost);
+
+        return {
+            kilometers: this.calculateInfoProbabilityReplacement(tkm, failures.map(e => e.tkm), censored.map(e => e.tkm), failureCost, censoredCost),
+            times: this.calculateInfoProbabilityReplacement(ttime, failures.map(e => e.ttime), censored.map(e => e.ttime), failureCost, censoredCost)
+        }
+    }
+
+    calculateInfoProbabilityReplacement(t: number, 
+            failuresT: number[], censoredT: number[],
+            failuresC: number[], censoredC: number[]): InfoVehicleFailurePredictionEventModel {
+        const { beta, eta } = this.meService.estimateWeibullParams(failuresT, censoredT);
+        const opt = this.meService.findOptimalT(beta, eta, failuresC, censoredC, 0.25, 0.75);
+        const probability = this.meService.normalizeProbability(this.meService.weibullFailureProbability(t, beta, eta));
+        return new InfoVehicleFailurePredictionEventModel({
+            beta, eta, t,
+            cost: this.meService.normalizeCost(opt.optimalCostPerKm * t),
+            probability: probability,
+            icon: this.iconService.loadIconProbability(probability),
+            optimalT: opt.optimalT,
+            optimalCost: this.meService.normalizeCost(opt.optimalCostPerKm * opt.optimalT),
+            optimalProbability: this.meService.normalizeProbability(this.meService.weibullFailureProbability(opt.optimalT, beta, eta))
+        });        
+    }
 
     // INFO REPLACEMENT HISTORIC
 

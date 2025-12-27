@@ -213,15 +213,32 @@ button.days-btn.today p {
   }
 }
 
-// BUG SEGMENT windows: Dont work scroll
-// ion-segment-button {
-//   min-width: 90px !important;
-// }
+// CARDS
 
-// .color-dark {
-//   background-color: var(--ion-color-dark);
-// }
+ion-card ion-item .item-native{
+  background-color: var(--ion-card-background);
+}
 
-// ion-list {
-//   background: none !important;
-// }
+.card-progress-success {
+  background: rgba(var(--ion-color-progressbar-success-progress), 0.4);
+}
+
+.card-progress-success-bar {
+  background: rgba(var(--ion-color-progressbar-success-progress), 0.6);
+}
+
+.card-progress-warning {
+  background: rgba(var(--ion-color-progressbar-warning-progress), 0.4);
+}
+
+.card-progress-warning-bar {
+  background: rgba(var(--ion-color-progressbar-warning-progress), 0.6);
+}
+
+.card-progress-danger {
+  background: rgba(var(--ion-color-progressbar-danger-progress), 0.4);
+}
+
+.card-progress-danger-bar {
+  background: rgba(var(--ion-color-progressbar-danger-progress), 0.6);
+}

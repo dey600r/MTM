@@ -1,0 +1,14 @@
+<ion-toolbar>
+    <ion-title style="padding-left: 20%; padding-right: 20%;">
+      <ion-skeleton-text animated></ion-skeleton-text>
+    </ion-title>
+</ion-toolbar>
+<ion-grid class="skeleton-background segment-button-fixed">
+    <ion-row>
+      <ion-col *ngFor="let col of input; let i = index" [size]="col" style="text-align: center;">
+        <ion-spinner *ngIf="i % 2 === 0" name="lines-small" color="medium"></ion-spinner>
+        <ion-skeleton-text *ngIf="i % 2 !== 0" animated 
+          [ngClass]="{ 'skeleton-width-par': input.length > 2, 'skeleton-width-one': input.length <= 2}"></ion-skeleton-text>
+      </ion-col>
+    </ion-row>
+</ion-grid>

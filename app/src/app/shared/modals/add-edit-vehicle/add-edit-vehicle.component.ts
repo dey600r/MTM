@@ -74,8 +74,11 @@ export class AddEditVehicleComponent implements OnInit {
     // GET CONFIGURATIONS
     this.configurations = this.commonService.orderBy(
       this.dataService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
-    if (!!this.configurations && this.configurations.length > 0 && this.modalInputModel.type === ModalTypeEnum.CREATE) {
-      this.vehicle.configuration = this.configurations[0];
+    if (!!this.configurations && this.configurations.length > 0) {
+      if(this.modalInputModel.type === ModalTypeEnum.CREATE)
+        this.vehicle.configuration = this.configurations[0];
+      else
+        this.vehicle.configuration = this.configurations.find(x => x.id === this.vehicle.configuration.id);
     }
 
     // GET VEHICLE TYPE

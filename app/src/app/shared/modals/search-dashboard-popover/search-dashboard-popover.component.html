@@ -14,11 +14,8 @@
         <ion-toolbar>
             <ion-segment [value]="searchDashboard.filterKmTime" [(ngModel)]="searchDashboard.filterKmTime"
             (ionChange)="onChangeFilterGrouper('showFilterKmTime')">
-                <ion-segment-button value="KM">
-                <ion-icon size="large" name="navigate"></ion-icon>
-                </ion-segment-button>
-                <ion-segment-button value="TIME">
-                <ion-icon size="large" name="alarm"></ion-icon>
+                <ion-segment-button *ngFor="let seg of segmentFilterKmTimeOptions" [value]="seg.value">
+                    <ion-icon size="large" [name]="seg.icon"></ion-icon>
                 </ion-segment-button>
             </ion-segment>
         </ion-toolbar>

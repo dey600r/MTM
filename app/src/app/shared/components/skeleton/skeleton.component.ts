@@ -6,7 +6,7 @@ import { SkeletonInputModel } from '@models/index';
 @Component({
     selector: 'app-skeleton',
     templateUrl: './skeleton.component.html',
-    styleUrls: ['./skeleton.component.scss'],
+    styleUrls: [],
     standalone: false
 })
 export class SkeletonComponent implements OnChanges {

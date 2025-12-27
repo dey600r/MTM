@@ -11,9 +11,8 @@ import * as shape from 'd3-shape';
 import {
   ModalInputModel, WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, DashboardModel,
   InfoCalendarReplacementViewModel, WearReplacementProgressBarViewModel, SearchDashboardModel, OperationModel, MaintenanceElementModel,
-  IDashboardExpensesModel, IDashboardModel, IDashboardSerieModel, ISettingModel,
-  HeaderOutputModel,
-  HeaderInputModel
+  IDashboardSerieModel, ISettingModel, HeaderOutputModel, HeaderInputModel,
+  IReplaclementEventFailurePrediction
 } from '@models/index';
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 
@@ -56,15 +55,16 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // MODEL FORM
   wear: WearVehicleProgressBarViewModel = new WearVehicleProgressBarViewModel();
-  dashboardVehicleOperationExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
-  dashboardVehicleReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardVehicleExpenses: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
+  dashboardFailureReplacement: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   dashboardRecordsMaintenance: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   currentPopover = null;
   hideGraphLabor = true;
-  hideGraphReplacement = true;
+  hideGraphFailure = true;
   hideSummary = false;
   hideRecords = true;
   isCalendar = true;
+  notEnoughDataPredictive = true;
   linear: any = shape.curveMonotoneX;
 
   // DATA
@@ -78,7 +78,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   labelNextChange = '';
   labelLifeReplacement = '';
   labelNotRecord = '';
+  labelPredictionKm = '';
+  iconPredictionKm = '';
+  labelPredictionTime = '';
+  iconPredictionTime = '';
   measure: ISettingModel;
+  coin: ISettingModel;
   iconMaintenanceElement = '';
   iconFilter = 'filter';
   showSpinner = false;
@@ -104,8 +109,22 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.screenSubscription.unsubscribe();
   }
 
+  initInfoPredictions(nameReplacement: string, km: number, time: number) {
+    const event = this.getEventsToPredictions(this.modalInputModel);
+    if(!!event && event.length == 1) {
+      const { kilometers, times } = this.infoVehicleService.calculateProbabilityPerEvent(km, time, event[0].events);
+      this.labelPredictionKm = this.translator.instant('ALERT.InfoProbabilityFailReplacement', 
+        {probability: kilometers.probability, price: kilometers.cost, coin: this.coin.value, replacement: nameReplacement, life: kilometers.t, measure: this.measure.value});
+      this.iconPredictionKm = kilometers.icon;
+      this.labelPredictionTime = this.translator.instant('ALERT.InfoProbabilityFailReplacement', 
+        {probability: times.probability, price: times.cost, coin: this.coin.value, replacement: nameReplacement, life: times.t, measure: this.translator.instant('COMMON.MONTHS')});
+      this.iconPredictionTime = times.icon;
+    }
+  }
+
   initInfoNotifications() {
     this.wear = this.homeService.getWearReplacement(true, this.modalInputModel.data, this.modalInputModel.dataList);
+    this.notEnoughDataPredictive = this.getOperationsToPredictions(this.modalInputModel).operations.length < 2;
 
     if (this.wear.listWearMaintenance.length > 0) {
       this.labelPercent = this.wear.percent;
@@ -129,9 +148,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   getObserverSearchDashboard() {
     this.searchDashboardSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
       if (!this.openningPopover) {
+        const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         this.showSpinner = true; // Windows: Fix refresh chart :(
-        this.calculateDashboardExpenses(filter);
-        this.calculateDashboad(false, filter);
+        this.calculateDashboardExpenses(windowsSize, filter);
+        this.calculateDashboad(windowsSize,filter);
+        this.calculateDashboadFailure(windowsSize, filter);
+        this.loadIconSearch();
         setTimeout(() => { this.showSpinner = false; }, 150);
       }
     });
@@ -140,49 +162,73 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   getObserverSearchDashboardRecords() {
     this.searchDashboardRecordsSubscription = this.dashboardService.getObserverSearchDashboardRecords().subscribe(filter => {
       if (!this.openningPopover) {
-        this.calculateDashboad(true, filter);
+        const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        this.calculateDashboad(windowsSize, filter, true);
+        this.calculateDashboadFailure(windowsSize, filter);
+        this.loadIconSearch();
       }
     });
   }
 
-  calculateDashboardExpenses(filter: SearchDashboardModel) {
-    if (!this.hideGraphLabor || !this.hideGraphReplacement) {
-      const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+  calculateDashboardExpenses(windowsSize: [number, number], filter: SearchDashboardModel) {
+    if (!this.hideGraphLabor) {
       const wearMain: WearMaintenanceProgressBarViewModel = this.getMaintenanceNow(this.dataMaintenance.listWearMaintenance);
       const oldData: MaintenanceElementModel[] = [...filter.searchMaintenanceElement];
       filter.searchMaintenanceElement = [new MaintenanceElementModel({ id: wearMain.listWearReplacement[0].idMaintenanceElement })];
-      const results: IDashboardExpensesModel<DashboardModel<IDashboardModel>> = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize,
+      this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelReplacementPerTime(windowsSize,
         this.modalInputModel.dataList.filter(x =>
           this.wear.listWearMaintenance.some(y => y.listWearReplacement[0].idOperation === x.id)), filter);
       filter.searchMaintenanceElement = oldData;
-      this.dashboardVehicleOperationExpenses = results.operationSum;
-      this.dashboardVehicleReplacementExpenses = results.replacementSum;
     }
   }
 
-  calculateDashboad(all: boolean, filter: SearchDashboardModel) {
+  calculateDashboad(windowsSize: [number, number], filter: SearchDashboardModel, all: boolean = false) {
     if (!this.hideRecords) {
-      const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
       if (all) {
         this.wear = this.homeService.getWearReplacement(filter.showStrict, this.modalInputModel.data, this.modalInputModel.dataList);
       }
       this.dashboardRecordsMaintenance =
         this.dashboardService.getDashboardRecordMaintenances(windowsSize, this.wear, filter, this.measure);
     }
-    this.loadIconSearch();
+  }
+
+  getOperationsToPredictions(modalInputModel: ModalInputModel): {id: number, operations: OperationModel[]} {
+    const idReplacement = this.modalInputModel.data?.listWearMaintenance[0]?.listWearReplacement[0]?.idMaintenanceElement;
+    if (idReplacement)
+      return {
+            id: idReplacement,
+            operations: modalInputModel.dataList.filter(op =>
+              op.vehicle.id === modalInputModel.data.idVehicle &&
+              op.listMaintenanceElement.some(rep => rep.id === idReplacement)
+            )
+          };
+    return {id: 0, operations: []};
+  }
+
+  getEventsToPredictions(modalInputModel: ModalInputModel): IReplaclementEventFailurePrediction[] {
+    const infoOperations = this.getOperationsToPredictions(modalInputModel);
+    return this.homeService.calculateEventFailurePrediction(infoOperations.operations, infoOperations.id);
+  }
+
+  calculateDashboadFailure(windowsSize: [number, number], filter: SearchDashboardModel) {
+    if (!this.hideGraphFailure) {
+      const events = this.getEventsToPredictions(this.modalInputModel);
+      this.dashboardFailureReplacement =
+        this.dashboardService.getDashboardFailureProgressProbability(windowsSize, events, filter);
+    }
   }
 
   getObserverOrientationChange() {
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
       let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
-      this.dashboardVehicleOperationExpenses.view = windowSize;
-      this.dashboardVehicleReplacementExpenses.view = windowSize;
+      this.dashboardVehicleExpenses.view = windowSize;
+      this.dashboardFailureReplacement.view = windowSize;
       this.dashboardRecordsMaintenance.view = windowSize;
       setTimeout(() => {
         windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
         if (windowSize[0] === windowSize[1]) {
-          this.dashboardVehicleOperationExpenses.view = windowSize;
-          this.dashboardVehicleReplacementExpenses.view = windowSize;
+          this.dashboardVehicleExpenses.view = windowSize;
+          this.dashboardFailureReplacement.view = windowSize;
           this.dashboardRecordsMaintenance.view = windowSize;
           this.changeDetector.detectChanges();
         }
@@ -194,6 +240,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     const settings = this.dataService.getSystemConfigurationData();
     if (!!settings && settings.length > 0) {
       this.measure = this.settingsService.getDistanceSelected(settings);
+      this.coin = this.settingsService.getMoneySelected(settings);
     }
   }
 
@@ -206,18 +253,18 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     this.nameMaintenanceElement = wearRep.nameMaintenanceElement;
     this.labelVehicleKm = this.infoVehicleService.getLabelKmVehicle(this.dataMaintenance.kmVehicle, this.dataMaintenance.kmEstimatedVehicle, this.measure);
     this.labelReliability = `${this.translator.instant('PAGE_HOME.RELIABILITY')} ${this.nameMaintenanceElement}`;
-    let kmLife = this.dataMaintenance.kmEstimatedVehicle;
+
     const today: Date = new Date();
+    let kmLife = this.dataMaintenance.kmEstimatedVehicle;
+    let timeLife = this.calendarService.monthDiff(new Date(this.dataMaintenance.datePurchaseVehicle), today);
     if (wearRep.kmOperation !== null) {
       kmLife -= wearRep.kmOperation;
+      timeLife = this.calendarService.monthDiff(new Date(wearRep.dateOperation), today);
     }
+    
+    this.initInfoPredictions(this.nameMaintenanceElement, kmLife, timeLife);
+    
     if (wearMain.timeMaintenance !== 0) {
-      let timeLife = 0;
-      if (wearRep.kmOperation === null) {
-        timeLife = this.calendarService.monthDiff(new Date(this.dataMaintenance.datePurchaseVehicle), today);
-      } else {
-        timeLife = this.calendarService.monthDiff(new Date(wearRep.dateOperation), today);
-      }
       this.labelLifeReplacement = this.translator.instant('ALERT.InfoLifeReplacementTime',
         { replacement: this.nameMaintenanceElement, km: kmLife, time: timeLife, measure: this.measure.value });
     } else {
@@ -254,10 +301,11 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  refreshChartReplacementExpenses() {
-    this.hideGraphReplacement = !this.hideGraphReplacement;
-    if (!this.hideGraphReplacement) {
-      this.dashboardService.setSearchDashboard(this.dashboardService.getSearchDashboard());
+  refreshChartFailureExpenses() {
+    this.hideGraphFailure = !this.hideGraphFailure;
+    if (!this.hideGraphFailure) {
+      const search: SearchDashboardModel = this.dashboardService.getSearchDashboard();
+      this.dashboardService.setSearchDashboardRecords(search.filterKmTime, search.showStrict);
     }
   }
 
