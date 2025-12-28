@@ -1,14 +1,22 @@
-import { BodySkeletonInputModel, BodySkeletonLabelsInputModel, SkeletonInputModel } from "@models/index";
+import { BodySkeletonInputModel, BodySkeletonLabelsInputModel, CardSkeletonInputModel, SkeletonInputModel } from "@models/index";
 
 export const HomeSkeletonSetting : SkeletonInputModel = new SkeletonInputModel({
     time: 1700, 
     itemsHeader: [2, 4, 2, 4],
     body: new BodySkeletonInputModel({
-      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 
+      items: [1], 
       avatar: true, 
       itemsLabel: [ 
         new BodySkeletonLabelsInputModel({ h3Width: 85, divWidth: 75, divPWidth: [25, 25, 25, 25] }),
       ] 
+    }),
+    card: new CardSkeletonInputModel({
+      activated: true,
+      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      sizelg: 4,
+      sizemd: 6,
+      sizesm: 12,
+      sizexs: 12
     })
   });
 

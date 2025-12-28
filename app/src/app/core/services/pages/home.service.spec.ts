@@ -15,7 +15,7 @@ import { MockAppData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/i
 import { WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, VehicleModel, OperationModel, MaintenanceModel, MaintenanceElementModel, ConfigurationModel, WearNotificationReplacementProgressBarViewModel, WearReplacementProgressBarViewModel } from '@models/index';
 
 // UTILS
-import { ConstantsColumns, WarningWearEnum } from '@utils/index';
+import { Constants, ConstantsColumns, FailurePredictionTypeEnum, WarningWearEnum } from '@utils/index';
 
 describe('HomeService', () => {
     let service: HomeService;
@@ -307,4 +307,36 @@ describe('HomeService', () => {
         expect(data.nameMaintenanceElement).toEqual(maintenanceElement.name);
         expect(data.iconMaintenanceElement).toEqual(maintenanceElement.icon);
     }
+
+    /** HELP EVENT FAILURES */
+
+    it('should validate if the operation is failure', () => {
+        MockAppData.OperationTypes.forEach(x => {
+            expect(service.isEventFailure(x.code)).toEqual((x.code === Constants.OPERATION_TYPE_FAILURE_HOME || x.code === Constants.OPERATION_TYPE_FAILURE_WORKSHOP));
+        });
+    });
+
+    it('should validate if the operation is preventive', () => {
+        MockAppData.OperationTypes.forEach(x => {
+            expect(service.isEventPreventive(x.code)).toEqual((x.code === Constants.OPERATION_TYPE_MAINTENANCE_HOME || x.code === Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP));
+        });
+    });
+
+    it('should calculate event failure from operations', () => {
+        const vehicle = MockAppData.Vehicles[0];
+        const operations = MockAppData.Operations.filter(x => x.vehicle.id === vehicle.id);
+        const events = service.calculateEventFailurePrediction(operations);
+        expect(events.map(x => x.events.length).reduce((x, n) => x + n, 0)).toEqual(operations.map(x => x.listMaintenanceElement.length).reduce((x, n) => x + n, 0));
+        expect(events[0].idVehicle).toEqual(vehicle.id);
+        expect(events[0].brandVehicle).toEqual(vehicle.brand);
+        expect(events[0].modelVehicle).toEqual(vehicle.model);
+        expect(events[0].events[0].tkm).toEqual(55000);
+        expect(events[0].events[0].ttime).toEqual(117);
+        expect(events[0].events[0].cost).toEqual(760);
+        expect(events[0].events[0].type).toEqual(FailurePredictionTypeEnum.MAINT);
+        expect(events[0].events[1].tkm).toEqual(12000);
+        expect(events[0].events[1].ttime).toEqual(19);
+        expect(events[0].events[1].cost).toEqual(443);
+        expect(events[0].events[1].type).toEqual(FailurePredictionTypeEnum.MAINT);
+        expect(events.find(x => x.idReplacement === MockAppData.MaintenanceElements[4].id).events.some(x => x.type === FailurePredictionTypeEnum.FAIL)). toBeTruthy();    });
 });

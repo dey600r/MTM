@@ -146,10 +146,29 @@ export class SkeletonInputModel {
     time: number;
     itemsHeader: number[];
     body: BodySkeletonInputModel;
+    card: CardSkeletonInputModel;
     constructor(data: Partial<SkeletonInputModel> = {}) {
         this.time = (data.time ?? 0);
         this.itemsHeader = (data.itemsHeader ?? []);
         this.body = (data.body ?? new BodySkeletonInputModel());
+        this.card = (data.card ?? new CardSkeletonInputModel());
+    }
+}
+
+export class CardSkeletonInputModel {
+    activated: boolean;
+    items: number[];
+    sizelg: number;
+    sizemd: number;
+    sizesm: number;
+    sizexs: number;
+    constructor(data: Partial<CardSkeletonInputModel> = {}) {
+        this.activated = (data.activated ?? false);
+        this.items = (data.items ?? []);
+        this.sizelg = (data.sizelg ?? 0);
+        this.sizemd = (data.sizemd ?? 0);
+        this.sizesm = (data.sizesm ?? 0);
+        this.sizexs = (data.sizexs ?? 0);
     }
 }
 

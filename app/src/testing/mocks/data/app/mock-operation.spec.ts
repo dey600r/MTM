@@ -208,7 +208,7 @@ export class MockAppOperation {
             ]
         }),
         new OperationModel({
-            description: 'Revisión8',
+            description: 'Revisión9',
             details: 'Filtro aceite, aceite motor, residuos',
             operationType: MockAppOperation.OperationTypes[0],
             vehicle: MockAppVehicle.Vehicles[0],
@@ -221,6 +221,24 @@ export class MockAppOperation {
             id: 11,
             listMaintenanceElement: [
                 MockAppMaintenance.MaintenanceElements[2],
+                MockAppMaintenance.MaintenanceElements[4],
+                MockAppMaintenance.MaintenanceElements[5],
+                MockAppMaintenance.MaintenanceElements[6]
+            ]
+        }),
+        new OperationModel({
+            description: 'Fallo9',
+            details: 'Filtro aceite, aceite motor, residuos',
+            operationType: MockAppOperation.OperationTypes[1],
+            vehicle: MockAppVehicle.Vehicles[0],
+            km: 119500,
+            date: new Date(new Date().getFullYear() - 3, new Date().getMonth() - 4, new Date().getDate() + 2),
+            location: 'Madrid (Motos Cortes)',
+            owner: 'Yo',
+            price: 900,
+            document: '',
+            id: 12,
+            listMaintenanceElement: [
                 MockAppMaintenance.MaintenanceElements[4],
                 MockAppMaintenance.MaintenanceElements[5],
                 MockAppMaintenance.MaintenanceElements[6]

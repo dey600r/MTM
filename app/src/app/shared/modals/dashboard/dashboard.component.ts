@@ -9,7 +9,7 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 import { DashboardService, ControlService, IconService } from '@services/index';
 
 // MODELS
-import { IDashboardModel, IInfoModel, DashboardModel, OperationModel, ModalInputModel, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel, DashboardInputModal } from '@models/index';
+import { IDashboardModel, IInfoModel, DashboardModel, OperationModel, ModalInputModel, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel, DashboardInputModal, IDashboardSerieModel } from '@models/index';
 
 // UTILS
 import { InfoButtonEnum, HeaderOutputEnum, PageEnum } from '@utils/index';
@@ -41,13 +41,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // MODEL FORM
   dashboardOpTypeExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
   dashboardReplacementExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
-  dashboardVehicleExpenses: DashboardModel<IDashboardModel> = new DashboardModel<IDashboardModel>();
+  dashboardVehicleExpenses: DashboardModel<IDashboardSerieModel> = new DashboardModel<IDashboardSerieModel>();
   currentPopover = null;
 
   // DATA
   allOperations: OperationModel[] = [];
   operations: OperationModel[] = [];
-  iconFilter = 'filter';
   showSpinner = false;
   openningPopover = false;
 
@@ -74,12 +73,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
         this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
       } else { // VEHICLE EXPENSES PER MONTH
-        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize, this.operations, filter).allSum;
+        this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehiclePerTime(windowsSize, this.operations, filter);
       }
       // VEHICLE EXPENSES PER OPERATION TYPE
       this.dashboardOpTypeExpenses = this.dashboardService.getDashboardModelOpTypeExpenses(windowsSize, this.operations, filter);
       this.dashboardReplacementExpenses = this.dashboardService.getDashboardModelReplacementExpenses(windowsSize, this.operations, filter);
-      this.loadIconSearch();
+      this.loadHeader();
       setTimeout(() => {
         this.showSpinner = false;
         this.changeDetector.detectChanges();
@@ -160,16 +159,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       });
     }
+
+    const parentPage: PageEnum = this.getParent(this.modalInputModel.parentPage);
     this.headerInput = new HeaderInputModel({
       title: 'COMMON.CHARTS',
-      iconButtonLeft: this.iconFilter,
+      iconButtonLeft: this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(parentPage)),
       dataSegment: listVehicles
     });
-  }
-
-  loadIconSearch() {
-    const parentPage: PageEnum = this.getParent(this.modalInputModel.parentPage);
-    this.iconFilter = this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(parentPage));
-    this.loadHeader();
   }
 }

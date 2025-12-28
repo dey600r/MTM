@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, OnInit, inject } from '@angular/core';
 
 // LIBRARIES
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 
 // UTILS
 import {
@@ -117,7 +118,7 @@ export class OperationPage extends BasePage implements OnInit {
 
     this.dashboardService.getObserverSearchOperation().subscribe(filter => {
       this.filterDashboard = filter;
-      this.operations = this.filterOperations(filter, this.getOperationVehicles());
+      this.operations = this.getOperationScrollingInfinite(0, Constants.MAX_ROWS_INFINITE_SCROLL);
       this.loadHeaderIconLeft(this.getIconDashboard(this.operations));
       this.loadHeaderIconRight();
       this.detector.detectChanges();
@@ -222,7 +223,7 @@ export class OperationPage extends BasePage implements OnInit {
   segmentChanged(event: any): void {
     this.changeLoadedBody(false);
     this.vehicleSelected = Number(event.detail.value);
-    this.operations = this.filterOperations(this.filterDashboard, this.getOperationVehicles());
+    this.operations = this.getOperationScrollingInfinite(0, Constants.MAX_ROWS_INFINITE_SCROLL);
     this.loadHeaderIconLeft(this.getIconDashboard(this.operations));
   }
 
@@ -242,6 +243,10 @@ export class OperationPage extends BasePage implements OnInit {
     return this.commonService.orderBy(dataFiltered, ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
   }
 
+  getOperationScrollingInfinite(start: number, end: number): OperationModel[] {
+    return this.filterOperations(this.filterDashboard, this.getOperationVehicles()).slice(start, end);
+  }
+
   getOperationVehicles(): OperationModel[] {
     return this.allOperations.filter(op => op.vehicle.id === this.vehicleSelected);
   }
@@ -251,6 +256,15 @@ export class OperationPage extends BasePage implements OnInit {
   }
   getIconSearch(): string {
     return this.iconService.loadIconSearch(this.dashboardService.isEmptySearchDashboard(PageEnum.OPERATION));
+  }
+
+  /* SCROLL */
+
+  onInfiniteScroll(event: InfiniteScrollCustomEvent) {
+    this.operations = [...this.operations, ...this.getOperationScrollingInfinite(this.operations.length, this.operations.length + Constants.MAX_ROWS_INFINITE_SCROLL)];
+    setTimeout(() => {
+      event.target.complete();
+    }, 500);
   }
 
   /* HEADER */

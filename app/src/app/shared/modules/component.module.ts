@@ -5,9 +5,6 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 import { IonCalendarModule } from '@heliomarpm/ion-calendar';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 
-// LIBRARIES ANGULAR
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-
 // MODULES
 import { SharedModule } from '@modules/shared.module';
 
@@ -54,7 +51,6 @@ import { InfoVehicleComponent } from '@modals/info-vehicle/info-vehicle.componen
         ListDataToUpdateComponent
     ], imports: [
         IonCalendarModule,
-        NgxChartsModule,
         SharedModule,
     ], providers: [
         File,

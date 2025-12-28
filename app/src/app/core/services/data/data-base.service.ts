@@ -77,7 +77,7 @@ export class DataBaseService {
     this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, 'Json Formated: ' + jsonStringly);
     
     for(const table of this.crudService.getAllTables()) {
-        await this.storageService.setData(table, jsonFormated[table]).then(x => console.log(`Storaged ${table}`));
+        await this.storageService.setData(table, jsonFormated[table]).then(x => this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, `Storaged ${table}`));
     };
 
     this.logService.logInfo(ToastTypeEnum.INFO, PageEnum.HOME, 'Database Storage updated sucessfully');

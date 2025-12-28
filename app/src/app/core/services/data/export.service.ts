@@ -31,7 +31,7 @@ export class ExportService {
         }
     }
 
-    private getRealRelativeDirectory(): string {
+    public getRealRelativeDirectory(): string {
         return (!!this.file.externalDataDirectory ? this.file.externalDataDirectory : '/Downloads');
     }
 

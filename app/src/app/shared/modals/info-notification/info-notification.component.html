@@ -29,66 +29,78 @@
       <p class="ion-color-info-summary">{{ labelNotRecord }}</p>
     </ion-item>
   </ion-list>
-  <!-- CHART -->
+  <!-- COSTS -->
   <ion-list *ngIf="isCalendar">
     <ion-list-header (click)="refreshChartLaborExpenses()" class="padding-list-header">
       <ion-icon size="large" name="bar-chart"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.LABOR_EXPENSE' | translate }}</h3>
+      <h3 class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
       <ion-button fill="clear">
         <ion-icon size="small" color="primary" [name]="hideGraphLabor ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
     <div *ngIf="!hideGraphLabor" class="justify-center">
-      <ngx-charts-bar-vertical *ngIf="!showSpinner"
-        [view]="dashboardVehicleOperationExpenses.view"
-        [scheme]="dashboardVehicleOperationExpenses.colorScheme"
-        [results]="dashboardVehicleOperationExpenses.data"
-        [gradient]="dashboardVehicleOperationExpenses.gradient"
-        [xAxis]="dashboardVehicleOperationExpenses.showXAxis"
-        [yAxis]="dashboardVehicleOperationExpenses.showYAxis"
-        [legend]="dashboardVehicleOperationExpenses.showLegend"
-        [legendTitle]="dashboardVehicleOperationExpenses.legendTitle"
-        [legendPosition]="dashboardVehicleOperationExpenses.legendPosition"
-        [showXAxisLabel]="dashboardVehicleOperationExpenses.showXAxisLabel"
-        [showYAxisLabel]="dashboardVehicleOperationExpenses.showYAxisLabel"
-        [showDataLabel]="dashboardVehicleOperationExpenses.showDataLabel"
-        [xAxisLabel]="dashboardVehicleOperationExpenses.xAxisLabel"
-        [yAxisLabel]="dashboardVehicleOperationExpenses.yAxisLabel">
-      </ngx-charts-bar-vertical>
-      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleOperationExpenses.view[1]" class="div-spinner">
+      <ngx-charts-bar-vertical-2d *ngIf="!showSpinner"
+        [view]="dashboardVehicleExpenses.view"
+        [scheme]="dashboardVehicleExpenses.colorScheme"
+        [results]="dashboardVehicleExpenses.data"
+        [gradient]="dashboardVehicleExpenses.gradient"
+        [xAxis]="dashboardVehicleExpenses.showXAxis"
+        [yAxis]="dashboardVehicleExpenses.showYAxis"
+        [legend]="dashboardVehicleExpenses.showLegend"
+        [legendTitle]="dashboardVehicleExpenses.legendTitle"
+        [legendPosition]="dashboardVehicleExpenses.legendPosition"
+        [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
+        [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
+        [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
+        [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
+        [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
+      </ngx-charts-bar-vertical-2d>
+      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
         <ion-spinner class="spinner" name="lines"></ion-spinner>
       </div>
     </div>
   </ion-list>
-  <ion-list *ngIf="isCalendar">
-    <ion-list-header (click)="refreshChartReplacementExpenses()" class="padding-list-header">
-      <ion-icon size="large" name="bar-chart"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.REPLACEMENT_EXPENSE' | translate }}</h3>
+  <!-- FAILURE -->
+  <ion-list *ngIf="isCalendar && !notEnoughDataPredictive">
+    <ion-list-header (click)="refreshChartFailureExpenses()" class="padding-list-header">
+      <ion-icon size="large" name="flash"></ion-icon>
+      <h3 class="header-list">{{ 'COMMON.PREDICTIVE_MAINTENANCE' | translate }}</h3>
       <ion-button fill="clear">
-        <ion-icon size="small" color="primary" [name]="hideGraphReplacement ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+        <ion-icon size="small" color="primary" [name]="hideGraphFailure ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <div *ngIf="!hideGraphReplacement" class="justify-center">
-      <ngx-charts-bar-vertical *ngIf="!showSpinner"
-        [view]="dashboardVehicleReplacementExpenses.view"
-        [scheme]="dashboardVehicleReplacementExpenses.colorScheme"
-        [results]="dashboardVehicleReplacementExpenses.data"
-        [gradient]="dashboardVehicleReplacementExpenses.gradient"
-        [xAxis]="dashboardVehicleReplacementExpenses.showXAxis"
-        [yAxis]="dashboardVehicleReplacementExpenses.showYAxis"
-        [legend]="dashboardVehicleReplacementExpenses.showLegend"
-        [legendTitle]="dashboardVehicleReplacementExpenses.legendTitle"
-        [legendPosition]="dashboardVehicleReplacementExpenses.legendPosition"
-        [showXAxisLabel]="dashboardVehicleReplacementExpenses.showXAxisLabel"
-        [showYAxisLabel]="dashboardVehicleReplacementExpenses.showYAxisLabel"
-        [showDataLabel]="dashboardVehicleReplacementExpenses.showDataLabel"
-        [xAxisLabel]="dashboardVehicleReplacementExpenses.xAxisLabel"
-        [yAxisLabel]="dashboardVehicleReplacementExpenses.yAxisLabel">
-      </ngx-charts-bar-vertical>
-      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleReplacementExpenses.view[1]" class="div-spinner">
-        <ion-spinner class="spinner" name="lines"></ion-spinner>
+    <ion-item *ngIf="!hideGraphFailure" class="item-border-color-white">
+      <div class="justify-center">
+        <ngx-charts-line-chart *ngIf="!showSpinner"
+          class="margin-chart"
+          [view]="dashboardFailureReplacement.view"
+          [scheme]="dashboardFailureReplacement.colorScheme"
+          [results]="dashboardFailureReplacement.data"
+          [gradient]="dashboardFailureReplacement.gradient"
+          [xAxis]="dashboardFailureReplacement.showXAxis"
+          [yAxis]="dashboardFailureReplacement.showYAxis"
+          [legend]="dashboardFailureReplacement.showLegend"
+          [legendTitle]="dashboardFailureReplacement.legendTitle"
+          [legendPosition]="dashboardFailureReplacement.legendPosition"
+          [showXAxisLabel]="dashboardFailureReplacement.showXAxisLabel"
+          [showYAxisLabel]="dashboardFailureReplacement.showYAxisLabel"
+          [xAxisLabel]="dashboardFailureReplacement.xAxisLabel"
+          [yAxisLabel]="dashboardFailureReplacement.yAxisLabel"
+          [curve]="linear">
+        </ngx-charts-line-chart>
+        <div *ngIf="showSpinner" [style.height.px]="dashboardFailureReplacement.view[1]" class="div-spinner">
+          <ion-spinner class="spinner" name="lines"></ion-spinner>
+        </div>
       </div>
-    </div>
+    </ion-item>
+    <ion-item *ngIf="!hideGraphFailure">
+      <p class="ion-color-info-summary">{{ labelPredictionKm }}</p>
+      <ion-icon slot="end" size="small" [name]="iconPredictionKm"></ion-icon>
+    </ion-item>
+    <ion-item *ngIf="!hideGraphFailure">
+      <p class="ion-color-info-summary">{{ labelPredictionTime }}</p>
+      <ion-icon slot="end" size="small" [name]="iconPredictionTime"></ion-icon>
+    </ion-item>
   </ion-list>
   <!-- List Records Maintenance -->
   <ion-list *ngIf="isCalendar">
@@ -100,22 +112,28 @@
       </ion-button>
     </ion-list-header>
     <ion-item *ngIf="!hideRecords" class="item-border-color-white">
-      <ngx-charts-line-chart class="margin-chart justify-center"
-        [view]="dashboardRecordsMaintenance.view"
-        [scheme]="dashboardRecordsMaintenance.colorScheme"
-        [results]="dashboardRecordsMaintenance.data"
-        [gradient]="dashboardRecordsMaintenance.gradient"
-        [xAxis]="dashboardRecordsMaintenance.showXAxis"
-        [yAxis]="dashboardRecordsMaintenance.showYAxis"
-        [legend]="dashboardRecordsMaintenance.showLegend"
-        [legendTitle]="dashboardRecordsMaintenance.legendTitle"
-        [legendPosition]="dashboardRecordsMaintenance.legendPosition"
-        [showXAxisLabel]="dashboardRecordsMaintenance.showXAxisLabel"
-        [showYAxisLabel]="dashboardRecordsMaintenance.showYAxisLabel"
-        [xAxisLabel]="dashboardRecordsMaintenance.xAxisLabel"
-        [yAxisLabel]="dashboardRecordsMaintenance.yAxisLabel"
-        [curve]="linear">
-      </ngx-charts-line-chart>
+      <div class="justify-center">
+        <ngx-charts-line-chart *ngIf="!showSpinner"
+          class="margin-chart" 
+          [view]="dashboardRecordsMaintenance.view"
+          [scheme]="dashboardRecordsMaintenance.colorScheme"
+          [results]="dashboardRecordsMaintenance.data"
+          [gradient]="dashboardRecordsMaintenance.gradient"
+          [xAxis]="dashboardRecordsMaintenance.showXAxis"
+          [yAxis]="dashboardRecordsMaintenance.showYAxis"
+          [legend]="dashboardRecordsMaintenance.showLegend"
+          [legendTitle]="dashboardRecordsMaintenance.legendTitle"
+          [legendPosition]="dashboardRecordsMaintenance.legendPosition"
+          [showXAxisLabel]="dashboardRecordsMaintenance.showXAxisLabel"
+          [showYAxisLabel]="dashboardRecordsMaintenance.showYAxisLabel"
+          [xAxisLabel]="dashboardRecordsMaintenance.xAxisLabel"
+          [yAxisLabel]="dashboardRecordsMaintenance.yAxisLabel"
+          [curve]="linear">
+        </ngx-charts-line-chart>
+        <div *ngIf="showSpinner" [style.height.px]="dashboardRecordsMaintenance.view[1]" class="div-spinner">
+          <ion-spinner class="spinner" name="lines"></ion-spinner>
+        </div>
+      </div>
     </ion-item>
     <!-- Items Maintenances -->
     <div *ngIf="!hideRecords">

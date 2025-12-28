@@ -86,7 +86,7 @@ export const DarkTheme: any = {
         { themeVariable: '--ion-item-background', value: '#2A2A2A'}, // LIST - ITEMS
         { themeVariable: '--ion-toolbar-background', value: '#303030'}, // HEADERS
         { themeVariable: '--ion-tab-bar-background', value: '#303030'}, // TABS - FOOTER
-        { themeVariable: '--ion-card-background', value: '#2A2A2A'}, // CARDS
+        { themeVariable: '--ion-card-background', value: '#303030'}, // CARDS
         { themeVariable: '--ion-color-chart-first', value: '#018991'}, // CHARTS
         { themeVariable: '--ion-color-chart-second', value: '#016FBD'},
         { themeVariable: '--ion-color-chart-third', value: '#0111A2'},
@@ -190,7 +190,7 @@ export const SkyTheme: any = {
         { themeVariable: '--ion-item-background', value: '#F5F5F5'}, // LIST - ITEMS
         { themeVariable: '--ion-toolbar-background', value: '#002a3a'}, // HEADERS
         { themeVariable: '--ion-tab-bar-background', value: '#002a3a'}, // TABS - FOOTER
-        { themeVariable: '--ion-card-background', value: '#00364b'}, // CARDS
+        { themeVariable: '--ion-card-background', value: '#002a3a'}, // CARDS
         { themeVariable: '--ion-color-chart-first', value: '#39A3A9'}, // CHARTS
         { themeVariable: '--ion-color-chart-second', value: '#3A8DC8'},
         { themeVariable: '--ion-color-chart-third', value: '#4D59C9'},

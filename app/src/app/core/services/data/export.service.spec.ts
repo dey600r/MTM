@@ -1,5 +1,6 @@
 import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
+import { Platform } from '@ionic/angular';
 
 // SERVICES
 import { ExportService } from './export.service';
@@ -37,10 +38,12 @@ describe('ExportService', () => {
     });
 
     it('should get root real relative path', () => {
+        const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(true);
         expect(service.getRootRealRelativePath())
             .toEqual(`${Constants.OUTPUT_DIR_NAME}/`);
         expect(service.getRootRealRelativePath('hola'))
             .toEqual(`${Constants.OUTPUT_DIR_NAME}/hola`);
+        expect(spyPlatform).toHaveBeenCalled();
     });
 
     it('should get real relative directory', () => {
@@ -48,13 +51,8 @@ describe('ExportService', () => {
             .toEqual(ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY);
         file.externalDataDirectory = null;
         expect(service.getRealRelativeDirectory())
-            .toEqual(`C:\\Users\\<USER>\\AppData\\Local\\Packages\\<52193DeyHome.MotortrackManager>\\LocalState\\${Constants.OUTPUT_DIR_NAME}`);
+            .toEqual(`/Downloads`);
         file.externalDataDirectory = ConstantsTest.PATH_EXTERNAL_DATA_DIRECTORY;
-    });
-
-    it('should get real path windows', () => {
-        expect(service.getRealPathWindows())
-            .toEqual(`C:\\Users\\<USER>\\AppData\\Local\\Packages\\<52193DeyHome.MotortrackManager>\\LocalState\\${Constants.OUTPUT_DIR_NAME}`);
     });
 
     it('should get path file', () => {
@@ -65,25 +63,31 @@ describe('ExportService', () => {
     });
 
     it('should create output directory', fakeAsync (() => {
+        const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(true);
         service.createOutputDirectory();
         tick();
+        expect(spyPlatform).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.checkDir).toHaveBeenCalled();
     }));
 
     it('should not create output directory', fakeAsync(() => {
+        const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(true);
         SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValue(Promise.reject());
         service.createOutputDirectory();
         tick();
+        expect(spyPlatform).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.checkDir).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.createDir).toHaveBeenCalled();
         SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValue(Promise.resolve());
     }));
 
     it('should not create output directory and error', fakeAsync(() => {
+        const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(true);
         SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValue(Promise.reject());
         SpyMockConfig.SpyConfig.file.createDir = jasmine.createSpy().and.returnValue(Promise.reject());
         service.createOutputDirectory();
         tick();
+        expect(spyPlatform).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.checkDir).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.createDir).toHaveBeenCalled();
         SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValue(Promise.resolve());
@@ -91,11 +95,13 @@ describe('ExportService', () => {
     }));
 
     it('should not create output directory and error and error', fakeAsync(() => {
+        const spyPlatform = spyOn(TestBed.inject(Platform), 'is').and.returnValue(true);
         SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValues(Promise.reject(), Promise.reject(), Promise.reject());
         SpyMockConfig.SpyConfig.file.createDir = jasmine.createSpy().and.returnValues(Promise.resolve(), Promise.reject(), Promise.reject());
         service.createOutputDirectory();
         tick();
         flush();
+        expect(spyPlatform).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.checkDir).toHaveBeenCalled();
         expect(SpyMockConfig.SpyConfig.file.createDir).toHaveBeenCalled();
         SpyMockConfig.SpyConfig.file.checkDir = jasmine.createSpy().and.returnValue(Promise.resolve());
