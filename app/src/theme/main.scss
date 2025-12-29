@@ -247,6 +247,7 @@
 .table-row {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .justify-end {
@@ -296,7 +297,7 @@
 
 .main-div {
     width: 100%;
-    padding: 15px 0px 0px 0px;
+    padding: 10px 1px 5px 7px;
 }
 
 .main-item-div {
@@ -339,6 +340,7 @@
 
 .padding-list-header {
     padding-left: 16px;
+    align-items: center;
 }
 
 .label-event-force {
@@ -380,7 +382,6 @@
   }
   
   .main-avatar {
-    //padding: 20px 0px 0px 14px;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -465,7 +466,8 @@ ion-calendar ion-button.button-has-icon-only {
 
 // CARDS
 
-ion-card .list-md {
+ion-card .list-md,
+ion-card .list-ios {
     background: none;
 }
 
@@ -475,6 +477,7 @@ ion-card ion-item::part(native) {
 
 ion-card-header {
     padding-bottom: 5px;
+    padding-top: 0px;
 }
 
 ion-card .card-content-md p {
@@ -496,7 +499,7 @@ ion-card .card-content-md p {
 }
 
 ion-segment-button .card-progress-bar {
-  bottom: 7px;
+  bottom: 6px;
   height: 4px;
 }
 

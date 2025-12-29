@@ -5,7 +5,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 
 // UTILS
 import {
-  DataService, CommonService, OperationService, ControlService,
+  DataService, UtilsService, OperationService, ControlService,
   DashboardService, SettingsService, IconService
 } from '@services/index';
 import {
@@ -34,7 +34,7 @@ export class OperationPage extends BasePage implements OnInit {
 
   // INJECTIONS
   private readonly dataService: DataService = inject(DataService);
-  private readonly commonService: CommonService = inject(CommonService);
+  private readonly utilsService: UtilsService = inject(UtilsService);
   private readonly controlService: ControlService = inject(ControlService);
   private readonly operationService: OperationService = inject(OperationService);
   private readonly dashboardService: DashboardService = inject(DashboardService);
@@ -91,7 +91,7 @@ export class OperationPage extends BasePage implements OnInit {
 
     this.dataService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
-        this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
+        this.vehicles = this.utilsService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
         if (this.vehicleSelected === -1) {
           this.vehicleSelected = this.vehicles[0].id;
         } else {
@@ -215,9 +215,9 @@ export class OperationPage extends BasePage implements OnInit {
   calculatePriceOperation(op: OperationModel): number {
     let totalPrice: number = op.price;
     if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
-      totalPrice += this.commonService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+      totalPrice += this.utilsService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
     }
-    return this.commonService.round(totalPrice, 100);
+    return this.utilsService.round(totalPrice, 100);
   }
 
   segmentChanged(event: any): void {
@@ -240,7 +240,7 @@ export class OperationPage extends BasePage implements OnInit {
       (filter.searchMaintenanceElement.length === 0 ||
         filter.searchMaintenanceElement.some(y => op.listMaintenanceElement.some(z => y.id === z.id)))
     );
-    return this.commonService.orderBy(dataFiltered, ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
+    return this.utilsService.orderBy(dataFiltered, ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
   }
 
   getOperationScrollingInfinite(start: number, end: number): OperationModel[] {

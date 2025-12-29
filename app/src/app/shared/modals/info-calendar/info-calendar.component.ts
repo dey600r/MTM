@@ -19,7 +19,7 @@ import {
 
 // SERVICES
 import {
-  CalendarService, CommonService, ControlService, SettingsService, DataService, InfoCalendarService
+  CalendarService, UtilsService, ControlService, SettingsService, DataService, InfoCalendarService
 } from '@services/index';
 
 // UTILS
@@ -37,7 +37,7 @@ export class InfoCalendarComponent implements OnInit {
   private readonly modalController: ModalController = inject(ModalController);
   private readonly calendarService: CalendarService = inject(CalendarService);
   private readonly infoCalendarService: InfoCalendarService = inject(InfoCalendarService);
-  private readonly commonService: CommonService = inject(CommonService);
+  private readonly utilsService: UtilsService = inject(UtilsService);
   private readonly translator: TranslateService = inject(TranslateService);
   private readonly controlService: ControlService = inject(ControlService);
   private readonly settingsService: SettingsService = inject(SettingsService);
@@ -120,7 +120,7 @@ export class InfoCalendarComponent implements OnInit {
     let days: IDayConfig[] = [];
     let dateInit: Date = new Date();
     if (!!this.listInfoCalendar && this.listInfoCalendar.length) {
-      dateInit = this.commonService.min(this.modalInputModel.data.wear, ConstantsColumns.COLUMN_MODEL_DATE_PURCHASE_VEHICLE);
+      dateInit = this.utilsService.min(this.modalInputModel.data.wear, ConstantsColumns.COLUMN_MODEL_DATE_PURCHASE_VEHICLE);
       this.listInfoCalendar.forEach(x => {
         x.listInfoCalendarMaintOp.forEach(y => {
           y.listInfoCalendarReplacement.forEach(z => {

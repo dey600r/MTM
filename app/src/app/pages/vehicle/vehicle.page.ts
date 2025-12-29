@@ -5,7 +5,7 @@ import {
   ActionDBEnum, ConstantsColumns, PageEnum, Constants, ToastTypeEnum, InfoButtonEnum, ModalTypeEnum, HeaderOutputEnum, 
   VehicleSkeletonSetting
 } from '@utils/index';
-import { DataService, VehicleService, CommonService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
+import { DataService, VehicleService, UtilsService, ControlService, DashboardService, SettingsService, IconService } from '@services/index';
 import { 
   VehicleModel, ModalInputModel, ModalOutputModel, OperationModel, IInfoModel, ISettingModel, 
   DashboardInputModal, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel,
@@ -29,7 +29,7 @@ export class VehiclePage extends BasePage implements OnInit {
   // INJECTIONS
   private readonly dataService: DataService = inject(DataService);
   private readonly vehicleService: VehicleService = inject(VehicleService);
-  private readonly commonService: CommonService = inject(CommonService);
+  private readonly utilsService: UtilsService = inject(UtilsService);
   private readonly controlService: ControlService = inject(ControlService);
   private readonly dashboardService: DashboardService = inject(DashboardService);
   private readonly settingsService: SettingsService = inject(SettingsService);
@@ -80,7 +80,7 @@ export class VehiclePage extends BasePage implements OnInit {
       if (!data || data.length === 0) {
         this.dashboardService.setSearchOperation();
       }
-      this.vehicles = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
+      this.vehicles = this.utilsService.orderBy(data, ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
       this.loadHeader(this.iconService.loadIconDashboard<VehicleModel>(this.vehicles));
       this.changeLoadedBody(false);
       this.detector.detectChanges();

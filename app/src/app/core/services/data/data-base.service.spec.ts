@@ -54,7 +54,7 @@ describe('DataBaseService', () => {
         tick(200);
         expect(spyPlatform).toHaveBeenCalled();
         expect(spyStorageService).toHaveBeenCalled();
-        expect(spySetStorageService).toHaveBeenCalledTimes(1);
+        expect(spySetStorageService).not.toHaveBeenCalled();
         expect(spyCRUDService).toHaveBeenCalled();
         expect(spyLogService).toHaveBeenCalled();
         expect(spyHttp).not.toHaveBeenCalled();
@@ -75,7 +75,7 @@ describe('DataBaseService', () => {
         tick(200);
         expect(spyPlatform).toHaveBeenCalled();
         expect(spyGetStorageService).toHaveBeenCalled();
-        expect(spySetStorageService).toHaveBeenCalledTimes(crudService.getAllTables().length + 1);
+        expect(spySetStorageService).toHaveBeenCalledTimes(crudService.getAllTables().length);
         expect(spyCRUDService).toHaveBeenCalled();
         expect(spyLogService).toHaveBeenCalled();
         expect(spyHttp).toHaveBeenCalled();

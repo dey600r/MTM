@@ -142,6 +142,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
       if (wear.codeMaintenanceFreq === Constants.MAINTENANCE_FREQ_CALENDAR_CODE) {
         this.labelNotRecord = this.translator.instant('PAGE_HOME.NotExistRecords', {maintenance: this.nameMaintenanceElement });
       }
+      this.loadIconSearch();
     }
   }
 

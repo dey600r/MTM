@@ -11,7 +11,7 @@ import {
   HeaderInputModel
 } from '@models/index';
 import {
-  DataService, OperationService, CommonService, ConfigurationService, ControlService,
+  DataService, OperationService, CommonService, UtilsService, ConfigurationService, ControlService,
   CalendarService, SettingsService, VehicleService
 } from '@services/index';
 
@@ -29,6 +29,7 @@ export class AddEditOperationComponent implements OnInit {
   private readonly translator: TranslateService = inject(TranslateService);
   private readonly operationService: OperationService = inject(OperationService);
   private readonly commonService: CommonService = inject(CommonService);
+  private readonly utilsService: UtilsService = inject(UtilsService);
   private readonly calendarService: CalendarService = inject(CalendarService);
   private readonly controlService: ControlService = inject(ControlService);
   private readonly configurationService: ConfigurationService = inject(ConfigurationService);
@@ -98,7 +99,7 @@ export class AddEditOperationComponent implements OnInit {
     }
 
     // GET OPERATION TYPE
-    this.operationType = this.commonService.orderBy(
+    this.operationType = this.utilsService.orderBy(
       this.dataService.getOperationTypeData(), ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
 
     // GET MAINTENANCE ELEMENT
@@ -281,9 +282,8 @@ export class AddEditOperationComponent implements OnInit {
   }
 
   isOperationTypeWithReplacement(): boolean {
-    return this.operationType.some(x => x.id === this.operation.operationType.id &&
-      (Constants.OPERATION_TYPE_FAILURE_HOME === x.code || Constants.OPERATION_TYPE_FAILURE_WORKSHOP === x.code ||
-      Constants.OPERATION_TYPE_MAINTENANCE_HOME === x.code || Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP === x.code));
+    return this.operationType.some(x => x.id === this.operation.operationType.id && 
+      this.commonService.isOperationWithReplacement(x.code));
   }
 
   validateDateToKm(): string {
@@ -367,7 +367,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsDateBefore && operationsDateBefore.length > 0) {
-      resultKm = this.commonService.max(operationsDateBefore, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
+      resultKm = this.utilsService.max(operationsDateBefore, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
     }
 
     return resultKm;
@@ -381,7 +381,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsDateAfter && operationsDateAfter.length > 0) {
-      resultKm = this.commonService.min(operationsDateAfter, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
+      resultKm = this.utilsService.min(operationsDateAfter, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
     }
 
     return resultKm;
@@ -394,7 +394,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsKmBefore && operationsKmBefore.length > 0) {
-      resultDate = new Date(this.commonService.max(operationsKmBefore, ConstantsColumns.COLUMN_MTM_OPERATION_DATE), 0, 0, 0);
+      resultDate = new Date(this.utilsService.max(operationsKmBefore, ConstantsColumns.COLUMN_MTM_OPERATION_DATE), 0, 0, 0);
     }
 
     return resultDate;
@@ -407,7 +407,7 @@ export class AddEditOperationComponent implements OnInit {
       x.id !== op.id);
 
     if (!!operationsKmAfter && operationsKmAfter.length > 0) {
-      resultDate = new Date(this.commonService.min(operationsKmAfter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE), 0, 0, 0);
+      resultDate = new Date(this.utilsService.min(operationsKmAfter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE), 0, 0, 0);
     }
 
     return resultDate;

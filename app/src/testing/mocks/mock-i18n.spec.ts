@@ -116,7 +116,8 @@ export class MockTranslate {
             PREDICTIVE_MAINTENANCE: "Predictive Maintenance",
             PREDICTIVE_COST: "Predictive cost",
             OPTIMISTIC: "Optimistic",
-            PESSIMISTIC: "Pessimistic"
+            PESSIMISTIC: "Pessimistic",
+            REST: "Rest"
         },
         PAGE_HOME: {
             HOME: 'Home',
@@ -511,7 +512,8 @@ export class MockTranslate {
             PREDICTIVE_MAINTENANCE: "Mantenimiento predictivo",
             PREDICTIVE_COST: "Coste predictivo",
             OPTIMISTIC: "Optimista",
-            PESSIMISTIC: "Pesimista"
+            PESSIMISTIC: "Pesimista",
+            REST: "Resto"
         },
         PAGE_HOME: {
             HOME: 'Inicio',

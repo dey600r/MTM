@@ -19,7 +19,7 @@
   </ion-label>
   <div *ngIf="!activeSpinner && listInfoCalendarSelected.length > 0">
     <ion-list *ngFor="let vehicle of listInfoCalendarSelected; let i = index;">
-        <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintOp; let j = index;">
+        <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintOp; let j = index;" lines="none">
           <!-- Icons -->
           <ion-avatar slot="start" class="max-width9 align-start">
             <ion-icon size="large" class="icon-color" [name]="maint.icon"></ion-icon>

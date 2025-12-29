@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 // UTILS
 import { ActionDBEnum, ConstantsColumns, ModalTypeEnum, PageEnum, ToastTypeEnum } from '@utils/index';
 import { ModalInputModel, ConfigurationModel, MaintenanceModel, MaintenanceElementModel, ISettingModel, HeaderInputModel } from '@models/index';
-import { DataService, CommonService, ConfigurationService, ControlService, SettingsService } from '@services/index';
+import { DataService, UtilsService, ConfigurationService, ControlService, SettingsService } from '@services/index';
 
 @Component({
     selector: 'app-add-edit-configuration',
@@ -17,7 +17,7 @@ export class AddEditConfigurationComponent implements OnInit {
   // INJECTIONS
   private readonly modalController: ModalController = inject(ModalController);
   private readonly dataService: DataService = inject(DataService);
-  private readonly commonService: CommonService = inject(CommonService);
+  private readonly utilsService: UtilsService = inject(UtilsService);
   private readonly controlService: ControlService = inject(ControlService);
   private readonly settingsService: SettingsService = inject(SettingsService);
   private readonly configurationService: ConfigurationService = inject(ConfigurationService);
@@ -47,7 +47,7 @@ export class AddEditConfigurationComponent implements OnInit {
 
     this.configuration = Object.assign({}, this.modalInputModel.data);
     
-    this.maintenances = this.commonService.orderBy(this.dataService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+    this.maintenances = this.utilsService.orderBy(this.dataService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
     if (this.modalInputModel.type === ModalTypeEnum.CREATE) {
       this.configuration.id = -1;
       this.maintenances.forEach(x => this.toggleMaintenaces = [...this.toggleMaintenaces, false]);

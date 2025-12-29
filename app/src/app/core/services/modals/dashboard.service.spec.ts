@@ -255,18 +255,24 @@ describe('DashboardService', () => {
         expect(dashboard.data[0].name).toEqual(name1);
         expect(dashboard.data[0].series[0].name).toEqual(MockTranslate.ES.PAGE_CONFIGURATION.REPLACEMENTS);
         expect(dashboard.data[0].series[1].name).toEqual(MockTranslate.ES.COMMON.LABOR);
+        expect(dashboard.data[0].series[2].name).toEqual(MockTranslate.ES.COMMON.REST);
         expect(dashboard.data[0].series[0].value).toBeGreaterThanOrEqual(362);
         expect(dashboard.data[0].series[1].value).toBeGreaterThanOrEqual(650);
+        expect(dashboard.data[0].series[2].value).toBeGreaterThanOrEqual(0);
         expect(dashboard.data[1].name).toEqual(name2);
         expect(dashboard.data[1].series[0].name).toEqual(MockTranslate.ES.PAGE_CONFIGURATION.REPLACEMENTS);
         expect(dashboard.data[1].series[1].name).toEqual(MockTranslate.ES.COMMON.LABOR);
+        expect(dashboard.data[1].series[2].name).toEqual(MockTranslate.ES.COMMON.REST);
         expect(dashboard.data[1].series[0].value).toBeGreaterThanOrEqual(193);
         expect(dashboard.data[1].series[1].value).toBeGreaterThanOrEqual(333);
+        expect(dashboard.data[1].series[2].value).toBeGreaterThanOrEqual(0);
         expect(dashboard.data[2].name).toEqual(name3);
         expect(dashboard.data[2].series[0].name).toEqual(MockTranslate.ES.PAGE_CONFIGURATION.REPLACEMENTS);
         expect(dashboard.data[2].series[1].name).toEqual(MockTranslate.ES.COMMON.LABOR);
+        expect(dashboard.data[2].series[2].name).toEqual(MockTranslate.ES.COMMON.REST);
         expect(dashboard.data[2].series[0].value).toBeGreaterThanOrEqual(234);
         expect(dashboard.data[2].series[1].value).toBeGreaterThanOrEqual(1000);
+        expect(dashboard.data[3].series[2].value).toBeGreaterThanOrEqual(204);
     });
 
     it('should calculate other vehicle per month expenses dashboard - EN', async () => {
@@ -283,6 +289,7 @@ describe('DashboardService', () => {
         expect(dashboard.yAxisLabel).toEqual(MockTranslate.EN.COMMON.EXPENSE);
         expect(dashboard.data[0].series[0].name).toEqual(MockTranslate.EN.PAGE_CONFIGURATION.REPLACEMENTS);
         expect(dashboard.data[0].series[1].name).toEqual(MockTranslate.EN.COMMON.LABOR);
+        expect(dashboard.data[0].series[2].name).toEqual(MockTranslate.EN.COMMON.REST);
     });
 
     it('should get range dates per months, quarter and years', () => {
@@ -322,7 +329,7 @@ describe('DashboardService', () => {
         const dashboard: DashboardModel<IDashboardModel> = service.getDashboardModelOpTypeExpenses(windows, MockAppData.Operations, filter);
         expect(dashboard.isDoughnut).toBeFalsy();
         expect(dashboard.showLegend).toBeFalsy();
-        expect(dashboard.data.length).toEqual(4);
+        expect(dashboard.data.length).toEqual(5);
         expect(dashboard.legendTitle).toEqual(MockTranslate.EN.COMMON.OPERATION_TYPE);
         expect(dashboard.xAxisLabel).toEqual(MockTranslate.EN.COMMON.OPERATION_TYPE);
         expect(dashboard.yAxisLabel).toEqual(MockTranslate.EN.COMMON.EXPENSE);

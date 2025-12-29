@@ -10,7 +10,7 @@ import { SearchDashboardPopOverComponent } from '../search-dashboard-popover/sea
 
 // SERVICES
 import {
-  CommonService, ControlService, DashboardService, DataService,  IconService,  InfoVehicleService, SettingsService
+  UtilsService, ControlService, DashboardService, DataService,  IconService,  InfoVehicleService, SettingsService
 } from '@services/index';
 
 // MODELS
@@ -44,7 +44,7 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
   private readonly platform: Platform = inject(Platform);
   private readonly screenOrientation: ScreenOrientation = inject(ScreenOrientation);
   private readonly dataService: DataService = inject(DataService);
-  private readonly commonService: CommonService = inject(CommonService);
+  private readonly utilsService: UtilsService = inject(UtilsService);
   private readonly infoVehicleService: InfoVehicleService = inject(InfoVehicleService);
   private readonly settingsService: SettingsService = inject(SettingsService);
   private readonly dashboardService: DashboardService = inject(DashboardService);
@@ -192,9 +192,9 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
 
   initConfigurationSummary() {
     // INFO VEHICLE CONFIGURATION
-    this.configurations = this.commonService.orderBy(
+    this.configurations = this.utilsService.orderBy(
       this.dataService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
-    this.maintenances = this.commonService.orderBy(
+    this.maintenances = this.utilsService.orderBy(
       this.dataService.getMaintenanceData(), ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
     this.maintenanceElements = this.dataService.getMaintenanceElementData();
     this.operations = this.dataService.getOperationsData();
