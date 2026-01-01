@@ -10,7 +10,7 @@ import {
 import { ConstantsColumns, ActionDBEnum, ConstantsTable } from '@utils/index';
 
 // SERVICES
-import { CommonService } from '../common/index';
+import { UtilsService } from '../common/index';
 import { CRUDService, DataService, MapService } from '../data/index';
 
 @Injectable({
@@ -18,7 +18,7 @@ import { CRUDService, DataService, MapService } from '../data/index';
 })
 export class ConfigurationService {
 
-    constructor(private readonly commonService: CommonService,
+    constructor(private readonly utilsService: UtilsService,
                 private readonly crudService: CRUDService,
                 private readonly mapService: MapService,
                 private readonly dataService: DataService) {
@@ -30,10 +30,10 @@ export class ConfigurationService {
         let order: MaintenanceElementModel[] = [];
 
         if (!!replacement && replacement.length > 0) {
-                order = this.commonService.orderBy(
+                order = this.utilsService.orderBy(
                     replacement.filter(x => !x.master), ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
                 const orderMaster: MaintenanceElementModel[] =
-                    this.commonService.orderBy(replacement.filter(x => x.master), ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
+                    this.utilsService.orderBy(replacement.filter(x => x.master), ConstantsColumns.COLUMN_MTM_MAINTENANCE_ELEMENT_NAME);
                 orderMaster.forEach(x => order = [...order, x]);
         }
 

@@ -15,7 +15,7 @@ import {
 
 // SERVICES
 import { HomeService } from '../pages/home.service';
-import { CalendarService, ControlService, CommonService, IconService } from '../common/index';
+import { CalendarService, ControlService, UtilsService, IconService } from '../common/index';
 import { MachineLearningService } from '../data/index';
 
 // UTILS
@@ -32,7 +32,7 @@ export class InfoVehicleService {
     private readonly calendarService: CalendarService = inject(CalendarService);
     private readonly translator: TranslateService = inject(TranslateService);
     private readonly controlService: ControlService = inject(ControlService);
-    private readonly commonService: CommonService = inject(CommonService);
+    private readonly utilsService: UtilsService = inject(UtilsService);
     private readonly iconService: IconService = inject(IconService);
 
     // INFO VEHICLE CONFIGURATION
@@ -119,7 +119,7 @@ export class InfoVehicleService {
         if (data === undefined || data === null || data.length === 0)
             return '';
         const model = <IDashboardModel>{};
-        const sum: number = this.commonService.sum(data, this.commonService.nameOf(() => model.value));
+        const sum: number = this.utilsService.sum(data, this.utilsService.nameOf(() => model.value));
         return this.translator.instant('PAGE_HOME.VehicleAverageKm', { km1: Math.floor(sum / data.length), km2: data[data.length - 1].value, measure: measure.value });
     }
 
@@ -245,10 +245,10 @@ export class InfoVehicleService {
         let result: InfoVehicleHistoricModel[] = [];
 
         const model: InfoVehicleReplacementModel = new InfoVehicleReplacementModel();
-        const nameOfKm: string = this.commonService.nameOf(() => model.km);
-        const nameOfTime: string = this.commonService.nameOf(() => model.time);
-        const nameOfPrice: string = this.commonService.nameOf(() => model.price);
-        const nameOfKmAverage: string = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().kmAverage);
+        const nameOfKm: string = this.utilsService.nameOf(() => model.km);
+        const nameOfTime: string = this.utilsService.nameOf(() => model.time);
+        const nameOfPrice: string = this.utilsService.nameOf(() => model.price);
+        const nameOfKmAverage: string = this.utilsService.nameOf(() => new InfoVehicleHistoricReplacementModel().kmAverage);
 
         vehicles.forEach(vehicle => {
             const timeDiffVehicle: number = this.calendarService.monthDiff(new Date(vehicle.datePurchase),
@@ -256,7 +256,7 @@ export class InfoVehicleService {
             const idMaintenancesOfVehicle: number[] = configurations.find(c => c.id === vehicle.configuration.id)
                 .listMaintenance.map(x => x.id);
             const maintenancesOfVehicle: MaintenanceModel[] = maintenances.filter(x => idMaintenancesOfVehicle.some(y => x.id === y));
-            const operationsVehicle: OperationModel[] = this.commonService.orderBy(
+            const operationsVehicle: OperationModel[] = this.utilsService.orderBy(
                     operations.filter(op => vehicle.id === op.vehicle.id), ConstantsColumns.COLUMN_MTM_OPERATION_KM, true);
             const maintenanceElementsVehicle: MaintenanceElementModel[] = maintenanceElements.filter(x =>
                 operationsVehicle.some(op => op.listMaintenanceElement.some(rep => rep.id === x.id)) ||
@@ -301,10 +301,10 @@ export class InfoVehicleService {
                     infoKm = vehicle.kmEstimated - opWithReplacement[0].km;
                     infoTime = this.calendarService.monthDiff(new Date(opWithReplacement[0].date),
                         (vehicle.active ? new Date() : new Date(vehicle.dateKms)));
-                    infoKmAverage = Math.round(this.commonService.sum(infoListReplacement, nameOfKm) / infoListReplacement.length);
-                    infoTimeAverage = Math.round(this.commonService.sum(infoListReplacement, nameOfTime) /
+                    infoKmAverage = Math.round(this.utilsService.sum(infoListReplacement, nameOfKm) / infoListReplacement.length);
+                    infoTimeAverage = Math.round(this.utilsService.sum(infoListReplacement, nameOfTime) /
                         infoListReplacement.length);
-                    infoPriceAverage = Math.round(this.commonService.sum(infoListReplacement, nameOfPrice) / infoListReplacement.length);
+                    infoPriceAverage = Math.round(this.utilsService.sum(infoListReplacement, nameOfPrice) / infoListReplacement.length);
                 } else {
                     infoKm = vehicle.kmEstimated;
                     infoTime = timeDiffVehicle;
@@ -324,7 +324,7 @@ export class InfoVehicleService {
                     listReplacements: infoListReplacement
                 })];
             });
-            result = [...result, new InfoVehicleHistoricModel(vehicle.id, this.commonService.orderBy(listReplacements, nameOfKmAverage))];
+            result = [...result, new InfoVehicleHistoricModel(vehicle.id, this.utilsService.orderBy(listReplacements, nameOfKmAverage))];
         });
 
         return result;

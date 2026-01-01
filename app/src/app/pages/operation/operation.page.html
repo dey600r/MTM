@@ -38,7 +38,7 @@
       </ion-item-sliding>
     }
   </ion-list>
-  <ion-infinite-scroll (ionInfinite)="onInfiniteScroll($event)">
+  <ion-infinite-scroll *ngIf="operations.length > 0" (ionInfinite)="onInfiniteScroll($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
   <ion-fab *ngIf="this.vehicles.length > 0" horizontal="end" vertical="bottom" slot="fixed">

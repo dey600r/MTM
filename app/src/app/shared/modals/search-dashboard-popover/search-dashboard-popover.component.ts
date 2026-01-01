@@ -11,7 +11,7 @@ import {
 } from '@models/index';
 
 // SERVICES
-import { DashboardService, CommonService, DataService, SettingsService, ConfigurationService } from '@services/index';
+import { DashboardService, UtilsService, DataService, SettingsService, ConfigurationService } from '@services/index';
 
 // UTILS
 import { 
@@ -30,7 +30,7 @@ import {
     private readonly popoverController: PopoverController = inject(PopoverController);
     private readonly dataService: DataService = inject(DataService);
     private readonly dashboardService: DashboardService = inject(DashboardService);
-    private readonly commonService: CommonService = inject(CommonService);
+    private readonly utilsService: UtilsService = inject(UtilsService);
     private readonly configurationService: ConfigurationService = inject(ConfigurationService);
     private readonly translator: TranslateService = inject(TranslateService);
     private readonly settingsService: SettingsService = inject(SettingsService);
@@ -102,12 +102,12 @@ import {
 
         // FILTER VEHICLES
         this.filterVehicle = [];
-        this.vehicles = this.commonService.orderBy(this.dataService.getVehiclesData(), ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
+        this.vehicles = this.utilsService.orderBy(this.dataService.getVehiclesData(), ConstantsColumns.COLUMN_MTM_VEHICLE_BRAND);
         this.searchDashboard.searchVehicle.forEach(x => this.filterVehicle = [...this.filterVehicle, x.id]);
 
         // FILTER OPERATION TYPE
         this.filterOpType = [];
-        this.operationTypes = this.commonService.orderBy(
+        this.operationTypes = this.utilsService.orderBy(
             this.dataService.getOperationTypeData(), ConstantsColumns.COLUMN_MTM_OPERATION_TYPE_DESCRIPTION);
         this.searchDashboard.searchOperationType.forEach(x => this.filterOpType = [...this.filterOpType, x.id]);
 

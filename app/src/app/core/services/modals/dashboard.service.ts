@@ -16,7 +16,7 @@ import {
 } from '@models/index';
 
 // SERVICES
-import { CommonService, CalendarService } from '../common/index';
+import { UtilsService, CalendarService, CommonService } from '../common/index';
 import { MachineLearningService } from '../data/index';
 
 // UTILS
@@ -31,6 +31,7 @@ import {
 export class DashboardService {
 
     // INJECTIONS
+    private readonly utilsService: UtilsService = inject(UtilsService);
     private readonly commonService: CommonService = inject(CommonService);
     private readonly calendarService: CalendarService = inject(CalendarService);
     private readonly meService: MachineLearningService = inject(MachineLearningService);
@@ -125,7 +126,7 @@ export class DashboardService {
                     if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
                         const sumPriceRepl: MaintenanceElementModel[] = this.getFilterReplacement(os.listMaintenanceElement, filter);
                         if (!!sumPriceRepl && sumPriceRepl.length > 0) {
-                            sumPrice += this.commonService.sum(sumPriceRepl, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                            sumPrice += this.utilsService.sum(sumPriceRepl, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
                         }
                     }
 
@@ -165,12 +166,13 @@ export class DashboardService {
 
                 let replAxis: string = this.translator.instant('PAGE_CONFIGURATION.REPLACEMENTS');
                 const opAxis: string = this.translator.instant('COMMON.LABOR');
+                const opRest: string = this.translator.instant('COMMON.REST');
 
                 const iterator: number = filter.showPerMont;
                 const minYear: number =
-                    new Date(this.commonService.min(operationPreFilter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
+                    new Date(this.utilsService.min(operationPreFilter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
                 const maxYear: number =
-                    new Date(this.commonService.max(operationPreFilter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
+                    new Date(this.utilsService.max(operationPreFilter, ConstantsColumns.COLUMN_MTM_OPERATION_DATE)).getFullYear();
                 for (let i = minYear; i <= maxYear; i++) {
                     for (let j = 0; j < 12; j += iterator) {
                         const ops: OperationModel[] = operationPreFilter.filter(x =>
@@ -180,22 +182,28 @@ export class DashboardService {
                         if (!!ops && ops.length > 0) {
                             let sumPriceOperation = 0;
                             let sumPriceReplacement = 0;
+                            let sumPriceOthers = 0;
                             ops.forEach(os => {
-                                sumPriceOperation += os.price;
-                                if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
-                                    const sumPriceRepl: MaintenanceElementModel[] =
-                                        this.getFilterReplacement(os.listMaintenanceElement, filter);
-                                    if (!!sumPriceRepl && sumPriceRepl.length > 0) {
-                                        sumPriceReplacement += this.commonService.sum(sumPriceRepl,
-                                            ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                                if(this.commonService.isOperationWithReplacement(os.operationType.code)) {
+                                    sumPriceOperation += os.price;
+                                    if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
+                                        const sumPriceRepl: MaintenanceElementModel[] =
+                                            this.getFilterReplacement(os.listMaintenanceElement, filter);
+                                        if (!!sumPriceRepl && sumPriceRepl.length > 0) {
+                                            sumPriceReplacement += this.utilsService.sum(sumPriceRepl,
+                                                ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                                        }
                                     }
+                                } else {
+                                    sumPriceOthers += os.price;
                                 }
                             });
-                            if(sumPriceOperation > 0 || sumPriceReplacement > 0) {
+                            if(sumPriceOperation > 0 || sumPriceReplacement > 0 || sumPriceOthers > 0) {
                                 const dataAxis: string = this.getRangeDates(i, j, iterator);                            
                                 result = [...result, this.getDataSeriesDashboard(dataAxis, [
                                     this.getDataDashboard(replAxis, sumPriceReplacement),
-                                    this.getDataDashboard(opAxis, sumPriceOperation)
+                                    this.getDataDashboard(opAxis, sumPriceOperation),
+                                    this.getDataDashboard(opRest, sumPriceOthers)
                                  ])];
                             }
                         }
@@ -237,7 +245,7 @@ export class DashboardService {
                     if (!!os.listMaintenanceElement && os.listMaintenanceElement.length > 0) {
                         const sumPriceRepl: MaintenanceElementModel[] = this.getFilterReplacement(os.listMaintenanceElement, filter);
                         if (!!sumPriceRepl && sumPriceRepl.length > 0) {
-                            sumPrice += this.commonService.sum(sumPriceRepl, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                            sumPrice += this.utilsService.sum(sumPriceRepl, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
                         }
                     }
                 });
@@ -249,7 +257,7 @@ export class DashboardService {
                             vehiclesSum = [...vehiclesSum, op.vehicle];
                         }
                     });
-                    const sumKm: number = this.commonService.sum(vehiclesSum, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
+                    const sumKm: number = this.utilsService.sum(vehiclesSum, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
                     resultPrice = Math.round((sumPrice / sumKm) * 100) / 100;
                 }
                 result = [...result, this.getDataDashboard(x.operationType.description, resultPrice, x.operationType.id)];
@@ -286,7 +294,7 @@ export class DashboardService {
                     vehiclesSum = [...vehiclesSum, op.vehicle];
                 }
             });
-            const sumKm: number = this.commonService.sum(vehiclesSum, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
+            const sumKm: number = this.utilsService.sum(vehiclesSum, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
             result.forEach(expenses => {
                 expenses.value = Math.round((expenses.value / sumKm) * 100) / 100;
             });
@@ -550,9 +558,9 @@ export class DashboardService {
         let kmRemains: number = vehicle.km;
         for (let i = initYear; i <= todayYear; i++) {
             let averageKm: number = -1;
-            const operationsYear: OperationModel[] = this.commonService.orderBy(
+            const operationsYear: OperationModel[] = this.utilsService.orderBy(
                 operations.filter(x => x.date && new Date(x.date).getFullYear() === i),
-                this.commonService.nameOf(() => new OperationModel().km));
+                this.utilsService.nameOf(() => new OperationModel().km));
             if (operationsYear.length > 0) {
                 const kmPerDay: number = this.calculateKmsPerDayPast(operations, operationsYear, i, kmPerDayVehicle);
                 averageKm = this.calculateInitalkmSumPerYear(datePurchase, operationsYear[0].date, kmPerDay, i) + // INIT
@@ -572,17 +580,17 @@ export class DashboardService {
         let kmBefore: number = kmPerDay;
         let kmMiddle: number = kmPerDay;
         let kmAfter: number = kmPerDay;
-        const modelDate: string = this.commonService.nameOf(() => new OperationModel().date);
+        const modelDate: string = this.utilsService.nameOf(() => new OperationModel().date);
 
         // CALCULATE KM PER DAY USING OLD OPERATIONS
-        const operationYearBefore: OperationModel[] = this.commonService.orderBy(operations.filter(x => 
+        const operationYearBefore: OperationModel[] = this.utilsService.orderBy(operations.filter(x => 
             x.date && (new Date(x.date).getFullYear() < year && new Date(x.date).getFullYear() > year - 2)), modelDate);
         if (operationYearBefore.length > 0 && operationYear.length > 0) {
             kmBefore = this.calculateKmPerDayOperation(operationYearBefore[operationYearBefore.length - 1], operationYear[0]);
         }
 
         // CALCULATE KM PER DAY USING OLD NEW OPERATION
-        const operationYearAfter: OperationModel[] = this.commonService.orderBy(operations.filter(x => 
+        const operationYearAfter: OperationModel[] = this.utilsService.orderBy(operations.filter(x => 
             x.date && (new Date(x.date).getFullYear() > year && new Date(x.date).getFullYear() < year + 2)), modelDate);
         if (operationYearAfter.length > 0 && operationYear.length > 0) {
             kmAfter = this.calculateKmPerDayOperation(operationYear[operationYear.length - 1], operationYearAfter[0]);
@@ -611,7 +619,7 @@ export class DashboardService {
         const countYearsWithoutOperation: number = result.filter(x => x.value === -1).length;
         if (countYearsWithoutOperation > 0) {
             const model = <IDashboardModel>{};
-            const kmCounted: number = this.commonService.sum(result.filter(x => x.value !== -1), this.commonService.nameOf(() => model.value));
+            const kmCounted: number = this.utilsService.sum(result.filter(x => x.value !== -1), this.utilsService.nameOf(() => model.value));
             let kmRemains: number = (vehicle.kmEstimated - kmCounted);
             const kmPerYear: number = Math.floor(kmRemains / countYearsWithoutOperation);
             result.filter(x => x.value === -1).forEach((x: IDashboardModel) => {
@@ -731,10 +739,10 @@ export class DashboardService {
         // TRANSLATE TYPE
         const translateCurrent: string = this.translator.instant('COMMON.CURRENT');
         const translateOptimal: string = this.translator.instant('COMMON.OPTIMAL');
-        let propData: string = this.commonService.nameOf(() => new InfoVehicleFailurePredictionModel().kilometers);
+        let propData: string = this.utilsService.nameOf(() => new InfoVehicleFailurePredictionModel().kilometers);
         let translateY: string = 'COMMON.KILOMETERS';
         if(filter.filterKmTime === FilterKmTimeEnum.TIME) {
-            propData = this.commonService.nameOf(() => new InfoVehicleFailurePredictionModel().times);
+            propData = this.utilsService.nameOf(() => new InfoVehicleFailurePredictionModel().times);
             translateY = 'COMMON.MONTHS';
         }
 
@@ -767,18 +775,18 @@ export class DashboardService {
         let resultLineMin: IDashboardModel[] = [];
 
         // TRANSLATE TYPE
-        let propAverage: string = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().kmAverage);
-        let propData: string = this.commonService.nameOf(() => new InfoVehicleReplacementModel().km);
-        let propBar: string = this.commonService.nameOf(() => new InfoVehicleReplacementModel().km);
+        let propAverage: string = this.utilsService.nameOf(() => new InfoVehicleHistoricReplacementModel().kmAverage);
+        let propData: string = this.utilsService.nameOf(() => new InfoVehicleReplacementModel().km);
+        let propBar: string = this.utilsService.nameOf(() => new InfoVehicleReplacementModel().km);
         let translateY: string = 'COMMON.KILOMETERS';
         if(filter.filterKmTime === FilterKmTimeEnum.TIME) {
-            propAverage = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().timeAverage);
-            propData = this.commonService.nameOf(() => new InfoVehicleReplacementModel().time);
-            propBar = this.commonService.nameOf(() => new InfoVehicleReplacementModel().time);
+            propAverage = this.utilsService.nameOf(() => new InfoVehicleHistoricReplacementModel().timeAverage);
+            propData = this.utilsService.nameOf(() => new InfoVehicleReplacementModel().time);
+            propBar = this.utilsService.nameOf(() => new InfoVehicleReplacementModel().time);
             translateY = 'COMMON.MONTHS';
         } else if(filter.filterKmTime === FilterKmTimeEnum.CASH) {
-            propAverage = this.commonService.nameOf(() => new InfoVehicleHistoricReplacementModel().priceAverage);
-            propData = this.commonService.nameOf(() => new InfoVehicleReplacementModel().price);
+            propAverage = this.utilsService.nameOf(() => new InfoVehicleHistoricReplacementModel().priceAverage);
+            propData = this.utilsService.nameOf(() => new InfoVehicleReplacementModel().price);
             translateY = 'COMMON.PRICE';
         }
 
@@ -787,8 +795,8 @@ export class DashboardService {
             let max: number = x[propAverage];
             let min: number = x[propAverage];
             if(x.listReplacements && x.listReplacements.length > 0) {
-                max = this.commonService.max(x.listReplacements, propData);
-                min = this.commonService.min(x.listReplacements, propData);
+                max = this.utilsService.max(x.listReplacements, propData);
+                min = this.utilsService.min(x.listReplacements, propData);
             }
             resultLineAverage = [...resultLineAverage, this.getDataDashboard(x.name, x[propAverage])];
             resultLineMax = [...resultLineMax, this.getDataDashboard(x.name, max)];
@@ -912,20 +920,20 @@ export class DashboardService {
 
     getConfigObservers(): IObserverSearcherControlModel {
         const aux: IDisplaySearcherControlModel = this.getConfigDisplay();
-        const showFilterKmTime: string = this.commonService.nameOf(() => aux.showFilterKmTime);
-        const showSearchText: string = this.commonService.nameOf(() => aux.showSearchText);
-        const showFilterOpType: string = this.commonService.nameOf(() => aux.showFilterOpType);
-        const showFilterVehicle: string = this.commonService.nameOf(() => aux.showFilterVehicle);
-        const showFilterMaintElement: string = this.commonService.nameOf(() => aux.showFilterMaintElement);
-        const showFilterMonth: string = this.commonService.nameOf(() => aux.showFilterMonth);
-        const showStrict: string = this.commonService.nameOf(() => aux.showStrict);
-        const showExpensePerKm: string = this.commonService.nameOf(() => aux.showExpensePerKm);
-        const showAxis: string = this.commonService.nameOf(() => aux.showAxis);
-        const showLegend: string = this.commonService.nameOf(() => aux.showLegend);
-        const showAxisLabel: string = this.commonService.nameOf(() => aux.showAxisLabel);
-        const showDataLabel: string = this.commonService.nameOf(() => aux.showDataLabel);
-        const showDoghnut: string = this.commonService.nameOf(() => aux.showDoghnut);
-        const showMyData: string = this.commonService.nameOf(() => aux.showMyData);
+        const showFilterKmTime: string = this.utilsService.nameOf(() => aux.showFilterKmTime);
+        const showSearchText: string = this.utilsService.nameOf(() => aux.showSearchText);
+        const showFilterOpType: string = this.utilsService.nameOf(() => aux.showFilterOpType);
+        const showFilterVehicle: string = this.utilsService.nameOf(() => aux.showFilterVehicle);
+        const showFilterMaintElement: string = this.utilsService.nameOf(() => aux.showFilterMaintElement);
+        const showFilterMonth: string = this.utilsService.nameOf(() => aux.showFilterMonth);
+        const showStrict: string = this.utilsService.nameOf(() => aux.showStrict);
+        const showExpensePerKm: string = this.utilsService.nameOf(() => aux.showExpensePerKm);
+        const showAxis: string = this.utilsService.nameOf(() => aux.showAxis);
+        const showLegend: string = this.utilsService.nameOf(() => aux.showLegend);
+        const showAxisLabel: string = this.utilsService.nameOf(() => aux.showAxisLabel);
+        const showDataLabel: string = this.utilsService.nameOf(() => aux.showDataLabel);
+        const showDoghnut: string = this.utilsService.nameOf(() => aux.showDoghnut);
+        const showMyData: string = this.utilsService.nameOf(() => aux.showMyData);
         return {
             filterDashboardGrouper: [showFilterOpType, showFilterMaintElement, showFilterMonth, showExpensePerKm, showAxis, showLegend, showAxisLabel, showDataLabel, showDoghnut, showMyData],
             filterDashboardRecordsGrouper: [showFilterKmTime, showFilterOpType, showFilterMaintElement, showStrict],

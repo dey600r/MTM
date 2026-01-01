@@ -9,15 +9,15 @@
     <ion-row>
       <ion-col *ngFor="let i of input.card.items" 
           [sizeLg]="input.card.sizelg" [sizeMd]="input.card.sizemd" [sizeSm]="input.card.sizesm" [sizeXs]="input.card.sizexs">
-        <ion-card>
-          <ion-list lines="none">
+        <ion-card style="min-height: 100px; display: flex; align-items: center;">
+          <ion-list lines="none" style="width: 100%">
             <app-body-skeleton [input]="input.body"></app-body-skeleton>
           </ion-list>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-list *ngIf="!input.card.activated">
+  <ion-list *ngIf="!input.card.activated" style="padding-top: 5px;">
     <app-body-skeleton [input]="input.body"></app-body-skeleton>
   </ion-list>
 </ion-content>

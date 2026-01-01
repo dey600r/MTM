@@ -3,7 +3,7 @@ import { IonSelect } from '@ionic/angular';
 
 // SERVICES
 import { 
-  DataService, CommonService, ConfigurationService, ControlService, SettingsService, VehicleService,
+  DataService, UtilsService, ConfigurationService, ControlService, SettingsService, VehicleService,
   DashboardService, IconService
 } from '@services/index';
 
@@ -38,7 +38,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
   // INJECTIONS
   private readonly dataService: DataService = inject(DataService);
-  private readonly commonService: CommonService = inject(CommonService);
+  private readonly utilsService: UtilsService = inject(UtilsService);
   private readonly controlService: ControlService = inject(ControlService);
   private readonly configurationService: ConfigurationService = inject(ConfigurationService);
   private readonly settingsService: SettingsService = inject(SettingsService);
@@ -124,7 +124,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
   initData() {
     this.dataService.getVehicles().subscribe(data => {
       if (!!data && data.length > 0) {
-        this.maxKm = this.commonService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
+        this.maxKm = this.utilsService.max(data, ConstantsColumns.COLUMN_MTM_VEHICLE_KM);
       }
       // Filter to get less elemnts to better perfomance
       this.vehicles = data;
@@ -137,7 +137,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
     this.dataService.getConfigurations().subscribe(data => {
       this.allConfigurations = data; 
-      this.configurations = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
+      this.configurations = this.utilsService.orderBy(data, ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
       this.dashboardService.setSearchConfiguration();
       this.changeLoadedBody(false);
       this.detector.detectChanges();
@@ -145,7 +145,7 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
     this.dataService.getMaintenance().subscribe(data => {
       this.allMaintenances = data;
-      this.maintenances = this.commonService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
+      this.maintenances = this.utilsService.orderBy(data, ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);
       this.dashboardService.setSearchConfiguration();
       this.changeLoadedBody(false);
       this.detector.detectChanges();
@@ -254,13 +254,13 @@ export class ConfigurationPage extends BasePage implements OnInit {
 
     // FILTER CONFIGURATION
     const filteredVehicles: VehicleModel[] = this.vehicles.filter(x => filter.searchVehicle.some(y => x.id === y.id));
-    this.configurations = this.commonService.orderBy(this.allConfigurations.filter(x => 
+    this.configurations = this.utilsService.orderBy(this.allConfigurations.filter(x => 
       (filteredVehicles.length === 0 || filteredVehicles.some(y => x.id === y.configuration.id)) &&
       (x.name.toLowerCase().includes(filteredText) || x.description.toLowerCase().includes(filteredText))),
       ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
     
     // FILTER MAINTENANCE
-    this.maintenances = this.commonService.orderBy(this.allMaintenances.filter(x =>
+    this.maintenances = this.utilsService.orderBy(this.allMaintenances.filter(x =>
       (filteredVehicles.length === 0 || this.configurations.some(y => y.listMaintenance.some(z => x.id === z.id))) &&
       (x.description.toLowerCase().includes(filteredText))),
       ConstantsColumns.COLUMN_MTM_MAINTENANCE_KM);

@@ -13,7 +13,7 @@ import {
 import { ConstantsColumns, WarningWearEnum, Constants, FailurePredictionTypeEnum } from '@utils/index';
 
 // SERVICES
-import { CommonService, CalendarService, IconService } from '../common/index';
+import { CommonService, CalendarService, IconService, UtilsService } from '../common/index';
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +22,7 @@ export class HomeService {
 
     // IJECTIONS
     private readonly commonService: CommonService = inject(CommonService);
+    private readonly utilsService: UtilsService = inject(UtilsService);
     private readonly calendarService: CalendarService = inject(CalendarService);
     private readonly translator: TranslateService = inject(TranslateService);
     private readonly iconService: IconService = inject(IconService);
@@ -130,7 +131,7 @@ export class HomeService {
             });
         }
 
-        return this.commonService.orderBy(result, ConstantsColumns.COLUMN_MODEL_NAME_VEHICLE);
+        return this.utilsService.orderBy(result, ConstantsColumns.COLUMN_MODEL_NAME_VEHICLE);
     }
 
     calculateWearNotificationReplacement(replacementWear: WearReplacementProgressBarViewModel[]):
@@ -184,13 +185,13 @@ export class HomeService {
                 !wearMaintenanceWarning.some(x => x.idMaintenance === main.idMaintenance) &&
                 main.listWearNotificationReplacement.some(notif => notif.warning === WarningWearEnum.SUCCESS));
 
-        result = this.commonService.orderBy(wearMaintenanceDanger, ConstantsColumns.COLUMN_MODEL_KM_MAINTENANCE);
-        this.commonService.orderBy(wearMaintenanceWarning, ConstantsColumns.COLUMN_MODEL_KM_MAINTENANCE).forEach(x =>
+        result = this.utilsService.orderBy(wearMaintenanceDanger, ConstantsColumns.COLUMN_MODEL_KM_MAINTENANCE);
+        this.utilsService.orderBy(wearMaintenanceWarning, ConstantsColumns.COLUMN_MODEL_KM_MAINTENANCE).forEach(x =>
             result = [...result, x]);
-        this.commonService.orderBy(wearMaintenanceSuccess, ConstantsColumns.COLUMN_MODEL_KM_MAINTENANCE).forEach(x =>
+        this.utilsService.orderBy(wearMaintenanceSuccess, ConstantsColumns.COLUMN_MODEL_KM_MAINTENANCE).forEach(x =>
             result = [...result, x]);
 
-        result.forEach(x => x.listWearReplacement = this.commonService.orderBy(x.listWearReplacement,
+        result.forEach(x => x.listWearReplacement = this.utilsService.orderBy(x.listWearReplacement,
             ConstantsColumns.COLUMN_MODEL_CALCULATE_KMS, true));
 
         return result;
@@ -318,7 +319,7 @@ export class HomeService {
             let calKms = 0;
             let calMonths = 0;
             if (!!ops && ops.length > 0) {
-                maxKm = this.commonService.max(ops, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
+                maxKm = this.utilsService.max(ops, ConstantsColumns.COLUMN_MTM_OPERATION_KM);
                 op = ops.find(x => x.km === maxKm);
                 calKms = this.calculateKmVehicleReplacement(vehicle.kmEstimated, op.km, main.km);
                 calMonths = this.calculateMontVehicleReplacement(main.time, op.date);
@@ -330,7 +331,7 @@ export class HomeService {
             const percentMonth: number = this.calculatePercent(main.time, calMonths);
             let priceSum: number = op.price;
             if (!!op.listMaintenanceElement && op.listMaintenanceElement.length > 0) {
-                priceSum += this.commonService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                priceSum += this.utilsService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
             }
             const warningKms: WarningWearEnum = this.getWarningWearNormal(main.wear, percentKm, calKms, op.km, main.km);
             const warningMonths: WarningWearEnum = this.getWarningWearNormal(main.wear, percentMonth, calMonths, op.km, main.time);
@@ -381,7 +382,7 @@ export class HomeService {
         let date = '';
         const months: number = time * (time < 0 ? -1 : 1);
         if (months >= 12) {
-          const years: number = this.commonService.round((months / 12), 10);
+          const years: number = this.utilsService.round((months / 12), 10);
           date = `${years} ${this.translator.instant(years > 1 ? 'COMMON.YEARS' : 'COMMON.YEAR')}`;
         } else {
           date = `${months} ${this.translator.instant(months > 1 ? 'COMMON.MONTHS' : 'COMMON.MONTH')}`;
@@ -397,7 +398,7 @@ export class HomeService {
 
         if (vehicleWear.listWearMaintenance.length > 0) {
             const diffDateToday: number = this.calendarService.monthDiff(vehicleWear.datePurchaseVehicle, new Date());
-            const listWear: WearMaintenanceProgressBarViewModel[] = this.commonService.orderBy(
+            const listWear: WearMaintenanceProgressBarViewModel[] = this.utilsService.orderBy(
                 vehicleWear.listWearMaintenance, ConstantsColumns.COLUMN_MODEL_FROM_KM_MAINTENANCE);
             // INIT VARIABLES
             let wearMaintenance: WearMaintenanceProgressBarViewModel[] = [];
@@ -622,16 +623,6 @@ export class HomeService {
 
     // HELPER METHODS FOR MACHINE LERNING TYPES
 
-    isEventFailure(code: string): boolean {
-        return code === Constants.OPERATION_TYPE_FAILURE_HOME ||
-            code === Constants.OPERATION_TYPE_FAILURE_WORKSHOP;
-    }
-
-    isEventPreventive(code: string): boolean {
-        return code === Constants.OPERATION_TYPE_MAINTENANCE_HOME ||
-            code === Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP;
-    }
-
     calculateEventFailurePrediction(operations: OperationModel[], idReplacement: number = 0): IReplaclementEventFailurePrediction[] {
         if(!operations || operations.length === 0) return [];
         
@@ -640,14 +631,14 @@ export class HomeService {
         return { 
                 tkm: op.km, 
                 ttime: this.calendarService.monthDiff(new Date(op.vehicle.datePurchase), new Date(op.date)),
-                type: this.isEventFailure(op.operationType.code) ? FailurePredictionTypeEnum.FAIL : FailurePredictionTypeEnum.MAINT,
+                type: this.commonService.isEventFailure(op.operationType.code) ? FailurePredictionTypeEnum.FAIL : FailurePredictionTypeEnum.MAINT,
                 cost: me.price + op.price
             }
             };
         
         const opPrefiltered = operations.filter(op => 
-        this.isEventFailure(op.operationType.code) ||
-        this.isEventPreventive(op.operationType.code));
+            this.commonService.isEventFailure(op.operationType.code) ||
+            this.commonService.isEventPreventive(op.operationType.code));
         opPrefiltered.forEach(op => {
         op.listMaintenanceElement.forEach(me => {
             if(idReplacement == 0 || idReplacement === me.id) {

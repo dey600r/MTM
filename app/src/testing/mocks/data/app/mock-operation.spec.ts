@@ -243,6 +243,20 @@ export class MockAppOperation {
                 MockAppMaintenance.MaintenanceElements[5],
                 MockAppMaintenance.MaintenanceElements[6]
             ]
+        }),
+        new OperationModel({
+            description: 'Chaqueta moto',
+            details: 'Alpinestar',
+            operationType: MockAppOperation.OperationTypes[3],
+            vehicle: MockAppVehicle.Vehicles[0],
+            km: 120500,
+            date: new Date(new Date().getFullYear() - 3, new Date().getMonth() - 3, new Date().getDate() + 1),
+            location: 'Madrid (Motos Cortes)',
+            owner: 'Yo',
+            price: 204,
+            document: '',
+            id: 13,
+            listMaintenanceElement: []
         })
     ];
 }

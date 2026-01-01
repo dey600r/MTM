@@ -43,7 +43,7 @@
     </ion-item>
     <ion-item *ngIf="!hideVehicleSummary">
       <p class="ion-color-info-summary">{{ 'PAGE_HOME.RELIABILITY_VEHICLE' | translate }}</p>
-      <p class="ion-color-info-summary" slot="end">{{ labelPercent }} %</p>
+      <p class="ion-color-info-summary icon-margin-p" slot="end">{{ labelPercent }} %</p>
       <ion-icon slot="end" size="small" [class]="labelIconClassPercent" [color]="labelIconClassPercent" [name]="labelIconPercent"></ion-icon>
     </ion-item>
   </ion-list>
@@ -234,7 +234,7 @@
         [xAxisLabel]="dashboardReplacementVehicle.xAxisLabel"
         [yAxisLabel]="dashboardReplacementVehicle.yAxisLabel">
       </combo-chart-component>
-      <ion-item *ngFor="let rep of selectedInfoReplacement; let i = index;" button (click)="showInfoReplacement[i] = !showInfoReplacement[i];">
+      <ion-item *ngFor="let rep of selectedInfoReplacement; let i = index;" [button]="rep.listReplacements.length > 0" (click)="showInfoReplacement[i] = !showInfoReplacement[i];">
         <div class="main-item-div">
           <div class="table-row">
             <div>

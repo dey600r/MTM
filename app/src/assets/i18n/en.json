@@ -116,7 +116,8 @@
         "PREDICTIVE_MAINTENANCE": "Predictive Maintenance",
         "PREDICTIVE_COST": "Predictive cost",
         "OPTIMISTIC": "Optimistic",
-        "PESSIMISTIC": "Pessimistic"
+        "PESSIMISTIC": "Pessimistic",
+        "REST": "Rest"
     },
     "PAGE_HOME": {
         "HOME": "Home",

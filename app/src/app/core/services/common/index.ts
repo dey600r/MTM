@@ -1,3 +1,4 @@
+export * from './utils.service';
 export * from './common.service';
 export * from './icon.service';
 export * from './calendar.service';

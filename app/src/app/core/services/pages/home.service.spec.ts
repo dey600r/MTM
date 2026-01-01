@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // SERVICES
 import { HomeService } from './home.service';
-import { CalendarService, CommonService } from '../common';
+import { CalendarService, UtilsService } from '../common';
 
 // CONFIGURATIONS
 import { MockAppData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/index';
@@ -15,12 +15,12 @@ import { MockAppData, MockTranslate, SetupTest, SpyMockConfig } from '@testing/i
 import { WearVehicleProgressBarViewModel, WearMaintenanceProgressBarViewModel, VehicleModel, OperationModel, MaintenanceModel, MaintenanceElementModel, ConfigurationModel, WearNotificationReplacementProgressBarViewModel, WearReplacementProgressBarViewModel } from '@models/index';
 
 // UTILS
-import { Constants, ConstantsColumns, FailurePredictionTypeEnum, WarningWearEnum } from '@utils/index';
+import { ConstantsColumns, FailurePredictionTypeEnum, WarningWearEnum } from '@utils/index';
 
 describe('HomeService', () => {
     let service: HomeService;
     let calendarService: CalendarService;
-    let commonService: CommonService;
+    let utilsService: UtilsService;
     let translate: TranslateService;
 
     beforeEach(async () => {
@@ -30,7 +30,7 @@ describe('HomeService', () => {
         }).compileComponents();
         service = TestBed.inject(HomeService);
         calendarService = TestBed.inject(CalendarService);
-        commonService = TestBed.inject(CommonService);
+        utilsService = TestBed.inject(UtilsService);
         translate = TestBed.inject(TranslateService);
         await firstValueFrom(translate.use('es'));
     });
@@ -81,7 +81,7 @@ describe('HomeService', () => {
                         expect(r.descriptionOperation).toEqual(op.description);
                         const diffOp = calendarService.monthDiff(new Date(vehicle.datePurchase), new Date(r.dateOperation));
                         expect(r.calculateMonths).toEqual(diffOp - diffV + m.timeMaintenance);
-                        const sum: number = commonService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
+                        const sum: number = utilsService.sum(op.listMaintenanceElement, ConstantsColumns.COLUMN_MTM_OP_MAINTENANCE_ELEMENT_PRICE);
                         expect(r.priceOperation).toEqual(sum + op.price);
                         expect(r.kmOperation).toEqual(op.km);
                     }
@@ -309,18 +309,6 @@ describe('HomeService', () => {
     }
 
     /** HELP EVENT FAILURES */
-
-    it('should validate if the operation is failure', () => {
-        MockAppData.OperationTypes.forEach(x => {
-            expect(service.isEventFailure(x.code)).toEqual((x.code === Constants.OPERATION_TYPE_FAILURE_HOME || x.code === Constants.OPERATION_TYPE_FAILURE_WORKSHOP));
-        });
-    });
-
-    it('should validate if the operation is preventive', () => {
-        MockAppData.OperationTypes.forEach(x => {
-            expect(service.isEventPreventive(x.code)).toEqual((x.code === Constants.OPERATION_TYPE_MAINTENANCE_HOME || x.code === Constants.OPERATION_TYPE_MAINTENANCE_WORKSHOP));
-        });
-    });
 
     it('should calculate event failure from operations', () => {
         const vehicle = MockAppData.Vehicles[0];

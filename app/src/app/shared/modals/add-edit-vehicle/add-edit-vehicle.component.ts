@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ActionDBEnum, ConstantsColumns, Constants, PageEnum, ToastTypeEnum, ModalTypeEnum } from '@utils/index';
 import { ModalInputModel, VehicleModel, ConfigurationModel, OperationModel, VehicleTypeModel, ISettingModel, HeaderInputModel } from '@models/index';
 import {
-  DataService, VehicleService, CommonService, CalendarService, ControlService, SettingsService
+  DataService, VehicleService, UtilsService, CalendarService, ControlService, SettingsService
 } from '@services/index';
 
 @Component({
@@ -24,7 +24,7 @@ export class AddEditVehicleComponent implements OnInit {
   private readonly dataService: DataService = inject(DataService);
   private readonly translator: TranslateService = inject(TranslateService);
   private readonly vehicleService: VehicleService = inject(VehicleService);
-  private readonly commonService: CommonService = inject(CommonService);
+  private readonly utilsService: UtilsService = inject(UtilsService);
   private readonly calendarService: CalendarService = inject(CalendarService);
   private readonly controlService: ControlService = inject(ControlService);
   private readonly settingsService: SettingsService = inject(SettingsService);
@@ -72,7 +72,7 @@ export class AddEditVehicleComponent implements OnInit {
     }
 
     // GET CONFIGURATIONS
-    this.configurations = this.commonService.orderBy(
+    this.configurations = this.utilsService.orderBy(
       this.dataService.getConfigurationsData(), ConstantsColumns.COLUMN_MTM_CONFIGURATION_NAME);
     if (!!this.configurations && this.configurations.length > 0) {
       if(this.modalInputModel.type === ModalTypeEnum.CREATE)
@@ -173,11 +173,11 @@ export class AddEditVehicleComponent implements OnInit {
     } else if (!!this.operations && this.operations.length > 0) {
       if (this.operations.some(x => this.vehicle.km < x.km)) {
         msg = this.translator.instant('PAGE_VEHICLE.AddKmHigher',
-        { km: this.commonService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM), measure: this.measure.value});
+        { km: this.utilsService.max(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_KM), measure: this.measure.value});
       } else if (this.operations.some(x => purchase > new Date(x.date))) {
         msg = this.translator.instant('PAGE_OPERATION.AddDateLower',
         { dateFin: this.calendarService.getDateString(
-            this.commonService.min(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_DATE))});
+            this.utilsService.min(this.operations, ConstantsColumns.COLUMN_MTM_OPERATION_DATE))});
       }
     }
 
