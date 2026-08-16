@@ -13,7 +13,7 @@
     "lint": "eslint -c eslint.config.mjs",
     "e2e": "ng e2e",
     "build:release-prod": "sh mtm-deploy-store.sh C:/Proyectos/MtM %npm_package_version%",
-    "build:release-jenkins": "sh mtm-deploy-store.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version",
+    "build:release-jenkins": "sh mtm-deploy-store.sh /home/workspace/workspace/deyapps-mtm-build $npm_package_version 0",
     "emulate:debug-android": "ionic cordova emulate android -l --debug",
     "deploy:release-firebase": "mtm-deploy-firebase.bat",
     "deploy:release-apk": "mtm-deploy-apk.bat",
