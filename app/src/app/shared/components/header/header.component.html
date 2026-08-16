@@ -2,30 +2,42 @@
   <ion-toolbar>
     <!-- Button Left -->
     <ion-button class="btn-width-header" slot="start" fill="clear" (click)="emitButtonLeft($event)">
-      <ion-icon *ngIf="this.input.iconButtonLeft !== ''" size="large" [name]="this.input.iconButtonLeft"></ion-icon>
+      @if (this.input.iconButtonLeft !== '') {
+        <ion-icon size="large" [name]="this.input.iconButtonLeft"></ion-icon>
+      }
     </ion-button>
     <!-- Tittle -->
     <ion-title color="text-header" class="align-center">{{ this.input.title | translate }}</ion-title>
     <!-- Button Right -->
-    <ion-button *ngIf="this.input.iconButtonRight !== ''" slot="end" fill="clear" (click)="emitButtonRight($event)" class="btn-width-header">
-      <ion-icon size="large" [name]="this.input.iconButtonRight"></ion-icon>
-    </ion-button>
+    @if (this.input.iconButtonRight !== '') {
+      <ion-button slot="end" fill="clear" (click)="emitButtonRight($event)" class="btn-width-header">
+        <ion-icon size="large" [name]="this.input.iconButtonRight"></ion-icon>
+      </ion-button>
+    }
     <!-- Button Close -->
-    <ion-button *ngIf="this.input.iconButtonRight === ''" fill="clear" slot="end" (click)="closeModal()" class="btn-width-header">
-      <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
-    </ion-button>
+    @if (this.input.iconButtonRight === '') {
+      <ion-button fill="clear" slot="end" (click)="closeModal()" class="btn-width-header">
+        <ion-icon size="large" class="btn-color" name="close-circle"></ion-icon>
+      </ion-button>
+    }
   </ion-toolbar>
   <!-- SEGMENT -->
-  <ion-segment *ngIf="this.input.dataSegment.length > 0" class="segment-button-fixed" [value]="this.selectedSegment"
+  @if (this.input.dataSegment.length > 0) {
+    <ion-segment class="segment-button-fixed" [value]="this.selectedSegment"
       [scrollable]="activeSegmentScroll()" (ionChange)="emitSegmentHeader($event)">
-    <ion-segment-button *ngFor="let data of this.input.dataSegment; let i = index;" [value]="data.id" layout="icon-start">
-      <ion-label>
-        {{ data.name  | translate }}
-      </ion-label>
-      <ion-icon size="small" [name]="data.icon"></ion-icon>
-      <div [class]="'card-progress-bar' +  data.progressColor" *ngIf="data.progressColor !== ''">
-        <div [class]="'progress' +  data.progressColor + '-bar'" [style.width.%]="data.progressValue"></div>
-      </div>
-    </ion-segment-button>
-  </ion-segment>
+      @for (data of this.input.dataSegment; track data; let i = $index) {
+        <ion-segment-button [value]="data.id" layout="icon-start">
+          <ion-label>
+            {{ data.name  | translate }}
+          </ion-label>
+          <ion-icon size="small" [name]="data.icon"></ion-icon>
+          @if (data.progressColor !== '') {
+            <div [class]="'card-progress-bar' +  data.progressColor">
+              <div [class]="'progress' +  data.progressColor + '-bar'" [style.width.%]="data.progressValue"></div>
+            </div>
+          }
+        </ion-segment-button>
+      }
+    </ion-segment>
+  }
 </ion-header>

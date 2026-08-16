@@ -1,105 +1,143 @@
 <ion-list>
-    <ion-list-header>
-        <!-- Tittle -->
-        <ion-label class="label-filter"><h2>{{ 'COMMON.FILTER' | translate }}</h2></ion-label>
-        <!-- Button Close -->
-        <ion-label>
-            <ion-button slot="end" fill="clear" (click)="closePopover()" class="btn-width-header">
-                <ion-icon size="large" name="close-circle"></ion-icon>
-            </ion-button>
-        </ion-label>
-    </ion-list-header>
-    <!-- Filters -->
-    <ion-item *ngIf="showFilterKmTime">
-        <ion-toolbar>
-            <ion-segment [value]="searchDashboard.filterKmTime" [(ngModel)]="searchDashboard.filterKmTime"
-            (ionChange)="onChangeFilterGrouper('showFilterKmTime')">
-                <ion-segment-button *ngFor="let seg of segmentFilterKmTimeOptions" [value]="seg.value">
-                    <ion-icon size="large" [name]="seg.icon"></ion-icon>
-                </ion-segment-button>
-            </ion-segment>
-        </ion-toolbar>
-    </ion-item>
-    <ion-item *ngIf="showSearchText">
-        <ion-searchbar class="search-bar-location" [(ngModel)]="searchDashboard.searchText" showCancelButton="never" 
-            debounce="500" (ionInput)="onChangeFilterGrouper('showSearchText')" clearIcon="close"></ion-searchbar>
-    </ion-item>
-    <ion-item *ngIf="showFilterOpType">
-        <ion-select [placeholder]="this.translateSelect" multiple="true" [cancelText]="this.translateCancel" 
-                [okText]="this.translateAccept" [(ngModel)]="this.filterOpType" 
-                (ionChange)="onChangeFilterGrouper('showFilterOpType')" label-placement="floating" >
-            <div slot="label" class="label-required">
-                <ion-text>{{ 'COMMON.OP_TYPE' | translate }}</ion-text>
-            </div>
-            <ion-select-option [value]="ot.id" *ngFor="let ot of operationTypes">{{ ot.description }}</ion-select-option>
-        </ion-select>
-    </ion-item>
-    <ion-item *ngIf="showFilterVehicle">
-        <ion-select [placeholder]="this.translateSelect" multiple="true" [cancelText]="this.translateCancel" 
-                [okText]="this.translateAccept" [(ngModel)]="this.filterVehicle" 
-                (ionChange)="onChangeFilterGrouper('showFilterVehicle')" label-placement="floating" >
-            <div slot="label" class="label-required">
-                <ion-text>{{ 'COMMON.VEHICLES' | translate }}</ion-text>
-            </div>
-            <ion-select-option [value]="v.id" *ngFor="let v of vehicles">{{ v.$getName }}</ion-select-option>
-        </ion-select>
-    </ion-item>
-    <ion-item *ngIf="showFilterMaintElement">
-        <ion-select [placeholder]="this.translateSelect" multiple="true" [cancelText]="this.translateCancel" 
-                [okText]="this.translateAccept" [(ngModel)]="this.filterMaintElement" 
-                (ionChange)="onChangeFilterGrouper('showFilterMaintElement')" label-placement="floating" >
-            <div slot="label" class="label-required">
-                <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
-            </div>
-            <ion-select-option [value]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
-        </ion-select>
-    </ion-item>
-    <ion-item *ngIf="showFilterMonth">
-        <ion-select [placeholder]="this.translateSelect" [(ngModel)]="this.filterMonth" 
-                (ionChange)="onChangeFilterGrouper('showFilterMonth')" label-placement="floating" >
-            <div slot="label" class="label-required">
-                <ion-text>{{ 'COMMON.CALCULATE_PER_MONTH' | translate }}</ion-text>
-            </div>
-            <ion-select-option [value]="m.id" *ngFor="let m of months">{{ m.name }}</ion-select-option>
-        </ion-select>
-    </ion-item>
-    <ion-item *ngIf="showStrict">
-        <ion-label>{{ 'COMMON.STRICT_CALCULATION' | translate }}</ion-label>
-        <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showStrict" (ionChange)="onChangeFilterGrouper('showStrict')"></ion-checkbox>
-    </ion-item>
-    <ion-item *ngIf="showExpensePerKm">
-        <ion-label>{{ this.translateExpensePerKM }}</ion-label>
-        <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.expensePerKm" (ionChange)="onChangeFilterGrouper('showExpensePerKm')"></ion-checkbox>
-    </ion-item>
-    <ion-item *ngIf="showAxis">
-        <ion-label>{{ 'COMMON.SHOW_AXIS' | translate }}</ion-label>
-        <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showAxis" (ionChange)="onChangeFilterGrouper('showAxis')"></ion-checkbox>
-    </ion-item>
-    <ion-item *ngIf="showLegend">
-        <ion-label>{{ 'COMMON.SHOW_LEGEND' | translate }}</ion-label>
-        <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showLegend" (ionChange)="onChangeFilterGrouper('showLegend')"></ion-checkbox>
-    </ion-item>
-    <ion-item *ngIf="showAxisLabel">
-        <ion-label>{{ 'COMMON.SHOW_AXIS_LABELS' | translate }}</ion-label>
-        <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showAxisLabel" (ionChange)="onChangeFilterGrouper('showAxisLabel')"></ion-checkbox>
-    </ion-item>
-    <ion-item *ngIf="showDataLabel">
-        <ion-label>{{ 'COMMON.SHOW_DATA_LABELS' | translate }}</ion-label>
-        <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showDataLabel" (ionChange)="onChangeFilterGrouper('showDataLabel')"></ion-checkbox>
-    </ion-item>
-    <ion-item *ngIf="showDoghnut">
-        <ion-label>{{ 'COMMON.SHOW_DOGHNUT' | translate }}</ion-label>
-        <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.doghnut" (ionChange)="onChangeFilterGrouper('showDoghnut')"></ion-checkbox>
-    </ion-item>
-    <ion-item *ngIf="showMyData">
-        <ion-label>{{ 'COMMON.SHOW_MY_DATA' | translate }}</ion-label>
-        <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showMyData" (ionChange)="onChangeFilterGrouper('showMyData')"></ion-checkbox>
-    </ion-item>
-    <!-- Clear -->
+  <ion-list-header>
+    <!-- Tittle -->
+    <ion-label class="label-filter"><h2>{{ 'COMMON.FILTER' | translate }}</h2></ion-label>
+    <!-- Button Close -->
+    <ion-label>
+      <ion-button slot="end" fill="clear" (click)="closePopover()" class="btn-width-header">
+        <ion-icon size="large" name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-label>
+  </ion-list-header>
+  <!-- Filters -->
+  @if (showFilterKmTime) {
     <ion-item>
-        <ion-chip slot="end" outline color="primary" (click)="clearFilter()">
-            <ion-icon color="primary" size="small" name="reload-circle"></ion-icon>
-            <ion-label color="primary">{{ 'COMMON.CLEAN' | translate }}</ion-label>
-        </ion-chip>
+      <ion-toolbar>
+        <ion-segment [value]="searchDashboard.filterKmTime" [(ngModel)]="searchDashboard.filterKmTime"
+          (ionChange)="onChangeFilterGrouper('showFilterKmTime')">
+          @for (seg of segmentFilterKmTimeOptions; track seg) {
+            <ion-segment-button [value]="seg.value">
+              <ion-icon size="large" [name]="seg.icon"></ion-icon>
+            </ion-segment-button>
+          }
+        </ion-segment>
+      </ion-toolbar>
     </ion-item>
+  }
+  @if (showSearchText) {
+    <ion-item>
+      <ion-searchbar class="search-bar-location" [(ngModel)]="searchDashboard.searchText" showCancelButton="never"
+      debounce="500" (ionInput)="onChangeFilterGrouper('showSearchText')" clearIcon="close"></ion-searchbar>
+    </ion-item>
+  }
+  @if (showFilterOpType) {
+    <ion-item>
+      <ion-select [placeholder]="this.translateSelect" multiple="true" [cancelText]="this.translateCancel"
+        [okText]="this.translateAccept" [(ngModel)]="this.filterOpType"
+        (ionChange)="onChangeFilterGrouper('showFilterOpType')" label-placement="floating" >
+        <div slot="label" class="label-required">
+          <ion-text>{{ 'COMMON.OP_TYPE' | translate }}</ion-text>
+        </div>
+        @for (ot of operationTypes; track ot) {
+          <ion-select-option [value]="ot.id">{{ ot.description }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  }
+  @if (showFilterVehicle) {
+    <ion-item>
+      <ion-select [placeholder]="this.translateSelect" multiple="true" [cancelText]="this.translateCancel"
+        [okText]="this.translateAccept" [(ngModel)]="this.filterVehicle"
+        (ionChange)="onChangeFilterGrouper('showFilterVehicle')" label-placement="floating" >
+        <div slot="label" class="label-required">
+          <ion-text>{{ 'COMMON.VEHICLES' | translate }}</ion-text>
+        </div>
+        @for (v of vehicles; track v) {
+          <ion-select-option [value]="v.id">{{ v.$getName }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  }
+  @if (showFilterMaintElement) {
+    <ion-item>
+      <ion-select [placeholder]="this.translateSelect" multiple="true" [cancelText]="this.translateCancel"
+        [okText]="this.translateAccept" [(ngModel)]="this.filterMaintElement"
+        (ionChange)="onChangeFilterGrouper('showFilterMaintElement')" label-placement="floating" >
+        <div slot="label" class="label-required">
+          <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
+        </div>
+        @for (me of maintenanceElements; track me) {
+          <ion-select-option [value]="me.id">{{ me.name }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  }
+  @if (showFilterMonth) {
+    <ion-item>
+      <ion-select [placeholder]="this.translateSelect" [(ngModel)]="this.filterMonth"
+        (ionChange)="onChangeFilterGrouper('showFilterMonth')" label-placement="floating" >
+        <div slot="label" class="label-required">
+          <ion-text>{{ 'COMMON.CALCULATE_PER_MONTH' | translate }}</ion-text>
+        </div>
+        @for (m of months; track m) {
+          <ion-select-option [value]="m.id">{{ m.name }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  }
+  @if (showStrict) {
+    <ion-item>
+      <ion-label>{{ 'COMMON.STRICT_CALCULATION' | translate }}</ion-label>
+      <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showStrict" (ionChange)="onChangeFilterGrouper('showStrict')"></ion-checkbox>
+    </ion-item>
+  }
+  @if (showExpensePerKm) {
+    <ion-item>
+      <ion-label>{{ this.translateExpensePerKM }}</ion-label>
+      <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.expensePerKm" (ionChange)="onChangeFilterGrouper('showExpensePerKm')"></ion-checkbox>
+    </ion-item>
+  }
+  @if (showAxis) {
+    <ion-item>
+      <ion-label>{{ 'COMMON.SHOW_AXIS' | translate }}</ion-label>
+      <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showAxis" (ionChange)="onChangeFilterGrouper('showAxis')"></ion-checkbox>
+    </ion-item>
+  }
+  @if (showLegend) {
+    <ion-item>
+      <ion-label>{{ 'COMMON.SHOW_LEGEND' | translate }}</ion-label>
+      <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showLegend" (ionChange)="onChangeFilterGrouper('showLegend')"></ion-checkbox>
+    </ion-item>
+  }
+  @if (showAxisLabel) {
+    <ion-item>
+      <ion-label>{{ 'COMMON.SHOW_AXIS_LABELS' | translate }}</ion-label>
+      <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showAxisLabel" (ionChange)="onChangeFilterGrouper('showAxisLabel')"></ion-checkbox>
+    </ion-item>
+  }
+  @if (showDataLabel) {
+    <ion-item>
+      <ion-label>{{ 'COMMON.SHOW_DATA_LABELS' | translate }}</ion-label>
+      <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showDataLabel" (ionChange)="onChangeFilterGrouper('showDataLabel')"></ion-checkbox>
+    </ion-item>
+  }
+  @if (showDoghnut) {
+    <ion-item>
+      <ion-label>{{ 'COMMON.SHOW_DOGHNUT' | translate }}</ion-label>
+      <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.doghnut" (ionChange)="onChangeFilterGrouper('showDoghnut')"></ion-checkbox>
+    </ion-item>
+  }
+  @if (showMyData) {
+    <ion-item>
+      <ion-label>{{ 'COMMON.SHOW_MY_DATA' | translate }}</ion-label>
+      <ion-checkbox slot="end" color="primary" [(ngModel)]="searchDashboard.showMyData" (ionChange)="onChangeFilterGrouper('showMyData')"></ion-checkbox>
+    </ion-item>
+  }
+  <!-- Clear -->
+  <ion-item>
+    <ion-chip slot="end" outline color="primary" (click)="clearFilter()">
+      <ion-icon color="primary" size="small" name="reload-circle"></ion-icon>
+      <ion-label color="primary">{{ 'COMMON.CLEAN' | translate }}</ion-label>
+    </ion-chip>
+  </ion-item>
 </ion-list>

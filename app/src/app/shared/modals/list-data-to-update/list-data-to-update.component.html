@@ -3,17 +3,19 @@
 
 <ion-content>
   <ion-list lines="full" class="margin-bottom35">
-    <ion-item *ngFor="let data of modalInputModel.data.listData; let i = index">
-      <ion-avatar slot="start" class="max-width10">
-        <ion-icon size="large" class="icon-color" [name]="data.icon"></ion-icon>
-      </ion-avatar>
-      <ion-label>
-        <h2>{{ data.title }}</h2>
-        <h3>{{ data.description }}</h3>
-        <p>{{ data.detail }}</p>
-      </ion-label>
-      <ion-checkbox color="primary" [(ngModel)]="data.selected" [disabled]="data.disabled" slot="end"></ion-checkbox>
-    </ion-item>
+    @for (data of modalInputModel.data.listData; track data; let i = $index) {
+      <ion-item>
+        <ion-avatar slot="start" class="max-width10">
+          <ion-icon size="large" class="icon-color" [name]="data.icon"></ion-icon>
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ data.title }}</h2>
+          <h3>{{ data.description }}</h3>
+          <p>{{ data.detail }}</p>
+        </ion-label>
+        <ion-checkbox color="primary" [(ngModel)]="data.selected" [disabled]="data.disabled" slot="end"></ion-checkbox>
+      </ion-item>
+    }
   </ion-list>
   <!-- Buton Save -->
   <ion-button class="button-circle" [disabled]="!modalInputModel.data.active" (click)="save()">

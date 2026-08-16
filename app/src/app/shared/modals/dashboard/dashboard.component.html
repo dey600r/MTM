@@ -2,69 +2,91 @@
 <app-header [input]="headerInput" (output)="eventEmitHeader($event)"></app-header>
 
 <ion-content>
-     <!-- INFO MAINTENANCES -->
-    <app-info *ngIf="dashboardVehicleExpenses.data.length === 0 && dashboardOpTypeExpenses.data.length === 0" [inputInfo]="input"></app-info>
-    <!-- CHARTS -->
-    <div *ngIf="dashboardVehicleExpenses.data.length > 0 || dashboardOpTypeExpenses.data.length > 0">
-        <ion-list-header class="padding-list-header">
-            <ion-icon size="large" name="cash"></ion-icon>
-            <h3 *ngIf="isParentPageVehicle()" class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerVehicle' | translate }}</h3>
-            <h3 *ngIf="isParentPageOperation()" class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
-        </ion-list-header>
-        <ngx-charts-bar-vertical-stacked *ngIf="!showSpinner" class="justify-center"
-            [view]="dashboardVehicleExpenses.view"
-            [scheme]="dashboardVehicleExpenses.colorScheme"
-            [results]="dashboardVehicleExpenses.data"
-            [gradient]="dashboardVehicleExpenses.gradient"
-            [xAxis]="dashboardVehicleExpenses.showXAxis"
-            [yAxis]="dashboardVehicleExpenses.showYAxis"
-            [legend]="dashboardVehicleExpenses.showLegend"
-            [legendTitle]="dashboardVehicleExpenses.legendTitle"
-            [legendPosition]="dashboardVehicleExpenses.legendPosition"
-            [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
-            [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
-            [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
-            [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
-            [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
+  <!-- INFO MAINTENANCES -->
+  @if (dashboardVehicleExpenses.data.length === 0 && dashboardOpTypeExpenses.data.length === 0) {
+    <app-info [inputInfo]="input"></app-info>
+  }
+  <!-- CHARTS -->
+  @if (dashboardVehicleExpenses.data.length > 0 || dashboardOpTypeExpenses.data.length > 0) {
+    <div>
+      <ion-list-header class="padding-list-header">
+        <ion-icon size="large" name="cash"></ion-icon>
+        @if (isParentPageVehicle()) {
+          <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerVehicle' | translate }}</h3>
+        }
+        @if (isParentPageOperation()) {
+          <h3 class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
+        }
+      </ion-list-header>
+      @if (!showSpinner) {
+        <ngx-charts-bar-vertical-stacked class="justify-center"
+          [view]="dashboardVehicleExpenses.view"
+          [scheme]="dashboardVehicleExpenses.colorScheme"
+          [results]="dashboardVehicleExpenses.data"
+          [gradient]="dashboardVehicleExpenses.gradient"
+          [xAxis]="dashboardVehicleExpenses.showXAxis"
+          [yAxis]="dashboardVehicleExpenses.showYAxis"
+          [legend]="dashboardVehicleExpenses.showLegend"
+          [legendTitle]="dashboardVehicleExpenses.legendTitle"
+          [legendPosition]="dashboardVehicleExpenses.legendPosition"
+          [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
+          [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
+          [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
+          [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
+          [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
         </ngx-charts-bar-vertical-stacked>
-        <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
-            <ion-spinner class="spinner" name="lines"></ion-spinner>
+      }
+      @if (showSpinner) {
+        <div [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
+          <ion-spinner class="spinner" name="lines"></ion-spinner>
         </div>
+      }
+      <ion-list-header class="padding-list-header">
+        <ion-icon size="large" name="construct"></ion-icon>
+        <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerOperationType' | translate }}</h3>
+      </ion-list-header>
+      @if (!showSpinner) {
+        <ngx-charts-pie-chart class="justify-center"
+          [view]="dashboardOpTypeExpenses.view"
+          [scheme]="dashboardOpTypeExpenses.colorScheme"
+          [results]="dashboardOpTypeExpenses.data"
+          [gradient]="dashboardOpTypeExpenses.gradient"
+          [legend]="dashboardOpTypeExpenses.showLegend"
+          [legendTitle]="dashboardOpTypeExpenses.legendTitle"
+          [legendPosition]="dashboardOpTypeExpenses.legendPosition"
+          [labels]="dashboardOpTypeExpenses.showLabels"
+          [doughnut]="dashboardOpTypeExpenses.isDoughnut">
+        </ngx-charts-pie-chart>
+      }
+      @if (showSpinner) {
+        <div [style.height.px]="dashboardOpTypeExpenses.view[1]" class="div-spinner">
+          <ion-spinner class="spinner" name="lines"></ion-spinner>
+        </div>
+      }
+      @if (dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0) {
         <ion-list-header class="padding-list-header">
-            <ion-icon size="large" name="construct"></ion-icon>
-            <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerOperationType' | translate }}</h3>
+          <ion-icon size="large" name="cog"></ion-icon>
+          <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerReplacement' | translate }}</h3>
         </ion-list-header>
-        <ngx-charts-pie-chart *ngIf="!showSpinner" class="justify-center"
-            [view]="dashboardOpTypeExpenses.view"
-            [scheme]="dashboardOpTypeExpenses.colorScheme"
-            [results]="dashboardOpTypeExpenses.data"
-            [gradient]="dashboardOpTypeExpenses.gradient"
-            [legend]="dashboardOpTypeExpenses.showLegend"
-            [legendTitle]="dashboardOpTypeExpenses.legendTitle"
-            [legendPosition]="dashboardOpTypeExpenses.legendPosition"
-            [labels]="dashboardOpTypeExpenses.showLabels"
-            [doughnut]="dashboardOpTypeExpenses.isDoughnut">
+      }
+      @if (!showSpinner && (dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0)) {
+        <ngx-charts-pie-chart class="justify-center"
+          [view]="dashboardReplacementExpenses.view"
+          [scheme]="dashboardReplacementExpenses.colorScheme"
+          [results]="dashboardReplacementExpenses.data"
+          [gradient]="dashboardReplacementExpenses.gradient"
+          [legend]="dashboardReplacementExpenses.showLegend"
+          [legendTitle]="dashboardReplacementExpenses.legendTitle"
+          [legendPosition]="dashboardReplacementExpenses.legendPosition"
+          [labels]="dashboardReplacementExpenses.showLabels"
+          [doughnut]="dashboardReplacementExpenses.isDoughnut">
         </ngx-charts-pie-chart>
-        <div *ngIf="showSpinner" [style.height.px]="dashboardOpTypeExpenses.view[1]" class="div-spinner">
-            <ion-spinner class="spinner" name="lines"></ion-spinner>
+      }
+      @if (showSpinner) {
+        <div [style.height.px]="dashboardReplacementExpenses.view[1]" class="div-spinner">
+          <ion-spinner class="spinner" name="lines"></ion-spinner>
         </div>
-        <ion-list-header class="padding-list-header" *ngIf="dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0">
-            <ion-icon size="large" name="cog"></ion-icon>
-            <h3 class="header-list">{{ 'PAGE_VEHICLE.ExpensesPerReplacement' | translate }}</h3>
-        </ion-list-header>
-        <ngx-charts-pie-chart *ngIf="!showSpinner && (dashboardReplacementExpenses.data && dashboardReplacementExpenses.data.length > 0)" class="justify-center"
-            [view]="dashboardReplacementExpenses.view"
-            [scheme]="dashboardReplacementExpenses.colorScheme"
-            [results]="dashboardReplacementExpenses.data"
-            [gradient]="dashboardReplacementExpenses.gradient"
-            [legend]="dashboardReplacementExpenses.showLegend"
-            [legendTitle]="dashboardReplacementExpenses.legendTitle"
-            [legendPosition]="dashboardReplacementExpenses.legendPosition"
-            [labels]="dashboardReplacementExpenses.showLabels"
-            [doughnut]="dashboardReplacementExpenses.isDoughnut">
-        </ngx-charts-pie-chart>
-        <div *ngIf="showSpinner" [style.height.px]="dashboardReplacementExpenses.view[1]" class="div-spinner">
-            <ion-spinner class="spinner" name="lines"></ion-spinner>
-        </div>
+      }
     </div>
+  }
 </ion-content>

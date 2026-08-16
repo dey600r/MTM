@@ -1,12 +1,28 @@
 
-<ion-item *ngFor="let i of input.items">
-  <ion-avatar *ngIf="input.avatar" slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
-  <ion-label *ngFor="let j of input.itemsLabel">
-    <h3 *ngIf="j.h3Width !== 0"><ion-skeleton-text animated [style]="'width:' + j.h3Width + '%'"></ion-skeleton-text></h3>
-    <h2 *ngIf="j.h2Width !== 0"><ion-skeleton-text animated [style]="'width:' + j.h2Width + '%'"></ion-skeleton-text></h2>
-    <p *ngFor="let k of j.pWidth"><ion-skeleton-text animated [style]="'width:' + k + '%'"></ion-skeleton-text></p>
-    <div *ngIf="j.divWidth !== 0" class="table-row" [style]="'width:' + j.divWidth + '%'">
-      <p *ngFor="let k of j.divPWidth" class="main-item-div"><ion-skeleton-text animated [style]="'width:' + k + '%'"></ion-skeleton-text></p>
-    </div>
-  </ion-label>
-</ion-item>
+@for (i of input.items; track i) {
+  <ion-item>
+    @if (input.avatar) {
+      <ion-avatar slot="start"><ion-skeleton-text animated></ion-skeleton-text></ion-avatar>
+    }
+    @for (j of input.itemsLabel; track j) {
+      <ion-label>
+        @if (j.h3Width !== 0) {
+          <h3><ion-skeleton-text animated [style]="'width:' + j.h3Width + '%'"></ion-skeleton-text></h3>
+        }
+        @if (j.h2Width !== 0) {
+          <h2><ion-skeleton-text animated [style]="'width:' + j.h2Width + '%'"></ion-skeleton-text></h2>
+        }
+        @for (k of j.pWidth; track k) {
+          <p><ion-skeleton-text animated [style]="'width:' + k + '%'"></ion-skeleton-text></p>
+        }
+        @if (j.divWidth !== 0) {
+          <div class="table-row" [style]="'width:' + j.divWidth + '%'">
+            @for (k of j.divPWidth; track k) {
+              <p class="main-item-div"><ion-skeleton-text animated [style]="'width:' + k + '%'"></ion-skeleton-text></p>
+            }
+          </div>
+        }
+      </ion-label>
+    }
+  </ion-item>
+}
