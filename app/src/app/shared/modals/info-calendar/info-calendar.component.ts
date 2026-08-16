@@ -144,7 +144,6 @@ export class InfoCalendarComponent implements OnInit {
         weekdays: this.calendarService.getFormatCalendarWeek(),
         weekStart: this.calendarService.getFormatCalendarWeekStart(),
         monthsTitle: this.calendarService.getFormatCalendarMonth(),
-        showToggleButtons: true,
         showMonthPicker: true,
         daysConfig: days
     };

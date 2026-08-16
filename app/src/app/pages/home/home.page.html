@@ -1,133 +1,167 @@
-<app-header *ngIf="loadedHeader" [input]="headerInput" (output)="eventEmitHeader($event)"></app-header>
+@if (loadedHeader) {
+  <app-header [input]="headerInput" (output)="eventEmitHeader($event)"></app-header>
+}
 
-<ion-content *ngIf="loadedBody">
-  <!-- INFO -->
-  <app-info *ngIf="activateInfo" [inputInfo]="input"></app-info>
-
-  <!-- List Vehicles -->    
-  <ion-grid *ngIf="!activateInfo">
-    <ion-row>
-      <ion-col *ngFor="let wm of this.vehicleSelected.listWearMaintenance; let i = index;" size-lg="4" size-md="6" size-sm="12" size-xs="12">
-        <ion-card button class="card-with-progress-bar" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
-          <ion-card-header>
-            <div class="table-row">
-              <div>
-                <!-- AVATAR MAINTENANCE -->
-                <ion-avatar slot="start" class="main-avatar">
-                  <ion-icon size="large" class="icon-color" [name]="wm.iconMaintenance"></ion-icon>
-                </ion-avatar>
-              </div>
-              <div class="main-div">
-                <div>
+@if (loadedBody) {
+  <ion-content>
+    <!-- INFO -->
+    @if (activateInfo) {
+      <app-info [inputInfo]="input"></app-info>
+    }
+    <!-- List Vehicles -->
+    @if (!activateInfo) {
+      <ion-grid>
+        <ion-row>
+          @for (wm of this.vehicleSelected.listWearMaintenance; track wm.idMaintenance; let i = $index) {
+            <ion-col size-lg="4" size-md="6" size-sm="12" size-xs="12">
+              <ion-card button class="card-with-progress-bar" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
+                <ion-card-header>
                   <div class="table-row">
-                    <!-- TITLE MAINTENANCE -->
-                    <div class="margin-right5 table-row">
-                      <ion-label class="h-row2">{{ wm.descriptionMaintenance }}</ion-label>
-                    </div>
-                    <!-- BUTTON OPEN INFORMATION -->
-                    <div class="icon-notification">
-                      <ion-button class="margin0" fill="clear" (click)="openUpdateModalMaintenance($event, wm)">
-                        <ion-icon size="small" color="primary" slot="icon-only" name="build"></ion-icon>
-                      </ion-button>
-                      <ion-button class="margin0" fill="clear" (click)="desactivateMaintenance($event, wm)">
-                        <ion-icon size="small" color="danger" name="notifications-off"></ion-icon>
-                      </ion-button>
-                    </div>
-                  </div>
-                  <div class="table-row">
-                    <!-- ICON INFORMATION SUMMARY REPLACEMENTS MAINTENANCE -->
-                    <div class="margin-right5 table-row">
-                      <div class="table-row" *ngFor="let wnr of wm.listWearNotificationReplacement">
-                        <ion-icon [class]="'icon-row2' + wnr.warningIconClass" [color]="wnr.warningIconClass"
-                          size="small" [name]="wnr.warningIcon"></ion-icon>
-                        <p class="p-row2">{{ wnr.numWarning + '/' + wnr.totalWarning }}</p>
-                      </div>
-                    </div>
-                    <!-- OPTIONS MANTENAINCES -->
-                    <div class="icon-notification">
-                      <ion-icon *ngIf="wm.fromKmMaintenance !== 0" size="small"
-                        class="icon-row3 icon-color" name="walk"></ion-icon>
-                      <ion-icon *ngIf="wm.toKmMaintenance !== null" size="small"
-                        class="icon-row3 icon-color" name="trail-sign"></ion-icon>
-                      <ion-icon *ngIf="wm.initMaintenance" size="small"
-                        class="icon-row3 icon-color" name="navigate-circle"></ion-icon>
-                      <ion-icon *ngIf="!wm.initMaintenance && wm.wearMaintenance" size="small"
-                        class="icon-row3 icon-color" name="notifications-circle"></ion-icon>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ion-card-header>
-          <ion-card-content>
-            <div class="table-row" *ngIf="showInfoMaintenance[i]">
-              <ion-list class="second-item-div" lines="none">
-                <ion-item button *ngFor="let wr of wm.listWearReplacement" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]; openInfoNotification(this.vehicleSelected, wm, wr)">
-                  <div>
-                    <!-- AVATAR REPLACEMENT -->
-                    <ion-avatar slot="start" class="second-avatar">
-                      <ion-icon size="large" [class]="'second-icon-avatar' + wr.warningIconClass"
-                        [color]="wr.warningIconClass" [name]="wr.iconMaintenanceElement"></ion-icon>
-                    </ion-avatar>
-                  </div>
-                  <div class="second-div">
                     <div>
-                      <!-- TITLE REPLACEMENT -->
-                      <div class="margin-right5 table-row">
-                        <ion-label class="h-row2">{{ wr.nameMaintenanceElement }}</ion-label>
-                      </div>
-                      <!-- ICON NOTIFICATION SUMMARY -->
-                      <div class="margin-right5 table-row">
-                        <ion-icon [class]="'icon-row' + wr.warningKmsIconClass" [color]="wr.warningKmsIconClass" size="small"
-                        [name]="wr.warningKmsIcon"></ion-icon>
-                        <p class="p-row">{{ getKmPercent(wm, wr) }} {{measure.value}}</p>
-                      </div>
-                      <!-- Progress bar maintenace KMS -->
-                      <div [class]="wr.warningKmsProgressBarIcon">
-                        <ion-progress-bar [value]="wr.percentKms"></ion-progress-bar>
-                      </div>
-                      <div *ngIf="wm.timeMaintenance > 0" class="table-row">
-                        <!-- MONTHS -->
-                        <div class="margin-right5 table-row">
-                          <ion-icon [color]="wr.warningMonthsIconClass" size="small"
-                            [class]="'icon-row' + wr.warningMonthsIconClass" [name]="wr.warningMonthsIcon"></ion-icon>
-                          <p class="p-row">{{ getTimePercent(wm, wr) }}</p>
+                      <!-- AVATAR MAINTENANCE -->
+                      <ion-avatar slot="start" class="main-avatar">
+                        <ion-icon size="large" class="icon-color" [name]="wm.iconMaintenance"></ion-icon>
+                      </ion-avatar>
+                    </div>
+                    <div class="main-div">
+                      <div>
+                        <div class="table-row">
+                          <!-- TITLE MAINTENANCE -->
+                          <div class="margin-right5 table-row">
+                            <ion-label class="h-row2">{{ wm.descriptionMaintenance }}</ion-label>
+                          </div>
+                          <!-- BUTTON OPEN INFORMATION -->
+                          <div class="icon-notification">
+                            <ion-button class="margin0" fill="clear" (click)="openUpdateModalMaintenance($event, wm)">
+                              <ion-icon size="small" color="primary" slot="icon-only" name="build"></ion-icon>
+                            </ion-button>
+                            <ion-button class="margin0" fill="clear" (click)="desactivateMaintenance($event, wm)">
+                              <ion-icon size="small" color="danger" name="notifications-off"></ion-icon>
+                            </ion-button>
+                          </div>
+                        </div>
+                        <div class="table-row">
+                          <!-- ICON INFORMATION SUMMARY REPLACEMENTS MAINTENANCE -->
+                          <div class="margin-right5 table-row">
+                            @for (wnr of wm.listWearNotificationReplacement; track $index) {
+                              <div class="table-row">
+                                <ion-icon [class]="'icon-row2' + wnr.warningIconClass" [color]="wnr.warningIconClass"
+                                size="small" [name]="wnr.warningIcon"></ion-icon>
+                                <p class="p-row2">{{ wnr.numWarning + '/' + wnr.totalWarning }}</p>
+                              </div>
+                            }
+                          </div>
+                          <!-- OPTIONS MANTENAINCES -->
+                          <div class="icon-notification">
+                            @if (wm.fromKmMaintenance !== 0) {
+                              <ion-icon size="small"
+                              class="icon-row3 icon-color" name="walk"></ion-icon>
+                            }
+                            @if (wm.toKmMaintenance !== null) {
+                              <ion-icon size="small"
+                              class="icon-row3 icon-color" name="trail-sign"></ion-icon>
+                            }
+                            @if (wm.initMaintenance) {
+                              <ion-icon size="small"
+                              class="icon-row3 icon-color" name="navigate-circle"></ion-icon>
+                            }
+                            @if (!wm.initMaintenance && wm.wearMaintenance) {
+                              <ion-icon size="small"
+                              class="icon-row3 icon-color" name="notifications-circle"></ion-icon>
+                            }
+                          </div>
                         </div>
                       </div>
-                        <!-- Progress bar maintenace TIME -->
-                      <div *ngIf="wm.timeMaintenance > 0" [class]="wr.warningMonthsProgressBarIcon">
-                        <ion-progress-bar [value]="wr.percentMonths"></ion-progress-bar>
-                      </div>
                     </div>
                   </div>
-                </ion-item>
-              </ion-list>
-            </div>
-          </ion-card-content>
-          <div [class]="'card-progress-bar' + wm.warningProgressBarIcon" *ngIf="!showInfoMaintenance[i]">
-            <div [class]="'progress'  + wm.warningProgressBarIcon + '-bar'" [style.width.%]="wm.percent"></div>
-          </div>
-        </ion-card>   
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  
-  <ion-fab *ngIf="!hideFabButton" vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="grid"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button color="fab-back" (click)="openCreateModalVehicle()"><ion-icon color="primary" name="home"></ion-icon></ion-fab-button>
-      <ion-fab-button color="fab-back" *ngIf="!hideOpButton" (click)="openCreateModalOperation()"><ion-icon color="primary" name="construct"></ion-icon></ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-</ion-content>
+                </ion-card-header>
+                <ion-card-content>
+                  @if (showInfoMaintenance[i]) {
+                    <div class="table-row">
+                      <ion-list class="second-item-div" lines="none">
+                        @for (wr of wm.listWearReplacement; track wr.idMaintenanceElement) {
+                          <ion-item button (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]; openInfoNotification(this.vehicleSelected, wm, wr)">
+                            <div>
+                              <!-- AVATAR REPLACEMENT -->
+                              <ion-avatar slot="start" class="second-avatar">
+                                <ion-icon size="large" [class]="'second-icon-avatar' + wr.warningIconClass"
+                                [color]="wr.warningIconClass" [name]="wr.iconMaintenanceElement"></ion-icon>
+                              </ion-avatar>
+                            </div>
+                            <div class="second-div">
+                              <div>
+                                <!-- TITLE REPLACEMENT -->
+                                <div class="margin-right5 table-row">
+                                  <ion-label class="h-row2">{{ wr.nameMaintenanceElement }}</ion-label>
+                                </div>
+                                <!-- ICON NOTIFICATION SUMMARY -->
+                                <div class="margin-right5 table-row">
+                                  <ion-icon [class]="'icon-row' + wr.warningKmsIconClass" [color]="wr.warningKmsIconClass" size="small"
+                                  [name]="wr.warningKmsIcon"></ion-icon>
+                                  <p class="p-row">{{ getKmPercent(wm, wr) }} {{measure.value}}</p>
+                                </div>
+                                <!-- Progress bar maintenace KMS -->
+                                <div [class]="wr.warningKmsProgressBarIcon">
+                                  <ion-progress-bar [value]="wr.percentKms"></ion-progress-bar>
+                                </div>
+                                @if (wm.timeMaintenance > 0) {
+                                  <div class="table-row">
+                                    <!-- MONTHS -->
+                                    <div class="margin-right5 table-row">
+                                      <ion-icon [color]="wr.warningMonthsIconClass" size="small"
+                                      [class]="'icon-row' + wr.warningMonthsIconClass" [name]="wr.warningMonthsIcon"></ion-icon>
+                                      <p class="p-row">{{ getTimePercent(wm, wr) }}</p>
+                                    </div>
+                                  </div>
+                                }
+                                <!-- Progress bar maintenace TIME -->
+                                @if (wm.timeMaintenance > 0) {
+                                  <div [class]="wr.warningMonthsProgressBarIcon">
+                                    <ion-progress-bar [value]="wr.percentMonths"></ion-progress-bar>
+                                  </div>
+                                }
+                              </div>
+                            </div>
+                          </ion-item>
+                        }
+                      </ion-list>
+                    </div>
+                  }
+                </ion-card-content>
+                @if (!showInfoMaintenance[i]) {
+                  <div [class]="'card-progress-bar' + wm.warningProgressBarIcon">
+                    <div [class]="'progress'  + wm.warningProgressBarIcon + '-bar'" [style.width.%]="wm.percent"></div>
+                  </div>
+                }
+              </ion-card>
+            </ion-col>
+          }
+        </ion-row>
+      </ion-grid>
+    }
+    @if (!hideFabButton) {
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button>
+          <ion-icon name="grid"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top">
+          <ion-fab-button color="fab-back" (click)="openCreateModalVehicle()"><ion-icon color="primary" name="home"></ion-icon></ion-fab-button>
+          @if (!hideOpButton) {
+            <ion-fab-button color="fab-back" (click)="openCreateModalOperation()"><ion-icon color="primary" name="construct"></ion-icon></ion-fab-button>
+          }
+        </ion-fab-list>
+      </ion-fab>
+    }
+  </ion-content>
+}
 
 <!-- SKELETON -->
-<app-skeleton class="max-height" *ngIf="!loadedHeader || !loadedBody" 
-[loadedHeader]="loadedHeader" 
-[loadedBody]="loadedBody" 
-[input]="skeletonInput" 
-(loadedHeaderOutput)="changeLoadedHeader($event)" 
-(loadedBodyOutput)="changeLoadedBody($event)"></app-skeleton>
+@if (!loadedHeader || !loadedBody) {
+  <app-skeleton class="max-height"
+    [loadedHeader]="loadedHeader"
+    [loadedBody]="loadedBody"
+    [input]="skeletonInput"
+    (loadedHeaderOutput)="changeLoadedHeader($event)"
+  (loadedBodyOutput)="changeLoadedBody($event)"></app-skeleton>
+}
 

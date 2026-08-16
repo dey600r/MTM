@@ -1,39 +1,47 @@
 <!-- HEADER MODAL -->
 <app-header [input]="headerInput"></app-header>
-  
+
 <ion-content>
-    <!-- Form -->
-    <form #formAddReplacement name="formAddReplacement" (ngSubmit)="saveData(formAddReplacement)" novalidate>
-      <ion-list lines="full">
-        <!-- Input control -->
-        <ion-item>
-            <ion-label position="stacked">
-              <ion-text>{{ 'COMMON.NAME' | translate }}</ion-text>
-              <ion-text color="danger">*</ion-text>
-              <ion-icon *ngIf="this.submited && !isValidName(formAddReplacement)" class="padding-left20" 
-                  color="danger" size="small" name="alert"></ion-icon>
-              <ion-text *ngIf="this.submited && !isValidName(formAddReplacement)" 
-                  color="danger">{{ 'PAGE_CONFIGURATION.AddName' | translate }}</ion-text>
-            </ion-label>
-            <ion-input #replacementName name="replacementName" placeholder="--" autocapitalize required type="text" 
-              [(ngModel)]="maintenanceElement.name"></ion-input>
-          </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            <ion-text>{{ 'COMMON.DESCRIPTION' | translate }}</ion-text>
-            <ion-text color="danger">*</ion-text>
-            <ion-icon *ngIf="this.submited && !isValidDescription(formAddReplacement)" class="padding-left20" 
-                color="danger" size="small" name="alert"></ion-icon>
-            <ion-text *ngIf="this.submited && !isValidDescription(formAddReplacement)" 
-                color="danger">{{ 'AddDescription' | translate }}</ion-text>
-          </ion-label>
-          <ion-input #replacementDescription name="replacementDescription" autocapitalize placeholder="--" required type="text" 
-            [(ngModel)]="maintenanceElement.description"></ion-input>
-        </ion-item>
-      </ion-list>
-      <!-- Buton Save -->
-      <ion-button class="button-circle" type="submit" [disabled]="maintenanceElement.master">
-        <ion-icon [name]="maintenanceElement.master ? 'lock-closed' : 'save'"></ion-icon>
-      </ion-button>
-    </form>
+  <!-- Form -->
+  <form #formAddReplacement name="formAddReplacement" (ngSubmit)="saveData(formAddReplacement)" novalidate>
+    <ion-list lines="full">
+      <!-- Input control -->
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.NAME' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          @if (this.submited && !isValidName(formAddReplacement)) {
+            <ion-icon class="padding-left20"
+            color="danger" size="small" name="alert"></ion-icon>
+          }
+          @if (this.submited && !isValidName(formAddReplacement)) {
+            <ion-text
+            color="danger">{{ 'PAGE_CONFIGURATION.AddName' | translate }}</ion-text>
+          }
+        </ion-label>
+        <ion-input #replacementName name="replacementName" placeholder="--" autocapitalize required type="text"
+        [(ngModel)]="maintenanceElement.name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.DESCRIPTION' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          @if (this.submited && !isValidDescription(formAddReplacement)) {
+            <ion-icon class="padding-left20"
+            color="danger" size="small" name="alert"></ion-icon>
+          }
+          @if (this.submited && !isValidDescription(formAddReplacement)) {
+            <ion-text
+            color="danger">{{ 'AddDescription' | translate }}</ion-text>
+          }
+        </ion-label>
+        <ion-input #replacementDescription name="replacementDescription" autocapitalize placeholder="--" required type="text"
+        [(ngModel)]="maintenanceElement.description"></ion-input>
+      </ion-item>
+    </ion-list>
+    <!-- Buton Save -->
+    <ion-button class="button-circle" type="submit" [disabled]="maintenanceElement.master">
+      <ion-icon [name]="maintenanceElement.master ? 'lock-closed' : 'save'"></ion-icon>
+    </ion-button>
+  </form>
 </ion-content>

@@ -1,36 +1,45 @@
 <!-- HEADER MODAL -->
 <app-header [input]="headerInput"></app-header>
-  
+
 <ion-content>
-    <!-- Form -->
-    <form #formAddConfiguration name="formAddConfiguration" (ngSubmit)="saveData(formAddConfiguration)" novalidate>
-      <ion-list lines="full" class="margin-bottom35">
-        <!-- Input control -->
+  <!-- Form -->
+  <form #formAddConfiguration name="formAddConfiguration" (ngSubmit)="saveData(formAddConfiguration)" novalidate>
+    <ion-list lines="full" class="margin-bottom35">
+      <!-- Input control -->
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.NAME' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          @if (this.submited && !isValidName(formAddConfiguration)) {
+            <ion-icon class="padding-left20"
+            color="danger" size="small" name="alert"></ion-icon>
+          }
+          @if (this.submited && !isValidName(formAddConfiguration)) {
+            <ion-text
+            color="danger">{{ 'PAGE_CONFIGURATION.AddName' | translate }}</ion-text>
+          }
+        </ion-label>
+        <ion-input #configurationName name="configurationName" placeholder="Yamaha" autocapitalize required type="text"
+        [(ngModel)]="configuration.name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.DESCRIPTION' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          @if (this.submited && !isValidDescription(formAddConfiguration)) {
+            <ion-icon class="padding-left20"
+            color="danger" size="small" name="alert"></ion-icon>
+          }
+          @if (this.submited && !isValidDescription(formAddConfiguration)) {
+            <ion-text
+            color="danger">{{ 'PAGE_OPERATION.AddDescription' | translate }}</ion-text>
+          }
+        </ion-label>
+        <ion-input #configurationDescription name="configurationDescription" autocapitalize placeholder="--" required type="text"
+        [(ngModel)]="configuration.description"></ion-input>
+      </ion-item>
+      @for (m of maintenances; track m; let i = $index) {
         <ion-item>
-          <ion-label position="stacked">
-            <ion-text>{{ 'COMMON.NAME' | translate }}</ion-text>
-            <ion-text color="danger">*</ion-text>
-            <ion-icon *ngIf="this.submited && !isValidName(formAddConfiguration)" class="padding-left20" 
-                color="danger" size="small" name="alert"></ion-icon>
-            <ion-text *ngIf="this.submited && !isValidName(formAddConfiguration)" 
-                color="danger">{{ 'PAGE_CONFIGURATION.AddName' | translate }}</ion-text>
-          </ion-label>
-          <ion-input #configurationName name="configurationName" placeholder="Yamaha" autocapitalize required type="text" 
-            [(ngModel)]="configuration.name"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            <ion-text>{{ 'COMMON.DESCRIPTION' | translate }}</ion-text>
-            <ion-text color="danger">*</ion-text>
-            <ion-icon *ngIf="this.submited && !isValidDescription(formAddConfiguration)" class="padding-left20" 
-                color="danger" size="small" name="alert"></ion-icon>
-            <ion-text *ngIf="this.submited && !isValidDescription(formAddConfiguration)" 
-                color="danger">{{ 'PAGE_OPERATION.AddDescription' | translate }}</ion-text>
-          </ion-label>
-          <ion-input #configurationDescription name="configurationDescription" autocapitalize placeholder="--" required type="text" 
-            [(ngModel)]="configuration.description"></ion-input>
-        </ion-item>
-        <ion-item *ngFor="let m of maintenances; let i = index">
           <!-- Icons -->
           <ion-avatar slot="start" class="max-width10">
             <ion-icon size="large" class="icon-color" [name]="m.maintenanceFreq.icon"></ion-icon>
@@ -40,26 +49,39 @@
             <h2>{{ m.description }}</h2>
             <h3>{{ getReplacementCommas(m.listMaintenanceElement) }}</h3>
             <div class="table-row">
-              <p *ngIf="m.time > 0" class="p-color">{{ m.km }} {{measure.value}} / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
-              <p *ngIf="m.time <= 0" class="p-color">{{ m.km }} {{measure.value}}</p>
+              @if (m.time > 0) {
+                <p class="p-color">{{ m.km }} {{measure.value}} / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+              }
+              @if (m.time <= 0) {
+                <p class="p-color">{{ m.km }} {{measure.value}}</p>
+              }
               <div class="icon-notification">
-                <ion-icon *ngIf="m.fromKm !== 0" class="icon-color" slot="end" size="small" name="walk"></ion-icon>
-                <ion-icon *ngIf="m.toKm !== null" class="icon-color" slot="end" size="small" name="trail-sign"></ion-icon>
-                <ion-icon *ngIf="m.init" class="icon-color" slot="end" size="small" name="navigate-circle"></ion-icon>
-                <ion-icon *ngIf="!m.init && m.wear" class="icon-color" slot="end" size="small" name="notifications-circle"></ion-icon>
+                @if (m.fromKm !== 0) {
+                  <ion-icon class="icon-color" slot="end" size="small" name="walk"></ion-icon>
+                }
+                @if (m.toKm !== null) {
+                  <ion-icon class="icon-color" slot="end" size="small" name="trail-sign"></ion-icon>
+                }
+                @if (m.init) {
+                  <ion-icon class="icon-color" slot="end" size="small" name="navigate-circle"></ion-icon>
+                }
+                @if (!m.init && m.wear) {
+                  <ion-icon class="icon-color" slot="end" size="small" name="notifications-circle"></ion-icon>
+                }
               </div>
             </div>
           </ion-label>
           <!-- Toggle -->
           <div class="width30" style="margin-left: 20px;">
-            <ion-checkbox class="right" [name]="'configurationMaintenance' + i" [color]="m.master ? 'primary' : 'secondary'" 
-              [(ngModel)]="toggleMaintenaces[i]"></ion-checkbox>
+            <ion-checkbox class="right" [name]="'configurationMaintenance' + i" [color]="m.master ? 'primary' : 'secondary'"
+            [(ngModel)]="toggleMaintenaces[i]"></ion-checkbox>
           </div>
         </ion-item>
-      </ion-list>
-      <!-- Buton Save -->
-      <ion-button class="button-circle" type="submit" [disabled]="configuration.master">
-        <ion-icon [name]="configuration.master ? 'lock-closed' : 'save'"></ion-icon>
-      </ion-button>
-    </form>
+      }
+    </ion-list>
+    <!-- Buton Save -->
+    <ion-button class="button-circle" type="submit" [disabled]="configuration.master">
+      <ion-icon [name]="configuration.master ? 'lock-closed' : 'save'"></ion-icon>
+    </ion-button>
+  </form>
 </ion-content>

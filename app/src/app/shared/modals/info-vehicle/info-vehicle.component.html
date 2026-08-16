@@ -3,318 +3,386 @@
 
 <ion-content>
   <!-- INFO VEHICLE -->
-  <app-info *ngIf="vehicles.length === 0" [inputInfo]="input"></app-info>
+  @if (vehicles.length === 0) {
+    <app-info [inputInfo]="input"></app-info>
+  }
   <!-- VEHICLE SUMMARY -->
-  <ion-list *ngIf="vehicles.length > 0">
-    <!-- INFORMATION VEHICLE -->
-    <ion-list-header (click)="hideVehicleSummary = !hideVehicleSummary" class="padding-list-header">
-      <ion-icon size="large" name="analytics"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.INFORMATION_VEHICLE' | translate }}</h3>
-      <ion-button fill="clear">
-        <ion-icon size="small" color="primary" [name]="hideVehicleSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <!-- CHART INFORMATION VEHICLE-->
-    <ngx-charts-bar-vertical *ngIf="!hideVehicleSummary && !showSpinner" class="justify-center"
-            [view]="dashboardInformationVehicle.view"
-            [scheme]="dashboardInformationVehicle.colorScheme"
-            [results]="dashboardInformationVehicle.data"
-            [gradient]="dashboardInformationVehicle.gradient"
-            [xAxis]="dashboardInformationVehicle.showXAxis"
-            [yAxis]="dashboardInformationVehicle.showYAxis"
-            [legend]="dashboardInformationVehicle.showLegend"
-            [legendTitle]="dashboardInformationVehicle.legendTitle"
-            [legendPosition]="dashboardInformationVehicle.legendPosition"
-            [showXAxisLabel]="dashboardInformationVehicle.showXAxisLabel"
-            [showYAxisLabel]="dashboardInformationVehicle.showYAxisLabel"
-            [showDataLabel]="dashboardInformationVehicle.showDataLabel"
-            [xAxisLabel]="dashboardInformationVehicle.xAxisLabel"
-            [yAxisLabel]="dashboardInformationVehicle.yAxisLabel">
+  @if (vehicles.length > 0) {
+    <ion-list>
+      <!-- INFORMATION VEHICLE -->
+      <ion-list-header (click)="hideVehicleSummary = !hideVehicleSummary" class="padding-list-header">
+        <ion-icon size="large" name="analytics"></ion-icon>
+        <h3 class="header-list">{{ 'COMMON.INFORMATION_VEHICLE' | translate }}</h3>
+        <ion-button fill="clear">
+          <ion-icon size="small" color="primary" [name]="hideVehicleSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      <!-- CHART INFORMATION VEHICLE-->
+      @if (!hideVehicleSummary && !showSpinner) {
+        <ngx-charts-bar-vertical class="justify-center"
+          [view]="dashboardInformationVehicle.view"
+          [scheme]="dashboardInformationVehicle.colorScheme"
+          [results]="dashboardInformationVehicle.data"
+          [gradient]="dashboardInformationVehicle.gradient"
+          [xAxis]="dashboardInformationVehicle.showXAxis"
+          [yAxis]="dashboardInformationVehicle.showYAxis"
+          [legend]="dashboardInformationVehicle.showLegend"
+          [legendTitle]="dashboardInformationVehicle.legendTitle"
+          [legendPosition]="dashboardInformationVehicle.legendPosition"
+          [showXAxisLabel]="dashboardInformationVehicle.showXAxisLabel"
+          [showYAxisLabel]="dashboardInformationVehicle.showYAxisLabel"
+          [showDataLabel]="dashboardInformationVehicle.showDataLabel"
+          [xAxisLabel]="dashboardInformationVehicle.xAxisLabel"
+          [yAxisLabel]="dashboardInformationVehicle.yAxisLabel">
         </ngx-charts-bar-vertical>
-    <div *ngIf="showSpinner" [style.height.px]="dashboardInformationVehicle.view[1]" class="div-spinner">
-      <ion-spinner class="spinner" name="lines"></ion-spinner>
-    </div>
-    <!-- ITEMS INFORMATION VEHICLE -->
-    <ion-item *ngIf="!hideVehicleSummary">
-      <p class="ion-color-info-summary">{{ labelVehicleAverageKm }}</p>
-    </ion-item>
-    <ion-item *ngIf="!hideVehicleSummary" button (click)="showInfoVehicle()">
-      <p class="ion-color-info-summary">{{ labelVehicleKm }}</p>
-    </ion-item>
-    <ion-item *ngIf="!hideVehicleSummary">
-      <p class="ion-color-info-summary">{{ 'PAGE_HOME.RELIABILITY_VEHICLE' | translate }}</p>
-      <p class="ion-color-info-summary icon-margin-p" slot="end">{{ labelPercent }} %</p>
-      <ion-icon slot="end" size="small" [class]="labelIconClassPercent" [color]="labelIconClassPercent" [name]="labelIconPercent"></ion-icon>
-    </ion-item>
-  </ion-list>
+      }
+      @if (showSpinner) {
+        <div [style.height.px]="dashboardInformationVehicle.view[1]" class="div-spinner">
+          <ion-spinner class="spinner" name="lines"></ion-spinner>
+        </div>
+      }
+      <!-- ITEMS INFORMATION VEHICLE -->
+      @if (!hideVehicleSummary) {
+        <ion-item>
+          <p class="ion-color-info-summary">{{ labelVehicleAverageKm }}</p>
+        </ion-item>
+      }
+      @if (!hideVehicleSummary) {
+        <ion-item button (click)="showInfoVehicle()">
+          <p class="ion-color-info-summary">{{ labelVehicleKm }}</p>
+        </ion-item>
+      }
+      @if (!hideVehicleSummary) {
+        <ion-item>
+          <p class="ion-color-info-summary">{{ 'PAGE_HOME.RELIABILITY_VEHICLE' | translate }}</p>
+          <p class="ion-color-info-summary icon-margin-p" slot="end">{{ labelPercent }} %</p>
+          <ion-icon slot="end" size="small" [class]="labelIconClassPercent" [color]="labelIconClassPercent" [name]="labelIconPercent"></ion-icon>
+        </ion-item>
+      }
+    </ion-list>
+  }
   <!-- CONFIGURATION SUMMARY -->
-  <ion-list *ngIf="vehicles.length > 0">
-    <ion-list-header (click)="showInfoConfigurationLoad()" class="padding-list-header">
-      <ion-icon size="large" name="cog"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.CONFIGURATION' | translate }} {{ selectedInfoVehicleConfiguration.nameConfiguration }}</h3>
-      <ion-button fill="clear">
-        <ion-icon size="small" color="primary" [name]="hideConfigurationSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <div *ngIf="!hideConfigurationSummary">
-      <!-- CHART -->
-      <ngx-charts-pie-grid class="justify-center"
-        [view]="dashboardConfigurationVehicle.view"
-        [scheme]="dashboardConfigurationVehicle.colorScheme"
-        [results]="dashboardConfigurationVehicle.data">
-      </ngx-charts-pie-grid>
-      <!-- CONFIGURATION VEHICLE -->
-      <ion-item button *ngFor="let m of selectedInfoVehicleConfiguration.listMaintenance; let i = index;"
-        [ngClass]="{ 'disable-item-color': !m.active }" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
-        <div class="main-item-div">
-          <div class="table-row">
-            <div>
-              <!-- Icons -->
-              <ion-avatar slot="start" class="main-avatar">
-                <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
-                  [name]="m.iconMaintenance"></ion-icon>
-              </ion-avatar>
-            </div>
-            <div class="main-div">
-              <!-- Labels -->
-              <ion-label class="auto-width label-event-force">
+  @if (vehicles.length > 0) {
+    <ion-list>
+      <ion-list-header (click)="showInfoConfigurationLoad()" class="padding-list-header">
+        <ion-icon size="large" name="cog"></ion-icon>
+        <h3 class="header-list">{{ 'COMMON.CONFIGURATION' | translate }} {{ selectedInfoVehicleConfiguration.nameConfiguration }}</h3>
+        <ion-button fill="clear">
+          <ion-icon size="small" color="primary" [name]="hideConfigurationSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      @if (!hideConfigurationSummary) {
+        <div>
+          <!-- CHART -->
+          <ngx-charts-pie-grid class="justify-center"
+            [view]="dashboardConfigurationVehicle.view"
+            [scheme]="dashboardConfigurationVehicle.colorScheme"
+            [results]="dashboardConfigurationVehicle.data">
+          </ngx-charts-pie-grid>
+          <!-- CONFIGURATION VEHICLE -->
+          @for (m of selectedInfoVehicleConfiguration.listMaintenance; track m.id; let i = $index) {
+            <ion-item button
+              [ngClass]="{ 'disable-item-color': !m.active }" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
+              <div class="main-item-div">
                 <div class="table-row">
-                  <h2 class="text-overflow">{{ m.description }}</h2>
-                  <div class="icon-notification">
-                    <ion-icon *ngIf="m.active" [class]="m.warningIconClass" [color]="m.warningIconClass"
-                      size="small" [name]="m.warningIcon"></ion-icon>
-                  </div>
-                </div>
-                <div class="table-row">
-                  <p *ngIf="m.time > 0" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }">{{ m.km }} {{measure.value}} / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
-                  <p *ngIf="m.time <= 0" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }">{{ m.km }} {{measure.value}}</p>
-                  <div class="icon-notification">
-                    <ion-icon *ngIf="m.fromKm !== 0" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
-                      slot="end" size="small" name="walk"></ion-icon>
-                    <ion-icon *ngIf="m.toKm !== null" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
-                     slot="end" size="small" name="trail-sign"></ion-icon>
-                    <ion-icon *ngIf="m.init" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
-                     slot="end" size="small" name="navigate-circle"></ion-icon>
-                    <ion-icon *ngIf="!m.init && m.wear" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
-                     slot="end" size="small" name="notifications-circle"></ion-icon>
-                  </div>
-                </div>
-              </ion-label>
-            </div>
-          </div>
-          <div class="table-row" *ngIf="showInfoMaintenance[i]">
-            <ion-list class="second-item-div">
-              <ion-item *ngFor="let r of m.listReplacement" [ngClass]="{ 'disable-item-color': !m.active }">
-                <ion-avatar slot="start" class="second-avatar">
-                  <ion-icon size="small" class="icon-color" [name]="r.iconReplacement"></ion-icon>
-                </ion-avatar>
-                <ion-label [ngClass]="{ 'disable-item-color second-div-title': !m.active, 'second-div-title': m.active }">{{ r.name }}</ion-label>
-                <ion-icon *ngIf="m.active" [class]="'icon-row' + r.warningIconClass" [color]="r.warningIconClass"
-                  size="small" [name]="r.warningIcon"></ion-icon>
-              </ion-item>
-            </ion-list>
-          </div>
-        </div>
-      </ion-item>
-    </div>
-    <div *ngIf="!loadedBodyConfigurationSummary">
-      <app-body-skeleton [input]="inputBodySkeletonConfigurationSummary"></app-body-skeleton>
-    </div>
-  </ion-list>
-  <!-- FAILURE PROBABILITY -->
-  <ion-list *ngIf="vehicles.length > 0 && !noDataOperations">
-    <ion-list-header (click)="showInfoFailureProbabilityLoad()" class="padding-list-header">
-      <ion-icon size="large" name="flash"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.PREDICTIVE_COST' | translate }}</h3>
-      <ion-button fill="clear">
-        <ion-icon size="small" color="primary" [name]="hideFailureProbabilitySummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <div *ngIf="!hideFailureProbabilitySummary">
-      <ngx-charts-bubble-chart
-        class="justify-center"
-        [view]="dashboardFailureProbabilityVehicle.view"
-        [scheme]="dashboardFailureProbabilityVehicle.colorScheme"
-        [results]="dashboardFailureProbabilityVehicle.data"
-        [xAxis]="dashboardFailureProbabilityVehicle.showXAxis"
-        [yAxis]="dashboardFailureProbabilityVehicle.showYAxis"
-        [legendTitle]="dashboardFailureProbabilityVehicle.legendTitle"
-        [legend]="dashboardFailureProbabilityVehicle.showLegend"
-        [legendPosition]="dashboardFailureProbabilityVehicle.legendPosition"
-        [showXAxisLabel]="dashboardFailureProbabilityVehicle.showXAxisLabel"
-        [showYAxisLabel]="dashboardFailureProbabilityVehicle.showYAxisLabel"
-        [xAxisLabel]="dashboardFailureProbabilityVehicle.xAxisLabel"
-        [yAxisLabel]="dashboardFailureProbabilityVehicle.yAxisLabel"
-        [xScaleMin]="dashboardFailureProbabilityVehicle.xScaleMin"
-        [xScaleMax]="dashboardFailureProbabilityVehicle.xScaleMax"
-        [yScaleMin]="dashboardFailureProbabilityVehicle.yScaleMin"
-        [yScaleMax]="dashboardFailureProbabilityVehicle.yScaleMax"
-        [minRadius]="dashboardFailureProbabilityVehicle.minRadius"
-        [maxRadius]="dashboardFailureProbabilityVehicle.maxRadius">
-      </ngx-charts-bubble-chart>
-      <ion-item *ngFor="let fail of selectedInfoPrediction">
-        <div class="main-item-div">
-          <div class="table-row">
-            <div>
-              <!-- Icons -->
-              <ion-avatar slot="start" class="main-avatar">
-                <ion-icon size="large" class="icon-color" [name]="fail.iconReplacement"></ion-icon>
-              </ion-avatar>
-            </div>
-            <div class="main-div">
-              <ion-label class="auto-width label-event-force">
-                <div class="table-row">
-                  <div class="second-div">
-                    <h2 class="second-div-title">{{ fail.nameReplacement }}</h2>
-                  </div>
-                  <div class="third-div">
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" name="walk"></ion-icon>
-                      <p class="icon-color text-size-small">{{ fail.kilometers.t }}{{ measure.value }}</p>
-                    </div>
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" [name]="fail.kilometers.icon"></ion-icon>
-                      <p class="icon-color text-size-small">{{ fail.kilometers.probability }}%</p>
-                    </div>
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
-                      <p class="icon-color text-size-small">{{ fail.kilometers.cost }}{{ coin.value }}</p>
-                    </div>
-                  </div>
-                  <div class="third-div">
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" name="alarm"></ion-icon>
-                      <p class="icon-color text-size-small">{{ fail.times.t }} {{ 'COMMON.MONTHS' | translate}}</p>
-                    </div>
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" [name]="fail.times.icon"></ion-icon>
-                      <p class="icon-color text-size-small">{{ fail.times.probability }}%</p>
-                    </div>
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
-                      <p class="icon-color text-size-small">{{ fail.times.cost }}{{ coin.value }}</p>
-                    </div>
-                  </div>
-                </div>
-              </ion-label>
-            </div>
-          </div>
-        </div>
-      </ion-item>
-    </div>
-    <div *ngIf="!loadedBodyFailureProbabilitySummary">
-      <app-body-skeleton [input]="inputBodySkeletonConfigurationSummary"></app-body-skeleton>
-    </div>
-  </ion-list>
-  <!-- REPLACEMENT SUMMARY -->
-  <ion-list *ngIf="vehicles.length > 0">
-    <ion-list-header (click)="showInfoReplacementLoad()" class="padding-list-header">
-      <ion-icon size="large" name="repeat"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.REPLACEMENT_HISTORY' | translate }}</h3>
-      <ion-button fill="clear">
-        <ion-icon size="small" color="primary" [name]="hideReplacementSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <div *ngIf="!hideReplacementSummary">
-      <combo-chart-component
-        class="justify-center"
-        [view]="dashboardReplacementVehicle.view"
-        [scheme]="dashboardReplacementVehicle.colorScheme"
-        [results]="dashboardReplacementVehicle.data"
-        [colorSchemeLine]="dashboardReplacementVehicle.colorScheme"
-        [lineChart]="dashboardReplacementVehicle.dataLine"
-        [gradient]="dashboardReplacementVehicle.gradient"
-        [xAxis]="dashboardReplacementVehicle.showXAxis"
-        [yAxis]="dashboardReplacementVehicle.showYAxis"
-        [legendTitle]="dashboardReplacementVehicle.legendTitle"
-        [legend]="dashboardReplacementVehicle.showLegend"
-        [legendPosition]="dashboardReplacementVehicle.legendPosition"
-        [showXAxisLabel]="dashboardReplacementVehicle.showXAxisLabel"
-        [showYAxisLabel]="dashboardReplacementVehicle.showYAxisLabel"
-        [xAxisLabel]="dashboardReplacementVehicle.xAxisLabel"
-        [yAxisLabel]="dashboardReplacementVehicle.yAxisLabel">
-      </combo-chart-component>
-      <ion-item *ngFor="let rep of selectedInfoReplacement; let i = index;" [button]="rep.listReplacements.length > 0" (click)="showInfoReplacement[i] = !showInfoReplacement[i];">
-        <div class="main-item-div">
-          <div class="table-row">
-            <div>
-              <!-- Icons -->
-              <ion-avatar slot="start" class="main-avatar">
-                <ion-icon size="large" class="icon-color" [name]="rep.iconReplacement"></ion-icon>
-              </ion-avatar>
-            </div>
-            <div class="main-div">
-              <ion-label class="auto-width label-event-force">
-                <div class="table-row">
-                  <div class="second-div">
-                    <h2 class="second-div-title">{{ rep.name }}</h2>
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-main-icon" [name]="rep.planned ? 'build' : 'construct'"></ion-icon>
-                      <p class="icon-color">{{ rep.km }}{{ measure.value }} / {{ rep.time }} {{ 'COMMON.MONTHS' | translate }}</p>
-                    </div>
-                  </div>
-                  <div *ngIf="rep.kmAverage !== -1" class="third-div">
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" name="walk"></ion-icon>
-                      <p class="icon-color text-size-small">{{ rep.kmAverage }}{{ measure.value }}</p>
-                    </div>
-                    <div class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" name="alarm"></ion-icon>
-                      <p class="icon-color text-size-small">{{ rep.timeAverage }} {{ 'COMMON.MONTHS' | translate}}</p>
-                    </div>
-                    <div *ngIf="rep.priceAverage > 0" class="table-row">
-                      <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
-                      <p class="icon-color text-size-small">{{ rep.priceAverage }}{{ coin.value }}</p>
-                    </div>
-                  </div>
-                </div>
-              </ion-label>
-            </div>
-          </div>
-          <div class="table-row" *ngIf="showInfoReplacement[i]">
-            <ion-list class="second-item-div">
-              <ion-item *ngFor="let subRep of rep.listReplacements" button
-                (click)="showInfoReplacement[i] = !showInfoReplacement[i]; showToastInfoReplacement(rep, subRep)">
-                <div class="table-row auto-width">
-                  <div style="width: 50px;">
+                  <div>
                     <!-- Icons -->
                     <ion-avatar slot="start" class="main-avatar">
-                      <ion-icon size="small" class="icon-color" name="construct"></ion-icon>
+                      <ion-icon size="large" [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
+                      [name]="m.iconMaintenance"></ion-icon>
                     </ion-avatar>
                   </div>
-                  <div class="submain-div">
+                  <div class="main-div">
+                    <!-- Labels -->
+                    <ion-label class="auto-width label-event-force">
+                      <div class="table-row">
+                        <h2 class="text-overflow">{{ m.description }}</h2>
+                        <div class="icon-notification">
+                          @if (m.active) {
+                            <ion-icon [class]="m.warningIconClass" [color]="m.warningIconClass"
+                            size="small" [name]="m.warningIcon"></ion-icon>
+                          }
+                        </div>
+                      </div>
+                      <div class="table-row">
+                        @if (m.time > 0) {
+                          <p [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }">{{ m.km }} {{measure.value}} / {{ m.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+                        }
+                        @if (m.time <= 0) {
+                          <p [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }">{{ m.km }} {{measure.value}}</p>
+                        }
+                        <div class="icon-notification">
+                          @if (m.fromKm !== 0) {
+                            <ion-icon [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
+                            slot="end" size="small" name="walk"></ion-icon>
+                          }
+                          @if (m.toKm !== null) {
+                            <ion-icon [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
+                            slot="end" size="small" name="trail-sign"></ion-icon>
+                          }
+                          @if (m.init) {
+                            <ion-icon [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
+                            slot="end" size="small" name="navigate-circle"></ion-icon>
+                          }
+                          @if (!m.init && m.wear) {
+                            <ion-icon [ngClass]="{ 'icon-color disable-item-color': !m.active, 'icon-color': m.active }"
+                            slot="end" size="small" name="notifications-circle"></ion-icon>
+                          }
+                        </div>
+                      </div>
+                    </ion-label>
+                  </div>
+                </div>
+                @if (showInfoMaintenance[i]) {
+                  <div class="table-row">
+                    <ion-list class="second-item-div">
+                      @for (r of m.listReplacement; track r.id) {
+                        <ion-item [ngClass]="{ 'disable-item-color': !m.active }">
+                          <ion-avatar slot="start" class="second-avatar">
+                            <ion-icon size="small" class="icon-color" [name]="r.iconReplacement"></ion-icon>
+                          </ion-avatar>
+                          <ion-label [ngClass]="{ 'disable-item-color second-div-title': !m.active, 'second-div-title': m.active }">{{ r.name }}</ion-label>
+                          @if (m.active) {
+                            <ion-icon [class]="'icon-row' + r.warningIconClass" [color]="r.warningIconClass"
+                            size="small" [name]="r.warningIcon"></ion-icon>
+                          }
+                        </ion-item>
+                      }
+                    </ion-list>
+                  </div>
+                }
+              </div>
+            </ion-item>
+          }
+        </div>
+      }
+      @if (!loadedBodyConfigurationSummary) {
+        <div>
+          <app-body-skeleton [input]="inputBodySkeletonConfigurationSummary"></app-body-skeleton>
+        </div>
+      }
+    </ion-list>
+  }
+  <!-- FAILURE PROBABILITY -->
+  @if (vehicles.length > 0 && !noDataOperations) {
+    <ion-list>
+      <ion-list-header (click)="showInfoFailureProbabilityLoad()" class="padding-list-header">
+        <ion-icon size="large" name="flash"></ion-icon>
+        <h3 class="header-list">{{ 'COMMON.PREDICTIVE_COST' | translate }}</h3>
+        <ion-button fill="clear">
+          <ion-icon size="small" color="primary" [name]="hideFailureProbabilitySummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      @if (!hideFailureProbabilitySummary) {
+        <div>
+          <ngx-charts-bubble-chart
+            class="justify-center"
+            [view]="dashboardFailureProbabilityVehicle.view"
+            [scheme]="dashboardFailureProbabilityVehicle.colorScheme"
+            [results]="dashboardFailureProbabilityVehicle.data"
+            [xAxis]="dashboardFailureProbabilityVehicle.showXAxis"
+            [yAxis]="dashboardFailureProbabilityVehicle.showYAxis"
+            [legendTitle]="dashboardFailureProbabilityVehicle.legendTitle"
+            [legend]="dashboardFailureProbabilityVehicle.showLegend"
+            [legendPosition]="dashboardFailureProbabilityVehicle.legendPosition"
+            [showXAxisLabel]="dashboardFailureProbabilityVehicle.showXAxisLabel"
+            [showYAxisLabel]="dashboardFailureProbabilityVehicle.showYAxisLabel"
+            [xAxisLabel]="dashboardFailureProbabilityVehicle.xAxisLabel"
+            [yAxisLabel]="dashboardFailureProbabilityVehicle.yAxisLabel"
+            [xScaleMin]="dashboardFailureProbabilityVehicle.xScaleMin"
+            [xScaleMax]="dashboardFailureProbabilityVehicle.xScaleMax"
+            [yScaleMin]="dashboardFailureProbabilityVehicle.yScaleMin"
+            [yScaleMax]="dashboardFailureProbabilityVehicle.yScaleMax"
+            [minRadius]="dashboardFailureProbabilityVehicle.minRadius"
+            [maxRadius]="dashboardFailureProbabilityVehicle.maxRadius">
+          </ngx-charts-bubble-chart>
+          @for (fail of selectedInfoPrediction; track fail.idReplacement) {
+            <ion-item>
+              <div class="main-item-div">
+                <div class="table-row">
+                  <div>
+                    <!-- Icons -->
+                    <ion-avatar slot="start" class="main-avatar">
+                      <ion-icon size="large" class="icon-color" [name]="fail.iconReplacement"></ion-icon>
+                    </ion-avatar>
+                  </div>
+                  <div class="main-div">
                     <ion-label class="auto-width label-event-force">
                       <div class="table-row">
                         <div class="second-div">
-                          <h2 class="second-div-title">{{ subRep.opName }}</h2>
-                          <p class="icon-color">{{ subRep.date | dateFormatCalendarPipe }} {{ (subRep.priceOp === 0 ? '' : '- ' + subRep.priceOp + coin.value) }}</p>
+                          <h2 class="second-div-title">{{ fail.nameReplacement }}</h2>
                         </div>
-                        <div class="subthird-div">
+                        <div class="third-div">
                           <div class="table-row">
                             <ion-icon size="large" class="icon-color sub-icon" name="walk"></ion-icon>
-                          <p class="icon-color text-size-small">{{ subRep.km }}{{ measure.value }}</p>
+                            <p class="icon-color text-size-small">{{ fail.kilometers.t }}{{ measure.value }}</p>
                           </div>
                           <div class="table-row">
-                            <ion-icon size="large" class="icon-color sub-icon" name="alarm"></ion-icon>
-                            <p class="icon-color text-size-small">{{ subRep.time }} {{ 'COMMON.MONTHS' | translate}}</p>
+                            <ion-icon size="large" class="icon-color sub-icon" [name]="fail.kilometers.icon"></ion-icon>
+                            <p class="icon-color text-size-small">{{ fail.kilometers.probability }}%</p>
                           </div>
-                          <div *ngIf="subRep.price > 0" class="table-row">
+                          <div class="table-row">
                             <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
-                            <p class="icon-color text-size-small">{{ subRep.price }}{{ coin.value }}</p>
+                            <p class="icon-color text-size-small">{{ fail.kilometers.cost }}{{ coin.value }}</p>
+                          </div>
+                        </div>
+                        <div class="third-div">
+                          <div class="table-row">
+                            <ion-icon size="large" class="icon-color sub-icon" name="alarm"></ion-icon>
+                            <p class="icon-color text-size-small">{{ fail.times.t }} {{ 'COMMON.MONTHS' | translate}}</p>
+                          </div>
+                          <div class="table-row">
+                            <ion-icon size="large" class="icon-color sub-icon" [name]="fail.times.icon"></ion-icon>
+                            <p class="icon-color text-size-small">{{ fail.times.probability }}%</p>
+                          </div>
+                          <div class="table-row">
+                            <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
+                            <p class="icon-color text-size-small">{{ fail.times.cost }}{{ coin.value }}</p>
                           </div>
                         </div>
                       </div>
                     </ion-label>
                   </div>
                 </div>
-              </ion-item>
-            </ion-list>
-          </div>
+              </div>
+            </ion-item>
+          }
         </div>
-      </ion-item>
-    </div>
-    <div *ngIf="!loadedBodyReplacementSummary">
-      <app-body-skeleton [input]="inputBodySkeletonReplacementSummary"></app-body-skeleton>
-    </div>
-  </ion-list>
+      }
+      @if (!loadedBodyFailureProbabilitySummary) {
+        <div>
+          <app-body-skeleton [input]="inputBodySkeletonConfigurationSummary"></app-body-skeleton>
+        </div>
+      }
+    </ion-list>
+  }
+  <!-- REPLACEMENT SUMMARY -->
+  @if (vehicles.length > 0) {
+    <ion-list>
+      <ion-list-header (click)="showInfoReplacementLoad()" class="padding-list-header">
+        <ion-icon size="large" name="repeat"></ion-icon>
+        <h3 class="header-list">{{ 'COMMON.REPLACEMENT_HISTORY' | translate }}</h3>
+        <ion-button fill="clear">
+          <ion-icon size="small" color="primary" [name]="hideReplacementSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      @if (!hideReplacementSummary) {
+        <div>
+          <combo-chart-component
+            class="justify-center"
+            [view]="dashboardReplacementVehicle.view"
+            [scheme]="dashboardReplacementVehicle.colorScheme"
+            [results]="dashboardReplacementVehicle.data"
+            [colorSchemeLine]="dashboardReplacementVehicle.colorScheme"
+            [lineChart]="dashboardReplacementVehicle.dataLine"
+            [gradient]="dashboardReplacementVehicle.gradient"
+            [xAxis]="dashboardReplacementVehicle.showXAxis"
+            [yAxis]="dashboardReplacementVehicle.showYAxis"
+            [legendTitle]="dashboardReplacementVehicle.legendTitle"
+            [legend]="dashboardReplacementVehicle.showLegend"
+            [legendPosition]="dashboardReplacementVehicle.legendPosition"
+            [showXAxisLabel]="dashboardReplacementVehicle.showXAxisLabel"
+            [showYAxisLabel]="dashboardReplacementVehicle.showYAxisLabel"
+            [xAxisLabel]="dashboardReplacementVehicle.xAxisLabel"
+            [yAxisLabel]="dashboardReplacementVehicle.yAxisLabel">
+          </combo-chart-component>
+          @for (rep of selectedInfoReplacement; track rep.id; let i = $index) {
+            <ion-item [button]="rep.listReplacements.length > 0" (click)="showInfoReplacement[i] = !showInfoReplacement[i];">
+              <div class="main-item-div">
+                <div class="table-row">
+                  <div>
+                    <!-- Icons -->
+                    <ion-avatar slot="start" class="main-avatar">
+                      <ion-icon size="large" class="icon-color" [name]="rep.iconReplacement"></ion-icon>
+                    </ion-avatar>
+                  </div>
+                  <div class="main-div">
+                    <ion-label class="auto-width label-event-force">
+                      <div class="table-row">
+                        <div class="second-div">
+                          <h2 class="second-div-title">{{ rep.name }}</h2>
+                          <div class="table-row">
+                            <ion-icon size="large" class="icon-color sub-main-icon" [name]="rep.planned ? 'build' : 'construct'"></ion-icon>
+                            <p class="icon-color">{{ rep.km }}{{ measure.value }} / {{ rep.time }} {{ 'COMMON.MONTHS' | translate }}</p>
+                          </div>
+                        </div>
+                        @if (rep.kmAverage !== -1) {
+                          <div class="third-div">
+                            <div class="table-row">
+                              <ion-icon size="large" class="icon-color sub-icon" name="walk"></ion-icon>
+                              <p class="icon-color text-size-small">{{ rep.kmAverage }}{{ measure.value }}</p>
+                            </div>
+                            <div class="table-row">
+                              <ion-icon size="large" class="icon-color sub-icon" name="alarm"></ion-icon>
+                              <p class="icon-color text-size-small">{{ rep.timeAverage }} {{ 'COMMON.MONTHS' | translate}}</p>
+                            </div>
+                            @if (rep.priceAverage > 0) {
+                              <div class="table-row">
+                                <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
+                                <p class="icon-color text-size-small">{{ rep.priceAverage }}{{ coin.value }}</p>
+                              </div>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </ion-label>
+                  </div>
+                </div>
+                @if (showInfoReplacement[i]) {
+                  <div class="table-row">
+                    <ion-list class="second-item-div">
+                      @for (subRep of rep.listReplacements; track subRep.id) {
+                        <ion-item button
+                          (click)="showInfoReplacement[i] = !showInfoReplacement[i]; showToastInfoReplacement(rep, subRep)">
+                          <div class="table-row auto-width">
+                            <div style="width: 50px;">
+                              <!-- Icons -->
+                              <ion-avatar slot="start" class="main-avatar">
+                                <ion-icon size="small" class="icon-color" name="construct"></ion-icon>
+                              </ion-avatar>
+                            </div>
+                            <div class="submain-div">
+                              <ion-label class="auto-width label-event-force">
+                                <div class="table-row">
+                                  <div class="second-div">
+                                    <h2 class="second-div-title">{{ subRep.opName }}</h2>
+                                    <p class="icon-color">{{ subRep.date | dateFormatCalendarPipe }} {{ (subRep.priceOp === 0 ? '' : '- ' + subRep.priceOp + coin.value) }}</p>
+                                  </div>
+                                  <div class="subthird-div">
+                                    <div class="table-row">
+                                      <ion-icon size="large" class="icon-color sub-icon" name="walk"></ion-icon>
+                                      <p class="icon-color text-size-small">{{ subRep.km }}{{ measure.value }}</p>
+                                    </div>
+                                    <div class="table-row">
+                                      <ion-icon size="large" class="icon-color sub-icon" name="alarm"></ion-icon>
+                                      <p class="icon-color text-size-small">{{ subRep.time }} {{ 'COMMON.MONTHS' | translate}}</p>
+                                    </div>
+                                    @if (subRep.price > 0) {
+                                      <div class="table-row">
+                                        <ion-icon size="large" class="icon-color sub-icon" name="cash"></ion-icon>
+                                        <p class="icon-color text-size-small">{{ subRep.price }}{{ coin.value }}</p>
+                                      </div>
+                                    }
+                                  </div>
+                                </div>
+                              </ion-label>
+                            </div>
+                          </div>
+                        </ion-item>
+                      }
+                    </ion-list>
+                  </div>
+                }
+              </div>
+            </ion-item>
+          }
+        </div>
+      }
+      @if (!loadedBodyReplacementSummary) {
+        <div>
+          <app-body-skeleton [input]="inputBodySkeletonReplacementSummary"></app-body-skeleton>
+        </div>
+      }
+    </ion-list>
+  }
 </ion-content>

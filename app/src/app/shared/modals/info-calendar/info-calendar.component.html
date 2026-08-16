@@ -4,83 +4,117 @@
 
 <ion-content>
   <!-- CALENDAR -->
-  <ion-calendar class="padding-calendar" ngDefaultControl [(ngModel)]="dateMulti" [options]="optionsMulti" [type]="type" 
+  <ion-calendar class="padding-calendar" ngDefaultControl [(ngModel)]="dateMulti" [options]="optionsMulti" [type]="type"
     (click)="onClick($event)" [format]="formatCalendar" (onSelect)="onSelect($event)" (onMonthChange)="onMonthChange($event)">
   </ion-calendar>
 
-  <div class="info-main padding-info" *ngIf="!activeSpinner && listInfoCalendarSelected.length === 0">
-    <div class="p-color">
-      <ion-icon class="font-size26" name="alarm"></ion-icon>
-      <h3 class="info-text-notification-empty padding-info-title">{{ notificationEmpty }}</h3>
+  @if (!activeSpinner && listInfoCalendarSelected.length === 0) {
+    <div class="info-main padding-info">
+      <div class="p-color">
+        <ion-icon class="font-size26" name="alarm"></ion-icon>
+        <h3 class="info-text-notification-empty padding-info-title">{{ notificationEmpty }}</h3>
+      </div>
     </div>
-  </div>
-  <ion-label *ngIf="activeSpinner" class="align-center">
-    <ion-spinner name="lines" color="medium"></ion-spinner>
-  </ion-label>
-  <div *ngIf="!activeSpinner && listInfoCalendarSelected.length > 0">
-    <ion-list *ngFor="let vehicle of listInfoCalendarSelected; let i = index;">
-        <ion-item *ngFor="let maint of vehicle.listInfoCalendarMaintOp; let j = index;" lines="none">
-          <!-- Icons -->
-          <ion-avatar slot="start" class="max-width9 align-start">
-            <ion-icon size="large" class="icon-color" [name]="maint.icon"></ion-icon>
-          </ion-avatar>
-          <div class="main-item">
-            <div>
-              <!-- Label -->
-              <div class="table-row">
-                <div class="main-item-div width100">
-                  <div class="table-row margin-right5 table-row auto-width">
-                    <ion-label class="row-label">{{ maint.description }}</ion-label>
-                    <p slot="end" class="p-color subrow-pos align-right auto-width font-size14">{{ maint.dateFormatOperation }}</p>
+  }
+  @if (activeSpinner) {
+    <ion-label class="align-center">
+      <ion-spinner name="lines" color="medium"></ion-spinner>
+    </ion-label>
+  }
+  @if (!activeSpinner && listInfoCalendarSelected.length > 0) {
+    <div>
+      @for (vehicle of listInfoCalendarSelected; track vehicle; let i = $index) {
+        <ion-list>
+          @for (maint of vehicle.listInfoCalendarMaintOp; track maint; let j = $index) {
+            <ion-item lines="none">
+              <!-- Icons -->
+              <ion-avatar slot="start" class="max-width9 align-start">
+                <ion-icon size="large" class="icon-color" [name]="maint.icon"></ion-icon>
+              </ion-avatar>
+              <div class="main-item">
+                <div>
+                  <!-- Label -->
+                  <div class="table-row">
+                    <div class="main-item-div width100">
+                      <div class="table-row margin-right5 table-row auto-width">
+                        <ion-label class="row-label">{{ maint.description }}</ion-label>
+                        <p slot="end" class="p-color subrow-pos align-right auto-width font-size14">{{ maint.dateFormatOperation }}</p>
+                      </div>
+                      @if (CALENDAR_TYPE.OPERATION == maint.type) {
+                        <div class="table-row margin-right5 table-row auto-width">
+                          <p class="subrow-color subrow-pos align-center auto-width subrow-width font-size13 font-italic">
+                            {{ 'COMMON.DISTANCE' | translate }}: {{ maint.kmOperation }}{{measure.value}}
+                          </p>
+                          <p class="subrow-color subrow-pos align-right auto-width font-size13 font-italic">
+                            {{ 'COMMON.LABOR' | translate }}: {{ maint.priceOperation }}{{coin.value}}
+                          </p>
+                        </div>
+                      }
+                    </div>
+                    @if (CALENDAR_TYPE.MAINTENANCE == maint.type) {
+                      <div class="table-row margin-right5 table-row auto-width icon-notification">
+                        @if (maint.fromKmMaintenance !== 0) {
+                          <ion-icon name="walk"
+                          color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+                        }
+                        @if (maint.toKmMaintenance !== null) {
+                          <ion-icon name="trail-sign"
+                          color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+                        }
+                        @if (maint.initMaintenance) {
+                          <ion-icon name="navigate-circle"
+                          color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+                        }
+                        @if (!maint.initMaintenance && maint.wearMaintenance) {
+                          <ion-icon name="notifications-circle"
+                          color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
+                        }
+                      </div>
+                    }
                   </div>
-                  <div *ngIf="CALENDAR_TYPE.OPERATION == maint.type" class="table-row margin-right5 table-row auto-width">
-                    <p class="subrow-color subrow-pos align-center auto-width subrow-width font-size13 font-italic">
-                      {{ 'COMMON.DISTANCE' | translate }}: {{ maint.kmOperation }}{{measure.value}}
-                    </p>
-                    <p class="subrow-color subrow-pos align-right auto-width font-size13 font-italic">
-                      {{ 'COMMON.LABOR' | translate }}: {{ maint.priceOperation }}{{coin.value}}
-                    </p>
-                  </div>
-              </div>
-              <div *ngIf="CALENDAR_TYPE.MAINTENANCE == maint.type" class="table-row margin-right5 table-row auto-width icon-notification">
-                <ion-icon *ngIf="maint.fromKmMaintenance !== 0" name="walk"
-                  color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
-                <ion-icon *ngIf="maint.toKmMaintenance !== null" name="trail-sign"
-                  color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
-                <ion-icon *ngIf="maint.initMaintenance" name="navigate-circle"
-                  color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
-                <ion-icon *ngIf="!maint.initMaintenance && maint.wearMaintenance" name="notifications-circle"
-                  color="icon-color-gray" class="icon-color-gray font-size16"></ion-icon>
-              </div>
-            </div>
-              <ion-item button *ngFor="let repl of maint.listInfoCalendarReplacement" class="second-item" (click)="showInfo(maint, repl)">
-                <!-- Ivatar -->
-                <ion-avatar slot="start" class="max-width9 align-start">
-                  <ion-icon [class]="'second-icon-avatar' + repl.warningIconClass" [color]="repl.warningIconClass" [name]="repl.iconReplacement"></ion-icon>
-                </ion-avatar>
-                <div class="main-item-div width100">
-                  <div class="table-row margin-right5 table-row auto-width">
-                    <ion-icon [class]="'icon-pos' + repl.warningIconClass" [color]="repl.warningIconClass" size="small"
-                      [name]="repl.warningIcon"></ion-icon>
-                    <p class="p-color row-pos auto-width row-overflow-hiden font-size14 width100">{{ repl.nameReplacement }}</p>
-                    <p *ngIf="CALENDAR_TYPE.MAINTENANCE == maint.type" class="p-color row-pos align-right auto-width font-size14">{{ repl.dateFormat }}</p>
-                    <p *ngIf="CALENDAR_TYPE.OPERATION == maint.type && repl.price !== 0" style="white-space: nowrap;" class="subrow-color row-pos align-right auto-width font-size13 font-italic">
-                      {{ 'COMMON.PRICE' | translate }}: {{ repl.price }}{{coin.value}}
-                    </p>
-                  </div>
-                  <div *ngIf="CALENDAR_TYPE.MAINTENANCE == maint.type" class="table-row margin-right5 table-row auto-width">
-                    <p *ngIf="repl.time === 0 && repl.km !== 0" class="subrow-color subrow-pos align-right auto-width subrow-width font-size13 font-italic">
-                      {{ 'COMMON.DISTANCE' | translate }}: {{ repl.km }}{{measure.value}}
-                    </p>
-                    <p *ngIf="repl.price !== 0" class="subrow-color subrow-pos align-right auto-width font-size13 font-italic">
-                      {{ 'COMMON.LAST_PRICE' | translate }}: {{ repl.price }}{{coin.value}}
-                    </p>
-                  </div>
+                  @for (repl of maint.listInfoCalendarReplacement; track repl) {
+                    <ion-item button class="second-item" (click)="showInfo(maint, repl)">
+                      <!-- Ivatar -->
+                      <ion-avatar slot="start" class="max-width9 align-start">
+                        <ion-icon [class]="'second-icon-avatar' + repl.warningIconClass" [color]="repl.warningIconClass" [name]="repl.iconReplacement"></ion-icon>
+                      </ion-avatar>
+                      <div class="main-item-div width100">
+                        <div class="table-row margin-right5 table-row auto-width">
+                          <ion-icon [class]="'icon-pos' + repl.warningIconClass" [color]="repl.warningIconClass" size="small"
+                          [name]="repl.warningIcon"></ion-icon>
+                          <p class="p-color row-pos auto-width row-overflow-hiden font-size14 width100">{{ repl.nameReplacement }}</p>
+                          @if (CALENDAR_TYPE.MAINTENANCE == maint.type) {
+                            <p class="p-color row-pos align-right auto-width font-size14">{{ repl.dateFormat }}</p>
+                          }
+                          @if (CALENDAR_TYPE.OPERATION == maint.type && repl.price !== 0) {
+                            <p style="white-space: nowrap;" class="subrow-color row-pos align-right auto-width font-size13 font-italic">
+                              {{ 'COMMON.PRICE' | translate }}: {{ repl.price }}{{coin.value}}
+                            </p>
+                          }
+                        </div>
+                        @if (CALENDAR_TYPE.MAINTENANCE == maint.type) {
+                          <div class="table-row margin-right5 table-row auto-width">
+                            @if (repl.time === 0 && repl.km !== 0) {
+                              <p class="subrow-color subrow-pos align-right auto-width subrow-width font-size13 font-italic">
+                                {{ 'COMMON.DISTANCE' | translate }}: {{ repl.km }}{{measure.value}}
+                              </p>
+                            }
+                            @if (repl.price !== 0) {
+                              <p class="subrow-color subrow-pos align-right auto-width font-size13 font-italic">
+                                {{ 'COMMON.LAST_PRICE' | translate }}: {{ repl.price }}{{coin.value}}
+                              </p>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </ion-item>
+                  }
                 </div>
-              </ion-item>
-            </div>
-          </div>
-        </ion-item>
-    </ion-list>
-  </div>
+              </div>
+            </ion-item>
+          }
+        </ion-list>
+      }
+    </div>
+  }
 </ion-content>
