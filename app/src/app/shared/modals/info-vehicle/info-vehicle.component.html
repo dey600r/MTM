@@ -80,7 +80,7 @@
             [results]="dashboardConfigurationVehicle.data">
           </ngx-charts-pie-grid>
           <!-- CONFIGURATION VEHICLE -->
-          @for (m of selectedInfoVehicleConfiguration.listMaintenance; track m; let i = $index) {
+          @for (m of selectedInfoVehicleConfiguration.listMaintenance; track m.id; let i = $index) {
             <ion-item button
               [ngClass]="{ 'disable-item-color': !m.active }" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
               <div class="main-item-div">
@@ -136,7 +136,7 @@
                 @if (showInfoMaintenance[i]) {
                   <div class="table-row">
                     <ion-list class="second-item-div">
-                      @for (r of m.listReplacement; track r) {
+                      @for (r of m.listReplacement; track r.id) {
                         <ion-item [ngClass]="{ 'disable-item-color': !m.active }">
                           <ion-avatar slot="start" class="second-avatar">
                             <ion-icon size="small" class="icon-color" [name]="r.iconReplacement"></ion-icon>
@@ -196,7 +196,7 @@
             [minRadius]="dashboardFailureProbabilityVehicle.minRadius"
             [maxRadius]="dashboardFailureProbabilityVehicle.maxRadius">
           </ngx-charts-bubble-chart>
-          @for (fail of selectedInfoPrediction; track fail) {
+          @for (fail of selectedInfoPrediction; track fail.idReplacement) {
             <ion-item>
               <div class="main-item-div">
                 <div class="table-row">
@@ -286,7 +286,7 @@
             [xAxisLabel]="dashboardReplacementVehicle.xAxisLabel"
             [yAxisLabel]="dashboardReplacementVehicle.yAxisLabel">
           </combo-chart-component>
-          @for (rep of selectedInfoReplacement; track rep; let i = $index) {
+          @for (rep of selectedInfoReplacement; track rep.id; let i = $index) {
             <ion-item [button]="rep.listReplacements.length > 0" (click)="showInfoReplacement[i] = !showInfoReplacement[i];">
               <div class="main-item-div">
                 <div class="table-row">
@@ -331,7 +331,7 @@
                 @if (showInfoReplacement[i]) {
                   <div class="table-row">
                     <ion-list class="second-item-div">
-                      @for (subRep of rep.listReplacements; track subRep) {
+                      @for (subRep of rep.listReplacements; track subRep.id) {
                         <ion-item button
                           (click)="showInfoReplacement[i] = !showInfoReplacement[i]; showToastInfoReplacement(rep, subRep)">
                           <div class="table-row auto-width">

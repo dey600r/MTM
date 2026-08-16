@@ -12,7 +12,7 @@
     @if (!activateInfo) {
       <ion-grid>
         <ion-row>
-          @for (wm of this.vehicleSelected.listWearMaintenance; track wm; let i = $index) {
+          @for (wm of this.vehicleSelected.listWearMaintenance; track wm.idMaintenance; let i = $index) {
             <ion-col size-lg="4" size-md="6" size-sm="12" size-xs="12">
               <ion-card button class="card-with-progress-bar" (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]">
                 <ion-card-header>
@@ -43,7 +43,7 @@
                         <div class="table-row">
                           <!-- ICON INFORMATION SUMMARY REPLACEMENTS MAINTENANCE -->
                           <div class="margin-right5 table-row">
-                            @for (wnr of wm.listWearNotificationReplacement; track wnr) {
+                            @for (wnr of wm.listWearNotificationReplacement; track $index) {
                               <div class="table-row">
                                 <ion-icon [class]="'icon-row2' + wnr.warningIconClass" [color]="wnr.warningIconClass"
                                 size="small" [name]="wnr.warningIcon"></ion-icon>
@@ -79,7 +79,7 @@
                   @if (showInfoMaintenance[i]) {
                     <div class="table-row">
                       <ion-list class="second-item-div" lines="none">
-                        @for (wr of wm.listWearReplacement; track wr) {
+                        @for (wr of wm.listWearReplacement; track wr.idMaintenanceElement) {
                           <ion-item button (click)="showInfoMaintenance[i] = !showInfoMaintenance[i]; openInfoNotification(this.vehicleSelected, wm, wr)">
                             <div>
                               <!-- AVATAR REPLACEMENT -->

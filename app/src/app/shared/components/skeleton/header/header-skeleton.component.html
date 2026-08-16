@@ -5,7 +5,7 @@
 </ion-toolbar>
 <ion-grid class="skeleton-background segment-button-fixed">
   <ion-row>
-    @for (col of input; track col; let i = $index) {
+    @for (col of input; track $index; let i = $index) {
       <ion-col [size]="col" style="text-align: center;">
         @if (i % 2 === 0) {
           <ion-spinner name="lines-small" color="medium"></ion-spinner>
