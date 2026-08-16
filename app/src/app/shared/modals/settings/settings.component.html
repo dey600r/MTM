@@ -13,7 +13,9 @@
         <div slot="label" class="label-required">
           <ion-text>{{ 'COMMON.MEASURING' | translate }}</ion-text>
         </div>
-        <ion-select-option *ngFor="let d of listDistances" [value]="d.code">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
+        @for (d of listDistances; track d) {
+          <ion-select-option [value]="d.code">{{d.valueLarge + ' - ' + d.value}}</ion-select-option>
+        }
       </ion-select>
     </ion-item>
     <ion-item>
@@ -21,7 +23,9 @@
         <div slot="label" class="label-required">
           <ion-text>{{ 'COMMON.COIN' | translate }}</ion-text>
         </div>
-        <ion-select-option [value]="m.code" *ngFor="let m of listMoney" >{{m.valueLarge + ' - ' + m.value}}</ion-select-option>
+        @for (m of listMoney; track m) {
+          <ion-select-option [value]="m.code" >{{m.valueLarge + ' - ' + m.value}}</ion-select-option>
+        }
       </ion-select>
     </ion-item>
   </ion-list>
@@ -37,7 +41,9 @@
         <div slot="label" class="label-required">
           <ion-text>{{ 'COMMON.MODE' | translate }}</ion-text>
         </div>
-        <ion-select-option [value]="t.code" *ngFor="let t of listThemes">{{t.value}}</ion-select-option>
+        @for (t of listThemes; track t) {
+          <ion-select-option [value]="t.code">{{t.value}}</ion-select-option>
+        }
       </ion-select>
     </ion-item>
   </ion-list>
@@ -88,7 +94,7 @@
               <ion-button fill="clear" (click)="f.click()">
                 <ion-icon color="primary" name="enter"></ion-icon>
               </ion-button>
-              <input id="file-input" class="ion-hide" #f type="file" (change)="validFileAndImport($event)">    
+              <input id="file-input" class="ion-hide" #f type="file" (change)="validFileAndImport($event)">
             </div>
           </div>
         </div>
@@ -112,43 +118,53 @@
   </ion-list>
 
   <!-- SYNCRONIZED -->
-  <ion-list *ngIf="pwdSync === 29">
-    <ion-list-header class="padding-list-header">
-      <ion-icon size="large" name="sync"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.SYNCHRONIZE' | translate }}</h3>
-      <ion-button class="btn-width-list" fill="clear" (click)="showInfoSynchronize()">
-        <ion-icon color="primary" size="large" name="information-circle"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <ion-item>
-      <ion-label position="stacked">
-        <ion-text>{{ 'COMMON.EMAIL' | translate }}</ion-text>
-        <ion-text color="danger">*</ion-text>
-      </ion-label>
-      <ion-input type="email" placeholder="example@gmail.com" [(ngModel)]="syncEmail"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">
-        <ion-text>{{ 'COMMON.PASSWORD' | translate }}</ion-text>
-        <ion-text color="danger">*</ion-text>
-      </ion-label>
-      <ion-input type="password" placeholder="****" [(ngModel)]="syncCode"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label class="min-width90">{{ 'COMMON.DOWNLOAD' | translate }}</ion-label>
-      <ion-spinner *ngIf="synchronizingDownload" name="lines-small" color="medium"></ion-spinner>
-      <ion-button *ngIf="!synchronizingDownload" class="btn-width-list" fill="clear" (click)="syncDownload()">
-        <ion-icon color="primary" size="small" name="cloud-download"></ion-icon>
-      </ion-button>
-    </ion-item>
-    <ion-item>
-      <ion-label class="min-width90">{{ 'COMMON.UPLOAD' | translate }}</ion-label>
-      <ion-spinner *ngIf="synchronizingUpload" name="lines-small" color="medium"></ion-spinner>
-      <ion-button *ngIf="!synchronizingUpload" class="btn-width-list" fill="clear" (click)="syncUpload()">
-        <ion-icon color="primary" size="small" name="cloud-upload"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  @if (pwdSync === 29) {
+    <ion-list>
+      <ion-list-header class="padding-list-header">
+        <ion-icon size="large" name="sync"></ion-icon>
+        <h3 class="header-list">{{ 'COMMON.SYNCHRONIZE' | translate }}</h3>
+        <ion-button class="btn-width-list" fill="clear" (click)="showInfoSynchronize()">
+          <ion-icon color="primary" size="large" name="information-circle"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.EMAIL' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="email" placeholder="example@gmail.com" [(ngModel)]="syncEmail"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.PASSWORD' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="password" placeholder="****" [(ngModel)]="syncCode"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="min-width90">{{ 'COMMON.DOWNLOAD' | translate }}</ion-label>
+        @if (synchronizingDownload) {
+          <ion-spinner name="lines-small" color="medium"></ion-spinner>
+        }
+        @if (!synchronizingDownload) {
+          <ion-button class="btn-width-list" fill="clear" (click)="syncDownload()">
+            <ion-icon color="primary" size="small" name="cloud-download"></ion-icon>
+          </ion-button>
+        }
+      </ion-item>
+      <ion-item>
+        <ion-label class="min-width90">{{ 'COMMON.UPLOAD' | translate }}</ion-label>
+        @if (synchronizingUpload) {
+          <ion-spinner name="lines-small" color="medium"></ion-spinner>
+        }
+        @if (!synchronizingUpload) {
+          <ion-button class="btn-width-list" fill="clear" (click)="syncUpload()">
+            <ion-icon color="primary" size="small" name="cloud-upload"></ion-icon>
+          </ion-button>
+        }
+      </ion-item>
+    </ion-list>
+  }
 
   <!-- VERISION APP -->
   <ion-label class="label-version">

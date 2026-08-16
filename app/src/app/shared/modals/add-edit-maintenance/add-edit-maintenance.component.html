@@ -1,93 +1,113 @@
 <!-- HEADER MODAL -->
 <app-header [input]="headerInput"></app-header>
-  
+
 <ion-content>
-    <!-- Form -->
-    <form #formAddMaintenance name="formAddMaintenance" (ngSubmit)="saveData(formAddMaintenance)" novalidate>
-      <ion-list lines="full">
-        <!-- Input control -->
-        <ion-item>
-          <ion-label position="stacked">
-            <ion-text>{{ 'COMMON.DESCRIPTION' | translate }}</ion-text>
+  <!-- Form -->
+  <form #formAddMaintenance name="formAddMaintenance" (ngSubmit)="saveData(formAddMaintenance)" novalidate>
+    <ion-list lines="full">
+      <!-- Input control -->
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.DESCRIPTION' | translate }}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          @if (this.submited && !isValidDescription(formAddMaintenance)) {
+            <ion-icon class="padding-left20"
+            color="danger" size="small" name="alert"></ion-icon>
+          }
+          @if (this.submited && !isValidDescription(formAddMaintenance)) {
+            <ion-text
+            color="danger">{{ 'PAGE_OPERATION.AddDescription' | translate }}</ion-text>
+          }
+        </ion-label>
+        <ion-input #maintenanceDescription name="maintenanceDescription" placeholder="--" autocapitalize required type="text"
+        [(ngModel)]="maintenance.description"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-select #maintenanceReplacement name="maintenanceReplacement" multiple="true" [placeholder]="this.translateSelect"
+          [cancelText]="this.translateCancel" [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect"
+          [interfaceOptions]="customActionSheetOptions" interface="action-sheet" label-placement="stacked" >
+          <div slot="label" class="label-required">
+            <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
             <ion-text color="danger">*</ion-text>
-            <ion-icon *ngIf="this.submited && !isValidDescription(formAddMaintenance)" class="padding-left20" 
-                color="danger" size="small" name="alert"></ion-icon>
-            <ion-text *ngIf="this.submited && !isValidDescription(formAddMaintenance)" 
-                color="danger">{{ 'PAGE_OPERATION.AddDescription' | translate }}</ion-text>
-          </ion-label>
-          <ion-input #maintenanceDescription name="maintenanceDescription" placeholder="--" autocapitalize required type="text" 
-            [(ngModel)]="maintenance.description"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-select #maintenanceReplacement name="maintenanceReplacement" multiple="true" [placeholder]="this.translateSelect"
-              [cancelText]="this.translateCancel" [okText]="this.translateAccept" [(ngModel)]="this.maintenanceElementSelect"
-              [interfaceOptions]="customActionSheetOptions" interface="action-sheet" label-placement="stacked" >
-            <div slot="label" class="label-required">
-              <ion-text>{{ 'COMMON.REPLACEMENT' | translate }}</ion-text>
-              <ion-text color="danger">*</ion-text>
-              <ion-icon *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-              <ion-text *ngIf="this.submited && !isValidReplacement(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddReplacement' | translate }}</ion-text>
-            </div>
-            <ion-select-option [value]="me.id" *ngFor="let me of maintenanceElements">{{ me.name }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item>
-          <ion-select #maintenanceFreq name="maintenanceFreq" [placeholder]="this.translateSelect" 
-              [(ngModel)]="maintenance.maintenanceFreq" label-placement="stacked" >
-            <div slot="label" class="label-required">
-              <ion-text>{{ 'COMMON.FREQUENCY' | translate }}</ion-text>
-              <ion-text color="danger">*</ion-text>
-              <ion-icon *ngIf="this.submited && !isValidFreq(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-              <ion-text *ngIf="this.submited && !isValidFreq(formAddMaintenance)" color="danger">{{ 'PAGE_CONFIGURATION.AddMaintenanceFreq' | translate }}</ion-text>
-            </div>
-            <ion-select-option [value]="f" *ngFor="let f of maintenanceFreqs">{{f.description}}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            <ion-text>{{ measure.valueLarge}}</ion-text>
+            @if (this.submited && !isValidReplacement(formAddMaintenance)) {
+              <ion-icon class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+            }
+            @if (this.submited && !isValidReplacement(formAddMaintenance)) {
+              <ion-text color="danger">{{ 'PAGE_CONFIGURATION.AddReplacement' | translate }}</ion-text>
+            }
+          </div>
+          @for (me of maintenanceElements; track me) {
+            <ion-select-option [value]="me.id">{{ me.name }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-select #maintenanceFreq name="maintenanceFreq" [placeholder]="this.translateSelect"
+          [(ngModel)]="maintenance.maintenanceFreq" label-placement="stacked" >
+          <div slot="label" class="label-required">
+            <ion-text>{{ 'COMMON.FREQUENCY' | translate }}</ion-text>
             <ion-text color="danger">*</ion-text>
-            <ion-icon *ngIf="this.submited && !isValidKm(formAddMaintenance)" class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
-            <ion-text *ngIf="this.submited && !isValidKm(formAddMaintenance)" color="danger">{{ 'PAGE_VEHICLE.AddKm' | translate }}</ion-text>
-          </ion-label>
-          <ion-input #maintenanceKm name="maintenanceKm" placeholder="10000 {{measure.value}}" required type="number" min="0" 
-            [(ngModel)]="maintenance.km"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">
-            <ion-text>{{ 'COMMON.MONTHS' | translate }}</ion-text>
-          </ion-label>
-          <ion-input #maintenanceTime name="maintenanceTime" placeholder="--" type="number" min="0" 
-            [(ngModel)]="maintenance.time"></ion-input>
-        </ion-item>
-        <ion-item button>
-          <ion-icon class="ion-icon-margin" slot="start" size="large" name="navigate-circle" (click)="showInfoInit()"></ion-icon>
-          <ion-label (click)="showInfoInit()">
-            <h2>{{ 'COMMON.INIT' | translate }}</h2>
-          </ion-label>
-          <ion-checkbox [disabled]="isInitDisabled()" #maintenanceInit name="maintenanceInit" slot="end" color="primary" [(ngModel)]="maintenance.init"></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-icon class="ion-icon-margin" slot="start" size="large" name="notifications-circle" (click)="showInfoWear()"></ion-icon>
-          <ion-label (click)="showInfoWear()">
-            <h2>{{ 'COMMON.WEAR' | translate }}</h2>
-          </ion-label>
-          <ion-checkbox #maintenanceWear name="maintenanceWear" slot="end" color="primary" [(ngModel)]="maintenance.wear"></ion-checkbox>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked" style="padding-bottom: 3px;">
-            <ion-text>{{ 'COMMON.KM_RANGE' | translate }} {{ showRange }}</ion-text>
-          </ion-label>
-          <ion-range dualKnobs="true" min="0" [max]="maxKm" step="500" #maintenanceFromTo name="maintenanceFromTo"
+            @if (this.submited && !isValidFreq(formAddMaintenance)) {
+              <ion-icon class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+            }
+            @if (this.submited && !isValidFreq(formAddMaintenance)) {
+              <ion-text color="danger">{{ 'PAGE_CONFIGURATION.AddMaintenanceFreq' | translate }}</ion-text>
+            }
+          </div>
+          @for (f of maintenanceFreqs; track f) {
+            <ion-select-option [value]="f">{{f.description}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ measure.valueLarge}}</ion-text>
+          <ion-text color="danger">*</ion-text>
+          @if (this.submited && !isValidKm(formAddMaintenance)) {
+            <ion-icon class="padding-left20" color="danger" size="small" name="alert"></ion-icon>
+          }
+          @if (this.submited && !isValidKm(formAddMaintenance)) {
+            <ion-text color="danger">{{ 'PAGE_VEHICLE.AddKm' | translate }}</ion-text>
+          }
+        </ion-label>
+        <ion-input #maintenanceKm name="maintenanceKm" placeholder="10000 {{measure.value}}" required type="number" min="0"
+        [(ngModel)]="maintenance.km"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">
+          <ion-text>{{ 'COMMON.MONTHS' | translate }}</ion-text>
+        </ion-label>
+        <ion-input #maintenanceTime name="maintenanceTime" placeholder="--" type="number" min="0"
+        [(ngModel)]="maintenance.time"></ion-input>
+      </ion-item>
+      <ion-item button>
+        <ion-icon class="ion-icon-margin" slot="start" size="large" name="navigate-circle" (click)="showInfoInit()"></ion-icon>
+        <ion-label (click)="showInfoInit()">
+          <h2>{{ 'COMMON.INIT' | translate }}</h2>
+        </ion-label>
+        <ion-checkbox [disabled]="isInitDisabled()" #maintenanceInit name="maintenanceInit" slot="end" color="primary" [(ngModel)]="maintenance.init"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <ion-icon class="ion-icon-margin" slot="start" size="large" name="notifications-circle" (click)="showInfoWear()"></ion-icon>
+        <ion-label (click)="showInfoWear()">
+          <h2>{{ 'COMMON.WEAR' | translate }}</h2>
+        </ion-label>
+        <ion-checkbox #maintenanceWear name="maintenanceWear" slot="end" color="primary" [(ngModel)]="maintenance.wear"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked" style="padding-bottom: 3px;">
+          <ion-text>{{ 'COMMON.KM_RANGE' | translate }} {{ showRange }}</ion-text>
+        </ion-label>
+        <ion-range dualKnobs="true" min="0" [max]="maxKm" step="500" #maintenanceFromTo name="maintenanceFromTo"
           [disabled]="!isInitDisabled()" [(ngModel)]="valueRange" (ionChange)="changeRange()">
-            <ion-icon size="small" class="icon-color" slot="start" name="walk"></ion-icon>
-            <ion-icon size="small" class="icon-color" slot="end"  name="trail-sign"></ion-icon> 
-          </ion-range>
-        </ion-item>
-      </ion-list>
-      <!-- Buton Save -->
-      <ion-button class="button-circle" type="submit" [disabled]="maintenance.master">
-        <ion-icon [name]="maintenance.master ? 'lock-closed' : 'save'"></ion-icon>
-      </ion-button>
-    </form>
+          <ion-icon size="small" class="icon-color" slot="start" name="walk"></ion-icon>
+          <ion-icon size="small" class="icon-color" slot="end"  name="trail-sign"></ion-icon>
+        </ion-range>
+      </ion-item>
+    </ion-list>
+    <!-- Buton Save -->
+    <ion-button class="button-circle" type="submit" [disabled]="maintenance.master">
+      <ion-icon [name]="maintenance.master ? 'lock-closed' : 'save'"></ion-icon>
+    </ion-button>
+  </form>
 </ion-content>

@@ -77,9 +77,9 @@ describe('InfoCalendarService', () => {
         const listInfoCalendar: InfoCalendarVehicleViewModel[] = service.getInfoCalendar(allWears, MockAppData.Operations);
         const result: InfoCalendarVehicleViewModel[] = service.getInfoCalendarReplacementDate(listInfoCalendar, 
             [new Date(2022, 1, 1), new Date(2023, 11, 31)]);
-        expect(result.some(x => x.nameVehicle == `${MockAppData.Vehicles[1].brand} ${MockAppData.Vehicles[1].model}`)).toBeTrue();
-        expect(result[0].listInfoCalendarMaintOp[0].listInfoCalendarReplacement.length).toEqual(2);
-        const op = MockAppData.Operations.find(x => x.id === 6);
+        expect(result.some(x => x.nameVehicle == `${MockAppData.Vehicles[0].brand} ${MockAppData.Vehicles[0].model}`)).toBeTrue();
+        expect(result[0].listInfoCalendarMaintOp[0].listInfoCalendarReplacement.length).toEqual(3);
+        const op = MockAppData.Operations.find(x => x.id === 12);
         expect(result[0].listInfoCalendarMaintOp[0].id).toEqual(op.id);
         expect(result[0].listInfoCalendarMaintOp[0].detailOperation).toEqual(op.details);
         expect(result[0].listInfoCalendarMaintOp[0].listInfoCalendarReplacement.length).toEqual(op.listMaintenanceElement.length);

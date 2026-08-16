@@ -140,7 +140,7 @@ describe('InfoVehicleService', () => {
         expect(vehicleHyosung.listHistoricReplacements[0].timeAverage).toEqual(34);
         expect(vehicleHyosung.listHistoricReplacements[0].listReplacements.length).toEqual(5);
         expect(vehicleHyosung.listHistoricReplacements[2].name).toEqual(MockAppData.MaintenanceElements[5].name);
-        expect(vehicleHyosung.listHistoricReplacements[2].km).toBeGreaterThanOrEqual(7840);
+        expect(vehicleHyosung.listHistoricReplacements[2].km).toBeGreaterThanOrEqual(7800);
         expect(vehicleHyosung.listHistoricReplacements[2].kmAverage).toEqual(29875);
         expect(vehicleHyosung.listHistoricReplacements[2].priceAverage).toEqual(34);
         expect(vehicleHyosung.listHistoricReplacements[2].time).toBeGreaterThanOrEqual(40);

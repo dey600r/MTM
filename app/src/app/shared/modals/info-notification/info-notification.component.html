@@ -11,181 +11,230 @@
         <ion-icon size="small" color="primary" [name]="hideSummary ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
       </ion-button>
     </ion-list-header>
-    <ion-item *ngIf="!hideSummary" button (click)="showInfoVehicle()">
-      <p class="ion-color-info-summary">{{ labelVehicleKm }}</p>
-    </ion-item>
-    <ion-item *ngIf="!hideSummary" button (click)="showInfoReliability()">
-      <p class="ion-color-info-summary">{{ labelReliability }}</p>
-      <p class="ion-color-info-summary icon-margin-p" slot="end">{{ labelPercent }} %</p>
-      <ion-icon slot="end" size="small" [class]="getIconPercent('color')" [color]="getIconPercent('color')" [name]="getIconPercent('icon')"></ion-icon>
-    </ion-item>
-    <ion-item *ngIf="!hideSummary" button (click)="showInfoMaintenance()">
-      <p class="ion-color-info-summary">{{ labelNextChange }}</p>
-    </ion-item>
-    <ion-item *ngIf="!hideSummary" button (click)="showInfoLifeReplacement()">
-      <p class="ion-color-info-summary">{{ labelLifeReplacement }}</p>
-    </ion-item>
-    <ion-item *ngIf="labelNotRecord !== ''">
-      <p class="ion-color-info-summary">{{ labelNotRecord }}</p>
-    </ion-item>
+    @if (!hideSummary) {
+      <ion-item button (click)="showInfoVehicle()">
+        <p class="ion-color-info-summary">{{ labelVehicleKm }}</p>
+      </ion-item>
+    }
+    @if (!hideSummary) {
+      <ion-item button (click)="showInfoReliability()">
+        <p class="ion-color-info-summary">{{ labelReliability }}</p>
+        <p class="ion-color-info-summary icon-margin-p" slot="end">{{ labelPercent }} %</p>
+        <ion-icon slot="end" size="small" [class]="getIconPercent('color')" [color]="getIconPercent('color')" [name]="getIconPercent('icon')"></ion-icon>
+      </ion-item>
+    }
+    @if (!hideSummary) {
+      <ion-item button (click)="showInfoMaintenance()">
+        <p class="ion-color-info-summary">{{ labelNextChange }}</p>
+      </ion-item>
+    }
+    @if (!hideSummary) {
+      <ion-item button (click)="showInfoLifeReplacement()">
+        <p class="ion-color-info-summary">{{ labelLifeReplacement }}</p>
+      </ion-item>
+    }
+    @if (labelNotRecord !== '') {
+      <ion-item>
+        <p class="ion-color-info-summary">{{ labelNotRecord }}</p>
+      </ion-item>
+    }
   </ion-list>
   <!-- COSTS -->
-  <ion-list *ngIf="isCalendar">
-    <ion-list-header (click)="refreshChartLaborExpenses()" class="padding-list-header">
-      <ion-icon size="large" name="bar-chart"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
-      <ion-button fill="clear">
-        <ion-icon size="small" color="primary" [name]="hideGraphLabor ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <div *ngIf="!hideGraphLabor" class="justify-center">
-      <ngx-charts-bar-vertical-2d *ngIf="!showSpinner"
-        [view]="dashboardVehicleExpenses.view"
-        [scheme]="dashboardVehicleExpenses.colorScheme"
-        [results]="dashboardVehicleExpenses.data"
-        [gradient]="dashboardVehicleExpenses.gradient"
-        [xAxis]="dashboardVehicleExpenses.showXAxis"
-        [yAxis]="dashboardVehicleExpenses.showYAxis"
-        [legend]="dashboardVehicleExpenses.showLegend"
-        [legendTitle]="dashboardVehicleExpenses.legendTitle"
-        [legendPosition]="dashboardVehicleExpenses.legendPosition"
-        [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
-        [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
-        [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
-        [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
-        [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
-      </ngx-charts-bar-vertical-2d>
-      <div *ngIf="showSpinner" [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
-        <ion-spinner class="spinner" name="lines"></ion-spinner>
-      </div>
-    </div>
-  </ion-list>
+  @if (isCalendar) {
+    <ion-list>
+      <ion-list-header (click)="refreshChartLaborExpenses()" class="padding-list-header">
+        <ion-icon size="large" name="bar-chart"></ion-icon>
+        <h3 class="header-list">{{ 'COMMON.EXPENSES' | translate }}</h3>
+        <ion-button fill="clear">
+          <ion-icon size="small" color="primary" [name]="hideGraphLabor ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      @if (!hideGraphLabor) {
+        <div class="justify-center">
+          @if (!showSpinner) {
+            <ngx-charts-bar-vertical-2d
+              [view]="dashboardVehicleExpenses.view"
+              [scheme]="dashboardVehicleExpenses.colorScheme"
+              [results]="dashboardVehicleExpenses.data"
+              [gradient]="dashboardVehicleExpenses.gradient"
+              [xAxis]="dashboardVehicleExpenses.showXAxis"
+              [yAxis]="dashboardVehicleExpenses.showYAxis"
+              [legend]="dashboardVehicleExpenses.showLegend"
+              [legendTitle]="dashboardVehicleExpenses.legendTitle"
+              [legendPosition]="dashboardVehicleExpenses.legendPosition"
+              [showXAxisLabel]="dashboardVehicleExpenses.showXAxisLabel"
+              [showYAxisLabel]="dashboardVehicleExpenses.showYAxisLabel"
+              [showDataLabel]="dashboardVehicleExpenses.showDataLabel"
+              [xAxisLabel]="dashboardVehicleExpenses.xAxisLabel"
+              [yAxisLabel]="dashboardVehicleExpenses.yAxisLabel">
+            </ngx-charts-bar-vertical-2d>
+          }
+          @if (showSpinner) {
+            <div [style.height.px]="dashboardVehicleExpenses.view[1]" class="div-spinner">
+              <ion-spinner class="spinner" name="lines"></ion-spinner>
+            </div>
+          }
+        </div>
+      }
+    </ion-list>
+  }
   <!-- FAILURE -->
-  <ion-list *ngIf="isCalendar && !notEnoughDataPredictive">
-    <ion-list-header (click)="refreshChartFailureExpenses()" class="padding-list-header">
-      <ion-icon size="large" name="flash"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.PREDICTIVE_MAINTENANCE' | translate }}</h3>
-      <ion-button fill="clear">
-        <ion-icon size="small" color="primary" [name]="hideGraphFailure ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <ion-item *ngIf="!hideGraphFailure" class="item-border-color-white" lines="none">
-      <div class="justify-center">
-        <ngx-charts-line-chart *ngIf="!showSpinner"
-          class="margin-chart"
-          [view]="dashboardFailureReplacement.view"
-          [scheme]="dashboardFailureReplacement.colorScheme"
-          [results]="dashboardFailureReplacement.data"
-          [gradient]="dashboardFailureReplacement.gradient"
-          [xAxis]="dashboardFailureReplacement.showXAxis"
-          [yAxis]="dashboardFailureReplacement.showYAxis"
-          [legend]="dashboardFailureReplacement.showLegend"
-          [legendTitle]="dashboardFailureReplacement.legendTitle"
-          [legendPosition]="dashboardFailureReplacement.legendPosition"
-          [showXAxisLabel]="dashboardFailureReplacement.showXAxisLabel"
-          [showYAxisLabel]="dashboardFailureReplacement.showYAxisLabel"
-          [xAxisLabel]="dashboardFailureReplacement.xAxisLabel"
-          [yAxisLabel]="dashboardFailureReplacement.yAxisLabel"
-          [curve]="linear">
-        </ngx-charts-line-chart>
-        <div *ngIf="showSpinner" [style.height.px]="dashboardFailureReplacement.view[1]" class="div-spinner">
-          <ion-spinner class="spinner" name="lines"></ion-spinner>
-        </div>
-      </div>
-    </ion-item>
-    <ion-item *ngIf="!hideGraphFailure">
-      <p class="ion-color-info-summary">{{ labelPredictionKm }}</p>
-      <ion-icon slot="end" size="small" [name]="iconPredictionKm"></ion-icon>
-    </ion-item>
-    <ion-item *ngIf="!hideGraphFailure">
-      <p class="ion-color-info-summary">{{ labelPredictionTime }}</p>
-      <ion-icon slot="end" size="small" [name]="iconPredictionTime"></ion-icon>
-    </ion-item>
-  </ion-list>
-  <!-- List Records Maintenance -->
-  <ion-list *ngIf="isCalendar">
-    <ion-list-header (click)="refreshChart()" class="padding-list-header">
-      <ion-icon size="large" [name]="iconMaintenanceElement"></ion-icon>
-      <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ nameMaintenanceElement }}</h3>
-      <ion-button fill="clear">
-        <ion-icon size="small" color="primary" [name]="hideRecords ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
-      </ion-button>
-    </ion-list-header>
-    <ion-item *ngIf="!hideRecords" class="item-border-color-white" lines="none">
-      <div class="justify-center">
-        <ngx-charts-line-chart *ngIf="!showSpinner"
-          class="margin-chart" 
-          [view]="dashboardRecordsMaintenance.view"
-          [scheme]="dashboardRecordsMaintenance.colorScheme"
-          [results]="dashboardRecordsMaintenance.data"
-          [gradient]="dashboardRecordsMaintenance.gradient"
-          [xAxis]="dashboardRecordsMaintenance.showXAxis"
-          [yAxis]="dashboardRecordsMaintenance.showYAxis"
-          [legend]="dashboardRecordsMaintenance.showLegend"
-          [legendTitle]="dashboardRecordsMaintenance.legendTitle"
-          [legendPosition]="dashboardRecordsMaintenance.legendPosition"
-          [showXAxisLabel]="dashboardRecordsMaintenance.showXAxisLabel"
-          [showYAxisLabel]="dashboardRecordsMaintenance.showYAxisLabel"
-          [xAxisLabel]="dashboardRecordsMaintenance.xAxisLabel"
-          [yAxisLabel]="dashboardRecordsMaintenance.yAxisLabel"
-          [curve]="linear">
-        </ngx-charts-line-chart>
-        <div *ngIf="showSpinner" [style.height.px]="dashboardRecordsMaintenance.view[1]" class="div-spinner">
-          <ion-spinner class="spinner" name="lines"></ion-spinner>
-        </div>
-      </div>
-    </ion-item>
-    <!-- Items Maintenances -->
-    <div *ngIf="!hideRecords">
-      <ion-item button *ngFor="let wm of wear.listWearMaintenance" (click)="showInfo(wm)">
-        <!-- Ivatar -->
-        <ion-avatar slot="start" class="max-width10 avatar-row">
-          <ion-icon size="large" class="icon-color" [name]="wm.iconMaintenance"></ion-icon>
-        </ion-avatar>
-        <div class="main-div">
-          <div>
-            <!-- Label -->
-            <div>
-              <ion-label>{{ (wm.listWearReplacement[0].descriptionOperation === null ?
-                wm.descriptionMaintenance : wm.listWearReplacement[0].descriptionOperation) }}</ion-label>
-            </div>
-            <div class="table-row">
-              <!-- KMS -->
-              <div class="margin-right5 table-row">
-                <ion-icon [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" 
-                  [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
-                  [name]="wm.listWearReplacement[0].warningKmsIcon"></ion-icon>
-                <p class="p-row">{{ getKmPercent(wm.listWearReplacement[0]) }} {{measure.value}}</p>
+  @if (isCalendar && !notEnoughDataPredictive) {
+    <ion-list>
+      <ion-list-header (click)="refreshChartFailureExpenses()" class="padding-list-header">
+        <ion-icon size="large" name="flash"></ion-icon>
+        <h3 class="header-list">{{ 'COMMON.PREDICTIVE_MAINTENANCE' | translate }}</h3>
+        <ion-button fill="clear">
+          <ion-icon size="small" color="primary" [name]="hideGraphFailure ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      @if (!hideGraphFailure) {
+        <ion-item class="item-border-color-white" lines="none">
+          <div class="justify-center">
+            @if (!showSpinner) {
+              <ngx-charts-line-chart
+                class="margin-chart"
+                [view]="dashboardFailureReplacement.view"
+                [scheme]="dashboardFailureReplacement.colorScheme"
+                [results]="dashboardFailureReplacement.data"
+                [gradient]="dashboardFailureReplacement.gradient"
+                [xAxis]="dashboardFailureReplacement.showXAxis"
+                [yAxis]="dashboardFailureReplacement.showYAxis"
+                [legend]="dashboardFailureReplacement.showLegend"
+                [legendTitle]="dashboardFailureReplacement.legendTitle"
+                [legendPosition]="dashboardFailureReplacement.legendPosition"
+                [showXAxisLabel]="dashboardFailureReplacement.showXAxisLabel"
+                [showYAxisLabel]="dashboardFailureReplacement.showYAxisLabel"
+                [xAxisLabel]="dashboardFailureReplacement.xAxisLabel"
+                [yAxisLabel]="dashboardFailureReplacement.yAxisLabel"
+                [curve]="linear">
+              </ngx-charts-line-chart>
+            }
+            @if (showSpinner) {
+              <div [style.height.px]="dashboardFailureReplacement.view[1]" class="div-spinner">
+                <ion-spinner class="spinner" name="lines"></ion-spinner>
               </div>
-              <!-- ICON -->
-              <div class="icon-notification">
-                <ion-icon *ngIf="wm.initMaintenance" [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
-                [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" name="navigate-circle"></ion-icon>
-                <ion-icon *ngIf="!wm.initMaintenance && wm.wearMaintenance"
-                  [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
-                  [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" name="notifications-circle"></ion-icon>
-              </div>
-            </div>
-              <!-- Progress bar maintenace -->
-            <div [class]="wm.listWearReplacement[0].warningKmsProgressBarIcon">
-              <ion-progress-bar [value]="wm.listWearReplacement[0].percentKms"></ion-progress-bar>
-            </div>
-            <div *ngIf="wm.timeMaintenance > 0" class="table-row">
-              <!-- MONTHS -->
-              <div class="margin-right5 table-row">
-                <ion-icon [color]="wm.listWearReplacement[0].warningMonthsIconClass" size="small"
-                  [class]="'icon-row' + wm.listWearReplacement[0].warningMonthsIconClass" [name]="wm.listWearReplacement[0].warningMonthsIcon"></ion-icon>
-                <p class="p-row">{{ getTimePercent(wm.listWearReplacement[0]) }}</p>
-              </div>
-            </div>
-              <!-- Progress bar maintenace -->
-            <div *ngIf="wm.timeMaintenance > 0" [class]="wm.listWearReplacement[0].warningMonthsProgressBarIcon">
-              <ion-progress-bar [value]="wm.listWearReplacement[0].percentMonths"></ion-progress-bar>
-            </div>
+            }
           </div>
+        </ion-item>
+      }
+      @if (!hideGraphFailure) {
+        <ion-item>
+          <p class="ion-color-info-summary">{{ labelPredictionKm }}</p>
+          <ion-icon slot="end" size="small" [name]="iconPredictionKm"></ion-icon>
+        </ion-item>
+      }
+      @if (!hideGraphFailure) {
+        <ion-item>
+          <p class="ion-color-info-summary">{{ labelPredictionTime }}</p>
+          <ion-icon slot="end" size="small" [name]="iconPredictionTime"></ion-icon>
+        </ion-item>
+      }
+    </ion-list>
+  }
+  <!-- List Records Maintenance -->
+  @if (isCalendar) {
+    <ion-list>
+      <ion-list-header (click)="refreshChart()" class="padding-list-header">
+        <ion-icon size="large" [name]="iconMaintenanceElement"></ion-icon>
+        <h3 class="header-list">{{ 'COMMON.RECORDS' | translate }} {{ nameMaintenanceElement }}</h3>
+        <ion-button fill="clear">
+          <ion-icon size="small" color="primary" [name]="hideRecords ? 'caret-down-circle' : 'caret-up-circle'"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      @if (!hideRecords) {
+        <ion-item class="item-border-color-white" lines="none">
+          <div class="justify-center">
+            @if (!showSpinner) {
+              <ngx-charts-line-chart
+                class="margin-chart"
+                [view]="dashboardRecordsMaintenance.view"
+                [scheme]="dashboardRecordsMaintenance.colorScheme"
+                [results]="dashboardRecordsMaintenance.data"
+                [gradient]="dashboardRecordsMaintenance.gradient"
+                [xAxis]="dashboardRecordsMaintenance.showXAxis"
+                [yAxis]="dashboardRecordsMaintenance.showYAxis"
+                [legend]="dashboardRecordsMaintenance.showLegend"
+                [legendTitle]="dashboardRecordsMaintenance.legendTitle"
+                [legendPosition]="dashboardRecordsMaintenance.legendPosition"
+                [showXAxisLabel]="dashboardRecordsMaintenance.showXAxisLabel"
+                [showYAxisLabel]="dashboardRecordsMaintenance.showYAxisLabel"
+                [xAxisLabel]="dashboardRecordsMaintenance.xAxisLabel"
+                [yAxisLabel]="dashboardRecordsMaintenance.yAxisLabel"
+                [curve]="linear">
+              </ngx-charts-line-chart>
+            }
+            @if (showSpinner) {
+              <div [style.height.px]="dashboardRecordsMaintenance.view[1]" class="div-spinner">
+                <ion-spinner class="spinner" name="lines"></ion-spinner>
+              </div>
+            }
+          </div>
+        </ion-item>
+      }
+      <!-- Items Maintenances -->
+      @if (!hideRecords) {
+        <div>
+          @for (wm of wear.listWearMaintenance; track wm) {
+            <ion-item button (click)="showInfo(wm)">
+              <!-- Ivatar -->
+              <ion-avatar slot="start" class="max-width10 avatar-row">
+                <ion-icon size="large" class="icon-color" [name]="wm.iconMaintenance"></ion-icon>
+              </ion-avatar>
+              <div class="main-div">
+                <div>
+                  <!-- Label -->
+                  <div>
+                    <ion-label>{{ (wm.listWearReplacement[0].descriptionOperation === null ?
+                    wm.descriptionMaintenance : wm.listWearReplacement[0].descriptionOperation) }}</ion-label>
+                  </div>
+                  <div class="table-row">
+                    <!-- KMS -->
+                    <div class="margin-right5 table-row">
+                      <ion-icon [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass"
+                        [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
+                      [name]="wm.listWearReplacement[0].warningKmsIcon"></ion-icon>
+                      <p class="p-row">{{ getKmPercent(wm.listWearReplacement[0]) }} {{measure.value}}</p>
+                    </div>
+                    <!-- ICON -->
+                    <div class="icon-notification">
+                      @if (wm.initMaintenance) {
+                        <ion-icon [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
+                        [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" name="navigate-circle"></ion-icon>
+                      }
+                      @if (!wm.initMaintenance && wm.wearMaintenance) {
+                        <ion-icon
+                          [color]="wm.listWearReplacement[0].warningKmsIconClass" size="small"
+                        [class]="'icon-row' + wm.listWearReplacement[0].warningKmsIconClass" name="notifications-circle"></ion-icon>
+                      }
+                    </div>
+                  </div>
+                  <!-- Progress bar maintenace -->
+                  <div [class]="wm.listWearReplacement[0].warningKmsProgressBarIcon">
+                    <ion-progress-bar [value]="wm.listWearReplacement[0].percentKms"></ion-progress-bar>
+                  </div>
+                  @if (wm.timeMaintenance > 0) {
+                    <div class="table-row">
+                      <!-- MONTHS -->
+                      <div class="margin-right5 table-row">
+                        <ion-icon [color]="wm.listWearReplacement[0].warningMonthsIconClass" size="small"
+                        [class]="'icon-row' + wm.listWearReplacement[0].warningMonthsIconClass" [name]="wm.listWearReplacement[0].warningMonthsIcon"></ion-icon>
+                        <p class="p-row">{{ getTimePercent(wm.listWearReplacement[0]) }}</p>
+                      </div>
+                    </div>
+                  }
+                  <!-- Progress bar maintenace -->
+                  @if (wm.timeMaintenance > 0) {
+                    <div [class]="wm.listWearReplacement[0].warningMonthsProgressBarIcon">
+                      <ion-progress-bar [value]="wm.listWearReplacement[0].percentMonths"></ion-progress-bar>
+                    </div>
+                  }
+                </div>
+              </div>
+            </ion-item>
+          }
         </div>
-      </ion-item>
-    </div>
-    
-  </ion-list>
+      }
+    </ion-list>
+  }
 </ion-content>

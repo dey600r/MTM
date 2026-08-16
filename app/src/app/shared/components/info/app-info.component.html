@@ -1,27 +1,29 @@
 <ion-content>
     <div [ngClass]="{'info-content-height-icon': inputInfo.data.info > 0,
             'info-content-height-no-icon': inputInfo.data.info === 0}">
-        <div class="info-main">
-            <div>
-                <ion-icon class="ion-color-info-init" size="large" [name]="inputInfo.data.icon"></ion-icon>
-                <h2 class="margin-top5 ion-color-info-init">{{ inputInfo.data.text | translate }}</h2>
-            </div>
-        </div>
-        <div *ngIf="inputInfo.data.info > 0">
-            <div class="info-tab">
-                <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 1}">
-                    <ion-icon class="ion-color-info-init"></ion-icon>
-                </div>
-                <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 2}">
-                    <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
-                </div>
-                <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 3}">
-                    <ion-icon></ion-icon>
-                </div>
-                <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 4}">
-                    <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
-                </div>
-            </div>
-        </div>
+    <div class="info-main">
+      <div>
+        <ion-icon class="ion-color-info-init" size="large" [name]="inputInfo.data.icon"></ion-icon>
+        <h2 class="margin-top5 ion-color-info-init">{{ inputInfo.data.text | translate }}</h2>
+      </div>
     </div>
+    @if (inputInfo.data.info > 0) {
+      <div>
+        <div class="info-tab">
+          <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 1}">
+            <ion-icon class="ion-color-info-init"></ion-icon>
+          </div>
+          <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 2}">
+            <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
+          </div>
+          <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 3}">
+            <ion-icon></ion-icon>
+          </div>
+          <div [ngClass]="{'info-icon': true, 'dissapear': inputInfo.data.info !== 4}">
+            <ion-icon class="ion-color-info-init" size="large" name="arrow-down-circle"></ion-icon>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
 </ion-content>

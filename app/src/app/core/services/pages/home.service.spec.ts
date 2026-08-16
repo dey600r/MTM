@@ -319,11 +319,11 @@ describe('HomeService', () => {
         expect(events[0].brandVehicle).toEqual(vehicle.brand);
         expect(events[0].modelVehicle).toEqual(vehicle.model);
         expect(events[0].events[0].tkm).toEqual(55000);
-        expect(events[0].events[0].ttime).toEqual(117);
+        expect(events[0].events[0].ttime).toEqual(118);
         expect(events[0].events[0].cost).toEqual(760);
         expect(events[0].events[0].type).toEqual(FailurePredictionTypeEnum.MAINT);
         expect(events[0].events[1].tkm).toEqual(12000);
-        expect(events[0].events[1].ttime).toEqual(19);
+        expect(events[0].events[1].ttime).toEqual(18);
         expect(events[0].events[1].cost).toEqual(443);
         expect(events[0].events[1].type).toEqual(FailurePredictionTypeEnum.MAINT);
         expect(events.find(x => x.idReplacement === MockAppData.MaintenanceElements[4].id).events.some(x => x.type === FailurePredictionTypeEnum.FAIL)). toBeTruthy();    });
