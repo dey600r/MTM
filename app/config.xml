@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="369" id="mtm.ionic.dey125r" version="3.6.9" windows-packageVersion="3.6.9" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="370" id="mtm.ionic.dey125r" version="3.7.0" windows-packageVersion="3.7.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MtM</name>
     <description>Motor Track Manager</description>
     <author email="deyhome.mtm@gmail.com" href="https://mtmweb-cd867.web.app/home">DeyHome</author>
@@ -43,7 +43,6 @@
         <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
         <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
     </platform>
-    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <platform name="electron">
         <hook src="scripts/beforeBuild-electron.js" type="before_build" />
         <preference name="ElectronSettingsFilePath" value="resources/windows/settings/settings.json" />
