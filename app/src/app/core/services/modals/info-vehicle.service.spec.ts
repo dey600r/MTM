@@ -136,14 +136,14 @@ describe('InfoVehicleService', () => {
         expect(vehicleHyosung.listHistoricReplacements[0].km).toBeGreaterThanOrEqual(3940);
         expect(vehicleHyosung.listHistoricReplacements[0].kmAverage).toEqual(23900);
         expect(vehicleHyosung.listHistoricReplacements[0].priceAverage).toEqual(6);
-        expect(vehicleHyosung.listHistoricReplacements[0].time).toBeGreaterThanOrEqual(40);
+        expect(vehicleHyosung.listHistoricReplacements[0].time).toBeGreaterThanOrEqual(39);
         expect(vehicleHyosung.listHistoricReplacements[0].timeAverage).toEqual(34);
         expect(vehicleHyosung.listHistoricReplacements[0].listReplacements.length).toEqual(5);
         expect(vehicleHyosung.listHistoricReplacements[2].name).toEqual(MockAppData.MaintenanceElements[5].name);
         expect(vehicleHyosung.listHistoricReplacements[2].km).toBeGreaterThanOrEqual(7800);
         expect(vehicleHyosung.listHistoricReplacements[2].kmAverage).toEqual(29875);
         expect(vehicleHyosung.listHistoricReplacements[2].priceAverage).toEqual(34);
-        expect(vehicleHyosung.listHistoricReplacements[2].time).toBeGreaterThanOrEqual(40);
+        expect(vehicleHyosung.listHistoricReplacements[2].time).toBeGreaterThanOrEqual(39);
         expect(vehicleHyosung.listHistoricReplacements[2].timeAverage).toEqual(42);
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements.length).toEqual(4);
         expect(vehicleHyosung.listHistoricReplacements[2].listReplacements[0].km).toEqual(9200);

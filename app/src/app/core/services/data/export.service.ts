@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { File } from '@awesome-cordova-plugins/file/ngx';
 
 // SERVICES
 import { LogService } from '../common/log.service';
+import { PlatformService } from '../common/platform.service';
 
 // UTILS
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
@@ -18,13 +18,13 @@ export class ExportService {
     // INJECTIONS
     private readonly file: File = inject(File);
     private readonly logService: LogService = inject(LogService);
-    private readonly platform: Platform = inject(Platform);
+    private readonly platformService: PlatformService = inject(PlatformService);
 
     /** EXPORTS AND IMPORTS */
 
     getRootRealRelativePath(filePath: string = ''): string {
         const dataDirectory: string = this.getRealRelativeDirectory();
-        if(this.platform.is('android')) {
+        if(this.platformService.isAndroid()) {
             return `${dataDirectory.substring(this.logService.getRootDirectory().length, dataDirectory.length)}${this.logService.getRootRelativePath(filePath)}`;
         } else {
             return dataDirectory;
@@ -40,7 +40,7 @@ export class ExportService {
     }
 
     async createOutputDirectory() {
-        if(this.platform.is('android')) {
+        if(this.platformService.isAndroid()) {
             const pathDataDirectory: string = this.logService.getDataDirectory();
             try {
                 await this.file.checkDir(pathDataDirectory, Constants.OUTPUT_DIR_NAME).then(dir => {

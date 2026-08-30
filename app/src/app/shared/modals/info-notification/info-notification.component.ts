@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, inject } from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -19,7 +19,8 @@ import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
 // SERVICES
 import {
   DashboardService, ControlService, CalendarService,
-  SettingsService, DataService, HomeService, InfoVehicleService, InfoCalendarService, IconService
+  SettingsService, DataService, HomeService, InfoVehicleService, InfoCalendarService, IconService,
+  PlatformService
 } from '@services/index';
 
 // COMPONENTS
@@ -34,7 +35,7 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   // INJECTIONS
-  private readonly platform: Platform = inject(Platform);
+  private readonly platformService: PlatformService = inject(PlatformService);
   private readonly modalController: ModalController = inject(ModalController);
   private readonly dashboardService: DashboardService = inject(DashboardService);
   private readonly calendarService: CalendarService = inject(CalendarService);
@@ -149,7 +150,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   getObserverSearchDashboard() {
     this.searchDashboardSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
       if (!this.openningPopover) {
-        const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        const windowsSize = this.dashboardService.getSizeWidthHeight(this.platformService.getWidth(), this.platformService.getHeight());
         this.showSpinner = true; // Windows: Fix refresh chart :(
         this.calculateDashboardExpenses(windowsSize, filter);
         this.calculateDashboad(windowsSize,filter);
@@ -163,7 +164,7 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
   getObserverSearchDashboardRecords() {
     this.searchDashboardRecordsSubscription = this.dashboardService.getObserverSearchDashboardRecords().subscribe(filter => {
       if (!this.openningPopover) {
-        const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        const windowsSize = this.dashboardService.getSizeWidthHeight(this.platformService.getWidth(), this.platformService.getHeight());
         this.calculateDashboad(windowsSize, filter, true);
         this.calculateDashboadFailure(windowsSize, filter);
         this.loadIconSearch();
@@ -221,12 +222,12 @@ export class InfoNotificationComponent implements OnInit, OnDestroy {
 
   getObserverOrientationChange() {
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize = this.dashboardService.getSizeWidthHeight(this.platformService.getHeight(), this.platformService.getWidth());
       this.dashboardVehicleExpenses.view = windowSize;
       this.dashboardFailureReplacement.view = windowSize;
       this.dashboardRecordsMaintenance.view = windowSize;
       setTimeout(() => {
-        windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        windowSize = this.dashboardService.getSizeWidthHeight(this.platformService.getWidth(), this.platformService.getHeight());
         if (windowSize[0] === windowSize[1]) {
           this.dashboardVehicleExpenses.view = windowSize;
           this.dashboardFailureReplacement.view = windowSize;

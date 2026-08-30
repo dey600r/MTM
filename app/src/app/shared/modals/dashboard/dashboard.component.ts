@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, Input, inject } from '@angular/core';
-import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 
 // SERVICES
-import { DashboardService, ControlService, IconService } from '@services/index';
+import { DashboardService, ControlService, IconService, PlatformService } from '@services/index';
 
 // MODELS
 import { IDashboardModel, IInfoModel, DashboardModel, OperationModel, ModalInputModel, HeaderInputModel, HeaderOutputModel, HeaderSegmentInputModel, DashboardInputModal, IDashboardSerieModel } from '@models/index';
@@ -26,7 +25,7 @@ import { SearchDashboardPopOverComponent } from '@src/app/shared/modals/search-d
 export class DashboardComponent implements OnInit, OnDestroy {
 
   // INJECTIONS
-  private readonly platform: Platform = inject(Platform);
+  private readonly platformService: PlatformService = inject(PlatformService);
   private readonly screenOrientation: ScreenOrientation = inject(ScreenOrientation);
   private readonly changeDetector: ChangeDetectorRef = inject(ChangeDetectorRef);
   private readonly dashboardService: DashboardService = inject(DashboardService);
@@ -69,7 +68,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadChart(this.modalInputModel.data.vehicleSelected);
     this.searchSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
       this.showSpinner = true;
-      const windowsSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+      const windowsSize = this.dashboardService.getSizeWidthHeight(this.platformService.getWidth(), this.platformService.getHeight());
       if (this.modalInputModel.parentPage === PageEnum.VEHICLE) { // VEHICLE TOTAL EXPENSES
         this.dashboardVehicleExpenses = this.dashboardService.getDashboardModelVehicleExpenses(windowsSize, this.operations, filter);
       } else { // VEHICLE EXPENSES PER MONTH
@@ -86,12 +85,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize = this.dashboardService.getSizeWidthHeight(this.platformService.getHeight(), this.platformService.getWidth());
       this.dashboardVehicleExpenses.view = windowSize;
       this.dashboardOpTypeExpenses.view = windowSize;
       this.dashboardReplacementExpenses.view = windowSize;
       setTimeout(() => {
-        windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        windowSize = this.dashboardService.getSizeWidthHeight(this.platformService.getWidth(), this.platformService.getHeight());
         if (windowSize[0] === windowSize[1]) {
           this.dashboardVehicleExpenses.view = windowSize;
           this.dashboardOpTypeExpenses.view = windowSize;

@@ -5,3 +5,4 @@ export * from './calendar.service';
 export * from './control.service';
 export * from './theme.service';
 export * from './log.service';
+export * from './platform.service';

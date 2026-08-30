@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { File } from '@awesome-cordova-plugins/file/ngx';
+
+// SERVICE
+import { PlatformService } from './platform.service';
 
 // UTILS
 import { Constants, PageEnum, ToastTypeEnum } from '@utils/index';
@@ -14,8 +16,8 @@ import { environment } from '@environment/environment';
 export class LogService {
 
     // INJECTIONS
+    private readonly platformService: PlatformService = inject(PlatformService);
     private readonly file: File = inject(File);
-    private platform: Platform = inject(Platform);
 
     private generateNameLogFile(): string {
         const today: Date = new Date();
@@ -47,7 +49,7 @@ export class LogService {
             const logFilePath: string = this.getRootPathFiles();
             const log: string = this.generateMessageLog(type, page, msg, err);
 
-            if(this.platform.is('android')) {
+            if(this.platformService.isAndroid()) {
                 try {
                     await this.file.checkFile(logFilePath, logFileName).then(value => {
                         this.file.readAsText(logFilePath, logFileName).then(txt => {

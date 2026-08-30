@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Platform } from '@ionic/angular';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
@@ -16,7 +15,7 @@ import {
 } from '@models/index';
 
 // SERVICES
-import { UtilsService, CalendarService, CommonService } from '../common/index';
+import { UtilsService, CalendarService, CommonService, PlatformService } from '../common/index';
 import { MachineLearningService } from '../data/index';
 
 // UTILS
@@ -36,7 +35,7 @@ export class DashboardService {
     private readonly calendarService: CalendarService = inject(CalendarService);
     private readonly meService: MachineLearningService = inject(MachineLearningService);
     private readonly translator: TranslateService = inject(TranslateService);
-    private readonly platform: Platform = inject(Platform);
+    private readonly platformService: PlatformService = inject(PlatformService);
 
     // DATA
     private searchDashboard: SearchDashboardModel = new SearchDashboardModel();
@@ -698,7 +697,7 @@ export class DashboardService {
         let result: IDashboardModel[] = [];
         let colors: string[] = [];
         const dataFiltered = data.listMaintenance.filter(x => x.active);
-        const windows: boolean = this.platform.is('desktop');
+        const windows: boolean = this.platformService.isDesktop();
         const numSuccess = dataFiltered.filter(x => x.warning === WarningWearEnum.SUCCESS).length;
         if (numSuccess > 0) {
             result = [...result, this.getDataDashboard(this.translator.instant('COMMON.SUCCESS'), numSuccess)];

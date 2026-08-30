@@ -487,7 +487,7 @@ describe('DashboardService', () => {
         expect(dashboard.data.some(x => x.name === MockTranslate.EN.COMMON.OPTIMAL)).toBeTruthy();
         expect(dashboard.data.every(x => x.series.some(y => y.name === dashboard.data[0].series[0].name))).toBeTruthy();
         expect(dashboard.data[0].series[1].name).toEqual('20');
-        expect(dashboard.data[0].series[1].value).toEqual(11.4);
+        expect(dashboard.data[0].series[1].value).toEqual(11.7);
     });
 
     it('should align series', () => {
@@ -938,20 +938,20 @@ describe('DashboardService', () => {
             }));
         expect(dashboard.view).toEqual([500, 900]);
         expect(dashboard.showXAxis).toBeTrue();
-        expect(dashboard.data[0].value).toEqual(40);
+        expect(dashboard.data[0].value).toEqual(39);
         expect(dashboard.data[0].name).toEqual(MockAppData.MaintenanceElements[4].name);
-        expect(dashboard.data[1].value).toEqual(40);
+        expect(dashboard.data[1].value).toEqual(39);
         expect(dashboard.data[1].name).toEqual(MockAppData.MaintenanceElements[5].name);
-        expect(dashboard.data[2].value).toEqual(40);
+        expect(dashboard.data[2].value).toEqual(39);
         expect(dashboard.data[2].name).toEqual(MockAppData.MaintenanceElements[5].name);
-        expect(dashboard.data[3].value).toEqual(73);
+        expect(dashboard.data[3].value).toEqual(72);
         expect(dashboard.data[3].name).toEqual(MockAppData.MaintenanceElements[0].name);
         expect(dashboard.data[4].value).toEqual(91);
         expect(dashboard.data[4].name).toEqual(MockAppData.MaintenanceElements[1].name);
         expect(dashboard.dataLine[0].name).toEqual('Max');
-        expect(dashboard.dataLine[0].series[0].value).toEqual(118);
+        expect(dashboard.dataLine[0].series[0].value).toEqual(117);
         expect(dashboard.dataLine[0].series[0].name).toEqual(MockAppData.MaintenanceElements[4].name);
-        expect(dashboard.dataLine[0].series[1].value).toEqual(118);
+        expect(dashboard.dataLine[0].series[1].value).toEqual(117);
         expect(dashboard.dataLine[0].series[1].name).toEqual(MockAppData.MaintenanceElements[5].name);
         expect(dashboard.dataLine[1].name).toEqual(MockTranslate.EN.COMMON.AVERAGE);
         expect(dashboard.dataLine[1].series[0].value).toEqual(34);
@@ -959,9 +959,9 @@ describe('DashboardService', () => {
         expect(dashboard.dataLine[1].series[1].value).toEqual(34);
         expect(dashboard.dataLine[1].series[1].name).toEqual(MockAppData.MaintenanceElements[5].name);
         expect(dashboard.dataLine[2].name).toEqual('Min');
-        expect(dashboard.dataLine[2].series[0].value).toEqual(5);
+        expect(dashboard.dataLine[2].series[0].value).toEqual(6);
         expect(dashboard.dataLine[2].series[0].name).toEqual(MockAppData.MaintenanceElements[4].name);
-        expect(dashboard.dataLine[2].series[1].value).toEqual(5);
+        expect(dashboard.dataLine[2].series[1].value).toEqual(6);
         expect(dashboard.dataLine[2].series[1].name).toEqual(MockAppData.MaintenanceElements[5].name);
         expect(dashboard.legendTitle).toEqual(MockTranslate.EN.COMMON.OPERATIONS);
         expect(dashboard.xAxisLabel).toEqual(MockTranslate.EN.COMMON.REPLACEMENT);

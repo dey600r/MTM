@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 
 // LIBRARIES
 import { TranslateService } from '@ngx-translate/core';
 
 // UTILS
-import { DataBaseService, ControlService, ExportService } from '@services/index';
+import { DataBaseService, ControlService, ExportService, PlatformService } from '@services/index';
 import { PageEnum } from '@utils/index';
 
 declare let window: any;
@@ -21,7 +20,7 @@ declare let window: any;
 export class AppComponent {
 
   // INJECTIONS
-  private readonly platform: Platform = inject(Platform);
+  private readonly platformService: PlatformService = inject(PlatformService);
   private readonly statusBar: StatusBar = inject(StatusBar);
   private readonly dbService: DataBaseService = inject(DataBaseService);
   private readonly translator: TranslateService = inject(TranslateService);
@@ -34,7 +33,7 @@ export class AppComponent {
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
+    this.platformService.getReady().then(() => {
       // TRANSLATOR
       let userLang = navigator.language.split('-')[0];
       userLang = /(es|en)/gi.test(userLang) ? userLang : 'en';

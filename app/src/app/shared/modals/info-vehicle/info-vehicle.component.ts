@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, inject, Input, OnInit, OnDestroy } from '@angular/core';
-import { Platform } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARIES
@@ -10,7 +9,8 @@ import { SearchDashboardPopOverComponent } from '../search-dashboard-popover/sea
 
 // SERVICES
 import {
-  UtilsService, ControlService, DashboardService, DataService,  IconService,  InfoVehicleService, SettingsService
+  UtilsService, ControlService, DashboardService, DataService,  IconService,  InfoVehicleService, SettingsService,
+  PlatformService
 } from '@services/index';
 
 // MODELS
@@ -41,7 +41,7 @@ import {
 export class InfoVehicleComponent implements OnInit, OnDestroy {
 
   // INJECTIONS
-  private readonly platform: Platform = inject(Platform);
+  private readonly platformService: PlatformService = inject(PlatformService);
   private readonly screenOrientation: ScreenOrientation = inject(ScreenOrientation);
   private readonly dataService: DataService = inject(DataService);
   private readonly utilsService: UtilsService = inject(UtilsService);
@@ -210,7 +210,7 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
   getObserverSearchDashboard() {
     this.searchDashboardSubscription = this.dashboardService.getObserverSearchDashboard().subscribe(filter => {
       if (!this.openningPopover) {
-        let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        let windowSize = this.dashboardService.getSizeWidthHeight(this.platformService.getWidth(), this.platformService.getHeight());
         this.initChartInformationVehicle(windowSize, filter);
         this.initChartConfigurationVehicle(windowSize);
         this.initChartFailureProbabilityVehicle(windowSize, filter);
@@ -223,7 +223,7 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
   getObserverSearchDashboardRecords() {
     this.searchDashboardRecordsSubscription = this.dashboardService.getObserverSearchDashboardRecords().subscribe(filter => {
       if (!this.openningPopover) {
-        let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.width(), this.platform.height());
+        let windowSize = this.dashboardService.getSizeWidthHeight(this.platformService.getWidth(), this.platformService.getHeight());
         this.initChartFailureProbabilityVehicle(windowSize, filter);
         this.initChartReplacementVehicle(windowSize, filter);
         this.loadHeader();
@@ -235,7 +235,7 @@ export class InfoVehicleComponent implements OnInit, OnDestroy {
     this.getObserverSearchDashboard();
     this.getObserverSearchDashboardRecords();
     this.screenSubscription = this.screenOrientation.onChange().subscribe(() => {
-      let windowSize = this.dashboardService.getSizeWidthHeight(this.platform.height(), this.platform.width());
+      let windowSize = this.dashboardService.getSizeWidthHeight(this.platformService.getHeight(), this.platformService.getWidth());
       this.dashboardInformationVehicle.view = windowSize;
       this.dashboardConfigurationVehicle.view = windowSize;
       this.dashboardFailureProbabilityVehicle.view = windowSize;

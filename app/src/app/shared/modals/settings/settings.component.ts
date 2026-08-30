@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, Input, inject } from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 
 // LIBRARIES
 import { File, Entry } from '@awesome-cordova-plugins/file/ngx';
@@ -16,7 +16,7 @@ import { Constants, ConstantsTable, PageEnum, ToastTypeEnum } from '@utils/index
 import { environment } from '@environment/environment';
 
 // SERVICES
-import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService, ExportService, DataService, CRUDService, LogService } from '@services/index';
+import { SettingsService, DataBaseService, ControlService, ThemeService, SyncService, ExportService, DataService, CRUDService, LogService, PlatformService } from '@services/index';
 
 @Component({
     selector: 'settings',
@@ -40,7 +40,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   private readonly themeService: ThemeService = inject(ThemeService);
   private readonly syncService: SyncService = inject(SyncService);
   private readonly logService: LogService = inject(LogService);
-  private readonly platform: Platform = inject(Platform);
+  private readonly platformService: PlatformService = inject(PlatformService);
 
   // MODAL MODELS
   @Input() modalInputModel: ModalInputModel<any, WearVehicleProgressBarViewModel> = new ModalInputModel<any, WearVehicleProgressBarViewModel>();
@@ -161,7 +161,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   exportDBToJson() {
     this.crudService.getAllDataFromStorage().then((json: any) => {
       const exportFileName: string = this.exportService.generateNameExportFile(Constants.EXPORT_FILE_NAME);
-      if(this.platform.is('android')) {
+      if(this.platformService.isAndroid()) {
         this.file.writeFile(this.logService.getRootPathFiles(Constants.EXPORT_DIR_NAME), exportFileName,
           JSON.stringify(json), { replace : true}).then(() => {
               this.getLastExportFile();
@@ -233,7 +233,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.crudService.getAllDataFromStorage().then((json: any) => {
       const backupFileName: string = this.exportService.generateNameExportFile(Constants.BACKUP_FILE_NAME);
       // Write backup file
-      if(this.platform.is('android')) {
+      if(this.platformService.isAndroid()) {
         this.file.writeFile(this.logService.getRootPathFiles(Constants.IMPORT_DIR_NAME), backupFileName,
           JSON.stringify(json), { replace : true}).then(() => {
             // IMPORT DB
@@ -274,7 +274,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   // GET LIST FILES
   getLastExportFile() {
-    if(this.platform.is('android')) {
+    if(this.platformService.isAndroid()) {
       this.file.listDir(this.logService.getRootPathFiles(), Constants.EXPORT_DIR_NAME).then((listFiles: Entry[]) => {
         this.lastExport = '';
         const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
@@ -326,7 +326,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   deleteFiles(path: string) {
-    if(this.platform.is('android')) {
+    if(this.platformService.isAndroid()) {
       this.file.listDir(this.logService.getRootPathFiles(), path).then((listFiles: Entry[]) => {
         const listActual: Entry[] = listFiles.filter(x => x.name.includes(Constants.FORMAT_FILE_DB));
         if (!!listActual && listActual.length > 0) {

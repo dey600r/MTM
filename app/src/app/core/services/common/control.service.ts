@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ToastController, AlertController, Platform, ModalController, PopoverController } from '@ionic/angular';
+import { ToastController, AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 // LIBRARY ANGULAR
@@ -8,6 +8,7 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 // SERVICE
 import { LogService } from './log.service';
+import { PlatformService } from './platform.service';
 
 // UTILS
 import { ModalInputModel, ModalOutputModel } from '@models/index';
@@ -24,9 +25,9 @@ export class ControlService {
     private readonly toastController: ToastController = inject(ToastController);
     private readonly modalController: ModalController = inject(ModalController);
     private readonly popoverController: PopoverController = inject(PopoverController);
-    private readonly platform: Platform = inject(Platform);
     private readonly iab: InAppBrowser = inject(InAppBrowser);
     private readonly logService: LogService = inject(LogService);
+    private readonly platformService: PlatformService = inject(PlatformService);
 
     // DATA
     private dateLastUse = new Date();
@@ -50,8 +51,8 @@ export class ControlService {
     // EXIT BUTTON
 
     activateButtonExist(parent: PageEnum) {
-        if (!this.platform.is('desktop') && this.isPage(parent)) {
-            this.exitButtonSubscripion = this.platform.backButton.subscribe(() => {
+        if (!this.platformService.isDesktop() && this.isPage(parent)) {
+            this.exitButtonSubscripion = this.platformService.getBackButton().subscribe(() => {
                 this.showConfirm(PageEnum.HOME, this.translator.instant('COMMON.EXIT'),
                     this.translator.instant('ALERT.ExitApp'),
                     {
@@ -194,11 +195,11 @@ export class ControlService {
     // SEGMENTS
 
     activeSegmentScroll(length: number): boolean {
-        return (this.platform.width() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && length > 2) || length > 10;
+        return (this.platformService.getWidth() < Constants.MAX_WIDTH_SEGMENT_SCROLABLE && length > 2) || length > 10;
     }
 
     // APP BROWSER
     showPrivacyPolicy() {
-        this.iab.create(encodeURI(Constants.MTM_URL_PRIVACY_POLICY), (this.platform.is('desktop') ? '_system' : '_self'));
+        this.iab.create(encodeURI(Constants.MTM_URL_PRIVACY_POLICY), (this.platformService.isDesktop() ? '_system' : '_self'));
     }
 }
